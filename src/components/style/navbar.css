@@ -1,0 +1,73 @@
+.navbar {
+    height: 56px;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: var(--primary-bg);
+    border-bottom: 2px solid var(--border);
+}
+
+    .navbar .start {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: 12px;
+    }
+
+        .navbar .start .logo {
+            display: flex;
+            flex-direction: row;
+        }
+
+            .navbar .start .logo a {
+                padding: 0;
+                align-items: center;
+                user-select: none;
+                flex: none;
+                display: flex;
+                flex-direction: row;
+                align-self: center;
+                cursor: pointer;
+                text-decoration: none;
+                color: var(--text-primary);
+            }
+
+    .navbar .end {
+        display: flex;
+        flex-direction: row;
+
+        min-width: 200px;
+        align-items: center;
+        justify-content: flex-end;
+        flex: none;
+    }
+
+        .navbar .end button {
+            margin-right: 8px;
+            width: auto;
+            padding-left: 12px;
+            padding-right: 12px;
+
+            padding: 0 8px;
+            background-color: var(--text-excite);
+            color: var(--text-primary);
+            cursor: pointer;
+            height: 26px;
+            font-size: 12px;
+            font-weight: 500;
+
+            border: none;
+            border-radius: 2px;
+            
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            flex: 0 0 auto;
+        }
+
+        .navbar .end .end-btn button {
+            background-color: var(--card-color );
+        }
