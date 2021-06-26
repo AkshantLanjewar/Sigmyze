@@ -1,9 +1,11 @@
 import projectReducer from "./projectSlice";
+import stateReducer from './stateSlice'
 
 import { combineReducers, createStore } from "redux";
 
 const rootReducer = combineReducers({
-    projectReducer
+    projectReducer,
+    stateReducer
 })
 
 const store = createStore(
