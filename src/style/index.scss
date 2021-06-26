@@ -20,6 +20,9 @@ body {
 
 @import './views/project-dashboard.scss';
 @import './components/navbar.scss';
-@import './components/project.scss';
-@import './components/project-modal.scss';
-@import './components/project-viewer.scss';
+
+@import './components/project-dashboard/project.scss';
+@import './components/project-dashboard/project-modal.scss';
+@import './components/project-dashboard/project-viewer.scss';
+
+@import './components/project-editor/editor-header.scss';

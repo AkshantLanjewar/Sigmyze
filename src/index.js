@@ -12,26 +12,20 @@ import { Provider } from 'react-redux'
 
 import ProjectModal from './components/project-components/project-modal'
 
-//react router
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+function StateManager() {
+    return (
+        <div className="container">
+            <ProjectDashboard />
+        </div> 
+    )
+}
 
 class App extends React.Component {
+
     render() {
         return (
             <Provider store={store}>
-                <Router>
-                    <Route exact path="/">
-                        <div className="container">
-                            <ProjectDashboard />
-                        </div>
-                    </Route>
-
-                    <Route path="/editor">
-                        <div className="container">
-                            
-                        </div>
-                    </Route>
-                </Router>
+                <StateManager />
 
                 <ProjectModal />
             </Provider>
