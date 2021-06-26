@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 //styles
-import './style/index.css'
+import './style/index.scss'
 
 //views
 import ProjectDashboard from './views/ProjectDashboard'

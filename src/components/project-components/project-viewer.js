@@ -1,7 +1,5 @@
 import React from "react"
 
-import '../style/project-viewer.css'
-
 import Project from './project'
 
 class ProjectViewer extends React.Component {

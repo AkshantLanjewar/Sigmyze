@@ -42,6 +42,10 @@ module.exports = {
                     }, {
                         loader: 'less-loader' // compiles Less to CSS
                 }]
+            },
+            {
+                test: /\.(scss|css)$/,
+                use: ['style-loader', 'css-loader', 'sass-loader'],
             }
         ]
     },

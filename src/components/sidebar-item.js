@@ -1,8 +1,8 @@
 import React from "react"
 
-import FolderIcon from './icons/folder-icon'
-import RepoIcon from './icons/repo-icon'
-import StarIcon from './icons/star-icon'
+import FolderIcon from './icons/side-icons/folder-icon'
+import RepoIcon from './icons/side-icons/repo-icon'
+import StarIcon from './icons/side-icons/star-icon'
 
 function SidebarItem(props) {
 

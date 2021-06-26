@@ -1,10 +1,15 @@
-import { Menu } from "antd"
-import { Header } from "antd/lib/layout/layout"
 import React from "react"
 
-import './style/navbar.css'
+import { useDispatch } from "react-redux"
 
 function Navbar() {
+
+    const dispatch = useDispatch()
+
+    function createProject() {
+        dispatch({type: "OPEN_MODAL"})
+    }
+
     return (
         <div className="navbar">
             <div className="start">
@@ -14,7 +19,7 @@ function Navbar() {
             </div>
 
             <div className="end">
-                <button>Create Project</button>
+                <button onClick={createProject}>Create Project</button>
 
                 <div className="end-btn">
                     <button>

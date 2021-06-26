@@ -1,0 +1,25 @@
+$primary-bg: #141414;
+$border: #2c2c2c;
+$text-primary: #FAF8FF;
+$text-excite: #8685EF;
+$card-color: #000000;
+$secondary-bg: rgb(21, 21, 21);
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    color: $text-primary;
+    font-family: 'Quicksand', sans-serif;
+}
+
+body {
+    background-color: $primary-bg;
+}
+
+@import './views/project-dashboard.scss';
+@import './components/navbar.scss';
+@import './components/project.scss';
+@import './components/project-modal.scss';
+@import './components/project-viewer.scss';

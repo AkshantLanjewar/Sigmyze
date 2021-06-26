@@ -6,23 +6,20 @@
     align-items: center;
     justify-content: space-between;
 
-    background-color: var(--primary-bg);
-    border-bottom: 2px solid var(--border);
-}
+    background-color: $primary-bg;
+    border-bottom: 2px solid $border;
 
-    .navbar .start {
+    .start {
         display: flex;
         flex-direction: row;
         align-items: center;
         margin-left: 12px;
-    }
 
-        .navbar .start .logo {
+        .logo {
             display: flex;
             flex-direction: row;
-        }
 
-            .navbar .start .logo a {
+            a {
                 padding: 0;
                 align-items: center;
                 user-select: none;
@@ -32,10 +29,12 @@
                 align-self: center;
                 cursor: pointer;
                 text-decoration: none;
-                color: var(--text-primary);
+                color: $text-primary;
             }
+        }
+    }
 
-    .navbar .end {
+    .end {
         display: flex;
         flex-direction: row;
 
@@ -43,17 +42,16 @@
         align-items: center;
         justify-content: flex-end;
         flex: none;
-    }
 
-        .navbar .end button {
+        button {
             margin-right: 8px;
             width: auto;
             padding-left: 12px;
             padding-right: 12px;
 
             padding: 0 8px;
-            background-color: var(--text-excite);
-            color: var(--text-primary);
+            background-color: $text-excite;
+            color: $text-primary;
             cursor: pointer;
             height: 26px;
             font-size: 12px;
@@ -68,6 +66,10 @@
             flex: 0 0 auto;
         }
 
-        .navbar .end .end-btn button {
-            background-color: var(--card-color );
+        .end-btn {
+            button {
+                background-color: $card-color;
+            }
         }
+    }
+}

@@ -1,8 +1,6 @@
 import React from 'react'
 import Navbar from '../components/navbar'
 
-import './style/project-dashboard.css'
-
 import SidebarItem from '../components/sidebar-item'
 import ProjectViewer from '../components/project-components/project-viewer'
 

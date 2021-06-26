@@ -1,8 +1,6 @@
 import React from "react"
 import Dots from '../icons/dots'
 
-import '../style/project.css'
-
 function Project(props) {
     let grid_classes = "grid-item"
     if(props.grid_active)
