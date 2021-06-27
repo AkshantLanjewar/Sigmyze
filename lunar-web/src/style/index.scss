@@ -1,3 +1,4 @@
+
 $primary-bg: #141414;
 $border: #2c2c2c;
 $text-primary: #FAF8FF;
@@ -18,11 +19,18 @@ body {
     background-color: $primary-bg;
 }
 
-@import './views/project-dashboard.scss';
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(90, 90, 90);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
 @import './components/navbar.scss';
-
-@import './components/project-dashboard/project.scss';
-@import './components/project-dashboard/project-modal.scss';
-@import './components/project-dashboard/project-viewer.scss';
-
-@import './components/project-editor/editor-header.scss';
