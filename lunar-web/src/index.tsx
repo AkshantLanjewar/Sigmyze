@@ -12,13 +12,22 @@ import {
 
 import Navbar from "./components/navbar";
 
-const App = () => (
-    <div>
-        <Router>
-            <Navbar />
-        </Router>
-    </div>
-);
+//importing the different pages
+import IndexPage from "./home";
+
+function App() : JSX.Element {
+    return (
+        <div>
+            <Router>
+                <Navbar />
+
+                <Switch>
+                    <Route exact path="/" component={IndexPage} />
+                </Switch>
+            </Router>
+        </div>
+    )   
+}
 
 ReactDOM.render(
     <App />,

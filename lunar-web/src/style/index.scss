@@ -3,8 +3,10 @@ $primary-bg: #141414;
 $border: #2c2c2c;
 $text-primary: #FAF8FF;
 $text-excite: #8685EF;
-$card-color: #000000;
+$text-muted: rgb(153, 153, 153);
+$card-color: rgb(15, 15, 15);
 $secondary-bg: rgb(21, 21, 21);
+$red: #ff3d41;
 
 @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
 
@@ -34,3 +36,6 @@ body {
 }
 
 @import './components/navbar.scss';
+@import './components/card.scss';
+
+@import './home.scss';

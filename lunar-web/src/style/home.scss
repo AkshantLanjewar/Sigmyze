@@ -1,0 +1,10 @@
+.index-wrap {
+    max-width: 80%;
+    width: 1200px;
+    margin: auto;
+    padding-top: 4rem;
+    margin-bottom: 4rem;
+    color: $text-primary;
+}
+
+@import './components/home-components/carousel.scss';
