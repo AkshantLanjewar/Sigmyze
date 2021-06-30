@@ -15,7 +15,9 @@ export interface SeriesOptions {
 
     xAxisData: Array<any>,
     yAxisData: Array<any>,
-    smooth?: boolean
+
+    smooth?: boolean,
+    spark?: boolean,
 }
 
 class ChartBuilder {
@@ -60,6 +62,16 @@ class ChartBuilder {
 
             xAxisIndex: this.options.yAxis.length - 1,
             yAxisIndex: this.options.yAxis.length - 1,
+        }
+
+        if(options.spark) {
+            this.options.tooltip.show = false
+
+            this.options.grid = {}
+            this.options.grid.left = "5%"
+            this.options.grid.right = "5%"
+            this.options.grid.top = "30"
+            this.options.grid.bottom = "30"
         }
 
         if(options.seriesType == 'line') {

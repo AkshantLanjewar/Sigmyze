@@ -1,0 +1,17 @@
+.indicators {
+    display: grid;
+    column-gap: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0px -0.5rem;
+    row-gap: 24px;
+
+    .card {
+        width: auto;
+        border-radius: 8px;
+        height: 250px;
+
+        .title .text h2 {
+            font-size: 16px;
+        }
+    }
+}

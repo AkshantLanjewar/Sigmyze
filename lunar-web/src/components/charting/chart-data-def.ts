@@ -24,16 +24,24 @@ export interface LunarChart {
         show: boolean
     },
 
-    readonly tooltip: {
+    tooltip: {
         trigger: string,
         axisPointer: {
             type: string
-        }
+        },
+        show?: boolean
     },
 
     legend: {
         data?: Array<string>,
         readonly show: boolean
+    },
+
+    grid?: {
+        left?: string,
+        top?: string,
+        bottom?: string,
+        right?: string
     },
 
     xAxis: Array<{data?: Array<any>, type: string, show?: boolean}>,

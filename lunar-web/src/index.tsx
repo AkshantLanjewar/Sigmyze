@@ -14,6 +14,7 @@ import Navbar from "./components/navbar";
 
 //importing the different pages
 import IndexPage from "./home";
+import IndicatorOverview from "./indicator-page";
 
 function App() : JSX.Element {
     return (
@@ -23,6 +24,7 @@ function App() : JSX.Element {
 
                 <Switch>
                     <Route exact path="/" component={IndexPage} />
+                    <Route path="/:indicator" children={<IndicatorOverview />} />
                 </Switch>
             </Router>
         </div>
