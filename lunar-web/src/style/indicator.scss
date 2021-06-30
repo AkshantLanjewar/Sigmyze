@@ -1,0 +1,52 @@
+.indicator-wrap {
+    max-width: 80%;
+    width: 1200px;
+    margin: auto;
+    height: 100%;
+    padding-top: 1rem;
+    color: $text-primary;
+
+    display: flex;
+    flex-direction: column;
+
+    .chart {
+        width: 100%;
+        height: 100%;
+    }
+
+    .paper {
+        background-color: $card-color;
+        margin: 4.5rem 0rem 0rem;
+
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        padding-left: 64px;
+        padding-right: 64px;
+
+        border-radius: 8px;
+        flex: 1 1 auto;
+
+        .indicator-title {      
+            h1 span {
+                color: $text-muted;
+                font-size: 20px;
+            }
+    
+            h4 { color: $text-muted; 
+                margin-top: 6px; 
+                padding-left: 3px; 
+            }
+        }
+
+        .main-chart {
+            padding-top: 32px;
+            height: 500px;
+
+            padding-left: 5%;
+            padding-right: 5%;
+
+            margin: 0 auto;
+            border-bottom: 2px solid $border;
+        }
+    }
+}

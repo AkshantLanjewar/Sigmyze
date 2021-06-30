@@ -27,7 +27,15 @@ class ChartBuilder {
         this.options = this.initEmptyOptions()
     }
 
-    BuildChart(container: HTMLDivElement) {
+    BuildChart(container: HTMLDivElement, noPadding?: boolean) {
+        if(noPadding) {
+            this.options.grid = {}
+            this.options.grid.left = "30"
+            this.options.grid.right = "30"
+            this.options.grid.top = "60"
+            this.options.grid.bottom = "60"
+        }
+
         let chart = echarts.init(container)
         chart.setOption(this.options)
     }
