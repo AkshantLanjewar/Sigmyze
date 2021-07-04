@@ -1,0 +1,37 @@
+@import '../../vars.scss';
+
+.home-container {
+    text-align: center;
+	padding-top: 10rem;
+
+	.jumbo-text {
+		color: black;
+		font-weight: bold;
+		font-size: 3rem;
+
+		margin-top: 2em;
+	}
+
+	.jumbo-subtext {
+		font-size: 1.125rem;
+		margin-top: .5em;
+		color: $secondary-text;
+	}
+
+	.login-button {
+		padding-top: 1em;
+		padding-bottom: 1em;
+		padding-left: 2em;
+		padding-right: 2em;
+		margin-top: 2rem;
+
+		font-size: 0.75em;
+		border-radius: 4px;
+
+		border: none;
+		background-color: $buttons;
+		color: white;
+		font-weight: 600;
+		cursor: pointer;
+	}
+}

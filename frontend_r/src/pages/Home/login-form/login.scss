@@ -1,0 +1,76 @@
+@import '../../../vars.scss';
+
+.login-form {
+    display: flex;
+    gap: 30px;
+    padding: 40px;
+    flex-direction: column;
+
+    .disclaimer-container {
+        gap: 10px;
+
+        display: flex;
+        flex-direction: column;
+
+        .header {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            svg {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .social-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .social {
+            padding-left: 40px;
+            color: white;
+
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            margin-top: 10px;
+
+            font-weight: 800;
+            font-size: 0.75rem;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: .5rem;
+
+            background-color: $suprise-color;
+            outline: none;
+            border: none;
+            cursor: pointer;
+
+            .social-wrap {
+                display: flex;
+                align-items: center;
+
+                .social-container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 20px;
+
+                    svg {
+                        width: 24px;
+                        height: 24px;
+                    }
+
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+}

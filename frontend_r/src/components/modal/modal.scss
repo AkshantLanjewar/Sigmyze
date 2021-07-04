@@ -1,0 +1,27 @@
+@import '../../vars.scss';
+
+.modal {
+    position: fixed;
+    inset: 0px;
+    background-color: rgba(0, 0, 0, 0.75);
+    overflow-y: auto;
+    z-index: 10;
+    transition: translate3d(0px, 0px, 0px);
+
+    opacity: 1;
+    max-height: 100vh;
+
+    .modal-container {
+        position: relative;
+        padding: 0;
+        inset: 20vh 0px 40px;
+        margin: 0px auto;
+
+        background-color: $secondary-card;
+        border-radius: 4px;
+        line-height: 1.2;
+
+        opacity: 1;
+        transform: scale(1) translateY(0px);
+    }
+}

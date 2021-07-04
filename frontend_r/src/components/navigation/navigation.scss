@@ -1,0 +1,39 @@
+@import '../../vars.scss';
+
+.navbar {
+    background-color: $card;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding-top: 12px;
+    padding-bottom: 12px;
+    justify-content: space-between;
+
+    .title {
+        margin-left: 10%;
+        color: black;
+    }
+
+    .nav_elements {
+        margin-right: 10%;
+        list-style: none;
+        
+        display: flex;
+        flex-direction: row;
+
+        .element {
+            margin-left: 22px;
+            cursor: pointer;
+
+            &:hover {
+                color: $suprise-color;
+            }
+
+            &.active {
+                color: $suprise-color;
+            }
+        }
+    }
+}
