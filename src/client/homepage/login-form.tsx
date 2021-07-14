@@ -1,43 +1,51 @@
-import './login.scss'
+import React from "react"
+import './sass/login-form.scss'
 
 import { AiFillGoogleCircle, AiOutlineGithub } from 'react-icons/ai'
 import { FiX } from 'react-icons/fi'
 
-const ICON_DICT = {
+const ICON_DICT: Record<string, any> = {
     "Google": <AiFillGoogleCircle />,
     "GitHub": <AiOutlineGithub />
 }
 
-function SocialContainer(props) {
+type SocialContainerProps = {
+    social: string
+}
+
+const SocialContainer: React.FC<SocialContainerProps> = ({children, social}) => {
     return (
         <button className="social">
             <span className="social-wrap">
-                <div className="social-container">
-                    {ICON_DICT[props.social]}
-                    <span>Login with {props.social}</span>
-                </div>
+                <a className="social-container">
+                    {ICON_DICT[social]}
+                    <span>Login with {social}</span>
+                </a>
             </span>
         </button>
     )
 }
 
-function LoginForm(props) {
+type LoginformProps = {
+    closeModal: Function
+}
+
+const Loginform: React.FC<LoginformProps> = ({children, closeModal}) => {
     return (
         <div className="login-form">
             <div className="disclaimer-container">
                 <div className="header">
                     <h3 className="login-title">Welcome</h3>
-                    <FiX onClick={props.closeModal} />
+                    <FiX onClick={() => { closeModal() }} />
                 </div>
                 <p className="notice">By logging in you accept our <span className="term">Terms of Service</span></p>
             </div>
 
             <div className="social-container">
-                <SocialContainer social={"GitHub"} />
                 <SocialContainer social={"Google"} />
             </div>
         </div>
     )
 }
 
-export default LoginForm
+export default Loginform
