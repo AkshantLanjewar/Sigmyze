@@ -8,6 +8,6 @@
     "watch": [
         "src/server"
     ],
-    "exec": "tsc -p tsconfig.server.json && node server/",
-    "ext": "ts"
+    "exec": "node src/server/index.js",
+    "ext": "js"
 }

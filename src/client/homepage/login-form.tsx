@@ -17,7 +17,7 @@ const SocialContainer: React.FC<SocialContainerProps> = ({children, social}) => 
     return (
         <button className="social">
             <span className="social-wrap">
-                <a className="social-container">
+                <a className="social-container" href="/user/auth/google">
                     {ICON_DICT[social]}
                     <span>Login with {social}</span>
                 </a>

@@ -24,9 +24,9 @@ class Homepage extends React.Component<{}, HomepageState> {
                 <Navbar />
     
                 <div className="home-container">
-                    <h1 className="jumbo-text">Build Better Apps Faster</h1>
-                    <h3 className="jumbo-subtext">Build your applications with speed and finesse, <br />
-                    harnessing the power of data without thousands of lines of code</h3>
+                    <h1 className="jumbo-text">Run your Buisness Faster</h1>
+                    <h3 className="jumbo-subtext">Dont let unorganized papertrails slow you down, <br />
+                    Get organized fast without the pain of learning a new tool</h3>
                     <button className="login-button" onClick={() => {this.setState({...this.state, login_modal_open: true})}}>
                         Login, its free
                     </button>
