@@ -10,7 +10,8 @@ module.exports = {
     entry: ['babel-polyfill', './src/client/index.tsx'],
     output: {
         path: path.join(__dirname, outputDirectory),
-        filename: './js/[name].bundle.js'
+        filename: './js/[name].bundle.js',
+        publicPath: '/'
     },
     devtool: 'source-map',
     module: {

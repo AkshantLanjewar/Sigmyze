@@ -24,14 +24,11 @@ mongoose
         const userRouter = require('./user/index')
         app.use('/user', userRouter.userRouter())
 
-        app.get(`/`, (req, res) => {
+        app.get(`/**`, (req, res) => {
             res.sendFile('/dist/index.html', { root: '.' })
         })
 
-        app.get(`/buisness`, (req, res) => {
-            res.sendFile('/dist/index.html', { root: '.' })
-        })
-
+        
         app.listen(port, () => {
             console.log('app listening on port ' + port)
         })
