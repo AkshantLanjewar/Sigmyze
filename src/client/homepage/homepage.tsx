@@ -5,6 +5,8 @@ import Navbar from '../components/navbar'
 import Modal from '../components/modal'
 import Loginform from './login-form'
 
+import SampleCard from './sample-card'
+
 type HomepageState = {
     login_modal_open: boolean
 };
@@ -24,12 +26,18 @@ class Homepage extends React.Component<{}, HomepageState> {
                 <Navbar />
     
                 <div className="home-container">
-                    <h1 className="jumbo-text">Run your Buisness Faster</h1>
-                    <h3 className="jumbo-subtext">Dont let unorganized papertrails slow you down, <br />
-                    Get organized fast without the pain of learning a new tool</h3>
+                    <h1 className="jumbo-text">Get Analysis Faster</h1>
+                    <h3 className="jumbo-subtext">Dont let Complicated tools and unclean data slow you down <br />
+                    Get your analysis in one place without having to bounce around and learn new tools</h3>
                     <button className="login-button" onClick={() => {this.setState({...this.state, login_modal_open: true})}}>
-                        Login, its free
+                        Get Started, its free
                     </button>
+
+                    <div className="samples">
+                        <SampleCard />
+
+                        <SampleCard />
+                    </div>
                 </div>
 
                 <Modal show={this.state.login_modal_open} maxWidth={450}>

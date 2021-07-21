@@ -26,6 +26,11 @@
         .panel-items {
             list-style: none;
 
+            a {
+                color: white;
+                text-decoration: none;
+            }
+
             .panel {
                 padding-left: 10px;
                 padding-right: 10px;

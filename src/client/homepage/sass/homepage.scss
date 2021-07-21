@@ -34,4 +34,75 @@
 		font-weight: 600;
 		cursor: pointer;
 	}
+
+	.samples {
+		display: flex;
+		flex-direction: row;
+
+		box-sizing: border-box;
+
+		padding-left: 2em;
+		padding-right: 2em;
+
+		margin-top: 13rem;
+		margin-bottom: 2rem;
+
+		.sample-card {
+			display: flex;
+			flex-direction: column;
+			
+			box-sizing: border-box;
+
+			width: 270px;
+			height: 230px;
+
+			padding-top: 18px;
+			padding-left: 22px;
+			padding-right: 22px;
+			margin-right: 32px;
+
+			background-color: $card;
+			border-radius: 4px;
+
+			.title {
+				font-weight: 700;
+				font-size: 16px;
+				cursor: pointer;
+			}
+
+			.tooltip {
+				position: relative;
+				display: inline-block;
+
+				&:hover .tooltiptext { visibility: visible; }
+
+				.tooltiptext {
+					visibility: hidden;
+					width: 240px;
+					background-color: black;
+					color: #fff;
+					text-align: center;
+					border-radius: 4px;
+					padding: 5px 0;
+					position: absolute;
+					z-index: 1;
+					bottom: 150%;
+					left: 50%;
+					margin-left: -120px;
+					font-size: 14px;
+				}
+
+				.tooltiptext::after {
+					content: "";
+					position: absolute;
+					top: 100%;
+					left: 50%;
+					margin-left: -5px;
+					border-width: 5px;
+					border-style: solid;
+					border-color: black transparent transparent transparent;
+				}
+			}
+		}
+	}
 }
