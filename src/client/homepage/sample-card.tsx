@@ -1,9 +1,16 @@
 import React, { useEffect } from "react"
+import ChartBuilder from '../components/charts/chart-builder'
 
 const SampleCard: React.FC<{}> = ({ children }) => {
 
-    useEffect(() => {
+    const chartRef = React.createRef<HTMLDivElement>()
 
+    useEffect(() => {
+        chartRef.current!.innerHTML = ""
+
+        let chart: ChartBuilder = new ChartBuilder(chartRef!)
+        chart.AddChart("line")
+        chart.CreateChart()
     })
 
     return (
@@ -14,7 +21,7 @@ const SampleCard: React.FC<{}> = ({ children }) => {
                 <span className="tooltiptext">10 Year Bonds / Unemployment</span>
             </div>
 
-            <div className="chart">
+            <div className="chart" ref={chartRef}>
                 
             </div>
         </div>

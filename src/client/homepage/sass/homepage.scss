@@ -70,6 +70,17 @@
 				cursor: pointer;
 			}
 
+			.chart {
+				display: flex;
+				flex-shrink: 0;
+				flex-grow: 1;
+
+				align-items: center;
+				justify-content: center;
+
+				box-sizing: border-box;
+			}
+
 			.tooltip {
 				position: relative;
 				display: inline-block;

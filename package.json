@@ -12,7 +12,6 @@
 		"server-dev": "nodemon"
 	},
 	"dependencies": {
-		"@amcharts/amcharts4": "^4.10.20",
 		"@babel/preset-typescript": "^7.14.5",
 		"@types/d3": "^7.0.0",
 		"@types/express-session": "^1.17.4",
