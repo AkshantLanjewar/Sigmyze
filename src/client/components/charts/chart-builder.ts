@@ -1,69 +1,158 @@
 import * as d3 from "d3"
 import React from "react"
 
+import '../sass/chart.scss'
+
 import LineChart, { LineOptions } from './line-chart'
 
-const blueColor = "#456ef7"
-const redColor  = "#f14b61"
+export const blueColor = "#456ef7"
+export const redColor  = "#f14b61"
 
 interface XYChartData {
     value: number,
     date: Date
 }
 
-interface ChartOptions {
+interface Margin {
+    top: number,
+    left: number,
+    right: number,
+    bottom: number
+}
+
+export interface ChartOptions {
     chartType: string,
-    chartData: Array<XYChartData>
+    chartData: Array<XYChartData>,
+    chartName: string,
+    chartColor: string
+
+    showXAxis: boolean,
+    showYAxis: boolean,
+
+    xAxisType: "utc",
+    yAxisType: "linear"
 }
 
 class ChartBuilder {
     container: React.RefObject<HTMLDivElement>
-    chartTypes: Array<string>
     charts: Array<ChartOptions>
+    axisIndex: number
+    margin: Margin
 
     constructor(container: React.RefObject<HTMLDivElement>) {
         this.container = container
-        this.chartTypes = []
         this.charts = []
+        this.axisIndex = 0
+
+        this.margin = {
+            top: 20, 
+            right: 10,
+            bottom: 20,
+            left: 10
+        }
     }
 
-    public AddChart(type: string) {
-        this.chartTypes.push(type)
+    public SetAxisIndex(index: number) {
+        this.axisIndex = index
+    }
+
+    public AddLineChart(options: ChartOptions) {
+        this.charts.push(options)
+    }
+
+    private UTCAxisFormatter(data: Array<XYChartData>, dimParam: number) {
+        return d3.scaleUtc()
+            .domain(<[Date, Date]>d3.extent(data, d => d.date))
+            .range([this.margin.left, dimParam - this.margin.right])
+    }
+
+    private LinearAxisFormatter(data: Array<XYChartData>, dimParam: number) {
+        return d3.scaleLinear()
+            .domain(<[number, number]>[0, d3.max(data, d => d.value)]).nice()
+            .range([dimParam - this.margin.bottom, this.margin.top])
     }
 
     public CreateChart() {
-        let boundingBox = this.container.current?.getBoundingClientRect()
+        if(this.charts.length == 0)
+            return
 
-        let margin = {top: 20, right: 10, bottom: 20, left: 10}
+        let boundingBox = this.container.current?.getBoundingClientRect()
 
         let rawWidth = boundingBox?.width!
         let rawHeight = boundingBox?.height!
 
-        let lineData = [
-            { date: new Date("2007-04-23"), value: 200 },
-            { date: new Date("2008-04-23"), value: 250 },
-            { date: new Date("2009-04-23"), value: 450 },
-            { date: new Date("2010-04-23"), value: 300 }
-        ]
+        let width  = rawWidth - this.margin.right - this.margin.left
+        let height = rawHeight - this.margin.top - this.margin.bottom 
 
         let svg = d3.select(this.container.current)
             .append("svg")
                 .attr("width", rawWidth)
                 .attr("height", rawHeight)
                 
-        let x = d3.scaleUtc()
-            .domain(<[Date, Date]>d3.extent(lineData, d => d.date))
-            .range([margin.left, rawWidth - margin.right])
-        let y = d3.scaleLinear()
-            .domain(<[number, number]>[0, d3.max(lineData, d => d.value)]).nice()
-            .range([rawHeight - margin.bottom, margin.top])       
+        let formatterOptions = this.charts[this.axisIndex]
+        let x, y
 
+        //do the x formatter
+        if(formatterOptions.xAxisType == "utc")
+            x = this.UTCAxisFormatter(formatterOptions.chartData, rawWidth)
+        if(formatterOptions.yAxisType == "linear")
+            y = this.LinearAxisFormatter(formatterOptions.chartData, rawHeight)
+        
+        //create the scales if applied
+        if(formatterOptions.showXAxis) {
+            svg.append("g")
+                .attr("transform", `translate(0, ${height})`)
+                .call(d3.axisBottom(x).ticks(width / 50).tickSizeOuter(0))
+        }
+        
+        if(formatterOptions.showYAxis) {
+            svg.append("g")
+                .attr("transform", `translate(${this.margin.left}, 0)`)
+                .call(d3.axisLeft(y))
+                .call(g => g.select('.domain').remove())
+                .call(g => g.select(".tick:last-of-type text").clone()
+                    .attr("x", 3)
+                    .attr("text-anchor", "start")
+                    .attr("font-weight", "bold")
+                    .text(""))
+        }
+        
+        for(let i = 0; i < this.charts.length; i++) {
+            let chartOptions = this.charts[i]
 
-        for(var i = 0; i < this.chartTypes.length; i++) {
-            let chartType = this.chartTypes[i]
+            if(chartOptions.chartType == "line")
+                LineChart(svg, chartOptions.chartData, x, y)
+        }
 
-            if(chartType == "line")
-                LineChart(svg, lineData, x, y)
+        //add a tooltip
+        let focus = svg.append("g")
+            .attr('class', 'focus')
+            .style('display', 'none')
+        
+        focus.append('line')
+            .attr('class', 'hover-line')
+            .attr('y1', 0)
+            .attr('y2', height)
+        
+        svg.append('rect')
+            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`)
+            .attr('class', 'overlay')
+            .attr('width', width)
+            .attr('height', height)
+            .on('mouseover', mouseover)
+            .on('mouseout', mouseout)
+            .on('mousemove', mousemove)
+        
+        function mouseover() {
+            focus.style("display", null)
+        }
+
+        function mouseout() {
+            focus.style("display", "none")
+        }
+
+        function mousemove() {
+
         }
     }
 }
