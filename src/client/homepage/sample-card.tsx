@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import ChartBuilder, { ChartOptions, blueColor, redColor } from '../components/charts/chart-builder'
+import ChartBuilder, { ChartOptions, blueColor, redColor } from '../components/chart-builder'
 
 const SampleCard: React.FC<{}> = ({ children }) => {
 
@@ -31,6 +31,8 @@ const SampleCard: React.FC<{}> = ({ children }) => {
             showXAxis: false,
             showYAxis: false,
 
+            formatterPre: "10 Year Bond: ",
+
             xAxisType: "utc",
             yAxisType: "linear"
         }
@@ -46,6 +48,8 @@ const SampleCard: React.FC<{}> = ({ children }) => {
 
             showXAxis: false,
             showYAxis: false,
+
+            formatterPre: "Unemployment: ",
 
             xAxisType: "utc",
             yAxisType: "linear"
