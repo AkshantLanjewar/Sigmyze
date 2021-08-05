@@ -1,0 +1,40 @@
+@import '../vars.scss';
+
+.lost-page {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    h1 {
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    a {
+        height: 28px;
+        width: auto;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+
+        border: none;
+        outline: none;
+        background: $buttons;
+        color: white;
+
+        margin-top: 12px;
+        padding-left: 8px;
+        padding-right: 8px;
+        border-radius: 4px;
+    }
+}

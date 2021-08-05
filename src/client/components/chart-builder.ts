@@ -94,7 +94,7 @@ class ChartBuilder {
         }
 
         longestCharLength = longestCharLength + 4
-        let boxHeight  = chartCount * 30
+        let boxHeight  = (chartCount + 1) * 30
         let boxWidth   = 10 * longestCharLength
         
         let tooltipText = tooltip.append("g")
@@ -106,10 +106,16 @@ class ChartBuilder {
             .attr('class', 'tooltip-chart')
             .attr('width', boxWidth)
             .attr('height', boxHeight)
-            .attr('rx', 5)
-            .attr('ry', 5)
+            .attr('rx', 3)
+            .attr('ry', 3)
 
-        let fontOffset = 25  
+        let yTitle = tooltipText.append("text")
+            .attr('font-family', 'Inter')
+            .attr('y', 25)
+            .attr('x', 10)
+            .style('font-size', '12px')
+
+        let fontOffset = 25 + 30 
         let textArray: Array<d3.Selection<SVGTextElement, unknown, null, undefined>> = []          
         for(let i = 0; i < chartCount; i++) {
             let tmpText = tooltipText.append("text")
@@ -157,6 +163,8 @@ class ChartBuilder {
                 boxTransform = { x: x(dataObj.data.date) - (boxWidth + 5), y: y(dataObj.data.value) }
             
             rect.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
+            yTitle.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
+            yTitle.text(charts[0].chartData[dataObj.index - 1].date.toDateString())
             for(let i = 0; i < chartCount; i++) {
                 textArray[i].attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
                 textArray[i].text(charts[i].formatterPre + charts[i].chartData[dataObj.index - 1].value)

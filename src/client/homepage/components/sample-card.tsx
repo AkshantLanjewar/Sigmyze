@@ -1,7 +1,12 @@
 import React, { useEffect } from "react"
-import ChartBuilder, { ChartOptions, blueColor, redColor } from '../components/chart-builder'
+import ChartBuilder, { ChartOptions, blueColor, redColor } from '../../components/chart-builder'
 
-const SampleCard: React.FC<{}> = ({ children }) => {
+type props = {
+    title?: string,
+    shortTitle?: string
+}
+
+const SampleCard: React.FC<props> = ({ children, title = "10 Year Bonds / Unemployment", shortTitle = "10yBOND/UNEM" }) => {
 
     const chartRef = React.createRef<HTMLDivElement>()
 
@@ -62,9 +67,9 @@ const SampleCard: React.FC<{}> = ({ children }) => {
     return (
         <div className="sample-card">
             <div className="title tooltip">
-                10yBOND/UNEM
+                {shortTitle}
 
-                <span className="tooltiptext">10 Year Bonds / Unemployment</span>
+                <span className="tooltiptext">{title}</span>
             </div>
 
             <div className="chart" ref={chartRef}>

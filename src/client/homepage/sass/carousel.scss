@@ -1,0 +1,22 @@
+.carousel {
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    .arrow {
+        cursor: pointer;
+        user-select: none;
+
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    .children {
+        display: flex;
+        flex-direction: row;
+    }
+}

@@ -24,6 +24,9 @@ mongoose
         const userRouter = require('./user/index')
         app.use('/user', userRouter.userRouter())
 
+        const dataRouter = require('./data/index')
+        app.use('/api/data', dataRouter.dataRouter())
+
         app.get(`/**`, (req, res) => {
             res.sendFile('/dist/index.html', { root: '.' })
         })
