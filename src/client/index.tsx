@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Homepage from './homepage/homepage'
+import LostPage from './404-page'
 import Projectpage from './project-page/project-page'
 import DashboardPage from './dashboard-page/dashboard-page'
 
@@ -14,8 +15,10 @@ function App() {
             <BrowserRouter>
                 <Switch>
                     <Route exact path="/" component={Homepage} /> 
-                    <Route exact path="/business" component={Projectpage} />
-                    <Route path="/dashboard/:dashboard" children={<DashboardPage />} />
+                    {/*<Route exact path="/business" component={Projectpage} />
+                    <Route path="/dashboard/:dashboard" children={<DashboardPage />} />*/}
+
+                    <Route component={LostPage} />
                 </Switch>
             </BrowserRouter>
         </div>

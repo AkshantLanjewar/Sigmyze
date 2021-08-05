@@ -1,5 +1,5 @@
 import React from "react"
-import './sass/login-form.scss'
+import '../sass/login-form.scss'
 
 import { AiFillGoogleCircle, AiOutlineGithub } from 'react-icons/ai'
 import { FiX } from 'react-icons/fi'

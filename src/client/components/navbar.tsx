@@ -8,11 +8,10 @@ function Navbar() {
 
     return (
         <div className="navbar">
-            <h1 className="title">Lunar</h1>
+            <a className="title" href="/">Lunar</a>
 
             <ul className="nav_elements">
-                <li className="element">About</li>
-                <li className="element">Roadmap</li>
+                {/*<li className="element"><a href="/roadmap">Roadmap</a></li>*/}
             </ul>
         </div>
     )

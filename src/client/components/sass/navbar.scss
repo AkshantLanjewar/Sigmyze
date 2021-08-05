@@ -14,6 +14,8 @@
     .title {
         margin-left: 10%;
         color: white;
+        text-decoration: none;
+        font-size: 2em;
     }
 
     .nav_elements {
@@ -26,13 +28,19 @@
         .element {
             margin-left: 22px;
             cursor: pointer;
+            
+            a {
+                user-select: none;
+                text-decoration: none;
+                color: $text-color;
 
-            &:hover {
-                color: $suprise-color;
-            }
-
-            &.active {
-                color: $suprise-color;
+                &:hover {
+                    color: $suprise-color;
+                }
+    
+                &.active {
+                    color: $suprise-color;
+                }
             }
         }
     }
