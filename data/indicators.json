@@ -1,0 +1,14 @@
+[
+    {"shortName": "BCA", "fullname": "Current account balance in USD"},
+    {"shortName": "BCA_NGDPD", "fullname": "Current account balance as % of GDP"},
+    {"shortName": "GGR", "fullname": "General government revenue in National Currency"},
+    {"shortName": "GGR_NGDP", "fullname": "General government revenue as % of GDP"},
+    {"shortName": "GGSB", "fullname": "General government structural balance in National Currency"},
+    {"shortName": "GGX", "fullname": "General government total expenditure in National Currency"},
+    {"shortName": "GGX_NGDP", "fullname": "General government total expenditure as % of GDP"},
+    {"shortName": "GGXCNL", "fullname": "General government net lending/borrowing in National Currency"},
+    {"shortName": "GGXCNL_NGDP", "fullname": "General government net lending/borrowing as % of GDP"},
+    {"shortName": "GGXONLB", "fullname": "General government primary net lending/borrowing in National Currency"},
+    {"shortName": "GGXONLB_NGDP", "fullname": "General government primary net lending/borrowing as % of GDP"},
+    {"shortName": "GGXWDG", "fullname": "General government gross debt in National Currency"}
+]

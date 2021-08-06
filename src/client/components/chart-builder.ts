@@ -5,7 +5,7 @@ import './sass/chart.scss'
 import * as d3 from 'd3'
 
 export const blueColor = "#456ef7"
-export const redColor  = "#f14b61"
+export const redColor  = "#F7456E"
 
 interface XYChartData {
     value: number,
@@ -48,7 +48,7 @@ class ChartBuilder {
         this.margin = {
             top: 20, 
             right: 10,
-            bottom: 20,
+            bottom: 25,
             left: 10
         }
     }
@@ -59,6 +59,19 @@ class ChartBuilder {
 
     public AddLineChart(options: ChartOptions) {
         this.charts.push(options)
+    }
+
+    //data utils
+    private Normalize(min: number, max: number, val: number) {
+        if(min < 0) {
+            max += 0 - min
+            val += 0 - min
+            min = 0
+        }
+
+        val = val - min
+        max = max - min
+        return Math.max(0, Math.min(1, val / max))
     }
 
     //tooltip
@@ -180,7 +193,7 @@ class ChartBuilder {
 
     private LinearAxisFormatter(data: Array<XYChartData>, dimParam: number) {
         return d3.scaleLinear()
-            .domain(<[number, number]>[0, d3.max(data, d => d.value)]).nice()
+            .domain(<[number, number]>[d3.min(data, d => d.value), d3.max(data, d => d.value)]).nice()
             .range([dimParam - this.margin.bottom, this.margin.top])
     }
 
@@ -205,9 +218,16 @@ class ChartBuilder {
         const rawHeight = boundingBox?.height! - this.margin.top
 
         const svg = d3.select(this.container.current).append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .style('overflow', 'visible')
+
+        let clipPath = svg.append("defs")
+            .append("clipPath")
+            .attr("id", options.chartName)
+            .append('rect')
             .attr("width", rawWidth!)
             .attr("height", rawHeight!)
-            .style('overflow', 'visible')
 
         let x: d3.ScaleTime<number, number, never>
         let y: d3.ScaleLinear<number, number, never>
@@ -217,20 +237,38 @@ class ChartBuilder {
         if(options.yAxisType == "linear")
             y = this.LinearAxisFormatter(options.chartData, rawHeight!)
         
+        let maxNum = 0
+        let minNum = 0
+
+        for(let i = 0; i < this.charts.length; i++) {
+            let chartOptions = this.charts[i]
+            
+            for(let x = 0; x < chartOptions.chartData.length; x++) {
+                let chartData = chartOptions.chartData[x]
+                if(chartData.value > maxNum)
+                    maxNum = chartData.value
+                if(chartData.value < minNum)
+                    minNum = chartData.value
+            }
+        }
 
         for(let i = 0; i < this.charts.length; i++) {
             const chartOptions = this.charts[i]
+            
+            if(chartOptions.chartType == "line") {
+                let yFormatter = this.LinearAxisFormatter(chartOptions.chartData, rawHeight!)
 
-            if(chartOptions.chartType == "line")
                 svg.append("path")
                     .datum(chartOptions.chartData)
                     .attr("fill", "none")
-                    .attr("stroke", "steelblue")
+                    .attr("stroke", chartOptions.chartColor)
                     .attr("stroke-width", 3)
                     .attr("stroke-linejoin", "round")
                     .attr("stroke-linecap", "round")
-                    .attr("d", this.LineChart(x!, y!))
+                    .attr("d", this.LineChart(x!, yFormatter!))
                     .attr("transform", `translate(0, ${this.margin.top})`)
+                    .attr("clip-path", `url(#${options.chartName})`)
+            }
         }
 
         this.SetupTooltip(svg, x!, y!, options.chartData, rawHeight!)

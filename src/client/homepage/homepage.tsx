@@ -37,11 +37,6 @@ class Homepage extends React.Component<{}, HomepageState> {
 
                     <section className="samples">
                         <Carousel displayCount={4}>
-                            <SampleCard shortTitle="swag" />
-                            <SampleCard />
-                            <SampleCard />
-                            <SampleCard />
-
                             <SampleCard />
                             <SampleCard />
                             <SampleCard />
