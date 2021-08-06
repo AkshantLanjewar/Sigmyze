@@ -39,21 +39,10 @@ async function IndexData() {
         }
 
         //save to disk
-        let string_nation = JSON.stringify(nation_list)
-
         if(!fs.existsSync('./data'))
             fs.mkdirSync('./data')
-
-        let categories_http_promise  = HTTP_Promise("api/econdata/getWEOMetricList/")
-        let categories_http_response = JSON.parse(await categories_http_promise)
-        
-        let categories_list = []
-        let categories_keys = Object.keys(categories_http_response)
-        for(let i = 0; i < categories_keys.length; i++)
-            categories_list.push({ shortName: categories_keys[i], fullname: categories_http_response[categories_keys[i]] })
-        
+        let string_nation = JSON.stringify(nation_list)
         fs.writeFileSync('./data/countries.json', string_nation)
-        fs.writeFileSync('./data/indicators.json', JSON.stringify(categories_list))
     } catch(error) {
         console.error(error)
     }
@@ -73,8 +62,43 @@ function ShuffleArray(array) {
     return array
 }
 
-function GrabIndicatorData(isoCode, indicatorCode) {
+async function GrabIndicatorData(isoCode, indicatorCode) {
+    let year = 0000
 
+    let url = `api/econdata/getMetricDataC/${indicatorCode}/${isoCode}/`
+    let promise = HTTP_Promise(url)
+    let result = JSON.parse(await promise)
+
+    let keys = Object.keys(result["data"])
+    let data = []
+    for(let i = 0; i < keys.length; i++) {
+        let key = keys[i]
+        let keyNum = parseInt(key)
+        let d_val = result["data"][key]
+
+        if(d_val == null)
+            continue
+        if(year == 0)
+            year = keyNum
+
+        data.push({ date: key, value: d_val })
+    }
+
+    return { year: year, data: data }
+}
+
+function TrimYear(year, data) {
+    let nArray = []
+
+    for(let i = 0; i < data.length; i++)  {
+        let numDate = parseInt(data[i].date)
+
+        if(numDate < year)
+            continue
+        nArray.push(data[i])
+    }
+
+    return nArray
 }
 
 function DataRouter() {
@@ -92,35 +116,17 @@ function DataRouter() {
         let country     = country_data[Math.floor(Math.random() * country_data.length)]
         let indicator_a = ShuffleArray(indicator_data)[0]
         let indicator_b = ShuffleArray(indicator_data)[0]
-
-        let m_year  = 0000
-        let mb_year = 0000
-
-        //grab indicator_a data
-        let indicator_a_url = `api/econdata/getMetricDataC/${indicator_a["shortName"]}/${country["isoCode"]}/`
-        let indicator_a_promise  = HTTP_Promise(indicator_a_url)
-        let indicator_a_result   = JSON.parse(await indicator_a_promise)
-
-        let indicator_a_data_keys =  Object.keys(indicator_a_result["data"])
-        let indicator_a_data      = []
-        for(let i = 0; i < indicator_a_data_keys.length; i++) {
-            let key  = indicator_a_data_keys[i]
-            let keyNum = parseInt(key)
-            let data = indicator_a_result["data"][key] 
-
-            if(data == null)
-                continue
-            if(m_year == 0 )
-                m_year = keyNum
-            
-            indicator_a_data.push({ date: key, value: data })
-        }
-
         
-        let indicator_a_data = GrabIndicatorData(country["isoCode"], indicator_a["shortName"])
-        let indicator_b_data = GrabIndicatorData(country["isoCode"], indicator_b["shortName"])
+        let indicator_a_data = await GrabIndicatorData(country["isoCode"], indicator_a["shortName"])
+        let indicator_b_data = await GrabIndicatorData(country["isoCode"], indicator_b["shortName"])
 
-        let package = { country: country, indicators: [indicator_a, indicator_b] }
+        if(indicator_a_data.year > indicator_b_data.year)
+            indicator_b_data.data = TrimYear(indicator_a_data.year, indicator_b_data.data)
+        if(indicator_b_data.year > indicator_a_data.year)
+            indicator_a_data.data = TrimYear(indicator_b_data.year, indicator_a_data.data)
+
+        let package = { country: country, indicators: [{ descriptor: indicator_a, data: indicator_a_data }, 
+                                                       { descriptor: indicator_b, data: indicator_b_data }]}
         res.json(package)
     })
 

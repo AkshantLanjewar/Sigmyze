@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import ChartBuilder, { ChartOptions, blueColor, redColor } from '../../components/chart-builder'
 
 type props = {
@@ -6,70 +6,92 @@ type props = {
     shortTitle?: string
 }
 
+type State = {
+    shortA: string,
+    shortB: string,
+    fullTitle: string,
+}
+
 const SampleCard: React.FC<props> = ({ children, title = "10 Year Bonds / Unemployment", shortTitle = "10yBOND/UNEM" }) => {
 
     const chartRef = React.createRef<HTMLDivElement>()
 
+    //setup state
+    let initalState: State = {
+        shortA: "",
+        shortB: "",
+        fullTitle: ""
+    }
+
+    const [state, setState] = useState(initalState)
+
     useEffect(() => {
         chartRef.current!.innerHTML = ""
 
-        let lineData = [
-            { date: new Date("2007-04-23"), value: 200 },
-            { date: new Date("2008-04-23"), value: 250 },
-            { date: new Date("2009-04-23"), value: 450 },
-            { date: new Date("2010-04-23"), value: 300 }
-        ]
+        const url = "/api/data/sample_indicator"
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                let chart: ChartBuilder = new ChartBuilder(chartRef!)
+                let shortA = ""
+                let shortB = ""
+                let fullName  = ""
 
-        let revData = [
-            { date: new Date("2007-04-23"), value: 300 },
-            { date: new Date("2008-04-23"), value: 400 },
-            { date: new Date("2009-04-23"), value: 250 },
-            { date: new Date("2010-04-23"), value: 200 }
-        ]
+                for(let i = 0; i < data.indicators.length; i++) {
+                    let indicator: any = data.indicators[i]
+                    let cData = indicator["data"]["data"]
 
-        let chartOptions: ChartOptions = {
-            chartType: "line",
-            chartData: lineData,
-            chartName: "line-chart",
-            chartColor: blueColor,
+                    let chartData = []
+                    for(let i = 0; i < cData.length; i++) {
+                        let object: any = {}
 
-            showXAxis: false,
-            showYAxis: false,
+                        object["date"] = new Date(cData[i]["date"])
+                        object["value"] = cData[i]["value"]
+                        chartData.push(object)
+                    }
 
-            formatterPre: "10 Year Bond: ",
+                    let chartOptions: ChartOptions = {
+                        chartType: "line",
+                        chartData: chartData,
+                        chartName: indicator.descriptor.shortName,
+                        chartColor: blueColor,
 
-            xAxisType: "utc",
-            yAxisType: "linear"
-        }
+                        showXAxis: false,
+                        showYAxis: false,
 
-        let chart: ChartBuilder = new ChartBuilder(chartRef!)
-        chart.AddLineChart(chartOptions)
+                        formatterPre: `${indicator.descriptor.shortName}: `,
 
-        let revOptions: ChartOptions = {
-            chartType: "line",
-            chartData: revData,
-            chartName: "line-chart",
-            chartColor: redColor,
+                        xAxisType: "utc",
+                        yAxisType: "linear"
+                    }
 
-            showXAxis: false,
-            showYAxis: false,
+                    if(i == 1)
+                        chartOptions.chartColor = redColor
+                    
+                    console.log(chartOptions)
+                    chart.AddLineChart(chartOptions)
 
-            formatterPre: "Unemployment: ",
+                    if(i == 0) {
+                        shortA = indicator.descriptor.shortName
+                        fullName  = indicator.descriptor.fullname + " / "
+                    }
+                    else {
+                        shortB = indicator.descriptor.shortName
+                        fullName  += indicator.descriptor.fullname
+                    }
+                }
 
-            xAxisType: "utc",
-            yAxisType: "linear"
-        }
-
-        chart.AddLineChart(revOptions)
-        chart.CreateChart()
-    })
+                chart.CreateChart()
+                setState({...state, shortA: shortA, shortB: shortB, fullTitle: fullName})
+            })
+    }, [])
 
     return (
         <div className="sample-card">
             <div className="title tooltip">
-                {shortTitle}
+                <span style={{color: blueColor}}>{state.shortA}</span><span>/</span><span style={{color: redColor}}>{state.shortB}</span>
 
-                <span className="tooltiptext">{title}</span>
+                <span className="tooltiptext">{ state.fullTitle }</span>
             </div>
 
             <div className="chart" ref={chartRef}>
