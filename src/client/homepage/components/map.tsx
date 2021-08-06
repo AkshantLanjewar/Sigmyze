@@ -1,7 +1,8 @@
 import React from "react"
 
-
+import { StaticMap } from 'react-map-gl'
 import DeckGL from "@deck.gl/react"
+import { BASEMAP } from '@deck.gl/carto'
 
 function Map() {
     const InitialViewState = {
@@ -14,7 +15,9 @@ function Map() {
 
     return (
         <section className="home-map">
-            <DeckGL initialViewState={InitialViewState} controller={true} />
+            <DeckGL initialViewState={InitialViewState} controller={true}>
+                <StaticMap mapStyle={BASEMAP.DARK_MATTER_NOLABELS} />
+            </DeckGL>
         </section>
     )
 }

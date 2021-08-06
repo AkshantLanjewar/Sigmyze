@@ -11,6 +11,7 @@ yarn-error.log*
 lerna-debug.log*
 
 dist
+data/
 
 package.lock.json
 
