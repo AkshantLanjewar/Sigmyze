@@ -8,7 +8,7 @@ function Map() {
     const InitialViewState = {
         longitude: -122.41669,
         latitude: 37.7853,
-        zoom: 13,
+        zoom: 2,
         pitch: 0,
         bearing: 0
     }

@@ -108,6 +108,13 @@ function DataRouter() {
 
     const router = Router()
 
+    router.get('/map/gdp_growth', async (req, res) => {
+        const countrygeoJSON = JSON.parse(fs.readFileSync('./data/countries.geo.json'))
+
+        //edit the features
+        let features = countrygeoJSON["features"]
+    })
+
     router.get('/sample_indicator', async (req, res) => {
         //read file into disk
         const country_data = JSON.parse(fs.readFileSync('./data/countries.json'))
