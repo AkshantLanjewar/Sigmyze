@@ -10,5 +10,20 @@
     {"shortName": "GGXCNL_NGDP", "fullname": "General government net lending/borrowing as % of GDP"},
     {"shortName": "GGXONLB", "fullname": "General government primary net lending/borrowing in National Currency"},
     {"shortName": "GGXONLB_NGDP", "fullname": "General government primary net lending/borrowing as % of GDP"},
-    {"shortName": "GGXWDG", "fullname": "General government gross debt in National Currency"}
+    {"shortName": "GGXWDG", "fullname": "General government gross debt in National Currency"},
+    {"shortName": "GGXWDG_NGDP", "fullname": "General government gross debt as % of GDP"},
+    {"shortName": "GGXWDN", "fullname": "General government net debt in National Currency"},
+    {"shortName": "GGXWDN_NGDP", "fullname": "General government net debt as % of GDP"},
+    {"shortName": "LP", "fullname": "Population"},
+    {"shortName": "NGDP", "fullname": "Gross domestic product, current prices in National Currency"},
+    {"shortName": "NGDP_FY", "fullname": "Gross domestic product corresponding to fiscal year, current prices, in National Currency"},
+    {"shortName": "NGDP_R", "fullname": "Gross domestic product, constant prices, in National Currency"},
+    {"shortName": "NGDP_RPCH", "fullname": "Gross domestic product, constant prices, annual growth"},
+    {"shortName": "NGSD_NGDP", "fullname": "Gross national savings as % of GDP"},
+    {"shortName": "NID_NGDP", "fullname": "Total investment as % of GDP"},
+    {"shortName": "PCPI", "fullname": "Inflation, average consumer prices"},
+    {"shortName": "PCPIEPCH", "fullname": "Inflation, end of period consumer prices"},
+    {"shortName": "PCPIPCH", "fullname": "Inflation, average consumer prices"},
+    {"shortName": "PPPEX", "fullname": "Implied PPP conversion rate"},
+    {"shortName": "PPPSH", "fullname": "Gross domestic product based on purchasing-power-parity (PPP) share of world total"}
 ]
