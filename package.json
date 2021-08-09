@@ -7,7 +7,7 @@
 		"dev-build": "webpack --watch --progress",
 		"start": "npm run build && npm run server",
 		"client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-		"server": "tsc -p tsconfig.server.json && node server/",
+		"server": "node src/server/",
 		"dev": "concurrently \"nodemon\" \"npm run dev-build\"",
 		"server-dev": "nodemon"
 	},
