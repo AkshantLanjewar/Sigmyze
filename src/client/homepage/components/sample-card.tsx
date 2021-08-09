@@ -68,7 +68,6 @@ const SampleCard: React.FC<props> = ({ children, title = "10 Year Bonds / Unempl
                     if(i == 1)
                         chartOptions.chartColor = redColor
                     
-                    console.log(chartOptions)
                     chart.AddLineChart(chartOptions)
 
                     if(i == 0) {
