@@ -35,7 +35,7 @@ async function IndexData() {
 
         for(let i = 0; i < econ_http_response.length; i++) {
             let country = econ_http_response[i]
-            nation_list.push({ isoCode: country["iso3"], fullname: country["country"] })
+            nation_list.push({ isoCode: country["iso3"], fullname: country["country"] })            
         }
 
         //save to disk
@@ -111,8 +111,44 @@ function DataRouter() {
     router.get('/map/gdp_growth', async (req, res) => {
         const countrygeoJSON = JSON.parse(fs.readFileSync('./data/countries.geo.json'))
 
+        let request = HTTP_Promise("api/econdata/getGDPGrowthGlobal/")
+        let data    = JSON.parse(await request)
+        let country_data = {}
+
+        for(let x = 0; x < data.length; x++) {
+            let country = data[x]
+            let years   = Object.keys(country["growthAnnual"])
+            //get the last year
+            let lastYear = years[years.length - 1]
+            let growth = country["growthAnnual"][lastYear]
+            country_data[country["iso3"]] = growth
+        }
+
         //edit the features
         let features = countrygeoJSON["features"]
+
+        let minGrowth = 0
+        let maxGrowth = 0
+
+        //loop through the features
+        for(let i = 0; i < features.length; i++) {
+            let feature = features[i]
+
+            let id     = feature['id']
+            let growth = country_data[id]
+
+            if(growth > maxGrowth)
+                maxGrowth = growth
+            if(growth < minGrowth)
+                minGrowth = growth
+
+            //alter the features
+            feature["properties"]["growth"] = growth
+            features[i] = feature
+        }
+
+        countrygeoJSON["features"] = features
+        res.json({ geo: countrygeoJSON, maxGrowth: maxGrowth, minGrowth: minGrowth })
     })
 
     router.get('/sample_indicator', async (req, res) => {
