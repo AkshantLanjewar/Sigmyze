@@ -1,15 +1,18 @@
 {
 	"name": "Lunar",
 	"version": "4.0.0",
-	"main": "server/index.js",
+	"main": "src/server/index.js",
 	"scripts": {
 		"build": "webpack --mode production",
 		"dev-build": "webpack --watch --progress",
-		"start": "npm run build && npm run server",
+		"start": "node src/server/",
 		"client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-		"server": "node src/server/",
+		"server": "pm2 start src/server/index.js -i max",
 		"dev": "concurrently \"nodemon\" \"npm run dev-build\"",
-		"server-dev": "nodemon"
+		"server-dev": "nodemon",
+		"stats": "pm2 plus",
+		"stop": "pm2 delete index",
+		"monitor": "pm2 monit"
 	},
 	"dependencies": {
 		"@babel/preset-typescript": "^7.14.5",
@@ -34,11 +37,13 @@
 		"deck.gl": "^8.5.2",
 		"express": "^4.16.3",
 		"express-session": "^1.17.2",
+		"forever": "^4.0.1",
 		"mongoose": "^5.10.11",
 		"mysql2": "^2.2.5",
 		"node-schedule": "^2.0.0",
 		"passport": "^0.4.1",
 		"passport-google-oauth2": "^0.2.0",
+		"pm2": "^5.1.0",
 		"react": "^16.5.2",
 		"react-dom": "^16.5.2",
 		"react-icons": "^4.2.0",
@@ -48,7 +53,8 @@
 		"react-router-dom": "^5.2.0",
 		"sass": "^1.35.2",
 		"sass-loader": "^10",
-		"sequelize": "^6.6.5"
+		"sequelize": "^6.6.5",
+		"strongloop": "^6.0.3"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.0.0",
