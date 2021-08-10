@@ -1,4 +1,8 @@
 const path = require('path');
+
+//compression
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -78,12 +82,19 @@ module.exports = {
             }
         }
     },
+
+    optimization: {
+        usedExports: true,
+        providedExports: true,
+    },
+
     plugins: [
         new CleanWebpackPlugin([outputDirectory]),
         new HtmlWebpackPlugin({
             template: './public/index.html',
             favicon: './public/favicon.ico',
-            title: 'express-typescript-react',
+            title: 'Lunar',
+
         }),
         new MiniCssExtractPlugin({
             filename: './css/[name].css',
@@ -91,6 +102,10 @@ module.exports = {
         }),
         new CopyPlugin([
             { from: './src/client/Assets', to: 'assets' },
-        ])
+        ]),
+
+        new CompressionWebpackPlugin({
+            
+        }),
     ],
 };
