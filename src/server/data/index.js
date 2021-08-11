@@ -104,7 +104,7 @@ function TrimYear(year, data) {
 function DataRouter() {
     //set the cron task
     schedule.scheduleJob('0 0 * * *', IndexData)
-    IndexData()
+    //IndexData()
 
     const router = Router()
 
