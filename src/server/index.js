@@ -28,6 +28,9 @@ app.use(express.static('dist', { root: '.' }));
 //const userRouter = require('./user/index')
 //app.use('/user', userRouter.userRouter())
 
+const blogRouter = require('./blog')
+app.use('/api/blog', blogRouter.blogRouter())
+
 const dataRouter = require('./data/index')
 app.use('/api/data', dataRouter.dataRouter())
 
