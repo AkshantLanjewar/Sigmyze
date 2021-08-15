@@ -12,6 +12,7 @@ function Navbar() {
 
             <ul className="nav_elements">
                 {/*<li className="element"><a href="/roadmap">Roadmap</a></li>*/}
+                <li className="element"><a href="/blog">Blog</a></li>
             </ul>
         </div>
     )

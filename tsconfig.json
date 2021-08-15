@@ -20,7 +20,7 @@
     "include": [
         "./src/client/*",
         "./src/client/types/**/*.d.ts"
-    ],
+, "src/client/u-pages/dashboard-page"    ],
     "awesomeTypescriptLoaderOptions": {
         "useWebpackText": true,
         "useTranspileModule": true,

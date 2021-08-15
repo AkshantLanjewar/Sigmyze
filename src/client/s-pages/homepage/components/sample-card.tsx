@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import ChartBuilder, { ChartOptions, blueColor, redColor } from '../../components/chart-builder'
+import ChartBuilder, { ChartOptions, blueColor, redColor } from '../../../components/chart-builder'
 
 type props = {
     title?: string,

@@ -1,8 +1,8 @@
 import React from 'react';
 import './sass/homepage.scss';
 
-import Navbar from '../components/navbar'
-import Modal from '../components/modal'
+import Navbar from '../../components/navbar'
+import Modal from '../../components/modal'
 import Loginform from './components/login-form'
 
 import SampleCard from './components/sample-card'

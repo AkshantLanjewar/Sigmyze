@@ -12,7 +12,7 @@ function ReadPost(path) {
         let line  = fileLines[i]
         let split = line.split(' ')
         
-        let indicator = split[0]
+        let indicator = split[0].trim()
 
         if(indicator == "__TITLE") {
             let nSplit = line.split('=')
@@ -47,6 +47,9 @@ function ReadPost(path) {
             }
 
             item["content"] = item["content"].trim()
+
+            if(item["content"] == "")
+                continue
             pack["blogElements"].push(item)
         }
     }
