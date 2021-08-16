@@ -63,8 +63,6 @@ function Map() {
         pickable: true
     })
 
-    console.log(geoLayer)
-
     const layers = [geoLayer]
 
     return (
