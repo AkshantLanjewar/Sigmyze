@@ -12,6 +12,7 @@ function isLoggedIn(req, res, next) {
     req.user ? next() : res.sendStatus(401)
 }
 
+
 //app.use(session({ secret: 'big yolo danny' }))
 //app.use(passport.initialize())
 //app.use(passport.session())
@@ -21,6 +22,11 @@ function isLoggedIn(req, res, next) {
 
 const dataRouter = require('./data/index')
 app.use('/api/data', dataRouter.dataRouter())
+
+app.get(`/**`, (req, res) => {
+    res.sendFile('/dist/index.html', { root: '.' })
+})
+
 
 app.listen(port, () => {
     console.log('app listening on port ' + port)
