@@ -12,6 +12,7 @@ function isLoggedIn(req, res, next) {
     req.user ? next() : res.sendStatus(401)
 }
 
+//app.use(express.static('dist', { root: '.' })); 
 
 //app.use(session({ secret: 'big yolo danny' }))
 //app.use(passport.initialize())

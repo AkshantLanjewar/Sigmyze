@@ -177,6 +177,7 @@ class ChartBuilder {
             
             rect.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
             yTitle.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
+            yTitle.text(charts[0].chartData[dataObj.index - 1].date.toDateString())
             for(let i = 0; i < chartCount; i++) {
                 textArray[i].attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
                 textArray[i].text(charts[i].formatterPre + charts[i].chartData[dataObj.index - 1].value)
