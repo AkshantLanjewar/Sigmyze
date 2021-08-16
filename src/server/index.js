@@ -12,15 +12,6 @@ function isLoggedIn(req, res, next) {
     req.user ? next() : res.sendStatus(401)
 }
 
-app.get('*.js', (req, res, next) => {
-    req.url = req.url + '.gz'
-    res.set('Content-Encoding', 'gzip')
-    res.set('Content-Type', 'application/javascript; charset=UTF-8')
-    next()
-})
-
-app.use(express.static('dist', { root: '.' })); 
-
 //app.use(session({ secret: 'big yolo danny' }))
 //app.use(passport.initialize())
 //app.use(passport.session())
@@ -30,11 +21,6 @@ app.use(express.static('dist', { root: '.' }));
 
 const dataRouter = require('./data/index')
 app.use('/api/data', dataRouter.dataRouter())
-
-app.get(`/**`, (req, res) => {
-    res.sendFile('/dist/index.html', { root: '.' })
-})
-
 
 app.listen(port, () => {
     console.log('app listening on port ' + port)
