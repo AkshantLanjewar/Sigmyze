@@ -1,0 +1,30 @@
+@import '../vars.scss';
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 100vh;
+
+    .title-text {
+        padding-top: 32px;
+        display: flex;
+        flex-direction: column;
+        
+        align-self: center;
+        justify-self: center;
+
+        width: 70%;
+
+        h1 { font-size: 46px; }
+        
+        * {
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        .sub { color: $primary-muted; }
+    }
+}

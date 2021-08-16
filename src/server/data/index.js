@@ -3,7 +3,7 @@ const schedule = require('node-schedule')
 const http = require('http')
 const fs = require('fs')
 
-const API_ROOT = "http://34.70.145.116"
+const API_ROOT = "http://34.70.145.116:8080"
 
 function HTTP_Promise(sublet) {
     return new Promise((resolve, reject) => {

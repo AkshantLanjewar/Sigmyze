@@ -86,7 +86,7 @@ const SampleCard: React.FC<props> = ({ children, title = "10 Year Bonds / Unempl
     }, [])
 
     return (
-        <div className="sample-card">
+        <div className="carousel-card">
             <div className="title tooltip">
                 <span style={{color: blueColor}}>{state.shortA}</span><span>/</span><span style={{color: redColor}}>{state.shortB}</span>
 

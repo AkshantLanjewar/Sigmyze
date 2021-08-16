@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import './sass/navbar.scss';
 
 function Navbar() {
     useEffect(() => {

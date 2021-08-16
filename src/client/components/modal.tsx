@@ -1,5 +1,4 @@
 import React from "react"
-import './sass/modal.scss'
 
 type ModalProps = {
     maxWidth: number,

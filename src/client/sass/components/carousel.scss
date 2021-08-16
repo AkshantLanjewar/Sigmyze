@@ -1,0 +1,53 @@
+.carousel {
+    display: flex;
+    flex-direction: row;
+
+    align-self: center;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 18px;
+    margin-bottom: 18px;
+
+    height: 450px;
+
+    .arrow { 
+        width: 24px; 
+        height: 24px; 
+        z-index: 999; 
+        cursor: pointer; 
+    }
+
+    .children {
+        display: flex;
+        flex-direction: row;
+        
+        justify-content: center;        
+        width: 90%;
+    }
+
+    .carousel-card {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+
+        background-color: $card;
+        box-shadow: 2px 4px 12px rgba(0,0,0,.08);
+        width: 25%;
+
+        border-radius: 4px;
+        margin-left: 4px;
+        margin-right: 4px;
+
+        
+        padding-top: 18px;
+        padding-left: 22px;
+        padding-right: 22px;
+
+        @media screen and (max-width: $medium) { width: 33%; }
+        @media screen and (max-width: $small) { width: 50%; }
+        @media screen and (max-width: $xtra-small) { width: 100%; }
+    }
+}
+

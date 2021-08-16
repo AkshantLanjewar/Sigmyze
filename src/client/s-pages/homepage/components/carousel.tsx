@@ -1,7 +1,5 @@
 import React, { useState } from "react"
 
-import '../sass/carousel.scss'
-
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi'
 
 type State = {

@@ -9,7 +9,7 @@ import BlogDirectory from './s-pages/blog/blog-directory'
 import Projectpage from './u-pages/project-page/project-page'
 import DashboardPage from './u-pages/dashboard-page/dashboard-page'
 
-import './index.scss'
+import './sass/index.scss'
 
 function App() {
     return (

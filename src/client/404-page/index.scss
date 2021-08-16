@@ -1,4 +1,4 @@
-@import '../vars.scss';
+@import '../sass/vars.scss';
 
 .lost-page {
     width: 100vw;
@@ -29,7 +29,6 @@
 
         border: none;
         outline: none;
-        background: $buttons;
         color: white;
 
         margin-top: 12px;

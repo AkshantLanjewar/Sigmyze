@@ -1,18 +1,18 @@
-@import '../../vars.scss';
+@import '../../sass/vars.scss';
 
 .hover-line {
-    stroke: $secondary-card;
+    //stroke: $secondary-card;
     stroke-width: 2px;
     stroke-dasharray: 10;
 }
 
 .tooltip-chart { 
-    fill: $secondary-card; 
+    //fill: $secondary-card; 
     stroke-width: 2; 
-    stroke: $border; 
+    //stroke: $border; 
 }
 
-.tooltip-container text { fill: $text-color; }
+.tooltip-container text { /* fill: $text-color; */ }
 
 .overlay {
     fill: none;
