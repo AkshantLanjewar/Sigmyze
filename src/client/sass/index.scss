@@ -47,9 +47,13 @@
 
 @import './vars.scss';
 
+//pages
+@import './homepage.scss';
+
+//glob components
 @import './components/navbar.scss';
-@import './components/homepage.scss';
 @import './components/carousel.scss';
+@import './components/chart.scss';
 
 body {
     background-color: $background-color;

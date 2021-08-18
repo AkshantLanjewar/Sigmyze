@@ -1,0 +1,19 @@
+@import '../vars.scss';
+
+.hover-line {
+    stroke: $dark-card;
+    stroke-width: 2px;
+    stroke-dasharray: 10;
+}
+
+.tooltip-chart { 
+    fill: $dark-card; 
+    stroke-width: 2; 
+}
+
+.tooltip-container text { fill: white; }
+
+.overlay {
+    fill: none;
+    pointer-events: all;
+}

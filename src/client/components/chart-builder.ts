@@ -1,7 +1,5 @@
 import React from "react"
 
-import './sass/chart.scss'
-
 import * as d3 from 'd3'
 
 export const blueColor = "#456ef7"
@@ -48,7 +46,7 @@ class ChartBuilder {
         this.margin = {
             top: 20, 
             right: 10,
-            bottom: 25,
+            bottom: 10,
             left: 10
         }
     }
@@ -108,7 +106,7 @@ class ChartBuilder {
 
         longestCharLength = longestCharLength + 4
         let boxHeight  = (chartCount + 1) * 30
-        let boxWidth   = 10 * longestCharLength
+        let boxWidth   = 15 * longestCharLength
         
         let tooltipText = tooltip.append("g")
             .attr('class', 'tooltip-container')
@@ -212,19 +210,18 @@ class ChartBuilder {
             return
 
         let options: ChartOptions = this.charts[this.axisIndex]
-        let boundingBox = this.container.current?.getBoundingClientRect()
-
-        const rawWidth  = boundingBox?.width
-        const rawHeight = boundingBox?.height! - this.margin.top
-
         const svg = d3.select(this.container.current).append("svg")
             .attr("width", "100%")
             .attr("height", "100%")
             .style('overflow', 'visible')
 
+        let boundingBox = svg.node()?.getBoundingClientRect()
+        const rawWidth  = boundingBox?.width
+        const rawHeight = boundingBox?.height! - this.margin.top
+
         let clipPath = svg.append("defs")
             .append("clipPath")
-            .attr("id", options.chartName)
+            .attr("id", options.chartName )
             .append('rect')
             .attr("width", rawWidth!)
             .attr("height", rawHeight!)

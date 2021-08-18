@@ -55,6 +55,10 @@ class Homepage extends React.Component<{}, HomepageState> {
                     
 
                     <section className="samples">
+                        <div className="sample-selectors">
+                            swag
+                        </div>
+                        
                         <Carousel displayCount={this.state.viewcount}>
                             <SampleCard />
                             <SampleCard />
@@ -63,12 +67,14 @@ class Homepage extends React.Component<{}, HomepageState> {
                         </Carousel>
                     </section>
 
-                    <section className="map-text">
-                        <h2>Limitless Possibilities</h2>
-                        <h4>Dont be restricted to just classical forms of Data Visualization</h4>
+                    <section className="title-text" style={{marginBottom: "32px"}}>
+                        <h1>
+                            <span className="main">New Tools. </span>
+                            <span className="sub">To help you create innovative visualizations</span>
+                        </h1>
                     </section>
 
-                    
+                    <Map />
                 </div>
 
                 <Modal show={this.state.login_modal_open} maxWidth={450}>

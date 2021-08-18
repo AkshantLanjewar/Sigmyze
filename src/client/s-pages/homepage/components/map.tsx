@@ -72,7 +72,7 @@ function Map() {
             <DeckGL initialViewState={InitialViewState} 
                     controller={true}
                     layers={layers}>
-                <StaticMap mapStyle={BASEMAP.DARK_MATTER_NOLABELS} />
+                <StaticMap mapStyle={BASEMAP.POSITRON_NOLABELS} />
             </DeckGL>
         </section>
     )
