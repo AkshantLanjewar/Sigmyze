@@ -4,6 +4,7 @@ import Navbar from '../../components/navbar'
 import Modal from '../../components/modal'
 import Loginform from './components/login-form'
 
+import CircleSelector from './components/circle-selector'
 import SampleCard from './components/sample-card'
 import Carousel from './components/carousel'
 import Map from './components/map'
@@ -56,7 +57,7 @@ class Homepage extends React.Component<{}, HomepageState> {
 
                     <section className="samples">
                         <div className="sample-selectors">
-                            swag
+                            <CircleSelector />
                         </div>
                         
                         <Carousel displayCount={this.state.viewcount}>

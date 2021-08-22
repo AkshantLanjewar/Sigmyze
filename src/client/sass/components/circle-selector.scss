@@ -1,0 +1,146 @@
+@import '../vars.scss';
+
+@function sin($angle){
+    $a: _to_unitless_rad($angle);
+    $sin: $a;
+    @for $n from 1 through $_precision {
+        $sin: $sin + (pow(-1, $n) / fact(2 * $n + 1) ) * pow($a, (2 * $n + 1));
+    }
+    @return $sin;
+}
+
+@function cos($angle){
+    $a: _to_unitless_rad($angle);
+    $cos: 1;
+    @for $n from 1 through $_precision {
+        $cos: $cos + ( pow(-1,$n) / fact(2*$n) ) * pow($a,2*$n);
+    }
+    @return $cos;
+}
+
+@function pow($base, $exp) {
+    $value: $base;
+    @if $exp > 1 {
+        @for $i from 2 through $exp {
+            $value: $value * $base;
+        }
+    }
+    @if $exp < 1{
+        @for $i from 0 through -$exp {
+            $value: $value / $base;
+        }
+    }
+    @return $value;
+}
+
+@function _to_unitless_rad($angle) {
+    @if unit($angle) == "deg" {
+        $angle: $angle / 180deg * $pi;
+    }
+    @if unit($angle) == "rad" {
+        $angle: $angle / 1rad;
+    }
+    @return $angle;
+}
+
+@function fact($num) {
+    $fact: 1;
+    @if $num > 0{
+        @for $i from 1 through $num {
+            $fact: $fact * $i;
+        }
+    }
+    @return $fact;
+}
+
+$fg:#e91e63;
+$bg:#8bc34a;
+
+$pi: 3.14159265359;
+$_precision: 10;
+
+//config
+$menu-items:6+1;
+$open-distance:105px;
+$opening-angle:$pi*2;
+
+%goo { filter: url('#goo'); }
+
+%ball {
+    background: $fg;
+    border-radius:100%;
+    width:80px;
+    height:80px;
+    margin-left:-40px;
+    position:absolute;
+    top:20px;
+    color:white;
+    text-align:center;
+    line-height:80px;
+    transform:translate3d(0,0,0);
+    transition:transform ease-out 200ms;
+}
+
+.circle-selector { 
+    position: relative; 
+
+    @extend %goo;
+
+    $width:380px;
+    $height:250px;
+
+    position:absolute;
+    left:50%;
+    margin-left:-$width/2;
+    padding-top:20px;
+    padding-left:$width/2;
+    width:$width;
+    height:$height;
+    box-sizing:border-box;
+    font-size:20px;
+    text-align:left;
+
+    .menu-open:checked + .menu-open-btn {
+        transition-timing-function:linear;
+        transition-duration:200ms;
+        transform:scale(0.8,0.8) translate3d(0,0,0);
+    }
+
+    .menu-open:checked~.itm {
+        transition-timing-function:cubic-bezier(0.935, 0.000, 0.340, 1.330);
+
+        @for $i from 1 through $menu-items {
+            $angle:(($pi - $opening-angle)/2)+(($opening-angle/($menu-items - 1))*($i - 1));
+
+            &:nth-child(#{$i+2}) {
+                transition-duration:80ms+(80ms*$i);
+                transform:translate3d(cos($angle)*$open-distance,sin($angle)*$open-distance,0);
+            }
+        }
+    }
+
+    .menu-open-btn {
+        @extend %ball;
+
+        z-index:2;
+        transition-timing-function:cubic-bezier(0.175, 0.885, 0.320, 1.275);
+        transition-duration:400ms;
+        transform:scale(1.1,1.1) translate3d(0,0,0);
+        cursor:pointer;
+
+        &:hover { transform:scale(1.2,1.2) translate3d(0,0,0); }
+    }
+
+    .itm { 
+        @extend %ball; 
+
+        &:hover {
+            background:white;
+            color:$fg;
+        }
+    }
+}
+
+.menu-open {
+    display: none;
+}
