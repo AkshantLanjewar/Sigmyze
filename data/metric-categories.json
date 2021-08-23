@@ -1,0 +1,6 @@
+{
+    "GDP": ["NGDP", "NGDP_FY", "NGDP_R", "NGDP_RPCH", "PPPSH"],
+    "GOVT": ["BCA", "BCA_NGDPD", "GGR", "GGR_NGDP", "GGSB", "GGX", "GGX_NGDP", "GGXCNL", "GGXCNL_NGDP", "GGXONLB", "GGXONLB_NGDP", "GGXWDG",
+                   "GGXWDN", "GGXWDN_NGDP"],
+    "INVEST": ["NGSD_NGDP", "NID_NGDP", "PCPI", "PCPIEPCH", "PCPIPCH", "PPPEX", "PCPIE"]
+}

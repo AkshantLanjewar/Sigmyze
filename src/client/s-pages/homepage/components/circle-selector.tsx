@@ -1,28 +1,53 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { v4 as uuidv4 } from 'uuid';
 
 //ICONS
 import { FaIndustry } from 'react-icons/fa'
+import { RiGovernmentFill, RiMoneyDollarBoxFill } from 'react-icons/ri'
 
-const CircleSelector = () => {
+const IconDICT = {
+    "GDP": <FaIndustry />,
+    "GOVT": <RiGovernmentFill />,
+    "INVEST": <RiMoneyDollarBoxFill />
+}
 
-    const uniqID = "a"
+type props = {
+    inital_category: "GDP" | "GOVT" | "INVEST",
+    index: number,
+    updateSelected: Function
+}
+
+const CircleSelector: React.FC<props> = ({ inital_category, index, updateSelected }) => {
+
+    const uniqID = `circleSelect-${uuidv4()}`
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        const url = "/api/data/indicator/categories"
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                setCategories(data)
+            })
+    }, [])
+
+    let items = []
+    for(let i = 0; i < categories.length; i++)
+        items.push(<a href="#" className="itm" onClick={() => { updateSelected(index, categories[i]) }}> {IconDICT[categories[i]]} <div>{categories[i]}</div> </a>)
+
+    let titleCard = (<label className="menu-open-btn" htmlFor={uniqID}>{IconDICT[inital_category]} <div>{inital_category}</div></label>)
 
     return (
         <div>
             <nav className="circle-selector">
-                <input type="checkbox" href="#" className="menu-open" name="menu-open" id="menu-open" />
-                <label className="menu-open-btn" htmlFor="menu-open"> <FaIndustry /> </label>
+                <input type="checkbox" className="menu-open" name="menu-open" id={uniqID} />
+                {titleCard}                
 
-                <a href="#" className="itm"> <FaIndustry /> </a>
-                <a href="#" className="itm"> <FaIndustry /> </a>
-                <a href="#" className="itm"> <FaIndustry /> </a>
-                <a href="#" className="itm"> <FaIndustry /> </a>
-                <a href="#" className="itm"> <FaIndustry /> </a>
-                <a href="#" className="itm"> <FaIndustry /> </a>
+                {items}
             </nav>
 
             {/* --FILTERS-- */}
-            <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" className="filter">
                 <defs>
                     <filter id="shadowed-goo">
                         <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10" />

@@ -53,8 +53,7 @@
     @return $fact;
 }
 
-$fg:#e91e63;
-$bg:#8bc34a;
+$fg:$red-excite;
 
 $pi: 3.14159265359;
 $_precision: 10;
@@ -66,37 +65,50 @@ $opening-angle:$pi*2;
 
 %goo { filter: url('#goo'); }
 
+$scale_factor: 0.8;
+
 %ball {
     background: $fg;
     border-radius:100%;
-    width:80px;
-    height:80px;
-    margin-left:-40px;
+    width:80px * $scale_factor;
+    height:80px * $scale_factor;
+    margin-left:-40px * $scale_factor;
     position:absolute;
-    top:20px;
+    top:20px * $scale_factor;
     color:white;
     text-align:center;
-    line-height:80px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    div { 
+        font-size: 14px; 
+        font-weight: 700; 
+        text-decoration: none; 
+    }
+
+    a { text-decoration: none; }
+
     transform:translate3d(0,0,0);
     transition:transform ease-out 200ms;
 }
+
+.filter { width: 200px; }
 
 .circle-selector { 
     position: relative; 
 
     @extend %goo;
 
-    $width:380px;
-    $height:250px;
+    $width:380px * $scale_factor;
+    $height:250px * $scale_factor;
 
-    position:absolute;
-    left:50%;
-    margin-left:-$width/2;
-    padding-top:20px;
     padding-left:$width/2;
-    width:$width;
-    height:$height;
     box-sizing:border-box;
+
+    user-select: none;
     font-size:20px;
     text-align:left;
 
@@ -128,11 +140,15 @@ $opening-angle:$pi*2;
         transform:scale(1.1,1.1) translate3d(0,0,0);
         cursor:pointer;
 
+        text-decoration: none;
+
         &:hover { transform:scale(1.2,1.2) translate3d(0,0,0); }
     }
 
     .itm { 
         @extend %ball; 
+
+        text-decoration: none;
 
         &:hover {
             background:white;

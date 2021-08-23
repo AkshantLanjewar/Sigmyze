@@ -11,7 +11,8 @@ import Map from './components/map'
 
 type HomepageState = {
     login_modal_open: boolean,
-    viewcount: number
+    viewcount: number,
+    selectors: Array<"GDP" | "GOVT" | "INVEST">
 };
 
 class Homepage extends React.Component<{}, HomepageState> {
@@ -30,8 +31,18 @@ class Homepage extends React.Component<{}, HomepageState> {
 
         this.state = {
             login_modal_open: false,
-            viewcount: viewcount
+            viewcount: viewcount,
+            selectors: ["GDP", "GOVT"]
         }
+
+        this.updateSelector = this.updateSelector.bind(this)
+    }
+
+    updateSelector(index: number, selectorID: "GDP" | "GOVT" | "INVEST") {
+        let selectors = this.state.selectors
+        selectors[index] = selectorID
+
+        this.setState({...this.state, selectors: selectors})
     }
 
     render() {
@@ -57,7 +68,8 @@ class Homepage extends React.Component<{}, HomepageState> {
 
                     <section className="samples">
                         <div className="sample-selectors">
-                            <CircleSelector />
+                            <CircleSelector inital_category={this.state.selectors[0]} index={0} updateSelected={this.updateSelector} />
+                            <CircleSelector inital_category={this.state.selectors[1]} index={1} updateSelected={this.updateSelector} />
                         </div>
                         
                         <Carousel displayCount={this.state.viewcount}>
