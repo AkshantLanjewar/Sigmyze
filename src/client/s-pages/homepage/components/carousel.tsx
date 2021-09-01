@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useEffect } from "react"
 
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi'
 
@@ -27,6 +28,19 @@ const Carousel: React.FC<Props> = ({ children, displayCount = 3 }) => {
     let displayChildren = []
     for(let i = 0; i < state.indexs.length; i++)
         displayChildren.push(state.children[state.indexs[i]])
+
+    useEffect(() => {
+        let nChildren = children
+        let tState: State = {
+            children: React.Children.toArray(nChildren),
+            indexs: []
+        }
+
+        for(let i = 0; i < displayCount; i++)
+            tState.indexs.push(i)
+
+        setState(tState)
+    }, [children])
 
     function ArrowClick(dir: "left" | "right") {
         if(dir == "left") {
@@ -66,7 +80,7 @@ const Carousel: React.FC<Props> = ({ children, displayCount = 3 }) => {
         <div className="carousel">
             <BiLeftArrow className="arrow" onClick={() => { ArrowClick("left") }} />
 
-            <div className="children">
+            <div className="children" key={children}>
                 {displayChildren}
             </div>
             

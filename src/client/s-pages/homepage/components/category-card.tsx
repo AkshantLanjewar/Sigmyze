@@ -9,36 +9,31 @@ type props = {
 type State = {
     shortA: string,
     shortB: string,
-    fullTitle: string,
+    fullName: string,
 }
 
-const SampleCard: React.FC<props> = ({  }) => {
-
+const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
     const chartRef = React.createRef<HTMLDivElement>()
 
-    //setup state
-    let initalState: State = {
+    const initalState: State = {
         shortA: "",
         shortB: "",
-        fullTitle: ""
+        fullName: ""
     }
-
     const [state, setState] = useState(initalState)
-
     useEffect(() => {
         chartRef.current!.innerHTML = ""
 
-        const url = "/api/data/sample_indicator"
+        const url = `/api/data/indicator/categories/pair/${category_a}/${category_b}`
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 let chart: ChartBuilder = new ChartBuilder(chartRef!)
-                let shortA = ""
-                let shortB = ""
-                let fullName  = ""
 
-                for(let i = 0; i < data.indicators.length; i++) {
-                    let indicator: any = data.indicators[i]
+                let shortA, shortB, fullName = ""
+                let indicators = data["data"]
+                for(let i = 0; i < indicators.length; i++) {
+                    let indicator: any = indicators[i]
                     let cData = indicator["data"]["data"]
 
                     let chartData = []
@@ -53,13 +48,13 @@ const SampleCard: React.FC<props> = ({  }) => {
                     let chartOptions: ChartOptions = {
                         chartType: "line",
                         chartData: chartData,
-                        chartName: indicator.descriptor.shortName,
+                        chartName: indicator.name,
                         chartColor: blueColor,
 
                         showXAxis: false,
                         showYAxis: false,
 
-                        formatterPre: `${indicator.descriptor.shortName}: `,
+                        formatterPre: `${indicator.name}: `,
 
                         xAxisType: "utc",
                         yAxisType: "linear"
@@ -71,26 +66,24 @@ const SampleCard: React.FC<props> = ({  }) => {
                     chart.AddLineChart(chartOptions)
 
                     if(i == 0) {
-                        shortA = indicator.descriptor.shortName
-                        fullName  = indicator.descriptor.fullname + " / "
+                        shortA = indicator.name
                     }
                     else {
-                        shortB = indicator.descriptor.shortName
-                        fullName  += indicator.descriptor.fullname
+                        shortB = indicator.name
                     }
                 }
 
                 chart.CreateChart()
-                setState({...state, shortA: shortA, shortB: shortB, fullTitle: fullName})
+                setState({...state, shortA: shortA, shortB: shortB, fullName: fullName})
             })
-    }, [])
+    }, [category_a, category_b])
 
     return (
-        <div className="carousel-card">
+        <div className="carousel-card" key={category_b}>
             <div className="title tooltip">
                 <span style={{color: blueColor}}>{state.shortA}</span><span>/</span><span style={{color: redColor}}>{state.shortB}</span>
 
-                <span className="tooltiptext">{ state.fullTitle }</span>
+                <span className="tooltiptext">{state.fullName}</span>
             </div>
 
             <div className="chart" ref={chartRef}>
@@ -100,4 +93,4 @@ const SampleCard: React.FC<props> = ({  }) => {
     )
 }
 
-export default SampleCard
+export default CategoryCard

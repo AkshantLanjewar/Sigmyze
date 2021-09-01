@@ -35,6 +35,29 @@ async function get_categories(req, res) {
     return res.json(keys)
 }
 
+async function get_indicator_pair(req, res) {
+    const category_a = req.params.category_a
+    const category_b = req.params.category_b
+
+    const categories = JSON.parse(fs.readFileSync('./data/metric-categories.json'))
+    let a_indicator = ShuffleArray(categories[category_a])[0]
+    let b_indicator = ShuffleArray(categories[category_b])[0]
+    while(a_indicator == b_indicator)
+        b_indicator = ShuffleArray(categories[category_b])[0]
+
+    const country_data = JSON.parse(fs.readFileSync('./data/countries.json'))
+    let country        = country_data[Math.floor(Math.random() * country_data.length)]
+    let indicator_a_data = await httpData.GrabIndicatorData(country["isoCode"], a_indicator)
+    let indicator_b_data = await httpData.GrabIndicatorData(country["isoCode"], b_indicator)
+
+    if(indicator_a_data.year > indicator_b_data.year)
+        indicator_b_data.data = TrimYear(indicator_a_data.year, indicator_b_data.data)
+    if(indicator_b_data.year > indicator_a_data.year)
+        indicator_a_data.data = TrimYear(indicator_b_data.year, indicator_a_data.data)
+
+    res.json({country: country, data: [{name: a_indicator, data: indicator_a_data}, {name: b_indicator, data: indicator_b_data}]})
+}
+
 async function sample_indicator(req, res) {
     //read file into disk
     const country_data = JSON.parse(fs.readFileSync('./data/countries.json'))
@@ -57,5 +80,6 @@ async function sample_indicator(req, res) {
     res.json(package)
 }
 
+exports.get_indicator_pair = get_indicator_pair
 exports.sample_indicator = sample_indicator
 exports.get_categories = get_categories

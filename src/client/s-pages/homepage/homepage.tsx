@@ -5,14 +5,18 @@ import Modal from '../../components/modal'
 import Loginform from './components/login-form'
 
 import CircleSelector from './components/circle-selector'
+
 import SampleCard from './components/sample-card'
+import CategoryCard from './components/category-card'
+
 import Carousel from './components/carousel'
 import Map from './components/map'
 
 type HomepageState = {
     login_modal_open: boolean,
     viewcount: number,
-    selectors: Array<"GDP" | "GOVT" | "INVEST">
+    selectors: Array<"GDP" | "GOVT" | "INVEST">,
+    cards: Array<JSX.Element>
 };
 
 class Homepage extends React.Component<{}, HomepageState> {
@@ -32,7 +36,15 @@ class Homepage extends React.Component<{}, HomepageState> {
         this.state = {
             login_modal_open: false,
             viewcount: viewcount,
-            selectors: ["GDP", "GOVT"]
+            selectors: ["GDP", "GOVT"],
+            cards: [<CategoryCard category_a={"GDP"} category_b={"GOVT"} />,
+                    <CategoryCard category_a={"GDP"} category_b={"GOVT"} />,
+                    <CategoryCard category_a={"GDP"} category_b={"GOVT"} />,
+                    <CategoryCard category_a={"GDP"} category_b={"GOVT"} />,
+                    <CategoryCard category_a={"GDP"} category_b={"GOVT"} />,
+                    <CategoryCard category_a={"GDP"} category_b={"GOVT"} />,
+                    <CategoryCard category_a={"GDP"} category_b={"GOVT"} />,
+                    <CategoryCard category_a={"GDP"} category_b={"GOVT"} />,]
         }
 
         this.updateSelector = this.updateSelector.bind(this)
@@ -42,12 +54,14 @@ class Homepage extends React.Component<{}, HomepageState> {
         let selectors = this.state.selectors
         selectors[index] = selectorID
 
-        this.setState({...this.state, selectors: selectors})
+        let nCards = []
+        for(let i = 0; i < 8; i++)
+            nCards.push(<CategoryCard category_a={selectors[0]} category_b={selectors[1]} />)
+
+        this.setState({...this.state, selectors: selectors, cards: nCards})
     }
 
     render() {
-
-
         return (
             <div>
                 <Navbar />
@@ -73,10 +87,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                         </div>
                         
                         <Carousel displayCount={this.state.viewcount}>
-                            <SampleCard />
-                            <SampleCard />
-                            <SampleCard />
-                            <SampleCard />
+                            {this.state.cards}
                         </Carousel>
                     </section>
 

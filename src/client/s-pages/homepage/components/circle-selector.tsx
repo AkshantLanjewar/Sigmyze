@@ -33,7 +33,7 @@ const CircleSelector: React.FC<props> = ({ inital_category, index, updateSelecte
 
     let items = []
     for(let i = 0; i < categories.length; i++)
-        items.push(<a href="#" className="itm" onClick={() => { updateSelected(index, categories[i]) }}> {IconDICT[categories[i]]} <div>{categories[i]}</div> </a>)
+        items.push(<a className="itm" onClick={() => { updateSelected(index, categories[i]) }}> {IconDICT[categories[i]]} <div>{categories[i]}</div> </a>)
 
     let titleCard = (<label className="menu-open-btn" htmlFor={uniqID}>{IconDICT[inital_category]} <div>{inital_category}</div></label>)
 
