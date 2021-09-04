@@ -10,6 +10,7 @@ type State = {
     shortA: string,
     shortB: string,
     fullName: string,
+    countryName: string,
 }
 
 const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
@@ -18,7 +19,8 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
     const initalState: State = {
         shortA: "",
         shortB: "",
-        fullName: ""
+        fullName: "",
+        countryName: ""
     }
     const [state, setState] = useState(initalState)
     useEffect(() => {
@@ -74,14 +76,14 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
                 }
 
                 chart.CreateChart()
-                setState({...state, shortA: shortA, shortB: shortB, fullName: fullName})
+                setState({...state, shortA: shortA, shortB: shortB, fullName: fullName, countryName: data["country"]["fullname"]})
             })
     }, [category_a, category_b])
 
     return (
         <div className="carousel-card" key={category_b}>
             <div className="title tooltip">
-                <span style={{color: blueColor}}>{state.shortA}</span><span>/</span><span style={{color: redColor}}>{state.shortB}</span>
+                <span>{state.countryName}  </span><span style={{color: blueColor}}>{state.shortA}</span><span>/</span><span style={{color: redColor}}>{state.shortB}</span>
 
                 <span className="tooltiptext">{state.fullName}</span>
             </div>
