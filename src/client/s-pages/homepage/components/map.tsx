@@ -8,10 +8,73 @@ import { GeoJsonLayer, PolygonLayer } from '@deck.gl/layers'
 
 import * as d3 from "d3"
 
+type Props = {
+    mapName: string,
+    mapDesc: string,
+
+    mapMin: number,
+    mapMax: number
+}
+
+const Legend: React.FC<Props> = ({mapName, mapDesc, mapMin, mapMax}) => {
+    const svgRref = React.createRef<SVGSVGElement>()
+    useEffect(() => {
+        svgRref.current!.innerHTML = ""
+        let svg = d3.select(svgRref.current)
+
+        let svgDims = svgRref.current!.getBoundingClientRect()
+
+        function ramp() {
+            const color = d3.interpolatePlasma
+            const canvas = document.createElement("canvas")
+            canvas.width = 512
+            canvas.height = 1
+
+            const context = canvas.getContext("2d")
+
+            canvas.style.margin = "0 -14px"
+            canvas.style.width = `${svgDims.width}px`;
+            canvas.style.height = "40px";
+            canvas.style.imageRendering = "-moz-crisp-edges"
+            canvas.style.imageRendering = "pixelated"
+
+            for(let i = 0; i < 512; ++i) {
+                context!.fillStyle = color(i / (512 - 1))
+                context!.fillRect(i, 0, 1, 1)
+            }
+
+            return canvas
+        }
+
+        let x = d3.scaleLinear().domain([mapMin, mapMax]).range([0, svgDims.width - 1])
+        let g = svg.append("g")
+            .attr("transform", `translate(0, ${30})`)
+        
+        svg.append("image")
+            .attr("preserveAspectRatio", "none")
+            .attr("width", `${svgDims.width}px`)
+            .attr("height", "30px")
+            .attr("xlink:href", ramp().toDataURL())
+        g.call(d3.axisBottom(x))
+    })
+
+    return (
+        <div className="legend">
+            <div className="title">
+                <div>{mapName}</div>
+                <div className="sub">{mapDesc}</div>
+            </div>
+
+            <div className="ramp">
+                <svg ref={svgRref}></svg>
+            </div>
+        </div>
+    )
+}
 
 function Map() {
     const InitialViewState = {
-        longitude: -122.41669,
+        longitude: 65.41669,
         latitude: 37.7853,
         zoom: 2,
         pitch: 0,
@@ -33,7 +96,6 @@ function Map() {
             .then(response => response.json())
             .then(data => {
                 //create the scale
-                let colorscale = d3.scaleSequential(d3.interpolatePlasma).domain([data["minGrowth"], data["maxGrowth"]])
                 let geojson = data["geo"]
 
                 setColorScale({min: data["minGrowth"], max: data["maxGrowth"]})
@@ -70,6 +132,11 @@ function Map() {
             <DeckGL initialViewState={InitialViewState} 
                     controller={true}
                     layers={layers}>
+                <Legend
+                    mapName={"Global GDP Growth"}
+                    mapDesc={"from 2020 in %"}
+                    mapMin={colorscale.min}
+                    mapMax={colorscale.max} />
                 <StaticMap mapStyle={BASEMAP.POSITRON_NOLABELS} />
             </DeckGL>
         </section>

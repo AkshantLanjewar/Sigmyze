@@ -1,0 +1,40 @@
+.legend {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 344px;
+    background: rgb(255, 255, 255);
+    box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
+    margin: 24px;
+    padding: 10px 24px;
+    max-height: 96%;
+    overflow: hidden overlay;
+    outline: none;
+    z-index: 10;
+    font-size: 14px;
+
+    cursor: auto;
+
+    .title {
+        display: flex;
+        flex-direction: column;
+
+        align-items:flex-start;
+        justify-content: space-between;
+        font: bold 16px / 24px UberMove, Helvetica, Arial, sans-serif;
+        margin: 8px 0px;
+
+        .sub {
+            font: normal 12px / 12px UberMove, Helvetica, Arial, sans-serif;
+        }
+    }
+
+    .ramp svg {
+        margin-top: 24px;
+        width: 100%;
+        height: 64px;
+
+        .tick line { visibility: hidden; }
+        .domain { visibility: hidden; }
+    }
+}

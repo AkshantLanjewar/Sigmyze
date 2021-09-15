@@ -81,14 +81,16 @@ class Homepage extends React.Component<{}, HomepageState> {
                     
 
                     <section className="samples">
-                        <div className="sample-selectors">
-                            <CircleSelector inital_category={this.state.selectors[0]} index={0} updateSelected={this.updateSelector} />
-                            <CircleSelector inital_category={this.state.selectors[1]} index={1} updateSelected={this.updateSelector} />
+                        <div className="nSelector">
+                            <Carousel displayCount={this.state.viewcount}>
+                                {this.state.cards}
+                            </Carousel>
+                            
+                            <div className="sample-selectors">
+                                <CircleSelector inital_category={this.state.selectors[0]} index={0} updateSelected={this.updateSelector} />
+                                <CircleSelector inital_category={this.state.selectors[1]} index={1} updateSelected={this.updateSelector} />
+                            </div>
                         </div>
-                        
-                        <Carousel displayCount={this.state.viewcount}>
-                            {this.state.cards}
-                        </Carousel>
                     </section>
 
                     <section className="title-text" style={{marginBottom: "32px"}}>

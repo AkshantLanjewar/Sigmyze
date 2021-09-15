@@ -13,12 +13,19 @@
 }
 
 .sample-selectors {
-    margin-top: 64px;
-    margin-bottom: 32px;
-
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
+}
+
+.nSelector {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 64px;
+    margin-bottom: 64px;
+
     align-items: center;
 }
 

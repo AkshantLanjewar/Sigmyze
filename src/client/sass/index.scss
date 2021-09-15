@@ -56,6 +56,9 @@
 @import './components/chart.scss';
 @import './components/tooltip.scss';
 
+//data vis
+@import './data-vis/map.scss';
+
 body {
     background-color: $background-color;
     font-family: "San Francisco"!important;

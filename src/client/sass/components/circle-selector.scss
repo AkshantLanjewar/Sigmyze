@@ -65,20 +65,23 @@ $opening-angle:$pi*2;
 
 %goo { filter: url('#goo'); }
 
-$scale_factor: 0.8;
+$scale_factor: 0.75;
 
 %ball {
     background: $fg;
     border-radius:100%;
     width:80px * $scale_factor;
     height:80px * $scale_factor;
-    margin-left:-40px * $scale_factor;
     position:absolute;
-    top:20px * $scale_factor;
+    top:30px * $scale_factor;
+
+    right: 65px;
     color:white;
     text-align:center;
+
     
     display: flex;
+    align-self: center;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -95,10 +98,14 @@ $scale_factor: 0.8;
     transition:transform ease-out 200ms;
 }
 
-.filter { width: 200px; }
+.filter { width: 200px; height: 100px; }
 
 .circle-selector { 
     position: relative; 
+
+    display: flex;
+    align-self: center;
+    align-items: center;
 
     @extend %goo;
 

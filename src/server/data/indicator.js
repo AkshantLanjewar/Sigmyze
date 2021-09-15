@@ -40,6 +40,9 @@ async function get_indicator_pair(req, res) {
     const category_b = req.params.category_b
 
     const categories = JSON.parse(fs.readFileSync('./data/metric-categories.json'))
+
+    const rawIndicators = JSON.parse(fs.readFileSync('./data/indicators.json'))
+
     let a_indicator = ShuffleArray(categories[category_a])[0]
     let b_indicator = ShuffleArray(categories[category_b])[0]
     while(a_indicator == b_indicator)
