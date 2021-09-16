@@ -1,3 +1,12 @@
+@import '../../vars.scss';
+
+.carousel-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 .carousel {
     display: flex;
     flex-direction: row;
@@ -32,9 +41,11 @@
         flex-direction: column;
         box-sizing: border-box;
 
-        background-color: $card;
+        background-color: $primary-bg;
         box-shadow: 2px 4px 12px rgba(0,0,0,.08);
-        width: 25%;
+
+        height: auto;
+        width: 33%;
 
         border-radius: 4px;
         margin-left: 4px;
@@ -44,8 +55,9 @@
         padding-top: 18px;
         padding-left: 22px;
         padding-right: 22px;
+        padding-bottom: 12px;
 
-        @media screen and (max-width: $medium) { width: 33%; }
+
         @media screen and (max-width: $small) { width: 50%; }
         @media screen and (max-width: $xtra-small) { width: 100%; }
 
@@ -53,6 +65,8 @@
             font-weight: 700;
             font-size: 16px;
             cursor: pointer;
+
+            overflow: hidden;
         }
 
         .chart {

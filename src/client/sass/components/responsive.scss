@@ -1,0 +1,40 @@
+.container {
+    margin: 0 auto;
+    max-width: 1140px;
+}
+
+.container, .row .col {
+    padding: 0 16px;
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0 -16px;
+}
+
+.row .col.col--11 {
+    --ifm-col-width: 91.66667%;
+}
+
+.row .col.col--offset-1 {
+    margin-left: 8.33333%;
+}
+
+.row .col[class*=col--] {
+    flex: 0 0 var(--ifm-col-width);
+    max-width: var(--ifm-col-width);
+}
+
+.row .col {
+    --ifm-col-width: 100%;
+    flex: 1 0;
+    margin-left: 0;
+}
+
+.container, .row .col {
+    padding: 0 16px;
+    width: 100%;
+}

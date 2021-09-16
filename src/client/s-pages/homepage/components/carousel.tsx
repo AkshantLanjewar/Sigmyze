@@ -77,14 +77,16 @@ const Carousel: React.FC<Props> = ({ children, displayCount = 3 }) => {
     }
     
     return (
-        <div className="carousel">
-            <BiLeftArrow className="arrow" onClick={() => { ArrowClick("left") }} />
+        <div className="carousel-container">
+            <div className="carousel">
+                <BiLeftArrow className="arrow" onClick={() => { ArrowClick("left") }} />
 
-            <div className="children" key={children}>
-                {displayChildren}
+                <div className="children" key={children}>
+                    {displayChildren}
+                </div>
+                
+                <BiRightArrow className="arrow" onClick={() => { ArrowClick("right") }} />
             </div>
-            
-            <BiRightArrow className="arrow" onClick={() => { ArrowClick("right") }} />
         </div>
     )
 }

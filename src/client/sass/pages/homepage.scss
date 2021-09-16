@@ -1,0 +1,85 @@
+@import '../vars.scss';
+
+.main {
+    flex: 1 1 auto;
+}
+
+.hero-banner {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 5rem 0 0;
+    position: relative;
+    text-align: center;
+
+    align-items: center;
+    background-color: $primary-bg;
+    color: rgb(235, 237, 240);
+
+    h1.hero__title { font-size: 3rem; }
+
+    p.hero__subtitle {
+        margin: 0 auto 2rem;
+        font-size: 1.2rem;
+    }
+
+    .hero__map {
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+
+        border-radius: 6px;
+        height: 780px;
+        max-width: 1440px;
+        width: 95%;
+        z-index: 2;
+    }
+
+    &::after {
+        bottom: 0;
+        content: "";
+        display: block;
+        height: 25%;
+        position: absolute;
+        width: 100%;
+
+        background-color: $dark-bg;
+    }
+}
+
+.main .charts {
+    padding: 5rem 0;
+    background-color: $dark-bg;
+    word-wrap: break-word;
+    box-sizing: border-box;
+}
+
+section {
+    .headline {
+        margin-bottom: 2rem;
+
+        .category {
+            align-items: center;
+            display: inline-flex;
+            font-weight: 700;
+            margin-bottom: 1rem;
+
+            color: $alt-text-color;
+
+            text-transform: uppercase;
+            &::before {
+                content: "#";
+                display: inline;
+                margin-right: .25rem;
+            }
+        }
+
+        .title {
+            font-size: 2.8rem;
+
+            line-height: normal;
+            max-width: 750px;
+            word-spacing: -.25rem;
+        }
+    }
+}

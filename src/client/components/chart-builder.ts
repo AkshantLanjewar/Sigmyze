@@ -46,7 +46,7 @@ class ChartBuilder {
         this.margin = {
             top: 20, 
             right: 10,
-            bottom: 10,
+            bottom: 20,
             left: 10
         }
     }

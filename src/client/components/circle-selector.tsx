@@ -38,7 +38,7 @@ const CircleSelector: React.FC<props> = ({ inital_category, index, updateSelecte
     let titleCard = (<label className="menu-open-btn" htmlFor={uniqID}>{IconDICT[inital_category]} <div>{inital_category}</div></label>)
 
     return (
-        <div>
+        <div style={{marginTop: "32px"}}>
             <nav className="circle-selector">
                 <input type="checkbox" className="menu-open" name="menu-open" id={uniqID} />
                 {titleCard}                
