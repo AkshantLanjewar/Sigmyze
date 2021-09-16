@@ -81,6 +81,17 @@ class Homepage extends React.Component<{}, HomepageState> {
                                 </Carousel>
                             </div>
                         </section>
+
+                        <section className="features">
+                            <div className="container">
+                                <div className="row">
+                                    <div className="headline">
+                                        <span className="category">Features</span>
+                                        <h2 className="title">Form new hypothesis from existing data</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </main>
                 </div>
 

@@ -47,14 +47,14 @@
     }
 }
 
-.main .charts {
-    padding: 5rem 0;
-    background-color: $dark-bg;
-    word-wrap: break-word;
-    box-sizing: border-box;
-}
+.main .charts { background-color: $dark-bg; }
+.main .features { background-color: $primary-bg; }
 
 section {
+    word-wrap: break-word;
+    box-sizing: border-box;
+    padding: 5rem 0;
+
     .headline {
         margin-bottom: 2rem;
 
