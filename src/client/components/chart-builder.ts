@@ -46,7 +46,7 @@ class ChartBuilder {
         this.margin = {
             top: 20, 
             right: 10,
-            bottom: 20,
+            bottom: 25,
             left: 10
         }
     }
@@ -106,7 +106,7 @@ class ChartBuilder {
 
         longestCharLength = longestCharLength + 4
         let boxHeight  = (chartCount + 1) * 30
-        let boxWidth   = 15 * longestCharLength
+        let boxWidth   = 10 * longestCharLength
         
         let tooltipText = tooltip.append("g")
             .attr('class', 'tooltip-container')
@@ -219,9 +219,14 @@ class ChartBuilder {
         const rawWidth  = boundingBox?.width
         const rawHeight = boundingBox?.height! - this.margin.top
 
+        const svg = d3.select(this.container.current).append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .style('overflow', 'visible')
+
         let clipPath = svg.append("defs")
             .append("clipPath")
-            .attr("id", options.chartName )
+            .attr("id", options.chartName)
             .append('rect')
             .attr("width", rawWidth!)
             .attr("height", rawHeight!)

@@ -22,7 +22,6 @@
     {"shortName": "NGSD_NGDP", "fullname": "Gross national savings as % of GDP"},
     {"shortName": "NID_NGDP", "fullname": "Total investment as % of GDP"},
     {"shortName": "PCPI", "fullname": "Inflation, average consumer prices"},
-    {"shortName": "PCPIE", "fullname": "Inflation, end of period consumer prices"},
     {"shortName": "PCPIEPCH", "fullname": "Inflation, end of period consumer prices"},
     {"shortName": "PCPIPCH", "fullname": "Inflation, average consumer prices"},
     {"shortName": "PPPEX", "fullname": "Implied PPP conversion rate"},

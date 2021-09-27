@@ -7,22 +7,13 @@ function Navbar() {
     })
 
     return (
-        <nav className="navbar is-black is-fixed-top">
-            <div className="navbar__inner">
-                <div className="left">
-                    <a className="brand">
-                        <img src={Logo} width={32} height={32} />
-                        <b>Lunar</b>
-                    </a>
+        <div className="navbar">
+            <a className="title" href="/">Lunar</a>
 
-                    <a className="nav-item">Blog</a>
-                </div>
-
-                <div className="right">
-
-                </div>
-            </div>
-        </nav>
+            <ul className="nav_elements">
+                {/*<li className="element"><a href="/roadmap">Roadmap</a></li>*/}
+            </ul>
+        </div>
     )
 }
 
