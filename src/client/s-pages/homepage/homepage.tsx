@@ -2,13 +2,12 @@ import React from 'react';
 
 import Navbar from '../../components/navbar'
 import Modal from '../../components/modal'
-import Loginform from './components/login-form'
 import CategoryCard from './components/category-card'
 
 import Carousel from './components/carousel'
 import Map from './components/map'
 
-import Logo from '../../svg/logo.svg';
+import Logo from '../../svg/logo.svg'; 
 
 type HomepageState = {
     login_modal_open: boolean,
@@ -134,7 +133,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                 </div>
 
                 <Modal show={this.state.login_modal_open} maxWidth={450}>
-                    <Loginform closeModal={() => { this.setState({...this.state, login_modal_open: false}) }} />
+                   
                 </Modal>
             </div>
         )

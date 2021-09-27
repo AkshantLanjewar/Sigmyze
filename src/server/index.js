@@ -21,6 +21,21 @@ function isLoggedIn(req, res, next) {
 //const userRouter = require('./user/index')
 //app.use('/user', userRouter.userRouter())
 
+process.env.NODE_ENV = "dev"
+
+if(process.env.NODE_ENV == "dev") {
+    console.log(process.env.NODE_ENV)
+
+    app.get('*.js', (req, res, next) => {
+        req.url = req.url + '.gz'
+        res.set('Content-Encoding', 'gzip')
+        res.set('Content-Type', 'application/javascript; charset=UTF-8')
+        next()
+    })
+
+    app.use(express.static('dist', { root: '.' })); 
+}
+
 const dataRouter = require('./data/index')
 app.use('/api/data', dataRouter.dataRouter())
 

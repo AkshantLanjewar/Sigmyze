@@ -219,11 +219,6 @@ class ChartBuilder {
         const rawWidth  = boundingBox?.width
         const rawHeight = boundingBox?.height! - this.margin.top
 
-        const svg = d3.select(this.container.current).append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .style('overflow', 'visible')
-
         let clipPath = svg.append("defs")
             .append("clipPath")
             .attr("id", options.chartName)

@@ -2,13 +2,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import Homepage from './homepage/homepage'
+import Homepage from './s-pages/homepage/homepage'
 import LostPage from './404-page'
-import Projectpage from './project-page/project-page'
-import DashboardPage from './dashboard-page/dashboard-page'
 
-import Projectpage from './u-pages/project-page/project-page'
-import DashboardPage from './u-pages/dashboard-page/dashboard-page'
 
 import './sass/index.scss'
 
