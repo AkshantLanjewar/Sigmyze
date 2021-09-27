@@ -31,7 +31,6 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
             .then(response => response.json())
             .then(data => {
                 let chart: ChartBuilder = new ChartBuilder(chartRef!)
-
                 let shortA, shortB, fullName = ""
                 let indicators = data["data"]
                 for(let i = 0; i < indicators.length; i++) {

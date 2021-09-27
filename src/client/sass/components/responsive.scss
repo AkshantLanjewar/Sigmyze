@@ -38,3 +38,7 @@
     padding: 0 16px;
     width: 100%;
 }
+
+.row .col.col--4 {
+    --ifm-col-width: 33.33333%;
+}

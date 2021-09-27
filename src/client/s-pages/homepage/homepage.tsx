@@ -90,6 +90,44 @@ class Homepage extends React.Component<{}, HomepageState> {
                                         <h2 className="title">Form new hypothesis from existing data</h2>
                                     </div>
                                 </div>
+
+                                <div className="row">
+                                    <div className="col col--4">
+                                        <div className="card dark" style={{minHeight: "258px"}}>
+                                            <div className="header">
+                                                <h3>Diverse Datasets</h3>
+                                            </div>
+
+                                            <div className="body">
+                                                <p>Answer your questions with a large variety of WEO Datasets that cover GDP to investment</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col col--4">
+                                        <div className="card dark" style={{minHeight: "258px"}}>
+                                            <div className="header">
+                                                <h3>Beautiful Visualizations</h3>
+                                            </div>
+
+                                            <div className="body">
+                                                <p>Dont let cookie cutter data visuazation options, that limit the ways you can display data hold your analysis back</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="col col--4">
+                                        <div className="card dark" style={{minHeight: "258px"}}>
+                                            <div className="header">
+                                                <h3>Faster Development</h3>
+                                            </div>
+
+                                            <div className="body">
+                                                <p>Dont let complex tools and pipelines slow down your development, simplify the process by doing all your analysis on one platform</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </main>
