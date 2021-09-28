@@ -7,13 +7,22 @@ function Navbar() {
     })
 
     return (
-        <div className="navbar">
-            <a className="title" href="/">Lunar</a>
+        <nav className="navbar is-black is-fixed-top">
+            <div className="navbar__inner">
+                <div className="left">
+                    <a className="brand">
+                        <img src={Logo} width={32} height={32} />
+                        <b>Lunar</b>
+                    </a>
 
-            <ul className="nav_elements">
-                {/*<li className="element"><a href="/roadmap">Roadmap</a></li>*/}
-            </ul>
-        </div>
+                    
+                </div>
+
+                <div className="right">
+
+                </div>
+            </div>
+        </nav>
     )
 }
 

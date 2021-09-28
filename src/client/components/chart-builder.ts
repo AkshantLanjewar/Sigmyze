@@ -46,7 +46,7 @@ class ChartBuilder {
         this.margin = {
             top: 20, 
             right: 10,
-            bottom: 25,
+            bottom: 20,
             left: 10
         }
     }
@@ -106,7 +106,7 @@ class ChartBuilder {
 
         longestCharLength = longestCharLength + 4
         let boxHeight  = (chartCount + 1) * 30
-        let boxWidth   = 10 * longestCharLength
+        let boxWidth   = 15 * longestCharLength
         
         let tooltipText = tooltip.append("g")
             .attr('class', 'tooltip-container')
@@ -221,7 +221,7 @@ class ChartBuilder {
 
         let clipPath = svg.append("defs")
             .append("clipPath")
-            .attr("id", options.chartName)
+            .attr("id", options.chartName )
             .append('rect')
             .attr("width", rawWidth!)
             .attr("height", rawHeight!)
