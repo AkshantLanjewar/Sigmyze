@@ -1,5 +1,8 @@
 import React from "react"
 
+import { AiOutlineLineChart } from 'react-icons/ai'
+import { MdCompare } from 'react-icons/md'
+
 function SearchIcon() {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" 
@@ -50,7 +53,19 @@ function CountrySearch() {
 
             <div className="result-tab">
                 <div className="result-section">
-                    
+                    <div className="ul-title"><p>actions</p></div>
+
+                    <div className="ul">
+                        <div className="li">
+                            <div className="icon"> <AiOutlineLineChart /> </div>
+                            <div className="text">Indicators</div>
+                        </div>
+
+                        <div className="li">
+                            <div className="icon"> <MdCompare /> </div>
+                            <div className="text">Comparison</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
