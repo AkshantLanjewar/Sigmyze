@@ -12,7 +12,7 @@ function Navbar() {
                 <div className="left">
                     <a className="brand" href="/">
                         <img src={Logo} width={32} height={32} />
-                        <b>Lunar</b>
+                        <b>Sigmyze</b>
                     </a>
 
                     

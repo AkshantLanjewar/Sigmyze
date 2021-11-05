@@ -4,7 +4,7 @@ import Navbar from '../../components/navbar'
 import Modal from '../../components/modal'
 import CategoryCard from './components/category-card'
 
-import Carousel from './components/carousel'
+import Carousel from '../../components/carousel'
 import Map from './components/map'
 
 import Logo from '../../svg/logo.svg'; 

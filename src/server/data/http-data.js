@@ -21,12 +21,12 @@ function HTTP_Promise(sublet) {
                 reject(error)
             })
         })
-    })
+    }).catch((error) => {console.error(error)})
 }
 
 async function IndexData() {
     try {
-        let econ_http_promise  = HTTP_Promise("api/econdata/getGDPGrowthGlobal/")
+        let econ_http_promise  = HTTP_Promise("api/econdata/getGDPGrowthGlobal/").catch((error) => {console.error(error)})
         let econ_http_response = JSON.parse(await econ_http_promise)
 
         let nation_list = []
@@ -50,8 +50,8 @@ async function GrabIndicatorData(isoCode, indicatorCode) {
     let year = 0000
 
     let url = `api/econdata/getMetricDataC/${indicatorCode}/${isoCode}/`
-    let promise = HTTP_Promise(url)
-    let result = JSON.parse(await promise)
+    let promise = HTTP_Promise(url).catch((error) => {console.error(error)})
+    let result = JSON.parse(await promise.catch(() => {}))
 
     let keys = Object.keys(result["data"])
     let data = []

@@ -1,5 +1,6 @@
 const fs = require('fs')
 const httpData = require('./http-data')
+const getCountryISO2 = require("country-iso-3-to-2")
 
 function ShuffleArray(array) {
     let currentIndex = array.length, randomIndex
@@ -27,10 +28,19 @@ function TrimYear(year, data) {
     return nArray
 }
 
-async function get_categories(req, res) {
+async function get_category(req, res) {
     const categories_data = JSON.parse(fs.readFileSync('./data/metric-categories.json'))
-    let keys = Object.keys(categories_data)
-    return res.json(keys)
+    let category = req.params.category
+
+    return res.json(categories_data[category])
+}
+
+async function get_indicator(req, res) {
+    let iso3 = req.params.iso3
+    let code = req.params.category
+
+    let data = await httpData.GrabIndicatorData(iso3, code)
+    return res.json(data)
 }
 
 async function get_indicator_pair_payload(category_a, category_b) {
@@ -87,6 +97,20 @@ async function sample_indicator(req, res) {
     res.json(package)
 }
 
+async function get_countries(req, res) {
+    const country_data = JSON.parse(fs.readFileSync('./data/countries.json'))
+    let finCountries = []
+    for(let i = 0; i < country_data.length; i++) {
+        const country = country_data[i]
+        const iso2 = getCountryISO2(country['isoCode'])
+        finCountries.push({name: country['fullname'], iso2: iso2, iso3: country['isoCode']})
+    }
+
+    res.json(finCountries)
+}
+
+exports.get_indicator = get_indicator
 exports.get_indicator_pair = get_indicator_pair
 exports.sample_indicator = sample_indicator
-exports.get_categories = get_categories
+exports.get_category = get_category
+exports.get_countries = get_countries

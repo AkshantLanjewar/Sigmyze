@@ -5,9 +5,98 @@
     text-align: center;
 }
 
+.tab-container {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+
+    .content {
+        display: flex;
+        flex-direction: row;
+        margin-top: 3em;
+        flex-wrap: wrap;
+
+        .card { 
+            max-width: 30%;
+
+            margin-left: 1em; 
+            margin-right: 1em; 
+            margin-bottom: 1em;
+        }    
+    }
+
+    .tabs {
+        display: flex;
+        align-items: stretch;
+        font-size: 1rem;
+        justify-content: space-between;
+        white-space: nowrap;
+        
+        overflow: hidden;
+        overflow-x: auto;
+        width: 80%;
+        margin: 0 auto;
+
+        ul {
+
+            display: flex;
+            flex-grow: 1;
+            flex-shrink: 0;
+            justify-content: center;
+
+            align-items: center;
+            list-style: none;
+
+            margin-top: 2em;
+
+            li {
+                display: block;
+                margin-left: -1px;
+
+                &:first-child a {
+                    border-top-left-radius: 0.375em;
+                    border-bottom-left-radius: 0.375em;
+                }
+
+                &:last-child a {
+                    border-top-right-radius: 0.375em;
+                    border-bottom-right-radius: 0.375em;
+                }
+
+                a {
+                    margin-bottom: 0;
+                    position: relative;
+                    cursor: pointer;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    padding: 0.5em 1em;
+                    vertical-align: top;
+                    background-color: $dark-bg;
+
+                    &:hover { background-color: $dark-bg-hover; }
+                    
+                    &.active { background-color: $alt-text-color; }
+
+                    span {
+                        display: flex;
+                        align-items: center;
+                        margin-right: 4px;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .search-container {
     width: 600px;
-    height: 320px;
+    height: auto;
     background: transparent;
     border-radius: 5px;
 
@@ -26,12 +115,12 @@
         width: 95%;
         background: #fff;
         border-radius: 10px;
-        overflow: hidden;
+        overflow-y: scroll;
 
-        opacity: 0;
+        display: none;
 
         &.active-search {
-            opacity: 1;
+            display: block;
         }
     }
 
@@ -163,8 +252,26 @@
 
                 z-index: 3;
 
+                display: flex;
+                flex-direction: row;
+
+                .submitted-text { 
+                    height: 100%;
+
+                    box-sizing: border-box;
+                    padding: 5px 5px 5px 43px;
+
+                    line-height: 2em;
+                    font-size: 1.1em;
+                    color: #3f3f3f;
+                }
+
                 .text-field {
-                    width: 100%;
+
+                    &.active-search {
+                        padding: 5px 5px 5px 0px;
+                    }
+
                     height: 100%;
                     background: transparent;
                     font-size: 1.1em;
@@ -175,6 +282,7 @@
                     padding: 5px 5px 5px 43px;
                     caret-color: #79a6ff;
                     line-height: 2em;
+                    flex: 1;
                 }
             }
         }

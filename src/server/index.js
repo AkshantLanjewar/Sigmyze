@@ -34,6 +34,7 @@ if(process.env.NODE_ENV == "dev") {
     })
 
     app.use(express.static('dist', { root: '.' })); 
+    app.use(express.static('static', {root: '.'}))
 }
 
 const dataRouter = require('./data/index')
