@@ -29,12 +29,11 @@ function capitalize(s: string)
 const stepOneChoices = [{icon: <AiOutlineLineChart />, name: "Internet Not Loading", iso3: "USA"}]
 
 type props = {
-    initalISO3: string,
     initalFullName: string,
     setActiveSearch: Function
 }
 
-const CountrySearch: React.FC<props> = ({ initalISO3, initalFullName, setActiveSearch }) => {
+const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => {
     const placeholderRef = React.createRef<HTMLDivElement>()
     const resultTabRef = React.createRef<HTMLDivElement>()
     const inputRef = React.createRef<HTMLInputElement>()
@@ -123,7 +122,7 @@ const CountrySearch: React.FC<props> = ({ initalISO3, initalFullName, setActiveS
                         <p className="placeholder" ref={placeholderRef}>Search Country</p>
 
                         <form>
-                            <input ref={inputRef} className="text-field" onKeyUp={onKeyUpInput} autoComplete="off" type="text" onBlur={onBlur} value={initalFullName} />
+                            <input ref={inputRef} className="text-field" onKeyUp={onKeyUpInput} autoComplete="off" type="text" onBlur={onBlur} />
                         </form>
                     </div>
                     <div className="search-btn"></div>

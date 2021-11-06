@@ -11,6 +11,7 @@ countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 
 const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
     const chartRef = React.createRef<HTMLDivElement>()
+    const cardRef = React.createRef<HTMLDivElement>()
 
     useEffect(() => {
         chartRef.current!.innerHTML = ""
@@ -27,6 +28,13 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
                     object["date"] = new Date(data.data[i]["date"])
                     object["value"] = data.data[i]["value"]
                     chartData.push(object)
+                }
+
+                if(chartData.length == 0) {
+                    cardRef.current!.style.display = "none"
+                    return
+                } else {
+                    cardRef.current!.style.display = "flex"
                 }
 
                 let chartOptions: ChartOptions = {
@@ -50,7 +58,7 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
     })
 
     return (
-        <div className="card dark">
+        <div className="card dark" ref={cardRef}>
             <div className="title tooltip">
                 <span>{countries.getName(iso3, "en", {select: "official"})} {category}</span>
 

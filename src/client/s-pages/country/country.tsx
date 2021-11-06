@@ -27,9 +27,9 @@ function IndicatorPage() {
     }]
 
     const [tabsState, setTabsState] = useState(initialTabState)
-    const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})
+    const [activeCountry, setActiveCountry] = useState({iso3: null, fullname: "United States"})
     const [activeTab, setActiveTab] = useState({ icon: <AiOutlineLineChart />, name: "Economics", short: "GDP", active: true })
-    const [activeCharts, setActiveCharts] = useState([{category: "NGDP", iso3: activeCountry.fullname}])
+    const [activeCharts, setActiveCharts] = useState([])
 
     function onTabClick(e: any, name: string) {
         e.preventDefault()
@@ -55,6 +55,8 @@ function IndicatorPage() {
     }
 
     useEffect(() => {
+        if(activeCountry.iso3 == null)
+            return
         const initalCategoryURL = `/api/data/categories/${activeTab.short}`
         fetch(initalCategoryURL)
             .then(response => response.json())
@@ -77,7 +79,7 @@ function IndicatorPage() {
             <div className="container">
                 <h1 className="country-title">Know your Country</h1>
 
-                <CountrySearch initalFullName={activeCountry.fullname} initalISO3={activeCountry.iso3} setActiveSearch={setActiveCountry} />
+                <CountrySearch initalFullName={activeCountry.fullname} setActiveSearch={setActiveCountry} />
                 <div className="tab-container">
                     <div className="tabs">
                         <ul>
