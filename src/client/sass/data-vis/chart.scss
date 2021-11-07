@@ -1,14 +1,17 @@
 @import '../vars.scss';
 
 .hover-line {
-    stroke: $dark-card;
+    stroke: $primary-muted;
     stroke-width: 2px;
     stroke-dasharray: 10;
 }
 
+.tooltip-container { z-index: 100; }
+
 .tooltip-chart { 
     fill: $dark-card; 
     stroke-width: 2; 
+    z-index: 99;
 }
 
 .tooltip-container text { fill: white; }

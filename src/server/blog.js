@@ -14,7 +14,10 @@ function blogRouter() {
 
             let dateSplit = file.split('.')
             let date      = moment(dateSplit[0], "MM-DD-YYYY")
+
+            pack["date-id"] = dateSplit[0]
             pack["date"] = date.format("MMMM Do YYYY")
+
             blogdata.push(pack)
         })
 
@@ -36,7 +39,7 @@ function blogRouter() {
             }
 
             blog["summary"] = summary
-            blog["blogElements"] = []
+            blog["blogElements"] = null
             blogdata[i] = blog
         }
 

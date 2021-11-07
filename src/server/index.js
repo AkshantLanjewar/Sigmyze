@@ -34,10 +34,14 @@ if(process.env.NODE_ENV == "dev") {
     })
 
     app.use(express.static('dist', { root: '.' })); 
+    app.use(express.static('static', {root: '.'}))
 }
 
 const dataRouter = require('./data/index')
 app.use('/api/data', dataRouter.dataRouter())
+
+const blogRouter = require('./blog')
+app.use('/api/blog', blogRouter.blogRouter())
 
 app.get(`/**`, (req, res) => {
     res.sendFile('/dist/index.html', { root: '.' })

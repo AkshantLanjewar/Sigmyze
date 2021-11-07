@@ -1,31 +1,75 @@
 @import '../../vars.scss';
 
 .card {
-    border-color: transparent;
-
-    border: 1px solid transparent;
-    margin: 1rem 0;
-    padding: .5rem;
-
     &.dark { background-color: $dark-bg; }
     &.light { background-color: $primary-bg; }
 
-    border-radius: 8px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    box-sizing: border-box;
 
-    .header {
-        padding-bottom: 0;
-        color: $alt-text-color;
-        padding: 1rem;
+    height: auto;
+    border-radius: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+
+    
+    padding-top: 18px;
+    padding-left: 22px;
+    padding-right: 22px;
+    padding-bottom: 12px;
+
+    @media screen and (max-width: $small) { width: 50%; }
+    @media screen and (max-width: $xtra-small) { width: 100%; }
+
+    .title {
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+
+        overflow: hidden;
     }
 
-    .body { 
-        padding: 1rem; 
-        line-height: 24px;
-        word-spacing: 1px;
-        letter-spacing: 1px;
+    .chart {
+        display: flex;
+        flex-shrink: 0;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+
+        &:hover .tooltiptext { visibility: visible; }
+
+        .tooltiptext {
+            visibility: hidden;
+            width: 240px;
+            background-color: $dark-card;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -120px;
+            font-size: 14px;
+        }
+
+        .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
     }
 }

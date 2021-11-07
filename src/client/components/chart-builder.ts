@@ -106,6 +106,8 @@ class ChartBuilder {
 
         longestCharLength = longestCharLength + 4
         let boxHeight  = (chartCount + 1) * 30
+        if(chartCount == 1)
+            boxHeight = (chartCount + 1.5) * 30
         let boxWidth   = 15 * longestCharLength
         
         let tooltipText = tooltip.append("g")
@@ -214,6 +216,7 @@ class ChartBuilder {
             .attr("width", "100%")
             .attr("height", "100%")
             .style('overflow', 'visible')
+            .style('z-index', '99')
 
         let boundingBox = svg.node()?.getBoundingClientRect()
         const rawWidth  = boundingBox?.width

@@ -10,16 +10,17 @@ function Navbar() {
         <nav className="navbar is-black is-fixed-top">
             <div className="navbar__inner">
                 <div className="left">
-                    <a className="brand">
+                    <a className="brand" href="/">
                         <img src={Logo} width={32} height={32} />
-                        <b>Lunar</b>
+                        <b>Sigmyze</b>
                     </a>
 
                     
                 </div>
 
                 <div className="right">
-
+                    <a className="nav-item" href="/compare">Indicators</a>
+                    <a className="nav-item" href="/blog">Blog</a>
                 </div>
             </div>
         </nav>
