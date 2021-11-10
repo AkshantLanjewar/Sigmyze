@@ -207,16 +207,25 @@ class ChartBuilder {
         return line
     }
 
-    public CreateChart() {
+    public CreateChart(tHeight?: number) {
         if(this.charts.length == 0)
             return
 
         let options: ChartOptions = this.charts[this.axisIndex]
-        const svg = d3.select(this.container.current).append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .style('overflow', 'visible')
-            .style('z-index', '99')
+        let svg 
+        if(tHeight != undefined) {
+            svg = d3.select(this.container.current).append("svg")
+                .attr("width", "100%")
+                .attr("height", `${tHeight}px`)
+                .style('overflow', 'visible')
+                .style('z-index', '99')
+        } else {
+            svg = d3.select(this.container.current).append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .style('overflow', 'visible')
+                .style('z-index', '99')
+        }
 
         let boundingBox = svg.node()?.getBoundingClientRect()
         const rawWidth  = boundingBox?.width

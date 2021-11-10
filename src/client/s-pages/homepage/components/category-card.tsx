@@ -9,6 +9,10 @@ type props = {
 type State = {
     shortA: string,
     shortB: string,
+    
+    longA: string,
+    longB: string,
+
     fullName: string,
     countryName: string,
 }
@@ -19,6 +23,10 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
     const initalState: State = {
         shortA: "",
         shortB: "",
+
+        longA: "",
+        longB: "",
+
         fullName: "",
         countryName: ""
     }
@@ -32,6 +40,9 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
             .then(data => {
                 let chart: ChartBuilder = new ChartBuilder(chartRef!)
                 let shortA, shortB, fullName = ""
+                let longA, longB = ""
+
+
                 let indicators = data["data"]
                 for(let i = 0; i < indicators.length; i++) {
                     let indicator: any = indicators[i]
@@ -68,22 +79,34 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
 
                     if(i == 0) {
                         shortA = indicator.name
+                        longA = indicator.fullname
                     }
                     else {
                         shortB = indicator.name
+                        longB = indicator.fullname
                     }
                 }
 
-                chart.CreateChart()
-                setState({...state, shortA: shortA, shortB: shortB, fullName: fullName, countryName: data["country"]["fullname"]})
+                chart.CreateChart(150)
+                setState({...state, shortA: shortA, shortB: shortB, fullName: fullName, countryName: data["country"]["fullname"], longA: longA, longB: longB})
             })
     }, [category_a, category_b])
 
     return (
         <div className="carousel-card" key={category_b}>
             <div className="title tooltip">
-                <span>{state.countryName}  </span><span style={{color: blueColor}}>{state.shortA}</span><span>/</span><span style={{color: redColor}}>{state.shortB}</span>
+                <h4 style={{marginBottom: "1em"}}>
+                    <span>{state.countryName} {'>'} </span>
+                    <span style={{color: blueColor}}>{state.longA} <span style={{color: "white"}}>:</span> </span>  
+                    <span style={{color: redColor}}>{state.longB}</span>
+                </h4>
 
+                <div>
+                    <span style={{color: blueColor}}>{state.shortA}</span>
+                    <span> : </span>
+                    <span style={{color: redColor}}>{state.shortB}</span>
+                </div>
+                
                 <span className="tooltiptext">{state.fullName}</span>
             </div>
 

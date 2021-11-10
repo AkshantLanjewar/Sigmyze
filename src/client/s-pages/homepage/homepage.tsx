@@ -56,7 +56,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                     <header className="hero-banner">
                         <div className="container">
                             <img src={Logo} width={64} height={64} />
-                            <h1 className="hero__title">Lunar</h1>
+                            <h1 className="hero__title">Sigmyze</h1>
                             <p className="hero__subtitle">A Web Based Data Visualization and Analytics Platform</p>
                         </div>
 

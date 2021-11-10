@@ -45,6 +45,7 @@ async function get_indicator(req, res) {
 
 async function get_indicator_pair_payload(category_a, category_b) {
     const categories = JSON.parse(fs.readFileSync('./data/metric-categories.json'))
+    const indicators = JSON.parse(fs.readFileSync('./data/indicators.json'))
 
     let a_indicator = ShuffleArray(categories[category_a])[0]
     let b_indicator = ShuffleArray(categories[category_b])[0]
@@ -64,6 +65,12 @@ async function get_indicator_pair_payload(category_a, category_b) {
     let payload = {country: country, data: [{name: a_indicator, data: indicator_a_data}, {name: b_indicator, data: indicator_b_data}]}
     if(indicator_a_data.data.length == 0 || indicator_b_data.data.length == 0)
         payload = await get_indicator_pair_payload(category_a, category_b)
+
+    let a_indicator_fullname = indicators[a_indicator]
+    let b_indicator_fullname = indicators[b_indicator]
+    payload["data"][0]["fullname"] = a_indicator_fullname
+    payload["data"][1]["fullname"] = b_indicator_fullname
+
     return payload
 }
 
@@ -71,30 +78,6 @@ async function get_indicator_pair(req, res, retPayload = false) {
     const category_a = req.params.category_a
     const category_b = req.params.category_b
     res.json(await get_indicator_pair_payload(category_a, category_b))
-}
-
-async function sample_indicator(req, res) {
-    //read file into disk
-    const country_data = JSON.parse(fs.readFileSync('./data/countries.json'))
-    const indicator_data = JSON.parse(fs.readFileSync('./data/indicators.json'))
-
-    let country     = country_data[Math.floor(Math.random() * country_data.length)]
-    let indicator_a = ShuffleArray(indicator_data)[0]
-    let indicator_b = ShuffleArray(indicator_data)[0]
-    
-    let indicator_a_data = await httpData.GrabIndicatorData(country["isoCode"], indicator_a["shortName"])
-    let indicator_b_data = await httpData.GrabIndicatorData(country["isoCode"], indicator_b["shortName"])
-
-    if(indicator_b_data.year < indicator_a_data.year)
-        indicator_a_data.data = TrimYear(indicator_b_data.year, indicator_a_data.data)
-    else if(indicator_a_data.year > indicator_b_data.year)
-        indicator_a_data.data = TrimYear(indicator_b_data.year, indicator_a_data.data)
-    else if(indicator_b_data.year > indicator_a_data.year)
-        indicator_b_data.data = TrimYear(indicator_a_data.year, indicator_b_data.data)
-
-    let package = { country: country, indicators: [{ descriptor: indicator_a, data: indicator_a_data }, 
-                                                   { descriptor: indicator_b, data: indicator_b_data }]}
-    res.json(package)
 }
 
 async function get_countries(req, res) {
@@ -111,6 +94,5 @@ async function get_countries(req, res) {
 
 exports.get_indicator = get_indicator
 exports.get_indicator_pair = get_indicator_pair
-exports.sample_indicator = sample_indicator
 exports.get_category = get_category
 exports.get_countries = get_countries
