@@ -93,13 +93,13 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
     }, [category_a, category_b])
 
     return (
-        <div className="carousel-card" key={category_b}>
+        <div className="carousel-card scaleHov" key={category_b}>
             <div className="title tooltip">
-                <h4 style={{marginBottom: "1em"}}>
+                <h3 style={{marginBottom: "1em"}}>
                     <span>{state.countryName} {'>'} </span>
                     <span style={{color: blueColor}}>{state.longA} <span style={{color: "white"}}>:</span> </span>  
                     <span style={{color: redColor}}>{state.longB}</span>
-                </h4>
+                </h3>
 
                 <div>
                     <span style={{color: blueColor}}>{state.shortA}</span>

@@ -13,6 +13,8 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
     const chartRef = React.createRef<HTMLDivElement>()
     const cardRef = React.createRef<HTMLDivElement>()
 
+    const [fullname, setFullname] = useState("")
+
     useEffect(() => {
         chartRef.current!.innerHTML = ""
         const url = `/api/data/indicator/${iso3}/${category}`
@@ -54,13 +56,20 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
 
                 chart.AddLineChart(chartOptions)
                 chart.CreateChart()
+
+                setFullname(data['fullname'])
             })
     })
 
     return (
-        <div className="card dark" ref={cardRef}>
+        <div className="card dark scaleHov" ref={cardRef}>
             <div className="title tooltip">
-                <span>{countries.getName(iso3, "en", {select: "official"})} {category}</span>
+                <h5 style={{marginBottom: "1em"}}>
+                    <span>{countries.getName(iso3, "en", {select: "official"})} {'>'} </span>
+                    <span>{fullname}</span>
+                </h5>
+                
+                <div>{category}</div>
 
                 <span className="tooltiptext">United States National GDP</span>
             </div>

@@ -9,6 +9,7 @@ import Post from './s-pages/blog/post'
 
 
 import IndicatorPage from './s-pages/country/country'
+import ChartBuilderPage from './u-pages/chart-builder/index';
 
 import './sass/index.scss'
 
@@ -19,9 +20,10 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={Homepage} /> 
                     <Route exact path="/post/:postID" component={Post} />
+                    <Route exact path="/chart" component={ChartBuilderPage} />
 
                     <Route
-                        path="/compare"
+                        path="/indicator"
                         render={({ match: { url } }) => (
                             <>
                                 <Route path={`${url}/`} component={IndicatorPage} exact />

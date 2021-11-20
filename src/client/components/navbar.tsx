@@ -19,8 +19,7 @@ function Navbar() {
                 </div>
 
                 <div className="right">
-                    <a className="nav-item" href="/compare">Indicators</a>
-                    <a className="nav-item" href="/blog">Blog</a>
+                    <a className="nav-item" href="/indicator">Indicators</a>
                 </div>
             </div>
         </nav>

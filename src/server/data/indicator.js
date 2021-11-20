@@ -38,8 +38,11 @@ async function get_category(req, res) {
 async function get_indicator(req, res) {
     let iso3 = req.params.iso3
     let code = req.params.category
-
+    
+    const indicators = JSON.parse(fs.readFileSync('./data/indicators.json'))
     let data = await httpData.GrabIndicatorData(iso3, code)
+    data['fullname'] = indicators[code]
+    
     return res.json(data)
 }
 
@@ -62,14 +65,15 @@ async function get_indicator_pair_payload(category_a, category_b) {
     if(indicator_b_data.year > indicator_a_data.year)
         indicator_b_data.data = TrimYear(indicator_a_data.year, indicator_b_data.data)
 
-    let payload = {country: country, data: [{name: a_indicator, data: indicator_a_data}, {name: b_indicator, data: indicator_b_data}]}
-    if(indicator_a_data.data.length == 0 || indicator_b_data.data.length == 0)
-        payload = await get_indicator_pair_payload(category_a, category_b)
-
     let a_indicator_fullname = indicators[a_indicator]
     let b_indicator_fullname = indicators[b_indicator]
+
+    let payload = {country: country, data: [{name: a_indicator, data: indicator_a_data}, {name: b_indicator, data: indicator_b_data}]}
     payload["data"][0]["fullname"] = a_indicator_fullname
     payload["data"][1]["fullname"] = b_indicator_fullname
+
+    if(indicator_a_data.data.length == 0 || indicator_b_data.data.length == 0)
+        payload = await get_indicator_pair_payload(category_a, category_b)
 
     return payload
 }

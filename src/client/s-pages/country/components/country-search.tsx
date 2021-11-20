@@ -57,6 +57,7 @@ const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => 
     useEffect(() => {
         if(initalFullName != "")
             placeholderRef.current!.style.opacity = "0"
+        inputRef.current!.value = "United States"
 
         let url = "/api/data/countries"
         fetch(url)

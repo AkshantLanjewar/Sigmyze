@@ -37,6 +37,16 @@
     }
 
     .carousel-card {
+
+        &.scaleHov {
+            cursor: pointer;
+            transition: all .1s ease-in-out;
+    
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+
         display: flex;
         flex-direction: column;
         box-sizing: border-box;

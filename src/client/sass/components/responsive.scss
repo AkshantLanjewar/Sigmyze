@@ -1,3 +1,5 @@
+@import '../vars.scss';
+
 .container {
     margin: 0 auto;
     max-width: 1140px;
@@ -41,4 +43,16 @@
 
 .row .col.col--4 {
     --ifm-col-width: 33.33333%;
+
+    @media screen and (max-width: $small) {
+        --ifm-col-width: 50%;
+        margin-bottom: 1em;
+
+        .card { width: 100%!important; }
+    }
+
+    @media screen and (max-width: $xtra-small) {
+        --ifm-col-width: 100%;
+        margin-bottom: 1em;
+    }
 }
