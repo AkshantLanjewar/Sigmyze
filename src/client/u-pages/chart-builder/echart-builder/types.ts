@@ -7,9 +7,32 @@ type title = {
     fontSize: number,
 }
 
+type LineStyle = {
+    color: string
+    width: number
+    type: 'solid' | 'dashed' | 'dotted',
+    cap: 'butt' | 'round' | 'square'
+}
+
+type TickStyle = {
+    show: boolean,
+    alignWithLabel: boolean,
+    inside: boolean,
+    length: number,
+    lineStyle: LineStyle
+}
+
+type AxisLineOptions = {
+    show: boolean
+    onZero: boolean,
+    lineStyle: LineStyle
+}
+
 type AxisOptions = {
     type: "value" | "category"
-    data: Array<string> | Array<number>
+    data: Array<string> | Array<number>,
+    axisLine: AxisLineOptions,
+    axisTick: TickStyle
 }
 
 type CHART_OPTIONS = {
@@ -17,4 +40,4 @@ type CHART_OPTIONS = {
     xAxis: Array<AxisOptions>
 }
 
-export { title, AxisOptions, CHART_OPTIONS }
+export { title, AxisOptions, CHART_OPTIONS, LineStyle }

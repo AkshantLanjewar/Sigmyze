@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 
 import BuildAxis from '../echart-builder/axis-builder'
-import SChartBuilder from '../echart-builder/echarts-builder'
 
 type XYData = {
     date: Date,
@@ -30,10 +29,7 @@ function OverviewChart() {
         if(initialCreate == true)
             return
 
-        let chartBuilder = new SChartBuilder()
-        chartBuilder.SetTitle("Swagadelphia")
-
-        let xAxis = new BuildAxis()
+        const xAxis: BuildAxis = new BuildAxis()
     }, [initialCreate])
 
     return (
