@@ -27,7 +27,7 @@ function IndicatorPage() {
     }]
 
     const [tabsState, setTabsState] = useState(initialTabState)
-    const [activeCountry, setActiveCountry] = useState({iso3: null, fullname: "United States"})
+    const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})
     const [activeTab, setActiveTab] = useState({ icon: <AiOutlineLineChart />, name: "Economics", short: "GDP", active: true })
     const [activeCharts, setActiveCharts] = useState([])
 

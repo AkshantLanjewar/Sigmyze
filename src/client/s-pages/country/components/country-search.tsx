@@ -57,6 +57,7 @@ const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => 
     useEffect(() => {
         if(initalFullName != "")
             placeholderRef.current!.style.opacity = "0"
+        inputRef.current!.value = "United States"
 
         let url = "/api/data/countries"
         fetch(url)
@@ -66,7 +67,7 @@ const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => 
 
                 for(let i = 0; i < data.length; i++) {
                     let country = data[i]
-                    let img = <img src={`/country/${country.iso2}.svg`} width="16px" height="16px" />
+                    let img = <img src={`/country/${country.iso2.toLowerCase()}.svg`} width="16px" height="16px" />
                     stepTwo.push({icon: img, name: country.name, iso3: country.iso3})
                 }
 

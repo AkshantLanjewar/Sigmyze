@@ -8,16 +8,22 @@ $primary-muted: #858588;
 
 $red-excite: #d60017;
 
-$medium: 1200px;
-$small: 900px;
+$medium: 1024px;
+$small: 768px;
 $xtra-small: 500px;
 
 
+$mute-text: rgb(162, 162, 162);
+$grey-hover: rgb(57, 57, 57);
+
 //n color palette
-$primary-bg: #20232a;
-$second-bg: rgb(32, 35, 42);
+$primary-bg: rgba(30, 30, 30, 1);
+$second-bg: rgb(23, 23, 23);
 $dark-bg: rgb(18, 18, 18);
 $dark-bg-hover: #333333;
+$border: #444444;
+
+$track: rgb(10, 10, 10);
 
 $navbar-bg: #121212;
 

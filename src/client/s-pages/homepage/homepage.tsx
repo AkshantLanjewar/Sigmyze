@@ -56,7 +56,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                     <header className="hero-banner">
                         <div className="container">
                             <img src={Logo} width={64} height={64} />
-                            <h1 className="hero__title">Lunar</h1>
+                            <h1 className="hero__title">Sigmyze</h1>
                             <p className="hero__subtitle">A Web Based Data Visualization and Analytics Platform</p>
                         </div>
 
@@ -94,10 +94,10 @@ class Homepage extends React.Component<{}, HomepageState> {
                                     <div className="col col--4">
                                         <div className="card dark" style={{minHeight: "258px"}}>
                                             <div className="header">
-                                                <h3>Diverse Datasets</h3>
+                                                <h2>Diverse Datasets</h2>
                                             </div>
 
-                                            <div className="body">
+                                            <div className="body" style={{marginTop: "1em"}}>
                                                 <p>Answer your questions with a large variety of WEO Datasets that cover GDP to investment</p>
                                             </div>
                                         </div>
@@ -106,10 +106,10 @@ class Homepage extends React.Component<{}, HomepageState> {
                                     <div className="col col--4">
                                         <div className="card dark" style={{minHeight: "258px"}}>
                                             <div className="header">
-                                                <h3>Beautiful Visualizations</h3>
+                                                <h2>Beautiful Visualizations</h2>
                                             </div>
 
-                                            <div className="body">
+                                            <div className="body" style={{marginTop: "1em"}}>
                                                 <p>Dont let cookie cutter data visuazation options, that limit the ways you can display data hold your analysis back</p>
                                             </div>
                                         </div>
@@ -118,10 +118,10 @@ class Homepage extends React.Component<{}, HomepageState> {
                                     <div className="col col--4">
                                         <div className="card dark" style={{minHeight: "258px"}}>
                                             <div className="header">
-                                                <h3>Faster Development</h3>
+                                                <h2>Faster Development</h2>
                                             </div>
 
-                                            <div className="body">
+                                            <div className="body" style={{marginTop: "1em"}}>
                                                 <p>Dont let complex tools and pipelines slow down your development, simplify the process by doing all your analysis on one platform</p>
                                             </div>
                                         </div>

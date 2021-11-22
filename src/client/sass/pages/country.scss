@@ -1,5 +1,7 @@
 @import '../vars.scss';
 
+@import '../components/chart/index.scss';
+
 .country-title {
     margin-top: 2em;
     text-align: center;
@@ -12,6 +14,20 @@
     width: 100%;
     height: auto;
     margin: 0 auto;
+
+    @media screen and (max-width: $small) { 
+        .content .card { 
+            max-width: 45%!important;
+            width: 45%!important; 
+        } 
+    }
+
+    @media screen and (max-width: $xtra-small) { 
+        .content .card { 
+            max-width: 95%!important;
+            width: 95%!important; 
+        } 
+    }
 
     .content {
         display: flex;
@@ -96,7 +112,7 @@
 }
 
 .search-container {
-    width: 600px;
+    max-width: 600px;
     height: auto;
     background: transparent;
     border-radius: 5px;
@@ -197,9 +213,9 @@
     }
 
     .form-container {
-        width: 600px;
+        max-width: 600px;
         height: 50px;
-        background: $second-bg;
+        background: $primary-bg;
         border-radius: 10px;
         margin-bottom: 10px;
 

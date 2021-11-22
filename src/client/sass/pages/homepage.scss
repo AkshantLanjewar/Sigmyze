@@ -58,6 +58,23 @@ section {
     .headline {
         margin-bottom: 2rem;
 
+        @media screen and (max-width: $medium) {
+            width: 100%;
+
+            .title {
+                width: 100%;
+                max-width: 100%!important;
+
+                text-align: center;
+            }
+
+            .category { padding-left: 2em; }
+        }
+
+        @media screen and (max-width: $xtra-small) {
+            .title { font-size: 1.8rem; }
+        }
+
         .category {
             align-items: center;
             display: inline-flex;
