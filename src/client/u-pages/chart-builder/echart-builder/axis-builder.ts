@@ -21,18 +21,23 @@ class BuildAxis {
         this.options.axisLine.lineStyle = defaultLineStyle
 
         //axis tick defaults
-        
+        this.options.axisTick.show = true
+        this.options.axisTick.alignWithLabel = false
+        this.options.axisTick.inside = false
+        this.options.axisTick.length = 5
+        this.options.axisTick.lineStyle = defaultLineStyle
+    }
+
+    GetAxis() {
+        return this.options
     }
 
     SetAxisType(type: "value" | "category") {
         this.options.type = type
     }
 
-    SetAxisData(data: Array<string> | Array<number>) {
-        if(typeof data[0] == 'string' && this.options.type == "category")
-            this.options.data = data
-        if(typeof data[0] == 'number' && this.options.type == "value")
-            this.options.data = data
+    SetAxisData(data: Array<any> ) {
+        this.options.data = data
     }
 
     HideAxisLine() {

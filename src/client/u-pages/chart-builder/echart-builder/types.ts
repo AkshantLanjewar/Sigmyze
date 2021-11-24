@@ -35,9 +35,21 @@ type AxisOptions = {
     axisTick: TickStyle
 }
 
-type CHART_OPTIONS = {
-    titleOptions?: title,
-    xAxis: Array<AxisOptions>
+type XYData = {
+    date: Date,
+    value: number
 }
 
-export { title, AxisOptions, CHART_OPTIONS, LineStyle }
+type Series = {
+
+}
+
+type CHART_OPTIONS = {
+    titleOptions?: title,
+
+    xAxis: Array<AxisOptions>,
+    yAxis: Array<AxisOptions>,
+    series: Array<Series>
+}
+
+export { title, AxisOptions, CHART_OPTIONS, LineStyle, XYData, Series }

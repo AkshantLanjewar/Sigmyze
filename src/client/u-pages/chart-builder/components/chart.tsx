@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react"
 
 import BuildAxis from '../echart-builder/axis-builder'
+import SChartBuilder from '../echart-builder/echarts-builder'
 
-type XYData = {
-    date: Date,
-    value: number
-}
+import { XYData } from '../echart-builder/types'
 
 let dummyData: Array<XYData> = [
     {date: new Date("2010"), value: 400},
@@ -28,8 +26,19 @@ function OverviewChart() {
     useEffect(() => {
         if(initialCreate == true)
             return
+        let xAxisData = []
+        for(let i = 0; i < dummyData.length; i++)
+            xAxisData.push(dummyData[i].date)
 
         const xAxis: BuildAxis = new BuildAxis()
+        xAxis.SetAxisType("category")
+        xAxis.SetAxisData(xAxisData)
+
+        const yAxis: BuildAxis = new BuildAxis()
+        yAxis.SetAxisType("value")
+
+        const chartBuilder: SChartBuilder = new SChartBuilder()
+
     }, [initialCreate])
 
     return (
