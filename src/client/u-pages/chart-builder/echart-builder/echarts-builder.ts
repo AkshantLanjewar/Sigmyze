@@ -14,6 +14,10 @@ class SChartBuilder {
         this.options.series = []
     }
 
+    BuildChart() {
+        console.log(this.options)
+    }
+
     SetTitle(text: string): void {
         let titleOptions: title = {
             id: this.uID + "-title",
@@ -37,8 +41,27 @@ class SChartBuilder {
             this.options.titleOptions.fontSize = fontsize
     }
 
-    AddLineChart(series: XYData, xAxis: AxisOptions, yAxis: AxisOptions) {
+    AddLineChart(series: Array<number>, xAxis: AxisOptions, yAxis: AxisOptions, name: string) {
         let seriesOptions: Series = {} as Series
+        seriesOptions.type = "line"
+        seriesOptions.name = name
+
+        //defaults
+        seriesOptions.showSymbol = false
+        seriesOptions.symbol = 'emptyCircle'
+        seriesOptions.symbolSize = 4
+
+        seriesOptions.smooth = false
+        seriesOptions.sampling = 'lttb'
+
+        seriesOptions.data = series
+
+        this.options.xAxis.push(xAxis)
+        seriesOptions.xAxisIndex = this.options.xAxis.length - 1
+        this.options.yAxis.push(yAxis)
+        seriesOptions.yAxisIndex = this.options.yAxis.length - 1
+
+        this.options.series.push(seriesOptions)
     }
 }
 

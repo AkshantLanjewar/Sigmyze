@@ -1,4 +1,4 @@
-import { AxisOptions, LineStyle } from './types'
+import { AxisOptions, LineStyle, AxisLineOptions, TickStyle } from './types'
 
 class BuildAxis {
     options: AxisOptions
@@ -16,11 +16,13 @@ class BuildAxis {
         this.options.type = 'value'
         
         //axis line defaults
+        this.options.axisLine = {} as AxisLineOptions
         this.options.axisLine.show = true
         this.options.axisLine.onZero = true
         this.options.axisLine.lineStyle = defaultLineStyle
 
         //axis tick defaults
+        this.options.axisTick = {} as TickStyle
         this.options.axisTick.show = true
         this.options.axisTick.alignWithLabel = false
         this.options.axisTick.inside = false

@@ -41,7 +41,21 @@ type XYData = {
 }
 
 type Series = {
+    type: string,
+    name: string,
 
+    xAxisIndex: number,
+    yAxisIndex: number,
+
+    //symbol
+    showSymbol: boolean,
+    symbol: 'emptyCircle' | 'circle' | 'roundRect' | 'triangle' | 'diamond' | 'pin' | 'arrow' | 'none',
+    symbolSize: number,
+
+    smooth: boolean,
+    sampling: string
+
+    data: Array<number>
 }
 
 type CHART_OPTIONS = {
@@ -52,4 +66,4 @@ type CHART_OPTIONS = {
     series: Array<Series>
 }
 
-export { title, AxisOptions, CHART_OPTIONS, LineStyle, XYData, Series }
+export { title, AxisOptions, CHART_OPTIONS, LineStyle, XYData, Series, AxisLineOptions, TickStyle }

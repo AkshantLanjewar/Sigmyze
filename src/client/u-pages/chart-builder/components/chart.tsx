@@ -26,9 +26,13 @@ function OverviewChart() {
     useEffect(() => {
         if(initialCreate == true)
             return
+
         let xAxisData = []
-        for(let i = 0; i < dummyData.length; i++)
+        let yAxisData = []
+        for(let i = 0; i < dummyData.length; i++) {
             xAxisData.push(dummyData[i].date)
+            yAxisData.push(dummyData[i].value)
+        }
 
         const xAxis: BuildAxis = new BuildAxis()
         xAxis.SetAxisType("category")
@@ -38,7 +42,8 @@ function OverviewChart() {
         yAxis.SetAxisType("value")
 
         const chartBuilder: SChartBuilder = new SChartBuilder()
-
+        chartBuilder.AddLineChart(yAxisData, xAxis.GetAxis(), yAxis.GetAxis(), "chart")
+        chartBuilder.BuildChart()
     }, [initialCreate])
 
     return (
