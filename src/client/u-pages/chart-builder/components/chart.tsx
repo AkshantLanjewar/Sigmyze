@@ -43,7 +43,7 @@ function OverviewChart() {
 
         const chartBuilder: SChartBuilder = new SChartBuilder()
         chartBuilder.AddLineChart(yAxisData, xAxis.GetAxis(), yAxis.GetAxis(), "chart")
-        chartBuilder.BuildChart()
+        const chartOPTS = chartBuilder.BuildChart()
     }, [initialCreate])
 
     return (

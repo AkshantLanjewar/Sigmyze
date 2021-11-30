@@ -1,4 +1,9 @@
 import * as uuid from "uuid"
+import React from "react"
+
+import { init } from "echarts"
+import type { ECharts } from "echarts"
+
 import { CHART_OPTIONS, title, AxisOptions, XYData, Series } from './types'
 
 class SChartBuilder {
@@ -14,10 +19,6 @@ class SChartBuilder {
         this.options.series = []
     }
 
-    BuildChart() {
-        console.log(this.options)
-    }
-
     SetTitle(text: string): void {
         let titleOptions: title = {
             id: this.uID + "-title",
@@ -29,6 +30,10 @@ class SChartBuilder {
         }
 
         this.options.titleOptions = titleOptions
+    }
+
+    BuildChart() {
+        return this.options
     }
 
     HideTitle(): void {
