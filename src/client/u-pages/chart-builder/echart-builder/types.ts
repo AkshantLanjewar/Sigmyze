@@ -28,11 +28,19 @@ type AxisLineOptions = {
     lineStyle: LineStyle
 }
 
+type SplitLine = {
+    show: boolean,
+    interval: string,
+    lineStyle: LineStyle
+}
+
 type AxisOptions = {
     type: "value" | "category"
     data: Array<string> | Array<number>,
     axisLine: AxisLineOptions,
     axisTick: TickStyle
+    position: string
+    splitLine: SplitLine
 }
 
 type XYData = {
@@ -40,22 +48,37 @@ type XYData = {
     value: number
 }
 
-type Series = {
-    type: string,
-    name: string,
+type Tooltip = {
+    show: boolean
+    trigger: 'item' | 'axis' | 'none'
+}
 
-    xAxisIndex: number,
-    yAxisIndex: number,
+type Series = {
+    type: string
+    name: string
+
+    xAxisIndex: number
+    yAxisIndex: number
 
     //symbol
-    showSymbol: boolean,
-    symbol: 'emptyCircle' | 'circle' | 'roundRect' | 'triangle' | 'diamond' | 'pin' | 'arrow' | 'none',
-    symbolSize: number,
+    showSymbol: boolean
+    symbol: 'emptyCircle' | 'circle' | 'roundRect' | 'triangle' | 'diamond' | 'pin' | 'arrow' | 'none'
+    symbolSize: number
 
-    smooth: boolean,
+    smooth: boolean
     sampling: string
+    lineStyle: LineStyle
 
     data: Array<number>
+}
+
+type GRID = {
+    left: string | number
+    right: string | number
+    top: string | number
+    bottom: string | number
+
+    show: boolean
 }
 
 type CHART_OPTIONS = {
@@ -64,6 +87,9 @@ type CHART_OPTIONS = {
     xAxis: Array<AxisOptions>,
     yAxis: Array<AxisOptions>,
     series: Array<Series>
+
+    grid: GRID,
+    tooltip: Tooltip
 }
 
-export { title, AxisOptions, CHART_OPTIONS, LineStyle, XYData, Series, AxisLineOptions, TickStyle }
+export { title, AxisOptions, CHART_OPTIONS, LineStyle, XYData, Series, AxisLineOptions, TickStyle, GRID, SplitLine, Tooltip }

@@ -1,15 +1,16 @@
-import { AxisOptions, LineStyle, AxisLineOptions, TickStyle } from './types'
+import { AxisLineOptions, AxisOptions, LineStyle, SplitLine } from './types'
 
 class BuildAxis {
     options: AxisOptions
 
     constructor() {
         this.options = {} as AxisOptions
+        this.options.position = "right"
 
         let defaultLineStyle = {} as LineStyle
-        defaultLineStyle.color = "#333"
+        defaultLineStyle.color = "#b2b5be"
         defaultLineStyle.type = 'solid'
-        defaultLineStyle.width = 1
+        defaultLineStyle.width = 2
         defaultLineStyle.cap = 'butt'
 
         //set defaults
@@ -21,25 +22,30 @@ class BuildAxis {
         this.options.axisLine.onZero = true
         this.options.axisLine.lineStyle = defaultLineStyle
 
-        //axis tick defaults
-        this.options.axisTick = {} as TickStyle
-        this.options.axisTick.show = true
-        this.options.axisTick.alignWithLabel = false
-        this.options.axisTick.inside = false
-        this.options.axisTick.length = 5
-        this.options.axisTick.lineStyle = defaultLineStyle
-    }
-
-    GetAxis() {
-        return this.options
+        //split line defaults
+        this.options.splitLine = {} as SplitLine
+        this.options.splitLine.show = true
+        this.options.splitLine.interval = 'auto'
+        this.options.splitLine.lineStyle = defaultLineStyle
     }
 
     SetAxisType(type: "value" | "category") {
         this.options.type = type
     }
 
-    SetAxisData(data: Array<any> ) {
-        this.options.data = data
+    GetAxis() {
+        return this.options
+    }
+
+    HideSplitLine() {
+        this.options.splitLine.show = false
+    }
+
+    SetAxisData(data: Array<string> | Array<number> ) {
+        if(typeof data[0] == 'string' && this.options.type == "category")
+            this.options.data = data
+        if(typeof data[0] == 'number' && this.options.type == "value")
+            this.options.data = data
     }
 
     HideAxisLine() {

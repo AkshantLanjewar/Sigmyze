@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react"
 import BuildAxis from '../echart-builder/axis-builder'
 import SChartBuilder from '../echart-builder/echarts-builder'
 
+import { ReactEChart } from '../../../components/echarts'
+
 import { XYData } from '../echart-builder/types'
 
 let dummyData: Array<XYData> = [
@@ -22,6 +24,9 @@ let dummyData: Array<XYData> = [
 function OverviewChart() {
     const chartRef = React.createRef<HTMLDivElement>()
     const [initialCreate, setInitialCreate] = useState(false)
+    
+    let initalOpts = {}
+    const [chartOptions, setChartOptions] = useState(initalOpts)
 
     useEffect(() => {
         if(initialCreate == true)
@@ -30,24 +35,29 @@ function OverviewChart() {
         let xAxisData = []
         let yAxisData = []
         for(let i = 0; i < dummyData.length; i++) {
-            xAxisData.push(dummyData[i].date)
+            xAxisData.push(dummyData[i].date.toDateString())
             yAxisData.push(dummyData[i].value)
         }
 
         const xAxis: BuildAxis = new BuildAxis()
         xAxis.SetAxisType("category")
         xAxis.SetAxisData(xAxisData)
+        xAxis.HideSplitLine()
 
         const yAxis: BuildAxis = new BuildAxis()
         yAxis.SetAxisType("value")
+        yAxis.HideSplitLine()
 
         const chartBuilder: SChartBuilder = new SChartBuilder()
         chartBuilder.AddLineChart(yAxisData, xAxis.GetAxis(), yAxis.GetAxis(), "chart")
+        chartBuilder.BuildTooltip()
         const chartOPTS = chartBuilder.BuildChart()
+        setChartOptions(chartOPTS)
     }, [initialCreate])
 
     return (
         <div className="overview-chart" ref={chartRef}>
+            <ReactEChart option={chartOptions} style={{height: "100%"}} />
         </div>
     )
 }

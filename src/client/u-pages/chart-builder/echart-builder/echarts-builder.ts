@@ -1,10 +1,5 @@
 import * as uuid from "uuid"
-import React from "react"
-
-import { init } from "echarts"
-import type { ECharts } from "echarts"
-
-import { CHART_OPTIONS, title, AxisOptions, XYData, Series } from './types'
+import { CHART_OPTIONS, title, AxisOptions, GRID, Series, LineStyle, Tooltip } from './types'
 
 class SChartBuilder {
     options: CHART_OPTIONS
@@ -17,6 +12,16 @@ class SChartBuilder {
         this.options.xAxis = []
         this.options.yAxis = []
         this.options.series = []
+
+        let gridOpts: GRID = {} as GRID
+        gridOpts.bottom = "3%"
+        gridOpts.top = "2.5%"
+        gridOpts.left = "0"
+        gridOpts.right = "3%"
+
+        gridOpts.show = false
+
+        this.options.grid = gridOpts
     }
 
     SetTitle(text: string): void {
@@ -46,16 +51,28 @@ class SChartBuilder {
             this.options.titleOptions.fontSize = fontsize
     }
 
+    BuildTooltip() {
+        let tooltip: Tooltip = {} as Tooltip
+        tooltip.show = true
+        tooltip.trigger = 'axis'
+
+        this.options.tooltip = tooltip
+    }
+
     AddLineChart(series: Array<number>, xAxis: AxisOptions, yAxis: AxisOptions, name: string) {
+        let defaultLineStyle: LineStyle = {} as LineStyle
+        defaultLineStyle.width = 2
+        defaultLineStyle.cap = 'round'
+        defaultLineStyle.color = '#456ef7'
+        defaultLineStyle.type = 'solid'
+
         let seriesOptions: Series = {} as Series
         seriesOptions.type = "line"
         seriesOptions.name = name
-
-        //defaults
         seriesOptions.showSymbol = false
-        seriesOptions.symbol = 'emptyCircle'
+        seriesOptions.symbol = 'circle'
         seriesOptions.symbolSize = 4
-
+        seriesOptions.lineStyle = defaultLineStyle
         seriesOptions.smooth = false
         seriesOptions.sampling = 'lttb'
 
