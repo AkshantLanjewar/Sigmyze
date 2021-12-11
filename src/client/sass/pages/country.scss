@@ -131,7 +131,7 @@
         justify-content: flex-start;
         flex-direction: column;
         width: 95%;
-        background: #fff;
+        background: $second-bg;
         border-radius: 10px;
         overflow-y: scroll;
 
@@ -163,7 +163,7 @@
             p {
                 text-transform: uppercase;
                 font-size: calc(1.1em / 1.5);
-                color: #222;
+                color: $primary-muted;
                 opacity: 1;
             }
         }
@@ -175,7 +175,7 @@
             position: relative;
 
             .li {
-                color: black;
+                color: $text-color;
                 box-sizing: border-box;
                 padding: 0 10%;
 
@@ -240,14 +240,14 @@
             position: relative;
             border-radius: 6px;
             overflow: hidden;
-            background: #eff4ff;
+            background: $second-bg;
 
             .search-icon {
                 position: absolute;
                 top: 10px;
                 left: 10px;
                 z-index: 1;
-                color: #6e80a5;
+                color: $text-color;
                 width: 24px;
                 height: 24px;
             }
@@ -257,7 +257,7 @@
                 top: 13px;
                 left: 42px;
                 z-index: 1;
-                color: #6e80a5;
+                color: $text-color;
                 font-size: calc(1.1em / 1.1);
                 user-select: none;
             }
@@ -281,7 +281,7 @@
 
                     line-height: 2em;
                     font-size: 1.1em;
-                    color: #3f3f3f;
+                    color: $text-color;
                 }
 
                 .text-field {
@@ -293,11 +293,11 @@
                     height: 100%;
                     background: transparent;
                     font-size: 1.1em;
-                    color: #3f3f3f;
+                    color: $text-color;
                     border: none;
                     outline: none;
                     box-sizing: border-box;
-                    padding: 5px 5px 5px 43px;
+                    padding: 5px 5px 3px 43px;
                     caret-color: #79a6ff;
                     line-height: 2em;
                     flex: 1;

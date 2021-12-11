@@ -3,55 +3,8 @@ import { AiOutlineLineChart, AiOutlineEllipsis, AiOutlineBarChart } from "react-
 import { FiChevronDown } from "react-icons/fi"
 import { IoMdClose } from "react-icons/io"
 import { HiPlus } from "react-icons/hi"
+import AddModal from './add-modal'
 
-function SearchIcon() {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            style={{cursor: "pointer"}}
-            fill="none" 
-            stroke="currentColor" 
-            stroke-width="2"
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
-            className="search-icon">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-    )
-}
-
-function AddModal() {
-    return (
-        <div style={{display: "flex", justifyContent: "center", width: "100vw", height: "100%", position: "absolute", top: 0}}>
-            <div className="absolute-black-bg"></div>
-
-            <div className="chart-modal">
-                <div className="search-container">
-                    <div className="form-container">
-                        <div className="form-tab">
-                            <div className="field">
-                                <SearchIcon />
-                                <p className="placeholder">Search Indicators</p>
-
-                                <form>
-                                <input className="text-field"  autoComplete="off" type="text" />
-                            </form>
-                            </div>
-                            <div className="search-btn"></div>
-                        </div>
-                    </div>
-
-                    <div className="result-tab">
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}
 
 function Item() {
     return (
