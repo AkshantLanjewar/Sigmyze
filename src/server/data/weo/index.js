@@ -46,7 +46,7 @@ async function TabulateWEOData() {
 
     let combined_indicators = []
 
-    for(let i = 0; i < categories_rep.length; i++) {
+    for(let i = 0; i < categories_rep.length; i++) {\
         let category = categories_rep[i]
         let url = `/api/econdata/metricsbygroup/${category}/`
         let req = HTTP_GET(url).catch((error) => { console.log(error) })
