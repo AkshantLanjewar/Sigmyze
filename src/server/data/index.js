@@ -5,6 +5,8 @@ const httpData  = require('./v1/http-data')
 const indicator = require('./v1/indicator')
 const map       = require('./v1/map')
 
+const v2 = require('./v2/index')
+
 const WEOTab = require('./weo/index')
 
 function DataRouter() {
@@ -22,6 +24,8 @@ function DataRouter() {
     router.get('/countries', indicator.get_countries)
     router.get('/indicator/:iso3/:category', indicator.get_indicator)
     router.get('/indicator/categories/pair/:category_a/:category_b', indicator.get_indicator_pair)
+
+    router.use('/v2', v2.V2APIRouter())
 
     return router
 }

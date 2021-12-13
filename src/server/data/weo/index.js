@@ -46,7 +46,7 @@ async function TabulateWEOData() {
 
     let combined_indicators = []
 
-    for(let i = 0; i < categories_rep.length; i++) {\
+    for(let i = 0; i < categories_rep.length; i++) {
         let category = categories_rep[i]
         let url = `/api/econdata/metricsbygroup/${category}/`
         let req = HTTP_GET(url).catch((error) => { console.log(error) })
@@ -76,6 +76,33 @@ async function TabulateWEOData() {
 
     for(let i = 0; i < country_rep.length; i++) {
         let country = country_rep[i]
+        let iso3 = country['iso3']
+        let active_indicators = []
+
+        for(let x = 0; x < combined_indicators.length; x++) {
+            let indicator = combined_indicators[x]
+            let shortI = indicator['indicator']
+            
+            let url = `/api/econdata/getMetricDataC/${shortI}/${iso3}/`
+            let req = HTTP_GET(url).catch((error) => { console.log(error) })
+            let rep = JSON.parse(await req)
+
+            let rep_data = rep['data']
+            //convert data to array
+            let data_keys = Object.keys(rep_data)
+            let data = []
+            for(let y = 0; y < data_keys.length; y++) {
+                let date  = data_keys[y]
+                let value = rep_data[date]
+                data.push({ date: date, value: value })
+            }
+
+            if(data[0] == null)
+                continue
+            active_indicators.push(indicator)
+        }
+
+        fs.writeFileSync(`./indicatorDB/WEO/countries/${iso3}_active.json`, JSON.stringify(active_indicators))
     }
 }
 
