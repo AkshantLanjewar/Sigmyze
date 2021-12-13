@@ -137,56 +137,80 @@ const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit}) => {
 }
 
 function IndicatorLayout() {
-    return (
-        <div className="main-wrap">
-            <div className="side">
-                <div className="tab">
-                    <span className="icon"><FcAreaChart /></span>
+    const inputRef = React.createRef<HTMLInputElement>()
+    const [indicatorList, setIndicatorList] = useState([])
 
-                    <span className="tab-title">
-                        <span className="text">WEO Economic</span>
-                    </span>
+    function onKeyUpInput(e: any) {
+        e.preventDefault()
+    }
+
+    useEffect(() => {
+        let indicatorList = []
+
+        
+    }, [])
+
+    return (
+        <div>
+            <div className="search-bar">
+                <div className="input-container">
+                    <input type="text" autoComplete="off" placeholder="Search" ref={inputRef} onKeyUp={onKeyUpInput} />
                 </div>
+                <span className="search">
+                    <SearchIcon />
+                </span>
             </div>
 
-            <div className="indicator-content">
-                <div className="pills">
-                    <span className="pill">
-                        <span className="content">GDP</span>
-                    </span>
+            <div className="main-wrap">
+                <div className="side">
+                    <div className="tab">
+                        <span className="icon"><FcAreaChart /></span>
 
-                    <span className="pill">
-                        <span className="content">Government</span>
-                    </span>
-
-                    <span className="pill">
-                        <span className="content">Investment</span>
-                    </span>
+                        <span className="tab-title">
+                            <span className="text">WEO Economic</span>
+                        </span>
+                    </div>
                 </div>
 
-                <div className="indicators">
-                    <div className="listContainer">
-                        <div className="title-item">
-                            <h3>Indicators</h3>
-                        </div>
+                <div className="indicator-content">
+                    <div className="pills">
+                        <span className="pill">
+                            <span className="content">GDP</span>
+                        </span>
 
-                        <div className="indicator">
-                            <div className="main-content">
-                                <span className="indicator-title">Account Balance (USD)</span>
+                        <span className="pill">
+                            <span className="content">Government</span>
+                        </span>
+
+                        <span className="pill">
+                            <span className="content">Investment</span>
+                        </span>
+                    </div>
+
+                    <div className="indicators">
+                        <div className="listContainer">
+                            <div className="title-item">
+                                <h3>Indicators</h3>
                             </div>
 
-                            <div className="actions">
-                                
-                            </div>
-                        </div>
+                            <div className="indicator">
+                                <div className="main-content">
+                                    <span className="indicator-title">Account Balance (USD)</span>
+                                </div>
 
-                        <div className="indicator">
-                            <div className="main-content">
-                                <span className="indicator-title">Account Balance (USD)</span>
+                                <div className="actions">
+                                    
+                                </div>
                             </div>
 
-                            <div className="actions">
-                                
+                            <div className="indicator">
+                                <div className="main-content">
+                                    <span className="indicator-title">Account Balance (USD)</span>
+                                </div>
+
+                                <div className="actions">
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -14,7 +14,7 @@ class SChartBuilder {
         this.options.series = []
 
         let gridOpts: GRID = {} as GRID
-        gridOpts.bottom = "3%"
+        gridOpts.bottom = "5%"
         gridOpts.top = "2.5%"
         gridOpts.left = "0"
         gridOpts.right = "3%"
