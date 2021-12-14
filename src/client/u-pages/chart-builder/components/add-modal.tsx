@@ -139,15 +139,20 @@ const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit}) => {
 function IndicatorLayout() {
     const inputRef = React.createRef<HTMLInputElement>()
     const [indicatorList, setIndicatorList] = useState([])
+    const [datasets, setDatasets] = useState([])
 
     function onKeyUpInput(e: any) {
         e.preventDefault()
     }
 
     useEffect(() => {
-        let indicatorList = []
-
-        
+        //get datasets
+        let datasetURL = "/api/data/v2/datasets"
+        fetch(datasetURL)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
     }, [])
 
     return (
