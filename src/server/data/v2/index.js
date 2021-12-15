@@ -35,14 +35,6 @@ function V2APIRouter() {
         return res.json(json)
     })
 
-    router.get('/datasets/:dataset/categories/:iso3', (req, res) => {
-        let dataset = req.params.dataset
-        let iso3 = req.params.iso3
-
-        let folderLocation = `./indicatorDB/${dataset}`
-        
-    })
-
     router.get('/datasets/:dataset/categories/:category/:iso3', (req, res) => {
         let category = req.params.category
         let dataset = req.params.dataset

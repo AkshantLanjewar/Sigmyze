@@ -26,10 +26,11 @@ function SearchIcon() {
 }
 
 type CountryLayoutProps = {
-    nextSubmit: Function
+    nextSubmit: Function,
+    setCountry: Function
 }
 
-const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit}) => {
+const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit, setCountry}) => {
     const inputRef = React.createRef<HTMLInputElement>()
     const [currentCountryStep, setCurrentCountryStep] = useState(stepOneChoices)
     const [displayCountryStep, setDisplayCountryStep] = useState(stepOneChoices)
@@ -75,12 +76,16 @@ const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit}) => {
     function onListClick(id: string) {
         let currentCountryT = currentCountryStep
         let displayCountryT = displayCountryStep
+        let activeCountry = {}
+
         for(let i = 0; i < currentCountryT.length; i++) {
             let country = currentCountryT[i]
             country.focus = ""
 
-            if(country.iso3 == id)
+            if(country.iso3 == id) {
                 country.focus = "focus"
+                activeCountry = country
+            }
             currentCountryT[i] = country
         }
 
@@ -88,14 +93,17 @@ const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit}) => {
             let country = displayCountryT[i]
             country.focus = ""
 
-            if(country.iso3 == id)
+            if(country.iso3 == id) {
                 country.focus = "focus"
-                displayCountryT[i] = country
+                activeCountry = country
+            }
+            displayCountryT[i] = country
         }
 
         setCurrentCountryStep([...currentCountryT])
         setDisplayCountryStep([...displayCountryT])
         nextSubmit(true)
+        setCountry(activeCountry)
     }
 
     return (
@@ -136,10 +144,18 @@ const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit}) => {
     )
 }
 
+type IndicatorProps = {
+    activeCountry: any
+}
+
 function IndicatorLayout() {
     const inputRef = React.createRef<HTMLInputElement>()
-    const [indicatorList, setIndicatorList] = useState([])
+
     const [datasets, setDatasets] = useState([])
+    const [activeDataset, setActiveDataset] = useState({})
+
+    const [categoryNames, setCategoryNames] = useState([])
+    const [indicators, setIndicators]
 
     function onKeyUpInput(e: any) {
         e.preventDefault()
@@ -151,9 +167,31 @@ function IndicatorLayout() {
         fetch(datasetURL)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                setDatasets(data)
+                setActiveDataset(data[0])
             })
     }, [])
+
+    useEffect(() => {
+        if(activeDataset == {})
+            return 
+        
+        let categoryUrl = `/api/data/v2/datasets/${activeDataset.name}/categories`
+        fetch(categoryUrl)
+            .then(response => response.json())
+            .then(data => {
+                let updatedList = []
+                for(let i = 0; i < data.length; i++)
+                    updatedList.push(data[i].replace(activeDataset.name, ''))
+                setCategoryNames(updatedList)
+            })
+            .then(() => {
+                for(let i = 0; i < categoryNames.length; i++) {
+                    let category = categoryNames[i]
+                    let indicatorUrl = `/api/data/v2/datasets/${activeDataset.name}/${category}/`
+                }
+            })
+    }, [activeDataset])
 
     return (
         <div>
@@ -168,28 +206,26 @@ function IndicatorLayout() {
 
             <div className="main-wrap">
                 <div className="side">
-                    <div className="tab">
-                        <span className="icon"><FcAreaChart /></span>
+                    {datasets.map((step) => {
+                        return (
+                            <div className="tab">
+                                <span className="icon"><FcAreaChart /></span>
 
-                        <span className="tab-title">
-                            <span className="text">WEO Economic</span>
-                        </span>
-                    </div>
+                                <span className="tab-title">
+                                    <span className="text">{step.name}</span>
+                                </span>
+                            </div>
+                        )
+                    })}
                 </div>
 
                 <div className="indicator-content">
                     <div className="pills">
-                        <span className="pill">
-                            <span className="content">GDP</span>
-                        </span>
-
-                        <span className="pill">
-                            <span className="content">Government</span>
-                        </span>
-
-                        <span className="pill">
-                            <span className="content">Investment</span>
-                        </span>
+                        {categoryNames.map((step) => (
+                            <span className="pill">
+                                <span className="content">{step}</span>
+                            </span>
+                        ))}
                     </div>
 
                     <div className="indicators">
@@ -230,6 +266,7 @@ const stepOneChoices = [{icon: <AiOutlineLineChart />, name: "Internet Not Loadi
 function AddModal() {
     const [modalStep, setModalStep] = useState(false)
     const [nextStep, setNextStep] = useState(false)
+    const [country, setCountry] = useState({})
 
     return (
         <div style={{display: "flex", justifyContent: "center", width: "100vw", height: "100%", position: "absolute", top: 0}}>
@@ -250,7 +287,7 @@ function AddModal() {
 
                 {modalStep
                     ? <IndicatorLayout />
-                    : <CountryLayout nextSubmit={setNextStep} />
+                    : <CountryLayout nextSubmit={setNextStep} setCountry={setCountry} />
                 }
 
                 {modalStep
