@@ -231,6 +231,8 @@
                     overflow: visible;
                     position: relative;
 
+                    &.active { border: 1px solid white; }
+
                     .content {
                         background-color: $dark-bg;
                         overflow: hidden;

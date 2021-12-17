@@ -43,7 +43,7 @@ function V2APIRouter() {
         let folderLocation = `./indicatorDB/${dataset}`
         if(!fs.existsSync(folderLocation))
             return res.send("dataset_404")
-        let fileLocation = `./indicatorDB/${dataset}/groups/${category}_indicators.json`
+        let fileLocation = `./indicatorDB/${dataset}/groups/${dataset}${category}_indicators.json`
         if(!fs.existsSync(fileLocation))
             return res.send("category_404")
         let countryFileLocation = `./indicatorDB/${dataset}/countries/${iso3}_active.json`

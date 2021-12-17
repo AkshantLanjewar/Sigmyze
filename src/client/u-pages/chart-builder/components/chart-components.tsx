@@ -3,7 +3,7 @@ import { AiOutlineLineChart, AiOutlineEllipsis, AiOutlineBarChart } from "react-
 import { FiChevronDown } from "react-icons/fi"
 import { IoMdClose } from "react-icons/io"
 import { HiPlus } from "react-icons/hi"
-import AddModal from './add-modal'
+import AddModal from './add-modal/add-modal.tsx'
 
 
 function Item() {
