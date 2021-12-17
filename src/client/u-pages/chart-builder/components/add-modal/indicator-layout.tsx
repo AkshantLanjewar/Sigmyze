@@ -36,10 +36,6 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry}) => {
     const [indicators, setIndicators] = useState([])
     const [activeIndicator, setActiveIndicator] = useState(null)
 
-    function onKeyUpInput(e: any) {
-        e.preventDefault()
-    }
-
     useEffect(() => {
         //get datasets
         let datasetURL = "/api/data/v2/datasets"
@@ -131,8 +127,11 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry}) => {
         setCategoryNames([...categoryList])
     }
 
-    function OnIndicatorClick(e: any, indicator: any) {
+    function onKeyUpInput(e: any) {
         e.preventDefault()
+
+        let currentInput = inputRef.current!.value.toLowerCase()
+        let pActiveCategory = activeCategory
     }
 
     return (
