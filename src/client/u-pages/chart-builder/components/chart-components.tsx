@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { AiOutlineLineChart, AiOutlineEllipsis, AiOutlineBarChart } from "react-icons/ai"
 import { FiChevronDown } from "react-icons/fi"
 import { IoMdClose } from "react-icons/io"
@@ -52,15 +52,18 @@ function ChartTabs() {
 }
 
 function ChartComponentsViewer() {
+    const [modalState, setModalState] = useState(false)
+
     return (
         <div>
-            <AddModal />
+            <AddModal modalState={modalState} setModalState={setModalState} />
+
             <div className="nav">
                 <div className="section-container">
                     <div className="header">
                         <FiChevronDown className="c-icon" />
                         <h3 className="title">Indicators</h3>
-                        <HiPlus className="add" />
+                        <HiPlus className="add" onClick={() => { setModalState(true) }} />
                     </div>
 
                     <div className="children">

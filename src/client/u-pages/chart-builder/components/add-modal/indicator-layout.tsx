@@ -21,10 +21,12 @@ function SearchIcon() {
 }
 
 type IndicatorProps = {
-    activeCountry: any
+    activeCountry: any,
+    submitStep: Function,
+    setIndicatorGlobal: Function
 }
 
-const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry}) => {
+const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry, submitStep, setIndicatorGlobal}) => {
     const inputRef = React.createRef<HTMLInputElement>()
 
     const [datasets, setDatasets] = useState([])
@@ -82,6 +84,7 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry}) => {
                 for(let i = 0; i < json.length; i++) {
                     let indicator = json[i]
                     indicator['category'] = category
+                    indicator['class'] = ''
                     p_indicators.push(indicator)
                 }
             }
@@ -129,9 +132,58 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry}) => {
 
     function onKeyUpInput(e: any) {
         e.preventDefault()
-
         let currentInput = inputRef.current!.value.toLowerCase()
         let pActiveCategory = activeCategory
+
+        let step = []
+        for(let i = 0; i < indicators.length; i++) {
+            const nLastWord = currentInput.toLowerCase().replace(/\s/g, '').split("")
+
+            let nStep = indicators[i]
+            const nSub = nStep.name.toLowerCase().replace(/\s/g, '').split("")
+            nSub.length = nLastWord.length
+
+            let fits_category = false
+            if(pActiveCategory == null)
+                fits_category = true
+            else if(pActiveCategory.name == nStep.category.name)
+                fits_category = true 
+
+            if(nLastWord.toString() == nSub.toString() && fits_category)
+                step.push(nStep)
+        }
+
+        setDisplayIndicators(step)
+    }
+
+    function onIndicatorClick(e: any, name: string) {
+        let pIndicators = indicators
+        let pDisplayInd = displayIndicators
+        let activeIndicator = {}
+
+        for(let i = 0; i < pIndicators.length; i++) {
+            let indicator = pIndicators[i]
+            indicator.class = ''
+
+            if(indicator.name == name)
+                indicator.class = 'active'
+            pIndicators[i] = indicator
+            activeIndicator = indicator
+        }
+
+        for(let i = 0; i < pDisplayInd.length; i++) {
+            let indicator = pDisplayInd[i]
+            indicator.class = ''
+
+            if(indicator.name == name)
+                indicator.class = 'focus'
+            pDisplayInd[i] = indicator
+        }
+
+        setIndicators([...pIndicators])
+        setDisplayIndicators([...pDisplayInd])
+        submitStep(true)
+        setIndicatorGlobal(activeIndicator)
     }
 
     return (
@@ -177,7 +229,7 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry}) => {
 
                             {displayIndicators.map((step) => {
                                 return (
-                                    <div className="indicator">
+                                    <div className={"indicator " + step.class} onClick={(e) => { onIndicatorClick(e, step.name) }}>
                                         <div className="main-content">
                                             <span className="indicator-title">{step.name}</span>
                                         </div>

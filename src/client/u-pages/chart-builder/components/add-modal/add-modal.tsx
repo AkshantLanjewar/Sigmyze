@@ -6,13 +6,32 @@ import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs"
 import IndicatorLayout from './indicator-layout.tsx'
 import CountryLayout from './country-layout.tsx'
 
-function AddModal() {
+type props = {
+    modalState: boolean,
+    setModalState: Function
+}
+
+const AddModal: React.FC<props> = ({ modalState, setModalState }) => {
     const [modalStep, setModalStep] = useState(false)
     const [nextStep, setNextStep] = useState(false)
+    const [submitStep, setSubmitStep] = useState(false)
+
+
     const [country, setCountry] = useState({})
+    const [indicator, setIndicator] = useState({})
+
+    function onNextClick() { 
+        if(nextStep == true)
+            setModalStep(true)
+    }
+
+    function onSubmitClick(e: any) {
+        e.preventDefault()
+        
+    }
 
     return (
-        <div style={{display: "flex", justifyContent: "center", width: "100vw", height: "100%", position: "absolute", top: 0}}>
+        <div style={{display: modalState ? "flex" : "none", justifyContent: "center", width: "100vw", height: "100%", position: "absolute", top: 0}}>
             <div className="absolute-black-bg"></div>
 
             <div className="chart-modal">
@@ -23,24 +42,24 @@ function AddModal() {
                             : (<div>Countries</div>)
                         }
                     </div>
-                    <span className="close">
+                    <span className="close" onClick={() => { setModalState(false) }}>
                         <IoMdClose />
                     </span>
                 </div>
 
                 {modalStep
-                    ? <IndicatorLayout activeCountry={country} />
+                    ? <IndicatorLayout activeCountry={country} submitStep={setSubmitStep} setIndicatorGlobal={setIndicator} />
                     : <CountryLayout nextSubmit={setNextStep} setCountry={setCountry} />
                 }
 
                 {modalStep
                     ?  (
                         <div className="form-controller">
-                            <button className="controller" onClick={() => {setModalStep(false)}}>
+                            <button className="controller" onClick={() => { setModalStep(false); setNextStep(false) }}>
                                 <BsFillCaretLeftFill />
                                 <span>Prev</span>
                             </button>
-                            <button className="controller">
+                            <button className="controller" onClick={onSubmitClick} style={{background: submitStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)"}}>
                                 <span>Submit</span>
                             </button>
                         </div>
@@ -48,10 +67,7 @@ function AddModal() {
                         
                     : (                        
                         <div className="form-controller">
-                            <button className="controller" onClick={() => {
-                                if(nextStep == true)
-                                    setModalStep(true)
-                            }} style={{background: nextStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)" }}>
+                            <button className="controller" onClick={onNextClick} style={{background: nextStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)" }}>
                                 <span>Next</span>
                             </button>
                         </div>
