@@ -9,9 +9,10 @@ import CountryLayout from './country-layout.tsx'
 type props = {
     modalState: boolean,
     setModalState: Function
+    addIndicator: Function
 }
 
-const AddModal: React.FC<props> = ({ modalState, setModalState }) => {
+const AddModal: React.FC<props> = ({ modalState, setModalState, addIndicator }) => {
     const [modalStep, setModalStep] = useState(false)
     const [nextStep, setNextStep] = useState(false)
     const [submitStep, setSubmitStep] = useState(false)
@@ -27,8 +28,18 @@ const AddModal: React.FC<props> = ({ modalState, setModalState }) => {
 
     function onSubmitClick(e: any) {
         e.preventDefault()
-        
+
+        addIndicator(country, indicator)
+        setModalState(false)
     }
+
+    useEffect(() => {
+        if(modalState == true) {
+            setCountry({})
+            setIndicator({})
+            setModalStep(false)
+        }
+    }, [modalState])
 
     return (
         <div style={{display: modalState ? "flex" : "none", justifyContent: "center", width: "100vw", height: "100%", position: "absolute", top: 0}}>

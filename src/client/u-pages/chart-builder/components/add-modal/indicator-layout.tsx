@@ -159,16 +159,18 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry, submitStep, s
     function onIndicatorClick(e: any, name: string) {
         let pIndicators = indicators
         let pDisplayInd = displayIndicators
-        let activeIndicator = {}
+        let pActiveIndicator = {}
 
         for(let i = 0; i < pIndicators.length; i++) {
             let indicator = pIndicators[i]
             indicator.class = ''
 
-            if(indicator.name == name)
+            if(indicator.name == name) {
                 indicator.class = 'active'
+                pActiveIndicator = indicator
+            }
+
             pIndicators[i] = indicator
-            activeIndicator = indicator
         }
 
         for(let i = 0; i < pDisplayInd.length; i++) {
@@ -183,7 +185,7 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry, submitStep, s
         setIndicators([...pIndicators])
         setDisplayIndicators([...pDisplayInd])
         submitStep(true)
-        setIndicatorGlobal(activeIndicator)
+        setIndicatorGlobal(pActiveIndicator)
     }
 
     return (

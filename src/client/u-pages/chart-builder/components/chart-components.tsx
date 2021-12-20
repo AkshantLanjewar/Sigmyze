@@ -5,25 +5,6 @@ import { IoMdClose } from "react-icons/io"
 import { HiPlus } from "react-icons/hi"
 import AddModal from './add-modal/add-modal.tsx'
 
-
-function Item() {
-    return (
-        <div className="component">
-            <div className="inner">
-                <div className="icon">
-                    <AiOutlineLineChart />
-                </div>
-
-                <div className="text">GDP Growth</div>
-
-                <div className="actions">
-                    <AiOutlineEllipsis />
-                </div>
-            </div>
-        </div>
-    )
-}
-
 function Tab() {
     const god = true
     let style = "flex"
@@ -53,10 +34,25 @@ function ChartTabs() {
 
 function ChartComponentsViewer() {
     const [modalState, setModalState] = useState(false)
+    const [indicators, setIndicators] = useState([])
+
+    function AddIndicator(country, indicator) {
+        let iso3  = country.iso3
+        let fName = country.name
+        let iShort = indicator.indicator
+        let indicatorF = indicator.name
+
+        let package = { iso3: iso3, fName: fName, indicator: iShort, indicatorF: indicatorF }
+        let nIndicators = indicators
+        nIndicators.push(package)
+        setIndicators([...nIndicators])
+
+        
+    }
 
     return (
         <div>
-            <AddModal modalState={modalState} setModalState={setModalState} />
+            <AddModal modalState={modalState} setModalState={setModalState} addIndicator={AddIndicator} />
 
             <div className="nav">
                 <div className="section-container">
@@ -68,8 +64,25 @@ function ChartComponentsViewer() {
 
                     <div className="children">
                         <div className="component-content">
-                            <Item />
-                            <Item />
+                            {indicators.map((step) => {
+                                let title = `${step.iso3} - ${step.indicator}`
+
+                                return (
+                                    <div className="component">
+                                        <div className="inner">
+                                            <div className="icon">
+                                                <AiOutlineLineChart />
+                                            </div>
+
+                                            <div className="text">{title}</div>
+
+                                            <div className="actions">
+                                                <AiOutlineEllipsis />
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
                 </div>
