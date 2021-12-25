@@ -45,7 +45,9 @@ const SampleCard: React.FC<props> = ({ children, title = "10 Year Bonds / Unempl
                     for(let i = 0; i < cData.length; i++) {
                         let object: any = {}
 
-                        object["date"] = new Date(cData[i]["date"])
+                        var dt = new Date(cData[i]["date"])
+
+                        object["date"] = dt.getUTCFullYear()
                         object["value"] = cData[i]["value"]
                         chartData.push(object)
                     }
@@ -67,7 +69,7 @@ const SampleCard: React.FC<props> = ({ children, title = "10 Year Bonds / Unempl
 
                     if(i == 1)
                         chartOptions.chartColor = redColor
-                    
+
                     chart.AddLineChart(chartOptions)
 
                     if(i == 0) {
@@ -94,7 +96,7 @@ const SampleCard: React.FC<props> = ({ children, title = "10 Year Bonds / Unempl
             </div>
 
             <div className="chart" ref={chartRef}>
-                
+
             </div>
         </div>
     )

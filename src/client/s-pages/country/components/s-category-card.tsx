@@ -26,8 +26,11 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
                 let chartData = []
                 for(let i = 0; i < data.data.length; i++) {
                     let object: any = {}
+                    let dt = new Date(data.data[i]["date"])
 
-                    object["date"] = new Date(data.data[i]["date"])
+                    object["date"] = dt.getUTCFullYear()
+                    console.log(dt.getUTCFullYear())
+                    //object["date"] = (data.data[i]["date"])
                     object["value"] = data.data[i]["value"]
                     chartData.push(object)
                 }
@@ -45,8 +48,8 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
                     chartName: category,
                     chartColor: blueColor,
 
-                    showXAxis: false,
-                    showYAxis: false,
+                    showXAxis: 1,
+                    showYAxis: 0,
 
                     formatterPre: `${category}: `,
 
@@ -68,7 +71,7 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
                     <span>{countries.getName(iso3, "en", {select: "official"})} {'>'} </span>
                     <span>{fullname}</span>
                 </h5>
-                
+
                 <div>{category}</div>
 
                 <span className="tooltiptext">United States National GDP</span>

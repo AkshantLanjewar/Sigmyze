@@ -9,7 +9,7 @@ type props = {
 type State = {
     shortA: string,
     shortB: string,
-    
+
     longA: string,
     longB: string,
 
@@ -52,7 +52,9 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
                     for(let i = 0; i < cData.length; i++) {
                         let object: any = {}
 
-                        object["date"] = new Date(cData[i]["date"])
+                        var dt = new Date(cData[i]["date"])
+
+                        object["date"] = dt.getUTCFullYear()
                         object["value"] = cData[i]["value"]
                         chartData.push(object)
                     }
@@ -74,7 +76,7 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
 
                     if(i == 1)
                         chartOptions.chartColor = redColor
-                    
+
                     chart.AddLineChart(chartOptions)
 
                     if(i == 0) {
@@ -97,7 +99,7 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
             <div className="title tooltip">
                 <h3 style={{marginBottom: "1em"}}>
                     <span>{state.countryName} {'>'} </span>
-                    <span style={{color: blueColor}}>{state.longA} <span style={{color: "white"}}>:</span> </span>  
+                    <span style={{color: blueColor}}>{state.longA} <span style={{color: "white"}}>:</span> </span>
                     <span style={{color: redColor}}>{state.longB}</span>
                 </h3>
 
@@ -106,12 +108,12 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
                     <span> : </span>
                     <span style={{color: redColor}}>{state.shortB}</span>
                 </div>
-                
+
                 <span className="tooltiptext">{state.fullName}</span>
             </div>
 
             <div className="chart" ref={chartRef}>
-                
+
             </div>
         </div>
     )
