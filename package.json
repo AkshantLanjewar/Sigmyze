@@ -36,6 +36,8 @@
 		"d3-scale-chromatic": "^2.0.0",
 		"d3-selection": "^1.1.0",
 		"deck.gl": "^8.5.2",
+		"dexie": "^3.2.0",
+		"dexie-react-hooks": "^1.1.1",
 		"echarts": "^5.2.2",
 		"express": "^4.16.3",
 		"express-session": "^1.17.2",
