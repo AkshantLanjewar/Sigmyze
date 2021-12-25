@@ -7,7 +7,7 @@ import CategoryCard from './components/category-card'
 import Carousel from '../../components/carousel'
 import Map from './components/map'
 
-import Logo from '../../svg/logo.svg'; 
+import Logo from '../../svg/logo.svg';
 
 type HomepageState = {
     login_modal_open: boolean,
@@ -57,7 +57,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                         <div className="container">
                             <img src={Logo} width={64} height={64} />
                             <h1 className="hero__title">Sigmyze</h1>
-                            <p className="hero__subtitle">A Web Based Data Visualization and Analytics Platform</p>
+                            <p className="hero__subtitle">Democratizing Data and Analysis</p>
                         </div>
 
                         <div className="hero__map">
@@ -71,7 +71,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                                 <div className="row">
                                     <div className="headline">
                                         <span className="category">Charts</span>
-                                        <h2 className="title">Splice different data points together</h2>
+                                        <h2 className="title">Splice and Analyze Different Datasets</h2>
                                     </div>
                                 </div>
 
@@ -86,7 +86,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                                 <div className="row">
                                     <div className="headline">
                                         <span className="category">Features</span>
-                                        <h2 className="title">Form new hypothesis from existing data</h2>
+                                        <h2 className="title">Datasets | Analysis | Insights</h2>
                                     </div>
                                 </div>
 
@@ -97,8 +97,11 @@ class Homepage extends React.Component<{}, HomepageState> {
                                                 <h2>Diverse Datasets</h2>
                                             </div>
 
+                                            <p>45+ indicators for 190+ countries, on GDP, Govt Finance, Trade, Employment and Investment from IMF WEO Dataset</p>
                                             <div className="body" style={{marginTop: "1em"}}>
-                                                <p>Answer your questions with a large variety of WEO Datasets that cover GDP to investment</p>
+                                              <br></br>
+                                              <h4>Coming Soon...</h4>
+                                              <p>World Bank, US Weekly Jobs Data, Covid, and other datasets. </p>
                                             </div>
                                         </div>
                                     </div>
@@ -110,7 +113,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                                             </div>
 
                                             <div className="body" style={{marginTop: "1em"}}>
-                                                <p>Dont let cookie cutter data visuazation options, that limit the ways you can display data hold your analysis back</p>
+                                                <p>Dont let cookie cutter data visualizations, that limit the ways you can display and understand data hold your analysis back</p>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +136,7 @@ class Homepage extends React.Component<{}, HomepageState> {
                 </div>
 
                 <Modal show={this.state.login_modal_open} maxWidth={450}>
-                   
+
                 </Modal>
             </div>
         )

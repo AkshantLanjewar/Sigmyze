@@ -15,11 +15,11 @@ function Navbar() {
                         <b>Sigmyze</b>
                     </a>
 
-                    
+
                 </div>
 
                 <div className="right">
-                    <a className="nav-item" href="/indicator">Indicators</a>
+                    <a className="nav-item" href="/indicator">Country Data</a>
                 </div>
             </div>
         </nav>

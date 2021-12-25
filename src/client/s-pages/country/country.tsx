@@ -11,12 +11,12 @@ import { RiGovernmentLine } from 'react-icons/ri'
 function IndicatorPage() {
     const initialTabState = [{
         icon: <AiOutlineLineChart />,
-        name: "Economics",
+        name: "GDP",
         short: "GDP",
         active: true
     }, {
         icon: <RiGovernmentLine />,
-        name: "Government",
+        name: "Govt. Finance",
         short: "GOVT",
         active: false
     }, {

@@ -17,6 +17,7 @@ interface Margin {
     bottom: number
 }
 
+
 export interface ChartOptions {
     chartType: string,
     chartData: Array<XYChartData>,
@@ -44,12 +45,13 @@ class ChartBuilder {
         this.axisIndex = 0
 
         this.margin = {
-            top: 20, 
+            top: 20,
             right: 10,
             bottom: 20,
             left: 10
         }
     }
+
 
     public SetAxisIndex(index: number) {
         this.axisIndex = index
@@ -60,6 +62,7 @@ class ChartBuilder {
     }
 
     //data utils
+    /*
     private Normalize(min: number, max: number, val: number) {
         if(min < 0) {
             max += 0 - min
@@ -70,12 +73,12 @@ class ChartBuilder {
         val = val - min
         max = max - min
         return Math.max(0, Math.min(1, val / max))
-    }
+    }*/
 
     //tooltip
 
-    private SetupTooltip(svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, 
-        x: d3.ScaleTime<number, number, never>, 
+    private SetupTooltip(svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+        x: d3.ScaleTime<number, number, never>,
         y: d3.ScaleLinear<number, number, never>,
         data: Array<XYChartData>,
         height: number) {
@@ -88,7 +91,7 @@ class ChartBuilder {
             .attr('class', 'hover-line')
             .attr('y1', 0)
             .attr('y2', height)
-        
+
         let charts = this.charts
         let chartCount = charts.length
         let yAxisCount = charts[this.axisIndex].chartData.length
@@ -109,7 +112,7 @@ class ChartBuilder {
         if(chartCount == 1)
             boxHeight = (chartCount + 1.5) * 30
         let boxWidth   = 15 * longestCharLength
-        
+
         let tooltipText = tooltip.append("g")
             .attr('class', 'tooltip-container')
             .attr('width', boxWidth)
@@ -128,15 +131,15 @@ class ChartBuilder {
             .attr('x', 10)
             .style('font-size', '12px')
 
-        let fontOffset = 25 + 30 
-        let textArray: Array<d3.Selection<SVGTextElement, unknown, null, undefined>> = []          
+        let fontOffset = 25 + 30
+        let textArray: Array<d3.Selection<SVGTextElement, unknown, null, undefined>> = []
         for(let i = 0; i < chartCount; i++) {
             let tmpText = tooltipText.append("text")
                 .text("swag")
                 .attr('font-family', 'Inter')
                 .attr('y', fontOffset)
                 .attr('x', 10)
-            
+
             textArray.push(tmpText)
             fontOffset += 22
         }
@@ -160,7 +163,7 @@ class ChartBuilder {
         svg.on('mouseout', function() {
             tooltip.style("display", 'none');
         })
-        
+
         svg.on("touchmove mousemove", function(event) {
             const dataObj = Bisect(d3.pointer(event)[0])
             line.attr("transform", `translate(${x(dataObj.data.date)}, 0)`)
@@ -174,10 +177,11 @@ class ChartBuilder {
                 boxTransform = { x: x(dataObj.data.date) + 5, y: y(dataObj.data.value) }
             else if (dataObj.direction == "left")
                 boxTransform = { x: x(dataObj.data.date) - (boxWidth + 5), y: y(dataObj.data.value) }
-            
+
             rect.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
             yTitle.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
-            yTitle.text(charts[0].chartData[dataObj.index - 1].date.toDateString())
+            //yTitle.text(charts[0].chartData[dataObj.index - 1].date.toDateString())
+            yTitle.text(charts[0].chartData[dataObj.index - 1].date)
             for(let i = 0; i < chartCount; i++) {
                 textArray[i].attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
                 textArray[i].text(charts[i].formatterPre + charts[i].chartData[dataObj.index - 1].value)
@@ -186,7 +190,7 @@ class ChartBuilder {
     }
 
     private ScaleUTC(data: Array<XYChartData>, dim: number) {
-        return d3.scaleUtc()
+        return d3.scaleLinear()
             .domain(<[Date, Date]>d3.extent(data, d => d.date))
             .range([this.margin.left, dim - this.margin.right])
     }
@@ -212,7 +216,7 @@ class ChartBuilder {
             return
 
         let options: ChartOptions = this.charts[this.axisIndex]
-        let svg 
+        let svg
         if(tHeight != undefined) {
             svg = d3.select(this.container.current).append("svg")
                 .attr("width", "100%")
@@ -238,20 +242,22 @@ class ChartBuilder {
             .attr("width", rawWidth!)
             .attr("height", rawHeight!)
 
-        let x: d3.ScaleTime<number, number, never>
-        let y: d3.ScaleLinear<number, number, never>
+        //let x: d3.ScaleTime<number, number, never>
+        //let y: d3.ScaleLinear<number, number, never>
+
+        var x, y;
 
         if(options.xAxisType == "utc")
             x = this.ScaleUTC(options.chartData, rawWidth!)
         if(options.yAxisType == "linear")
             y = this.LinearAxisFormatter(options.chartData, rawHeight!)
-        
+
         let maxNum = 0
         let minNum = 0
 
         for(let i = 0; i < this.charts.length; i++) {
             let chartOptions = this.charts[i]
-            
+
             for(let x = 0; x < chartOptions.chartData.length; x++) {
                 let chartData = chartOptions.chartData[x]
                 if(chartData.value > maxNum)
@@ -263,9 +269,16 @@ class ChartBuilder {
 
         for(let i = 0; i < this.charts.length; i++) {
             const chartOptions = this.charts[i]
-            
+
             if(chartOptions.chartType == "line") {
                 let yFormatter = this.LinearAxisFormatter(chartOptions.chartData, rawHeight!)
+
+                if(options.showXAxis == 1){
+                  svg.append('g')
+                      .attr('transform', 'translate(0,'+rawHeight!+')')
+                      .call(d3.axisBottom(x).tickFormat(d3.format('d')))
+                }
+
 
                 svg.append("path")
                     .datum(chartOptions.chartData)
@@ -277,6 +290,7 @@ class ChartBuilder {
                     .attr("d", this.LineChart(x!, yFormatter!))
                     .attr("transform", `translate(0, ${this.margin.top})`)
                     .attr("clip-path", `url(#${options.chartName})`)
+
             }
         }
 
