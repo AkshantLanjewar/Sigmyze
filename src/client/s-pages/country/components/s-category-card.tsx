@@ -29,7 +29,6 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
                     let dt = new Date(data.data[i]["date"])
 
                     object["date"] = dt.getUTCFullYear()
-                    console.log(dt.getUTCFullYear())
                     //object["date"] = (data.data[i]["date"])
                     object["value"] = data.data[i]["value"]
                     chartData.push(object)

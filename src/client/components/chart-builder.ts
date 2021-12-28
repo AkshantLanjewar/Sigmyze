@@ -254,6 +254,8 @@ class ChartBuilder {
 
         let maxNum = 0
         let minNum = 0
+        let minYr = 2025
+        let maxYr = 0
 
         for(let i = 0; i < this.charts.length; i++) {
             let chartOptions = this.charts[i]
@@ -264,6 +266,10 @@ class ChartBuilder {
                     maxNum = chartData.value
                 if(chartData.value < minNum)
                     minNum = chartData.value
+                if(chartData.date >maxYr)
+                    maxYr = chartData.date
+                if(chartData.date<minYr)
+                    minYr = chartData.date
             }
         }
 
@@ -274,9 +280,25 @@ class ChartBuilder {
                 let yFormatter = this.LinearAxisFormatter(chartOptions.chartData, rawHeight!)
 
                 if(options.showXAxis == 1){
+                  var stepValue = Math.round((maxYr-minYr)/6);
+                  let tickRange =[];
+                  tickRange.push(minYr);
+                  for (var j=0;j<7;j++){
+                    let val = tickRange[j]+stepValue;
+
+                    if (val>=maxYr){
+                      tickRange.push(maxYr);
+                      break
+                    }
+                    else{
+                      tickRange.push(val);
+                    }
+
+                  }
+
                   svg.append('g')
                       .attr('transform', 'translate(0,'+rawHeight!+')')
-                      .call(d3.axisBottom(x).tickFormat(d3.format('d')))
+                      .call(d3.axisBottom(x).tickFormat(d3.format('d')).tickValues(tickRange))
                 }
 
 
