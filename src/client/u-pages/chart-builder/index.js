@@ -3,6 +3,7 @@ import ChartNavbar from "./components/chart-nav"
 import OverviewChart from './components/chart'
 import Indicator from "../../data/indicator"
 import AddModal from './components/add-modal/add-modal'
+import Legend from "./components/legend"
 
 import { AiOutlineLineChart, AiOutlineEllipsis, AiOutlineBarChart } from "react-icons/ai"
 import { FiChevronDown } from "react-icons/fi"
@@ -36,9 +37,18 @@ function ChartTabs() {
     )
 }
 
+let colors = [
+    {name: 'white', hex: '#FFFFFF'}, 
+    {name: 'blue', hex: '#1c588c'},
+    {name: 'green', hex: '#26a69a'},
+    {name: 'red', hex: '#ef5350'},
+    {name: 'orange', hex: '#f8a250'}
+]
+
 function ChartBuilderPage() {
     const [modalState, setModalState] = useState(false)
     const [indicators, setIndicators] = useState([])
+    const [colorIndex, setColorIndex] = useState(0)
 
     function AddIndicator(country, indicator) {
         let iso3  = country.iso3
@@ -56,9 +66,16 @@ function ChartBuilderPage() {
             .then(async (data) => {
                 await Indicator.AddIndicator(iso3, fName, iShort, indicatorF, data)
                 dataPack['dataIndexed'] = true
+                dataPack['color'] = colors[colorIndex]
                 nIndicators[nIndicators.length - 1] = dataPack
 
                 setIndicators([...nIndicators])
+                let updateColor = colorIndex
+                if(updateColor + 1 == colors.length)
+                    updateColor = 0
+                else
+                    updateColor += 1
+                setColorIndex(updateColor)
             })
     }
 
@@ -104,7 +121,11 @@ function ChartBuilderPage() {
                 
                 <div className="content">
                     <ChartTabs />
-                    <OverviewChart indicators={indicators} />
+
+                    <div className="overview-chart">
+                        <Legend indicators={indicators} />
+                        <OverviewChart indicators={indicators} />
+                    </div>
                 </div>
             </div>
         </div>

@@ -46,10 +46,12 @@ function OverviewChart(props) {
     const [crosshairPos, setCrosshairPos] = useState({x: null, y: null, tracker: null})
     const [chartLayout, setChartLayout] = useState([])
     const [chartMisc, setChartMisc] = useState({ min: 0, max: 0, style: styler([]), columns: [] })
+    const [indicatorL, setIndicatorL] = useState([])
 
     useEffect(() => {
         async function anon() {
             let indicators = props.indicators
+
             let years = []
             let tPoints = {}
 
@@ -75,6 +77,12 @@ function OverviewChart(props) {
                 }
 
                 tPoints[`${iso3}-${ind3}`] = values
+
+                t_styler.push({
+                    key: `${iso3}-${ind3}`,
+                    width: 3,
+                    color: indicator.color.hex
+                })
             }
 
             years = years.sort()
@@ -84,16 +92,6 @@ function OverviewChart(props) {
 
             let min = 0
             let max = 0
-
-            for(let i = 0; i < dataColumns.length; i++) {
-                let col = dataColumns[i]
-
-                t_styler.push({
-                    key: col,
-                    width: 3,
-                    color: "steelblue"
-                })
-            }
 
             for(let i = 0; i < years.length; i++) {
                 let year = years[i]
@@ -137,6 +135,7 @@ function OverviewChart(props) {
 
                 setEmpty(true)
                 setChartLayout(["line"])
+                setIndicatorL(indicators)
             }
         }
 
@@ -159,43 +158,45 @@ function OverviewChart(props) {
     }
 
     return (
-        <div className="overview-chart">
+        <div>
             {emptyIndicators
                 ? (
-                   <Resizable>
-                       <ChartContainer
-                          timeRange={timerange}
-                          maxTime={indicatorSeries.range().end()}
-                          minTime={indicatorSeries.range().begin()}
-                          onTrackerChange={handleTrackerChange}
-                          enablePanZoom={true}
-                          onTimeRangeChanged={handleTimeRangeChange}
-                          onMouseMove={(x, y) => handleMouseMove(x, y)}
-                        >
-                            <ChartRow height="800">
-                                <Charts>
-                                    {chartLayout.map((step) => {
-                                        return (
-                                            <LineChart
-                                                axis="y"
-                                                series={indicatorSeries}
-                                                style={chartMisc.style}
-                                                columns={chartMisc.columns}
-                                                interpolation="curveBasis" />
-                                        )
-                                    })}
+                    <div>
+                        <Resizable>
+                            <ChartContainer
+                                timeRange={timerange}
+                                maxTime={indicatorSeries.range().end()}
+                                minTime={indicatorSeries.range().begin()}
+                                onTrackerChange={handleTrackerChange}
+                                enablePanZoom={true}
+                                onTimeRangeChanged={handleTimeRangeChange}
+                                onMouseMove={(x, y) => handleMouseMove(x, y)}
+                                >
+                                    <ChartRow height="800">
+                                        <Charts>
+                                            {chartLayout.map((step) => {
+                                                return (
+                                                    <LineChart
+                                                        axis="y"
+                                                        series={indicatorSeries}
+                                                        style={chartMisc.style}
+                                                        columns={chartMisc.columns}
+                                                        interpolation="curveBasis" />
+                                                )
+                                            })}
 
-                                    <CrossHairs x={crosshairPos.x} y={crosshairPos.y} />
-                                </Charts>
+                                            <CrossHairs x={crosshairPos.x} y={crosshairPos.y} />
+                                        </Charts>
 
-                                <YAxis
-                                    id="y"
-                                    min={chartMisc.min}
-                                    max={chartMisc.max}
-                                    width="60" />
-                            </ChartRow>
-                       </ChartContainer>
-                   </Resizable>
+                                        <YAxis
+                                            id="y"
+                                            min={chartMisc.min}
+                                            max={chartMisc.max}
+                                            width="60" />
+                                    </ChartRow>
+                            </ChartContainer>
+                        </Resizable>
+                    </div>
                 )
 
                 : (
