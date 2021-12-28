@@ -11,7 +11,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const outputDirectory = 'dist';
 
 module.exports = {
-    entry: ['babel-polyfill', './src/client/index.tsx'],
+    entry: ['babel-polyfill', './src/client/index.js'],
     output: {
         path: path.join(__dirname, outputDirectory),
         filename: './js/[name].bundle.js',

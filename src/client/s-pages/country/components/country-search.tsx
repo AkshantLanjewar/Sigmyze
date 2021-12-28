@@ -132,7 +132,7 @@ const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => 
 
             <div className="result-tab" ref={resultTabRef} onClick={(e) => {e.preventDefault()}}>
                 <div className="result-section">
-                    <div className="ul-title"><p>actions</p></div>
+                    <div className="ul-title"><p>Countries</p></div>
 
                     <div className="ul">
                         {displayStep.map((step) => (
