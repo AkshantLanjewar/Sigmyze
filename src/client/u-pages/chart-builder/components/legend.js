@@ -11,7 +11,7 @@ function Legend(props) {
     return (
         <div className="chart-legend">
             {indicators.map((step) => {
-                let title = `${step.iso3} - ${step.indicator}`
+                let title = `${step.fName}: ${step.indicatorF}`
                 let color = step.color
                 if(color == undefined)
                     return

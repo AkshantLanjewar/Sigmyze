@@ -3,7 +3,6 @@ import ChartNavbar from "./components/chart-nav"
 import OverviewChart from './components/chart'
 import Indicator from "../../data/indicator"
 import AddModal from './components/add-modal/add-modal'
-import Legend from "./components/legend"
 
 import { AiOutlineLineChart, AiOutlineEllipsis, AiOutlineBarChart } from "react-icons/ai"
 import { FiChevronDown } from "react-icons/fi"
@@ -121,11 +120,7 @@ function ChartBuilderPage() {
                 
                 <div className="content">
                     <ChartTabs />
-
-                    <div className="overview-chart">
-                        <Legend indicators={indicators} />
-                        <OverviewChart indicators={indicators} />
-                    </div>
+                    <OverviewChart indicators={indicators} />
                 </div>
             </div>
         </div>
