@@ -3,6 +3,8 @@ import _ from "underscore"
 import { HiPlus } from "react-icons/hi"
 
 import Indicator from "../../../data/indicator";
+import { scaleLinear } from "d3-scale";
+import Legend from './legend'
 
 import {
     Charts,
@@ -33,6 +35,45 @@ class CrossHairs extends React.Component {
     }
 }
 
+function Normalize(val, min, max) {
+    return (val - min) / (max - min);
+}
+
+function YEndTail(props) {
+    let displayStyle = "flex"
+    if(props.activeChartHover == false)
+        displayStyle = "none"
+
+    let min = props.min
+    let max = props.max
+    let tYpos = max - props.yPos
+
+    let index = Number(Normalize(tYpos, min, max) * (props.ticks.length - 1)).toFixed(0)
+    let val = props.ticks[index]
+
+    return (
+        <div className="yTail" style={{height: `790px`}}>
+            <div className="tail" style={{transform: `translateY(${props.yPos - 12.5}px)`, display: displayStyle}}> {val} </div>
+        </div>
+    )
+}
+
+function XEndTail(props) {
+    let displayStyle = "flex"
+    if(props.activeChartHover == false)
+        displayStyle = "none"
+
+    let value = props.gVal
+    let strVal = "swag"
+    if(value !== null)
+        strVal = value.getFullYear()
+    return (
+        <div className="xTail">
+            <div className="tail" style={{transform: `translateX(${props.xPos - 23}px)`, display: displayStyle}}> {strVal} </div>
+        </div>
+    )
+}
+
 let dummyPoints = new TimeSeries({
     name: "dummy",
     columns: ['time', 'value'],
@@ -45,8 +86,10 @@ function OverviewChart(props) {
     const [timerange, setTimerange] = useState(dummyPoints.range())
     const [crosshairPos, setCrosshairPos] = useState({x: null, y: null, tracker: null})
     const [chartLayout, setChartLayout] = useState([])
-    const [chartMisc, setChartMisc] = useState({ min: 0, max: 0, style: styler([]), columns: [] })
-    const [indicatorL, setIndicatorL] = useState([])
+    const [chartMisc, setChartMisc] = useState({ min: 0, max: 0, style: styler([]), columns: [], dMax: 0, ticks: [] })
+    const [lTracker, setLTracker] = useState(null)
+
+    const [activeChartHover, setActiveChartHover] = useState(false)
 
     useEffect(() => {
         async function anon() {
@@ -131,11 +174,21 @@ function OverviewChart(props) {
                 misc['style'] = styler(t_styler)
                 misc['columns'] = dataColumns
 
+                const margin = 5
+                const innerHeight = 800 - margin * 2 //row - margin * 2
+
+                let rangeTop = margin
+                let rangeBottom = innerHeight - margin
+                let tScale = scaleLinear().domain([min, max]).range([rangeBottom, rangeTop]).nice()
+
+                misc['dMax'] = tScale.ticks()[tScale.ticks().length - 1]
+                misc['ticks'] = tScale.ticks()
+
                 setChartMisc(misc)
 
                 setEmpty(true)
                 setChartLayout(["line"])
-                setIndicatorL(indicators)
+                setCrosshairPos({x: null, y: null, tracker: points[0][0]})
             }
         }
 
@@ -147,18 +200,27 @@ function OverviewChart(props) {
     }
 
     function handleTrackerChange(tracker) {
-        if(!tracker)
+        if(!tracker) {
             setCrosshairPos({tracker: tracker, x: null, y: null})
-        else
+            setActiveChartHover(false)
+        }
+        else {
+            setActiveChartHover(true)
+            setLTracker(tracker)
             setCrosshairPos({tracker: tracker, x: crosshairPos.x, y: crosshairPos.y})
+        }
     }
 
     function handleMouseMove(x, y) {
         setCrosshairPos({x: x, y: y, tracker: crosshairPos.tracker})
-    }
+    }  
 
     return (
-        <div>
+        <div className="overview-chart">
+            <Legend indicators={props.indicators} />
+            <XEndTail xPos={crosshairPos.x} activeChartHover={activeChartHover} gVal={lTracker} />
+            <YEndTail yPos={crosshairPos.y} activeChartHover={activeChartHover} min={0} max={790} dMax={chartMisc.dMax} ticks={chartMisc.ticks}  />
+
             {emptyIndicators
                 ? (
                     <div>
@@ -167,7 +229,7 @@ function OverviewChart(props) {
                                 timeRange={timerange}
                                 maxTime={indicatorSeries.range().end()}
                                 minTime={indicatorSeries.range().begin()}
-                                onTrackerChange={handleTrackerChange}
+                                onTrackerChanged={(tracker) => {handleTrackerChange(tracker)}}
                                 enablePanZoom={true}
                                 onTimeRangeChanged={handleTimeRangeChange}
                                 onMouseMove={(x, y) => handleMouseMove(x, y)}
@@ -192,7 +254,8 @@ function OverviewChart(props) {
                                             id="y"
                                             min={chartMisc.min}
                                             max={chartMisc.max}
-                                            width="60" />
+                                            format=".2s"
+                                            width="45" />
                                     </ChartRow>
                             </ChartContainer>
                         </Resizable>
