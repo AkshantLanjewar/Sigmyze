@@ -19,7 +19,7 @@ function Navbar() {
                 </div>
 
                 <div className="right">
-                    <a className="nav-item" href="/indicator">Country Data</a>
+                    <a className="nav-item" href="/indicator">Country Charts</a>
                 </div>
             </div>
         </nav>
