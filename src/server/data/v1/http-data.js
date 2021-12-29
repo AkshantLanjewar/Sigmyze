@@ -33,7 +33,7 @@ async function IndexData() {
 
         for(let i = 0; i < econ_http_response.length; i++) {
             let country = econ_http_response[i]
-            nation_list.push({ isoCode: country["iso3"], fullname: country["country"] })            
+            nation_list.push({ isoCode: country["iso3"], fullname: country["country"] })
         }
 
         //save to disk
@@ -54,6 +54,15 @@ async function GrabIndicatorData(isoCode, indicatorCode) {
     let result = JSON.parse(await promise.catch(() => {}))
 
     let keys = Object.keys(result["data"])
+    let sname = result['simpleName']
+    let scale = ""
+    if (result['scale']!='(empty)'){
+      scale = result['scale']
+    }
+    else{
+      scale='%'
+    }
+
     let data = []
     for(let i = 0; i < keys.length; i++) {
         let key = keys[i]
@@ -68,7 +77,7 @@ async function GrabIndicatorData(isoCode, indicatorCode) {
         data.push({ date: key, value: d_val })
     }
 
-    return { year: year, data: data }
+    return { year: year, data: data, simpleName: sname, scale: scale }
 }
 
 exports.HTTP_Promise = HTTP_Promise

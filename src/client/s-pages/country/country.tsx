@@ -6,7 +6,9 @@ import SingleCategoryCard from './components/s-category-card'
 
 import { AiOutlineLineChart } from 'react-icons/ai'
 import { GiMoneyStack } from 'react-icons/gi'
+import { GiTrade } from 'react-icons/gi'
 import { RiGovernmentLine } from 'react-icons/ri'
+import { IoIosPeople } from 'react-icons/io'
 
 function IndicatorPage() {
     const initialTabState = [{
@@ -24,7 +26,19 @@ function IndicatorPage() {
         name: "Investment",
         short: "INVEST",
         active: false
-    }]
+    },{
+        icon: <GiTrade />,
+        name: "Trade",
+        short: "TRADE",
+        active: false
+    },{
+        icon: <IoIosPeople />,
+        name: "People",
+        short: "PEOPLE",
+        active: false
+    }
+
+  ]
 
     const [tabsState, setTabsState] = useState(initialTabState)
     const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})

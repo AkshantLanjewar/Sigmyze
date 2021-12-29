@@ -38,11 +38,11 @@ async function get_category(req, res) {
 async function get_indicator(req, res) {
     let iso3 = req.params.iso3
     let code = req.params.category
-    
+
     const indicators = JSON.parse(fs.readFileSync('./data/indicators.json'))
     let data = await httpData.GrabIndicatorData(iso3, code)
-    data['fullname'] = indicators[code]
-    
+    //data['fullname'] = indicators[code]
+
     return res.json(data)
 }
 
