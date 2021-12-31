@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import _ from "underscore"
 import { HiPlus } from "react-icons/hi"
+import { format } from "d3-format"
 
 import Indicator from "../../../data/indicator";
 import { scaleLinear } from "d3-scale";
@@ -88,7 +89,7 @@ function OverviewChart(props) {
     const [chartLayout, setChartLayout] = useState([])
     const [chartMisc, setChartMisc] = useState({ min: 0, max: 0, style: styler([]), columns: [], dMax: 0, ticks: [] })
     const [lTracker, setLTracker] = useState(null)
-
+    const [legendVal, setLegendVal] = useState({})
     const [activeChartHover, setActiveChartHover] = useState(false)
 
     useEffect(() => {
@@ -136,6 +137,8 @@ function OverviewChart(props) {
             let min = 0
             let max = 0
 
+            let pack = {}
+
             for(let i = 0; i < years.length; i++) {
                 let year = years[i]
                 let pPoints = [new Date(year)]
@@ -146,14 +149,23 @@ function OverviewChart(props) {
 
                     if(year in row) {
                         pPoints.push(row[year])
+
+                        if(i == 0)
+                            pack[col] = row[year]
+
                         if(row[year] > max)
                             max = row[year]
                         if(row[year] < min)
                             min = row[year]
                     }
-                    else
+                    else {
+                        if(i == 0)
+                            pack[col] = row[year]
+
                         pPoints.push(null)
+                    }
                 }
+
                 points.push(pPoints)
             }
 
@@ -189,6 +201,7 @@ function OverviewChart(props) {
                 setEmpty(true)
                 setChartLayout(["line"])
                 setCrosshairPos({x: null, y: null, tracker: points[0][0]})
+                setLegendVal(pack)
             }
         }
 
@@ -208,6 +221,20 @@ function OverviewChart(props) {
             setActiveChartHover(true)
             setLTracker(tracker)
             setCrosshairPos({tracker: tracker, x: crosshairPos.x, y: crosshairPos.y})
+            const f = format(",.2f")
+
+            let index = indicatorSeries.bisect(tracker)
+            let event = indicatorSeries.at(index)
+            let indicators = props.indicators
+            let pack = {}
+
+            for(let i = 0; i < indicators.length; i++) {
+                let indicator = indicators[i]
+                let name = `${indicator.iso3}-${indicator.indicator}`
+                pack[name] = f(event.get(name))
+            }
+
+            setLegendVal(pack)
         }
     }
 
@@ -217,7 +244,7 @@ function OverviewChart(props) {
 
     return (
         <div className="overview-chart">
-            <Legend indicators={props.indicators} />
+            <Legend indicators={props.indicators} values={legendVal} />
             <XEndTail xPos={crosshairPos.x} activeChartHover={activeChartHover} gVal={lTracker} />
             <YEndTail yPos={crosshairPos.y} activeChartHover={activeChartHover} min={0} max={790} dMax={chartMisc.dMax} ticks={chartMisc.ticks}  />
 
