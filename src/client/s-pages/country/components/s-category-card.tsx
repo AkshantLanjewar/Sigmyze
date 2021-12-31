@@ -14,10 +14,12 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
     const cardRef = React.createRef<HTMLDivElement>()
 
     const [fullname, setFullname] = useState("")
+    const [scale, setScale] = useState()
 
     useEffect(() => {
         chartRef.current!.innerHTML = ""
         const url = `/api/data/indicator/${iso3}/${category}`
+        //let url = `/api/data/v2/datasets/WEO/${iso3}/${iShort}`
 
         fetch(url)
             .then(response => response.json())
@@ -59,7 +61,8 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
                 chart.AddLineChart(chartOptions)
                 chart.CreateChart()
 
-                setFullname(data['fullname'])
+                setFullname(data['simpleName'])
+                setScale(data['scale'])
             })
     })
 
@@ -67,8 +70,8 @@ const SingleCategoryCard: React.FC<props> = ({ category, iso3 }) => {
         <div className="card dark scaleHov" ref={cardRef}>
             <div className="title tooltip">
                 <h5 style={{marginBottom: "1em"}}>
-                    <span>{countries.getName(iso3, "en", {select: "official"})} {'>'} </span>
-                    <span>{fullname}</span>
+                    <span>{iso3} {'>'} </span>
+                    <span>{fullname} {'('}{scale}{')'}</span>
                 </h5>
 
                 <div>{category}</div>

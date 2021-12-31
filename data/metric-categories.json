@@ -1,0 +1,58 @@
+{
+    "GDP": [
+      "NGAP_NPGDP",
+      "NGDP",
+      "NGDP_D",
+      "NGDP_FY",
+      "NGDP_R",
+      "NGDP_RPCH",
+      "NGDPD",
+      "NGDPDPC",
+      "NGDPPC",
+      "NGDPRPC",
+      "NGDPRPPPPC",
+      "PPPGDP",
+      "PPPPC",
+      "PPPSH"
+    ],
+    "GOVT": [
+      "BCA",
+      "BCA_NGDPD",
+      "FLIBOR6",
+      "GGR",
+      "GGR_NGDP",
+      "GGSB",
+      "GGSB_NPGDP",
+      "GGX",
+      "GGX_NGDP",
+      "GGXCNL",
+      "GGXCNL_NGDP",
+      "GGXONLB",
+      "GGXONLB_NGDP",
+      "GGXWDG",
+      "GGXWDG_NGDP",
+      "GGXWDN",
+      "GGXWDN_NGDP",
+      "FLIBOR3"
+    ],
+    "INVEST": [
+      "NGSD_NGDP",
+      "NID_NGDP",
+      "PCPI",
+      "PCPIE",
+      "PCPIEPCH",
+      "PCPIPCH",
+      "PPPEX"
+    ],
+    "TRADE":[
+      "TM_RPCH",
+      "TMG_RPCH",
+      "TX_RPCH",
+      "TXG_RPCH"
+    ],
+    "PEOPLE":[
+      "LE",
+      "LP",
+      "LUR"
+    ]
+}
