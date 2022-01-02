@@ -91,6 +91,15 @@ function OverviewChart(props) {
     const [lTracker, setLTracker] = useState(null)
     const [legendVal, setLegendVal] = useState({})
     const [activeChartHover, setActiveChartHover] = useState(false)
+    const [rowHeight, setRowHeight] = useState(800)
+
+    const overViewRef = React.createRef()
+
+    useEffect(() => {
+        let containerHeight  = overViewRef.current.clientHeight
+        containerHeight = containerHeight - 40
+        setRowHeight(containerHeight)
+    }, [])
 
     useEffect(() => {
         async function anon() {
@@ -243,7 +252,7 @@ function OverviewChart(props) {
     }  
 
     return (
-        <div className="overview-chart">
+        <div className="overview-chart" ref={overViewRef}>
             <Legend indicators={props.indicators} values={legendVal} />
             <XEndTail xPos={crosshairPos.x} activeChartHover={activeChartHover} gVal={lTracker} />
             <YEndTail yPos={crosshairPos.y} activeChartHover={activeChartHover} min={0} max={790} dMax={chartMisc.dMax} ticks={chartMisc.ticks}  />
@@ -261,7 +270,7 @@ function OverviewChart(props) {
                                 onTimeRangeChanged={handleTimeRangeChange}
                                 onMouseMove={(x, y) => handleMouseMove(x, y)}
                                 >
-                                    <ChartRow height="800">
+                                    <ChartRow height={rowHeight}>
                                         <Charts>
                                             {chartLayout.map((step) => {
                                                 return (

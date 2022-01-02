@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from '../../../svg/logo.svg'
+import Logo from '../../../../svg/logo.svg'
 
 function ChartNavbar() {
     return (

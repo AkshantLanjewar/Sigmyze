@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import Navbar from '../../components/navbar'
 import CategoryCard from './components/category-card'
@@ -6,7 +6,9 @@ import CategoryCard from './components/category-card'
 import Carousel from '../../components/carousel'
 import Map from './components/map'
 
-import Logo from '../../svg/logo.svg';
+import Logo from '../../../svg/logo.svg';
+
+import Modal from '../../components/modal'
 
 
 function Homepage(props) {
@@ -23,8 +25,15 @@ function Homepage(props) {
     for(let i = 0; i < 8; i++)
         cards.push(<CategoryCard category_a={"GDP"} category_b={"GOVT"} />)
 
+    const [loginState, setLoginState] = useState(false)
+
     return (
         <div>
+
+            <Modal viewState={loginState} setViewState={setLoginState} title={"Login"}>
+
+            </Modal>
+
             <Navbar />
 
             <div className='main'>
@@ -33,6 +42,8 @@ function Homepage(props) {
                         <img src={Logo} width={64} height={64} />
                         <h1 className='hero__title'>Sigmyze</h1>
                         <p className='hero__subtitle'>Democratizing Data and Analysis</p>
+
+                        <button className='login_button' onClick={() => { setLoginState(true) }}>Get Started</button>
                     </div>
 
                     <div className='hero__map'>

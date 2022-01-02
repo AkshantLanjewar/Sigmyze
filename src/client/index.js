@@ -2,12 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import Homepage from './s-pages/homepage/homepage'
-import LostPage from './404-page'
-import IndicatorPage from './s-pages/country/country'
-import ChartBuilderPage from './u-pages/chart-builder/index';
+import Homepage from './pages/homepage/homepage'
+import LostPage from './pages/404-page'
+import IndicatorPage from './pages/country/country'
+import ChartBuilderPage from './pages/chart-builder/index';
 
-import './sass/index.scss'
+import './sass/index.scss' 
 
 function App() {
     return (

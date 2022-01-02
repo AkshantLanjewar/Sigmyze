@@ -20,7 +20,22 @@
 
     p.hero__subtitle {
         margin: 0 auto 2rem;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
+    }
+
+    .login_button {
+        border: none;
+        outline: none;
+        background-color: $blue-excite;
+        user-select: none;
+        color: rgb(235, 237, 240);
+
+        font-size: 0.85em;
+        font-weight: 600;
+        cursor: pointer;
+        margin-bottom: 3em;
+        padding: 0.5em 1em;
+        border-radius: 1em;
     }
 
     .hero__map {

@@ -40,7 +40,7 @@ function AddModal(props) {
     }, [modalState])
 
     return (
-        <div style={{display: modalState ? "flex" : "none", justifyContent: "center", width: "100vw", height: "100%", position: "absolute", top: 0}}>
+        <div style={{display: modalState ? "flex" : "none", justifyContent: "center", width: "100vw", height: "100vh", position: "absolute", top: 0}}>
             <div className="absolute-black-bg"></div>
 
             <div className="chart-modal">
