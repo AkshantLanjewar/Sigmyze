@@ -3,16 +3,14 @@ import React, { useState, useEffect } from "react"
 import { IoMdClose } from "react-icons/io"
 import { BsFillCaretLeftFill, BsFillCaretRightFill } from "react-icons/bs"
 
-import IndicatorLayout from './indicator-layout.tsx'
-import CountryLayout from './country-layout.tsx'
+import IndicatorLayout from './indicator-layout.js'
+import CountryLayout from './country-layout.js'
 
-type props = {
-    modalState: boolean,
-    setModalState: Function
-    addIndicator: Function
-}
+function AddModal(props) {
+    let modalState = props.modalState
+    let setModalState = props.setModalState
+    let addIndicator = props.addIndicator
 
-const AddModal: React.FC<props> = ({ modalState, setModalState, addIndicator }) => {
     const [modalStep, setModalStep] = useState(false)
     const [nextStep, setNextStep] = useState(false)
     const [submitStep, setSubmitStep] = useState(false)
@@ -26,7 +24,7 @@ const AddModal: React.FC<props> = ({ modalState, setModalState, addIndicator }) 
             setModalStep(true)
     }
 
-    function onSubmitClick(e: any) {
+    function onSubmitClick(e) {
         e.preventDefault()
 
         addIndicator(country, indicator)

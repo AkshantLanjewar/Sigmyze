@@ -8,21 +8,18 @@ import { GeoJsonLayer, PolygonLayer } from '@deck.gl/layers'
 
 import * as d3 from "d3"
 
-type Props = {
-    mapName: string,
-    mapDesc: string,
+function Legend(props) {
+    let mapName = props.mapName
+    let mapDesc = props.mapDesc
+    let mapMin  = props.mapMin
+    let mapMax  = props.mapMax
 
-    mapMin: number,
-    mapMax: number
-}
-
-const Legend: React.FC<Props> = ({mapName, mapDesc, mapMin, mapMax}) => {
-    const svgRref = React.createRef<SVGSVGElement>()
+    const svgRref = React.createRef()
     useEffect(() => {
-        svgRref.current!.innerHTML = ""
+        svgRref.current.innerHTML = ""
         let svg = d3.select(svgRref.current)
 
-        let svgDims = svgRref.current!.getBoundingClientRect()
+        let svgDims = svgRref.current.getBoundingClientRect()
 
         function ramp() {
             const color = d3.interpolatePlasma
@@ -39,8 +36,8 @@ const Legend: React.FC<Props> = ({mapName, mapDesc, mapMin, mapMax}) => {
             canvas.style.imageRendering = "pixelated"
 
             for(let i = 0; i < 512; ++i) {
-                context!.fillStyle = color(i / (512 - 1))
-                context!.fillRect(i, 0, 1, 1)
+                context.fillStyle = color(i / (512 - 1))
+                context.fillRect(i, 0, 1, 1)
             }
 
             return canvas
@@ -84,8 +81,8 @@ function Map() {
     const [mapdata, setMapData] = useState(null)
     const [colorscale, setColorScale] = useState({min: 0, max: 0})
 
-    function HexToArr(hex: string) {
-        var result: any = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    function HexToArr(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
         return [ parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16) ]
     }
 

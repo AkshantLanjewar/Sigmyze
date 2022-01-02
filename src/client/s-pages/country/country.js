@@ -45,7 +45,7 @@ function IndicatorPage() {
     const [activeTab, setActiveTab] = useState({ icon: <AiOutlineLineChart />, name: "Economics", short: "GDP", active: true })
     const [activeCharts, setActiveCharts] = useState([])
 
-    function onTabClick(e: any, name: string) {
+    function onTabClick(e, name) {
         e.preventDefault()
         name = name.toLowerCase()
         let newTabList = []
@@ -65,7 +65,7 @@ function IndicatorPage() {
         }
 
         setTabsState(newTabList)
-        setActiveTab(activeTab!)
+        setActiveTab(activeTab)
     }
 
     useEffect(() => {

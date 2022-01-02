@@ -20,14 +20,11 @@ function SearchIcon() {
     )
 }
 
-type IndicatorProps = {
-    activeCountry: any,
-    submitStep: Function,
-    setIndicatorGlobal: Function
-}
-
-const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry, submitStep, setIndicatorGlobal}) => {
-    const inputRef = React.createRef<HTMLInputElement>()
+function IndicatorLayout(props) {
+    let activeCountry = props.activeCountry
+    const submitStep = props.submitStep
+    const setIndicatorGlobal = props.setIndicatorGlobal
+    const inputRef = React.createRef()
 
     const [datasets, setDatasets] = useState([])
     const [activeDataset, setActiveDataset] = useState({})
@@ -108,7 +105,7 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry, submitStep, s
         }
     }, [categoryNames])
 
-    function OnCategoryClick(e: any, category: string) {
+    function OnCategoryClick(e, category) {
         e.preventDefault()
 
         let categoryList = categoryNames
@@ -130,9 +127,9 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry, submitStep, s
         setCategoryNames([...categoryList])
     }
 
-    function onKeyUpInput(e: any) {
+    function onKeyUpInput(e) {
         e.preventDefault()
-        let currentInput = inputRef.current!.value.toLowerCase()
+        let currentInput = inputRef.current.value.toLowerCase()
         let pActiveCategory = activeCategory
 
         let step = []
@@ -156,7 +153,7 @@ const IndicatorLayout: React.FC<IndicatorProps> = ({activeCountry, submitStep, s
         setDisplayIndicators(step)
     }
 
-    function onIndicatorClick(e: any, name: string) {
+    function onIndicatorClick(e, name) {
         let pIndicators = indicators
         let pDisplayInd = displayIndicators
         let pActiveIndicator = {}

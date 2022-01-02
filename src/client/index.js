@@ -4,10 +4,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Homepage from './s-pages/homepage/homepage'
 import LostPage from './404-page'
-import BlogDirectory from './s-pages/blog/blog-directory'
-import Post from './s-pages/blog/post'
-
-
 import IndicatorPage from './s-pages/country/country'
 import ChartBuilderPage from './u-pages/chart-builder/index';
 
@@ -19,7 +15,6 @@ function App() {
             <BrowserRouter>
                 <Switch>
                     <Route exact path="/" component={Homepage} /> 
-                    <Route exact path="/post/:postID" component={Post} />
                     <Route exact path="/chart" component={ChartBuilderPage} />
 
                     <Route
@@ -27,14 +22,6 @@ function App() {
                         render={({ match: { url } }) => (
                             <>
                                 <Route path={`${url}/`} component={IndicatorPage} exact />
-                            </>
-                        )} />
-
-                    <Route 
-                        path="/blog"
-                        render={({ match: { url } }) => (
-                            <>
-                                <Route path={`${url}/`} component={BlogDirectory} exact />
                             </>
                         )} />
 

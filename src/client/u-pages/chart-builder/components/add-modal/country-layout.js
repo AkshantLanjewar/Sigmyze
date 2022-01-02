@@ -20,15 +20,14 @@ function SearchIcon() {
     )
 }
 
-type CountryLayoutProps = {
-    nextSubmit: Function,
-    setCountry: Function
-}
 
 const stepOneChoices = [{icon: <AiOutlineLineChart />, name: "Internet Not Loading", iso3: "USA"}]
 
-const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit, setCountry}) => {
-    const inputRef = React.createRef<HTMLInputElement>()
+function CountryLayout(props) {
+    const nextSubmit = props.nextSubmit
+    const setCountry = props.setCountry 
+
+    const inputRef = React.createRef()
     const [currentCountryStep, setCurrentCountryStep] = useState(stepOneChoices)
     const [displayCountryStep, setDisplayCountryStep] = useState(stepOneChoices)
     const [displayRefs, setDisplayRefs] = useState([])
@@ -53,9 +52,9 @@ const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit, setCountry}) =
             })
     }, [])
 
-    function onKeyUpInput(e: any) {
+    function onKeyUpInput(e) {
         e.preventDefault()
-        let currentInput = inputRef.current!.value.toLowerCase()
+        let currentInput = inputRef.current.value.toLowerCase()
 
         let step = []
         for(let i = 0; i < currentCountryStep.length; i++) {
@@ -70,7 +69,7 @@ const CountryLayout: React.FC<CountryLayoutProps> = ({nextSubmit, setCountry}) =
         setDisplayCountryStep(step)
     }
 
-    function onListClick(id: string) {
+    function onListClick(id) {
         let currentCountryT = currentCountryStep
         let displayCountryT = displayCountryStep
         let activeCountry = {}

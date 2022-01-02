@@ -3,19 +3,12 @@ import { useEffect } from "react"
 
 import { BiRightArrow, BiLeftArrow } from 'react-icons/bi'
 
-type State = {
-    children: Array<React.ReactNode>,
 
-    indexs: Array<number>
-}
+function Carousel(props) {
+    let children = props.children
+    let displayCount = props.children | 3
 
-type Props = {
-    displayCount?: number
-}
-
-const Carousel: React.FC<Props> = ({ children, displayCount = 3 }) => {
-
-    let initalState: State = {
+    let initalState = {
         children: React.Children.toArray(children),
         indexs: []        
     }
@@ -31,7 +24,7 @@ const Carousel: React.FC<Props> = ({ children, displayCount = 3 }) => {
 
     useEffect(() => {
         let nChildren = children
-        let tState: State = {
+        let tState = {
             children: React.Children.toArray(nChildren),
             indexs: []
         }
@@ -42,7 +35,7 @@ const Carousel: React.FC<Props> = ({ children, displayCount = 3 }) => {
         setState(tState)
     }, [children])
 
-    function ArrowClick(dir: "left" | "right") {
+    function ArrowClick(dir) {
         if(dir == "left") {
             let array = state.indexs
 

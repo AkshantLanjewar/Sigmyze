@@ -21,43 +21,41 @@ function SearchIcon() {
     )
 }
 
-function capitalize(s: string)
+function capitalize(s)
 {
     return s[0].toUpperCase() + s.slice(1);
 }
 
 const stepOneChoices = [{icon: <AiOutlineLineChart />, name: "Internet Not Loading", iso3: "USA"}]
 
-type props = {
-    initalFullName: string,
-    setActiveSearch: Function
-}
+function CountrySearch(props) {
+    let initalFullName    = props.initalFullName
+    const setActiveSearch = props.setActiveSearch
 
-const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => {
-    const placeholderRef = React.createRef<HTMLDivElement>()
-    const resultTabRef = React.createRef<HTMLDivElement>()
-    const inputRef = React.createRef<HTMLInputElement>()
+    const placeholderRef = React.createRef()
+    const resultTabRef = React.createRef()
+    const inputRef = React.createRef()
     let [currentStep, setCurrentStep] = useState(stepOneChoices)
     let [displayStep, setDisplayStep] = useState(stepOneChoices)
 
     function onFocus() {
-        if(inputRef.current!.value == "")
-            placeholderRef.current!.style.opacity = "0"
-        resultTabRef.current!.classList.add("active-search")
-        inputRef.current!.value = ""
+        if(inputRef.current.value == "")
+            placeholderRef.current.style.opacity = "0"
+        resultTabRef.current.classList.add("active-search")
+        inputRef.current.value = ""
     }
 
     function onBlur() {
-        if(inputRef.current!.value == "")
-            placeholderRef.current!.style.opacity = "1"
+        if(inputRef.current.value == "")
+            placeholderRef.current.style.opacity = "1"
 
-        resultTabRef.current!.classList.remove("active-search")
+        resultTabRef.current.classList.remove("active-search")
     }
 
     useEffect(() => {
         if(initalFullName != "")
-            placeholderRef.current!.style.opacity = "0"
-        inputRef.current!.value = "United States"
+            placeholderRef.current.style.opacity = "0"
+        inputRef.current.value = "United States"
 
         let url = "/api/data/countries"
         fetch(url)
@@ -76,9 +74,9 @@ const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => 
             })
     }, [])
 
-    function onKeyUpInput(e: any) {
+    function onKeyUpInput(e) {
         e.preventDefault()
-        let currentInput = inputRef.current!.value.toLowerCase()
+        let currentInput = inputRef.current.value.toLowerCase()
 
         let nStep = []
         for(let i = 0; i < currentStep.length; i++) {
@@ -93,10 +91,10 @@ const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => 
         setDisplayStep(nStep)
     }
 
-    function onTabClick(e: any, name: string, iso3: string) {
+    function onTabClick(e, name, iso3) {
         e.preventDefault()
 
-        let split = inputRef.current!.value.toLowerCase().split(" ")
+        let split = inputRef.current.value.toLowerCase().split(" ")
         split[split.length - 1] = name
         let fString = ""
         for(let i = 0; i < split.length; i++) {
@@ -107,8 +105,8 @@ const CountrySearch: React.FC<props> = ({ initalFullName, setActiveSearch }) => 
             fString += text + " "
         }
 
-        inputRef.current!.value = ""
-        inputRef.current!.value = fString
+        inputRef.current.value = ""
+        inputRef.current.value = fString
         onBlur()
 
         setActiveSearch({iso3: iso3, fullname: name})

@@ -1,26 +1,12 @@
 import React, { useEffect, useState } from "react"
 import ChartBuilder, { ChartOptions, blueColor, redColor } from '../../../components/chart-builder'
 
-type props = {
-    category_a: string,
-    category_b: string
-}
+function CategoryCard(props) {
+    let category_a = props.category_a
+    let category_b = props.category_b
+    const chartRef = React.createRef()
 
-type State = {
-    shortA: string,
-    shortB: string,
-
-    longA: string,
-    longB: string,
-
-    fullName: string,
-    countryName: string,
-}
-
-const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
-    const chartRef = React.createRef<HTMLDivElement>()
-
-    const initalState: State = {
+    const initalState = {
         shortA: "",
         shortB: "",
 
@@ -32,25 +18,25 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
     }
     const [state, setState] = useState(initalState)
     useEffect(() => {
-        chartRef.current!.innerHTML = ""
+        chartRef.current.innerHTML = ""
 
         const url = `/api/data/indicator/categories/pair/${category_a}/${category_b}`
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                let chart: ChartBuilder = new ChartBuilder(chartRef!)
+                let chart = new ChartBuilder(chartRef)
                 let shortA, shortB, fullName = ""
                 let longA, longB = ""
 
 
                 let indicators = data["data"]
                 for(let i = 0; i < indicators.length; i++) {
-                    let indicator: any = indicators[i]
+                    let indicator = indicators[i]
                     let cData = indicator["data"]["data"]
 
                     let chartData = []
                     for(let i = 0; i < cData.length; i++) {
-                        let object: any = {}
+                        let object = {}
 
                         var dt = new Date(cData[i]["date"])
 
@@ -59,7 +45,7 @@ const CategoryCard: React.FC<props> = ({ category_a, category_b }) => {
                         chartData.push(object)
                     }
 
-                    let chartOptions: ChartOptions = {
+                    let chartOptions = {
                         chartType: "line",
                         chartData: chartData,
                         chartName: indicator.name,
