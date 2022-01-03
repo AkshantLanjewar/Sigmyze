@@ -1,0 +1,318 @@
+.chart-modal {
+    opacity: 1;
+    background-color: $primary-bg;
+    z-index: 299919999199;
+    border-radius: .25rem;
+    width: 40rem;
+
+    position: relative;
+    display: flex;
+    justify-self: center;
+    align-self: center;
+
+    flex-direction: column;
+
+    &.sm { width: 25rem; }
+
+    .form-controller {
+        width: 100%;
+        border-top: 1px solid $border;
+        padding-top: 12px;
+        padding-bottom: 12px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        button { 
+            margin-left: 8px; 
+            margin-right: 8px; 
+            box-sizing: content-box;
+            cursor: pointer;
+            outline: none;
+            border: none;
+
+            display: flex;
+            align-items: center;
+
+            font-size: 14px;
+            line-height: 1.2;
+            padding: 4px 12px;
+            border-radius: .25rem;
+            background: $dark-bg;
+            color: $text-color
+        }
+    }
+
+    .title {
+        display: flex;
+        align-items: center;
+        cursor: default;
+        flex: 0 0 auto;
+        padding: 0 20px;
+        user-select: none;
+
+        .text {
+            color: $mute-text;
+            cursor: default;
+            flex-grow: 1;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 28px;
+            min-width: 0;
+            padding: 17px 0;
+        }
+
+        .close {
+            align-items: center;
+            border-radius: 2px;
+            color: white;
+            cursor: default;
+            display: flex;
+            flex-shrink: 0;
+            height: 34px;
+            justify-content: center;
+            margin: 17px -3px 17px 0;
+            width: 34px;
+            cursor: pointer;
+        }
+    }
+
+    .search-bar {
+        display: flex;
+        cursor: pointer;
+        position: relative;
+        box-sizing: content-box;
+
+        align-items: center;
+        flex-shrink: 0;
+        border-top: 1px solid $border;
+        border-bottom: 1px solid $border;
+
+        .input-container {
+            height: 24px;
+            width: 100%;
+            padding: 8px 16px 8px 47px;
+            box-sizing: content-box;
+
+            input {
+                background-color: $primary-bg;
+                border: none;
+                outline: none;
+                color: $mute-text;
+                font-size: 16px;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                padding-top: 1px;
+                width: 100%;
+                
+                box-sizing: content-box;
+            }
+        }
+
+        .search {
+            color: $mute-text;
+            height: 18px;
+            box-sizing: content-box;
+
+            position: absolute;
+            top: calc(50% - 9px);
+            left: 20px;
+            pointer-events: none;
+        }
+    }
+
+    .main-wrap {
+        display: flex;
+        flex: 1 1 auto;
+        height: 400px;
+        overflow: hidden;
+        box-sizing: content-box;
+
+        .side {
+            display: flex;
+            flex: none;
+            flex-direction: column;
+
+            min-height: 145px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            
+            border-right: 1px solid $border;
+            padding-top: 6px;
+            padding-bottom: 6px;
+            width: 175px;
+            box-sizing: content-box;
+
+            .tab {
+                display: flex;
+                box-sizing: content-box;
+                align-items: center;
+                color: $text-color;
+                padding: 6px 0 6px 20px;
+                cursor: pointer;
+                user-select: none;
+
+                .icon {
+                    height: 28px;
+                    width: 28px;
+
+                    svg { 
+                        height: 28px;
+                        width: 28px; 
+                    }
+                }
+
+                .tab-title {
+                    display: flex;
+                    font-size: 14px;
+                    margin-left: 8px;
+                    min-width: 0;
+                    white-space: nowrap;
+
+                    .text {
+                        flex: 0 100%;
+                        min-width: 0;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+        }
+
+        .indicator-content {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+            overflow: auto;
+            width: 100%;
+
+            .pills {
+                padding: 8px 4px 6px 26px;
+                box-sizing: content-box;
+
+                display: flex;
+                align-items: center;
+                flex: 0 0 auto;
+                overflow-x: auto;
+                overflow-y: hidden;
+
+                .pill {
+                    box-sizing: content-box;
+                    background-color: $dark-bg;
+                    color: #fff;
+                    cursor: pointer;
+                    margin: 8px 8px 0 0;
+                    padding: 0 11px;
+
+                    border-radius: 14px;
+                    font-weight: normal;
+                    font-size: 14px;
+                    line-height: 21px;
+
+                    align-items: center;
+                    box-sizing: border-box;
+                    display: inline-flex;
+                    flex: none;
+                    max-width: 100%;
+                    outline: none;
+                    overflow: visible;
+                    position: relative;
+
+                    &.active { border: 1px solid white; }
+
+                    .content {
+                        background-color: $dark-bg;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        user-select: none;
+                    }
+                }
+            }
+
+            .indicators {
+                height: 100%;
+                width: 100%;
+                min-width: 0;
+                overflow-x: hidden;
+                position: relative;
+            }
+
+            .listContainer {
+                position: relative;
+                overflow: auto;
+                width: 100%;
+                direction: ltr;
+
+                display: flex;
+                flex-direction: column;
+                
+                .title-item {
+                    height: 40px;
+                    width: 100%;
+                    display: flex;
+                    padding: 16px 84px 8px 32px;
+
+                    h3 {
+                        color: $mute-text;
+                        font-size: 11px;
+                        font-weight: 400;
+                        letter-spacing: .4px;
+                        line-height: 16px;
+                        margin: 0;
+                        text-transform: uppercase;
+                        white-space: nowrap;
+                        user-select: none;
+                    }
+                }
+
+                .indicator {
+                    height: 32px;
+                    width: 100%;
+
+                    display: flex;
+                    align-items: center;
+                    padding-left: 6px;
+                    padding-right: 16px;
+                    cursor: pointer;
+
+                    &:first-child { margin-top: 20px; }
+                    &:hover { background-color: $dark-bg; }
+
+                    &.focus { background-color: $dark-bg; }
+
+                    .main-content {
+                        display: flex;
+                        align-items: center;
+                        flex: 1 1 auto;
+                        margin-right: auto;
+                        min-width: 0;
+                        margin-left: 26px;
+
+
+                        .indicator-icon {
+                            display: flex;
+                            align-items: center;
+                            margin-right: 8px;
+                        }
+
+                        .indicator-title {
+                            color: $text-color;
+                            font-size: 14px;
+                            
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                    }
+
+                    .actions {
+
+                    }
+                }
+            }
+        }
+    }
+}

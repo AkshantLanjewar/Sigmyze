@@ -9,6 +9,7 @@ import Map from './components/map'
 import Logo from '../../../svg/logo.svg';
 
 import Modal from '../../components/modal'
+import UserAuth from './components/user-auth'
 
 
 function Homepage(props) {
@@ -26,12 +27,13 @@ function Homepage(props) {
         cards.push(<CategoryCard category_a={"GDP"} category_b={"GOVT"} />)
 
     const [loginState, setLoginState] = useState(false)
+    const [userTitle, setUserTitle] = useState("Login")
 
     return (
         <div>
 
-            <Modal viewState={loginState} setViewState={setLoginState} title={"Login"}>
-
+            <Modal viewState={loginState} setViewState={setLoginState} title={userTitle} small={true}>
+                <UserAuth setUserTitle={setUserTitle} />
             </Modal>
 
             <Navbar />

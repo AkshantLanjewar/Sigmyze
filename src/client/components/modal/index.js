@@ -3,6 +3,8 @@ import { IoMdClose } from "react-icons/io"
 
 function Modal(props) {
     let viewState = props.viewState
+    let small = props.small
+
     if(viewState)
         document.getElementsByTagName("body")[0].style.overflow = "hidden"
     if(!viewState)
@@ -28,7 +30,7 @@ function Modal(props) {
                 zIndex: "4009"}}>
             <div className="absolute-black-bg"></div>
 
-            <div className="chart-modal">
+            <div className={`chart-modal ${small ? "sm" : ""}`}>
                 <div className="title">
                     <div className="text">{props.title}</div>
                     <span className="close" onClick={() => { props.setViewState(false) }}><IoMdClose /></span>
