@@ -22,12 +22,13 @@ function Modal(props) {
              style={{
                 display: viewState ? "flex" : "none", 
                 justifyContent: "center", 
-                width: "100%", 
+                width: "100vw", 
                 height: "100%", 
                 position: "absolute", 
                 bottom: 0,
                 top: bodyOffset, 
-                zIndex: "4009"}}>
+                left: 0,
+                zIndex: "20000"}}>
             <div className="absolute-black-bg"></div>
 
             <div className={`chart-modal ${small ? "sm" : ""}`}>

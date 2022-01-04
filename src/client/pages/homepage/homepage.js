@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-
-import Navbar from '../../components/navbar'
 import CategoryCard from './components/category-card'
 
 import Carousel from '../../components/carousel'
@@ -35,8 +33,6 @@ function Homepage(props) {
             <Modal viewState={loginState} setViewState={setLoginState} title={userTitle} small={true}>
                 <UserAuth setUserTitle={setUserTitle} />
             </Modal>
-
-            <Navbar />
 
             <div className='main'>
                 <header className='hero-banner'>

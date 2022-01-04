@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 
-import Navbar from "../../components/navbar"
 import CountrySearch from './components/country-search'
 import SingleCategoryCard from './components/s-category-card'
 
@@ -88,8 +87,6 @@ function IndicatorPage() {
 
     return (
         <div>
-            <Navbar />
-
             <div className="container">
                 <h1 className="country-title">Know your Country</h1>
 

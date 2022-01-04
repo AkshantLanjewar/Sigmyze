@@ -72,7 +72,7 @@
         }
 
         input:focus ~ .underline::after, 
-        input:focus ~ .underline::after {
+        input:active ~ .underline::after {
             transform: scaleX(1);
             transform-origin: left;
         }

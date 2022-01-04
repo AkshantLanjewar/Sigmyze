@@ -1,11 +1,9 @@
 import React, { useState } from "react"
-import ChartNavbar from "./components/chart-nav"
 import OverviewChart from './components/chart'
 import Indicator from "../../data/indicator"
 import AddModal from './components/add-modal/add-modal'
 
 import { AiOutlineLineChart, AiOutlineEllipsis, AiOutlineBarChart } from "react-icons/ai"
-import { FiChevronDown } from "react-icons/fi"
 import { IoMdClose } from "react-icons/io"
 import { HiPlus } from "react-icons/hi"
 
@@ -80,15 +78,12 @@ function ChartBuilderPage() {
 
     return (
         <div className="chart-builder">
-            <ChartNavbar />
-
             <div className="root">
                 <AddModal modalState={modalState} setModalState={setModalState} addIndicator={AddIndicator} />
                 <div className="nav">
                     <div className="section-container">
                         <div className="header">
-                            <FiChevronDown className="c-icon" />
-                            <h3 className="title">Indicators</h3>
+                            <h3 className="title" style={{marginLeft: "1em"}}>Indicators</h3>
                             <HiPlus className="add" onClick={() => { setModalState(true) }} />
                         </div>
 

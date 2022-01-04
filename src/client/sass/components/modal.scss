@@ -1,3 +1,15 @@
+.absolute-black-bg {
+    opacity: .7;
+    z-index: 199919999199;
+    background-color: rgb(0, 0, 0);
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
 .chart-modal {
     opacity: 1;
     background-color: $primary-bg;
