@@ -10,7 +10,7 @@ function SingleCategoryCard(props) {
     const chartRef = React.createRef()
     const cardRef = React.createRef()
 
-    const [fullname, setFullname] = useState("")
+    const [simpleName, setSimpleName] = useState("")
     const [scale, setScale] = useState()
 
     useEffect(() => {
@@ -22,12 +22,12 @@ function SingleCategoryCard(props) {
             .then(data => {
                 let chart = new ChartBuilder(chartRef)
                 let chartData = []
-                for(let i = 0; i < data.length; i++) {
+                for(let i = 0; i < data['data'].length; i++) {
                     let object = {}
-                    let dt = new Date(data[i]["date"])
+                    let dt = new Date(data['data'][i]["date"])
 
                     object["date"] = dt.getUTCFullYear()
-                    object["value"] = data[i]["value"]
+                    object["value"] = data['data'][i]["value"]
                     chartData.push(object)
                 }
 
@@ -56,7 +56,7 @@ function SingleCategoryCard(props) {
                 chart.AddLineChart(chartOptions)
                 chart.CreateChart()
 
-                setFullname(data['simpleName'])
+                setSimpleName(data['sName'])
                 setScale(data['scale'])
             })
     })
@@ -66,7 +66,7 @@ function SingleCategoryCard(props) {
             <div className="title tooltip">
                 <h5 style={{marginBottom: "1em"}}>
                     <span>{iso3} {'>'} </span>
-                    <span>{fullname} {'('}{scale}{')'}</span>
+                    <span>{simpleName} {'('}{scale}{')'}</span>
                 </h5>
 
                 <div>{category}</div>
