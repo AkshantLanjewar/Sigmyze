@@ -9,6 +9,7 @@ import Post from './s-pages/blog/post'
 
 
 import IndicatorPage from './s-pages/country/country'
+import AboutUsPage from './s-pages/about/about'
 import ChartBuilderPage from './u-pages/chart-builder/index';
 
 import './sass/index.scss'
@@ -18,9 +19,10 @@ function App() {
         <div>
             <BrowserRouter>
                 <Switch>
-                    <Route exact path="/" component={Homepage} /> 
+                    <Route exact path="/" component={Homepage} />
                     <Route exact path="/post/:postID" component={Post} />
                     <Route exact path="/chart" component={ChartBuilderPage} />
+                    <Route exact path="/about" component={AboutUsPage} />
 
                     <Route
                         path="/indicator"
@@ -30,7 +32,7 @@ function App() {
                             </>
                         )} />
 
-                    <Route 
+                    <Route
                         path="/blog"
                         render={({ match: { url } }) => (
                             <>
