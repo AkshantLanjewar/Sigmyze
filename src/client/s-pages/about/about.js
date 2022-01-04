@@ -68,7 +68,7 @@ function AboutUsPage() {
             This is a passion project for us (we currently have other day jobs to help with the business of life!).
           </p>
           <p className='aboutPara'>
-            Akshant Lanjewar - tech and coding geek, intrepid taekwondo learner, and high school senior. Dabbled in building a gaming PC and personal coding projects using React, HTML, JS, NodeJS, Express, Python, etc. ?????
+            Akshant Lanjewar - tech and coding geek, intrepid taekwondo learner, and high school senior. Dabbled in building a gaming PC and personal coding projects using React, HTML, JS, NodeJS, Express, Python, etc.
           </p>
           <p className='aboutPara'>
             Rahul Lanjewar - tech and crypto enthusiast and presumably the 'voice of experience' - having spent many years in tech consulting. Dabbled in tech transformation consulting, corporate strategy, financial analysis & simulations, and occasional programming.
