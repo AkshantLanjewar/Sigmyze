@@ -1,0 +1,29 @@
+@import '../vars.scss';
+
+.aboutBody {
+    position:absolute;
+    width: 90%;
+    left: 5%;
+    top: 25%;
+    text-align: center;
+}
+
+.aboutTitle {
+    margin-bottom: 10px;
+    font-size: 1.3em;
+    font-weight: bold;
+    color:rgb(166,255,77);
+}
+
+.aboutDivider {
+    border-top-style: groove;
+    border-top-width: 1px;
+    border-color: rgb(230,230,230);
+    margin-bottom: 15px;
+}
+
+.aboutPara {
+      margin-bottom: 10px;
+      font-size: 0.95em;
+      font-weight: 400;
+}

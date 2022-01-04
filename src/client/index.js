@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Homepage from './s-pages/homepage/homepage'
 import LostPage from './404-page'
 import IndicatorPage from './s-pages/country/country'
+import AboutUsPage from './s-pages/about/about'
 import ChartBuilderPage from './u-pages/chart-builder/index';
 
 import './sass/index.scss'
@@ -14,8 +15,9 @@ function App() {
         <div>
             <BrowserRouter>
                 <Switch>
-                    <Route exact path="/" component={Homepage} /> 
+                    <Route exact path="/" component={Homepage} />
                     <Route exact path="/chart" component={ChartBuilderPage} />
+                    <Route exact path="/about" component={AboutUsPage} />
 
                     <Route
                         path="/indicator"

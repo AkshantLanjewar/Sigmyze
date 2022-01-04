@@ -21,6 +21,12 @@ function Navbar() {
                 <div className="right">
                     <a className="nav-item" href="/indicator">Country Charts</a>
                 </div>
+                <div className="right">
+                    <a className="nav-item" href="/chart">MyChart</a>
+                </div>
+                <div className="right">
+                    <a className="nav-item" href="/about">About Us</a>
+                </div>
             </div>
         </nav>
     )
