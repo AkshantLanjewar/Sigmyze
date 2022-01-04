@@ -29,7 +29,7 @@ function Modal(props) {
                 top: bodyOffset, 
                 left: 0,
                 zIndex: "20000"}}>
-            <div className="absolute-black-bg"></div>
+            <div className="absolute-black-bg" onClick={() => { props.setViewState(false) }}></div>
 
             <div className={`chart-modal ${small ? "sm" : ""}`}>
                 <div className="title">

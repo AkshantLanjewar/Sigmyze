@@ -40,9 +40,9 @@ function App() {
                     </div>
 
                     <div className='content'>
-                        <ul>
-                            <li>
-                                <a href='/' data-original-title="Homepage">
+                        <ul style={{marginTop: "1em"}}>
+                            <li className="tooltip-right t-side"  data-tooltip="Homepage">
+                                <a href='/'>
                                     <FaHome />
                                     <span className='truncate'>Homepage</span>
                                 </a>
@@ -55,7 +55,7 @@ function App() {
             <header className='topnav' ref={topRef}>
                 <div className='nav'>
                     <div className='left'>
-                        <button className='toggler' onClick={ToggleSidenav} ref={togglerRef}>
+                        <button className='toggler tooltip-right' data-tooltip="Expand" onClick={ToggleSidenav} ref={togglerRef}>
                             <HiOutlineMenuAlt1 />
                         </button>
                     </div>
