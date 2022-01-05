@@ -1,9 +1,8 @@
+const redis = require('redis')
 const express  = require('express')
 const session = require('express-session')
 const passport = require('passport')
-const path = require('path') 
-
-const mongoose = require('mongoose')
+const connectRedis = require('connect-redis')
 
 const app = express();
 const port = Number(process.env.PORT) || 8050;
@@ -12,14 +11,37 @@ function isLoggedIn(req, res, next) {
     req.user ? next() : res.sendStatus(401)
 }
 
-//app.use(express.static('dist', { root: '.' })); 
+const RedisStore = connectRedis(session)
 
-//app.use(session({ secret: 'big yolo danny' }))
-//app.use(passport.initialize())
-//app.use(passport.session())
+const redisClient = redis.createClient({
+    host: 'localhost',
+    port: 6379
+})
 
-//const userRouter = require('./user/index')
-//app.use('/user', userRouter.userRouter())
+redisClient.on('error', function (err) {
+    console.log('Could not establish a connection with redis. ' + err);
+})
+
+redisClient.on('connect', function (err) {
+    console.log('Connected to redis successfully');
+})
+
+app.use(session({
+    secret: "asdkashdaksjhdaskjhdakjhdannyadksjhakjshd",
+    store: new RedisStore({ client: redisClient }),
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        secure: false,
+        httpOnly: false,
+        maxAge: 1000 * 60 * 60 * 24
+    }
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+
+const userRouter = require('./user/index')
+app.use('/user', userRouter.userRouter())
 
 process.env.NODE_ENV = "dev"
 
@@ -39,9 +61,6 @@ if(process.env.NODE_ENV == "dev") {
 
 const dataRouter = require('./data/index')
 app.use('/api/data', dataRouter.dataRouter())
-
-const blogRouter = require('./blog')
-app.use('/api/blog', blogRouter.blogRouter())
 
 
 app.get(`/**`, (req, res) => {

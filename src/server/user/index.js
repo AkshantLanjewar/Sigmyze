@@ -1,4 +1,5 @@
 const Router = require('express').Router
+const fs = require('fs')
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 
@@ -6,65 +7,51 @@ const User = require('./user-model')
 
 function userRouter() {
     const router = Router();
-    const GOOGLE_CLIENT_ID = "566324925606-4oornr2dq44h84ikoiv8fl7hg8snknla.apps.googleusercontent.com"
-    const GOOGLE_CLIENT_SECRET = "1N6glJWPL1qH7tLrcwiOr237"
+    const keys = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\google_keys.json'))
+    
+    passport.serializeUser(async function(user, done) {
+        done(null, user)
+    })
+
+    passport.deserializeUser(async function(user, done) {
+        done(null, user)
+    })
 
     passport.use(new GoogleStrategy({
-            clientID: GOOGLE_CLIENT_ID,
-            clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:8050/user/auth/google/callback",
+            "clientID": keys['web']['client_id'],
+            "clientSecret": keys['web']['client_secret'],
+            "callbackURL": '/user/google/callback',
             passReqToCallback: true
         },
-        async function(request, accessToken, refreshToken, profile, done) {
-            const provider    = profile.provider
-            const id          = profile.id
-            const displayname = profile.displayName
-            const email       = profile.email
-
-            const tUserEMAIL = await User.findOne({o_id: id, provider: provider, email: email}, 'email')
-            if(tUserEMAIL == null)
-            {
-                const user = new User({
-                    email: email,
-                    provider: provider,
-                    o_id: id,
-                    displayname: displayname
-                })
-
-                await user.save()
-            }
-
+        function(request, accessToken, refreshToken, profile, done) {
             return done(null, profile)
         }
     ))
 
-    passport.serializeUser(function(user, done) {
-        done(null, user)
+    router.get('/failed', (req, res) => {
+        res.send("failed")
     })
 
-    passport.deserializeUser(function(user, done) {
-        done(null, user)
-    })
-
-    router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
-    router.get('/auth/google/callback', passport.authenticate('google', {
-        successRedirect: '/buisness',
-        failureRedirect: '/user/auth/google/failure'
-    }))
-
-    router.get('/auth/google/failure', (req, res) => {
-        res.send("Failed to Login")
-    })
-
-    router.get('/isLoggedin', (req, res) => {
-        req.user ? res.send("loggedin") : res.send("logout")
+    router.get('/success', (req, res) => {
+        console.log(req.user)
+        res.send(`welcome ${req.user}`)
     })
 
     router.get('/logout', (req, res) => {
+        req.session = null
         req.logout()
-        req.session.destroy()
-        res.send('logout')
+        res.redirect('/')
     })
+
+    router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
+
+    router.get('/google/callback', passport.authenticate('google', {
+            failureRedirect: '/user/failed'
+        }),
+        function(req, res) {
+            res.redirect('/user/success')
+        }
+    )
 
     return router;
 }
