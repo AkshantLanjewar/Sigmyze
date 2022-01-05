@@ -1,18 +1,27 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 import Homepage from './pages/homepage/homepage'
 import LostPage from './pages/404-page'
 import IndicatorPage from './pages/country/country'
 import ChartBuilderPage from './pages/chart-builder/index';
 
+import UserAuth from './pages/homepage/components/user-auth';
+import Modal from './components/modal'
+
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
-import { FaHome } from 'react-icons/fa'
+import { RiHomeFill, RiBarChartBoxFill, RiOmega } from 'react-icons/ri'
 
 import Logo from '../svg/logo.svg'
-
 import './sass/index.scss' 
+
+let pageNav = [
+    { name: "Homepage", icon: <RiHomeFill />, active: false, url: '/' },
+    { name: "Indicators", icon: <RiBarChartBoxFill />, active: false, url: '/indicator' },
+    { name: "Charts", icon: <RiOmega />, active: false, url: '/chart' }
+]
 
 function App() {
     //refs
@@ -28,8 +37,31 @@ function App() {
         mainRef.current.classList.toggle("expand")
     }
 
+    const [loginState, setLoginState] = useState(false)
+    const [userTitle, setUserTitle] = useState("Login")
+    const [navState, setNavState] = useState(pageNav)
+
+    useEffect(() => {
+        let path = window.location.pathname
+        let tNavState = navState
+        for(let i = 0; i < tNavState.length; i++) {
+            let nav = tNavState[i]
+            nav['active'] = false
+
+            if(nav.url == path)
+                nav['active'] = true
+            tNavState[i] = nav
+        }
+
+        setNavState([...tNavState])
+    }, [])
+
     return (
         <div>
+            <Modal viewState={loginState} setViewState={setLoginState} title={userTitle} small={true}>
+                <UserAuth setUserTitle={setUserTitle} />
+            </Modal>
+
             <aside className='sidenav' ref={sidenavRef}>
                 <div className='nav'>
                     <div className='brand'>
@@ -41,12 +73,16 @@ function App() {
 
                     <div className='content'>
                         <ul style={{marginTop: "1em"}}>
-                            <li className="tooltip-right t-side"  data-tooltip="Homepage">
-                                <a href='/'>
-                                    <FaHome />
-                                    <span className='truncate'>Homepage</span>
-                                </a>
-                            </li>
+                            {navState.map((step) => {
+                                return (
+                                    <li className={`tooltip-right t-side ${step.active ? "active" : ""}`} data-tooltip={step.name}>
+                                        <a href={step.url}>
+                                            {step.icon}
+                                            <span className='truncate'>{step.name}</span>
+                                        </a>
+                                    </li>
+                                )
+                            })}
                         </ul>
                     </div>
                 </div>
@@ -63,7 +99,7 @@ function App() {
                     <div className='right'>
                         <ul>
                             <li style={{marginLeft: "1em"}}>
-                                <a className='login-btn'>Login</a>
+                                <a className='login-btn' onClick={() => { setLoginState(true) }}>Login</a>
                             </li>
                         </ul>
                     </div>
@@ -73,7 +109,9 @@ function App() {
             <main className='main-content' ref={mainRef}>
                 <BrowserRouter>
                     <Switch>
-                        <Route exact path="/" component={Homepage} /> 
+                        <Route exact path="/">
+                            <Homepage setLoginState={setLoginState} />
+                        </Route> 
                         <Route exact path="/chart" component={ChartBuilderPage} />
 
                         <Route

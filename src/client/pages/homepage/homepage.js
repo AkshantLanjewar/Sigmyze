@@ -6,11 +6,10 @@ import Map from './components/map'
 
 import Logo from '../../../svg/logo.svg';
 
-import Modal from '../../components/modal'
-import UserAuth from './components/user-auth'
-
 
 function Homepage(props) {
+    let setLoginState = props.setLoginState
+
     let viewcount = 3
     const windowWidth = window.innerWidth
     if(windowWidth <= 1200)
@@ -24,16 +23,8 @@ function Homepage(props) {
     for(let i = 0; i < 8; i++)
         cards.push(<CategoryCard category_a={"GDP"} category_b={"GOVT"} />)
 
-    const [loginState, setLoginState] = useState(false)
-    const [userTitle, setUserTitle] = useState("Login")
-
     return (
         <div>
-
-            <Modal viewState={loginState} setViewState={setLoginState} title={userTitle} small={true}>
-                <UserAuth setUserTitle={setUserTitle} />
-            </Modal>
-
             <div className='main'>
                 <header className='hero-banner'>
                     <div className='container'>

@@ -87,7 +87,7 @@ function IndicatorPage() {
 
     return (
         <div>
-            <div className="container">
+            <div className="container" style={{marginTop: "6em"}}>
                 <h1 className="country-title">Know your Country</h1>
 
                 <CountrySearch initalFullName={activeCountry.fullname} setActiveSearch={setActiveCountry} />
