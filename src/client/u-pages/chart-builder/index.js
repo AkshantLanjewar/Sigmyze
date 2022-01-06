@@ -37,7 +37,7 @@ function ChartTabs() {
 }
 
 let colors = [
-    {name: 'white', hex: '#FFFFFF'}, 
+    {name: 'white', hex: '#FFFFFF'},
     {name: 'blue', hex: '#1c588c'},
     {name: 'green', hex: '#26a69a'},
     {name: 'red', hex: '#ef5350'},
@@ -117,7 +117,7 @@ function ChartBuilderPage() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className="content">
                     <ChartTabs />
                     <OverviewChart indicators={indicators} />

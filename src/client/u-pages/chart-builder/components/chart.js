@@ -175,7 +175,7 @@ function OverviewChart(props) {
                 columns: cols,
                 points
             })
-            
+
             if(indicators.length !== 0) {
                 setIndicatorSeries(series)
                 setTimerange(series.range())
@@ -240,7 +240,7 @@ function OverviewChart(props) {
 
     function handleMouseMove(x, y) {
         setCrosshairPos({x: x, y: y, tracker: crosshairPos.tracker})
-    }  
+    }
 
     return (
         <div className="overview-chart">

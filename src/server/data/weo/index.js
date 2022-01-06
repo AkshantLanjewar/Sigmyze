@@ -2,7 +2,8 @@
 const fs = require('fs')
 const http = require('http')
 
-const API_ROOT = "http://34.70.145.116:8080"
+//const API_ROOT = "http://34.70.145.116:8080"
+const API_ROOT = "http://34.66.146.203:8080"
 
 function HTTP_GET(sublet) {
     return new Promise((resolve, reject) => {
@@ -38,7 +39,7 @@ async function TabulateWEOData() {
 
     //start with categories
     let categories_url = "/api/econdata/metricgroups/"
-    let categories_req = HTTP_GET(categories_url).catch((error) => {console.error(error)})    
+    let categories_req = HTTP_GET(categories_url).catch((error) => {console.error(error)})
     let categories_rep = JSON.parse(await categories_req)
 
     //save the file
@@ -71,7 +72,7 @@ async function TabulateWEOData() {
     let country_url = '/api/econdata/countries/'
     let country_req = HTTP_GET(country_url).catch((error) => {console.error(error)})
     let country_rep = JSON.parse(await country_req)
-    
+
     fs.writeFileSync(`./indicatorDB/countries.json`, JSON.stringify(country_rep))
 
     for(let i = 0; i < country_rep.length; i++) {
@@ -82,7 +83,7 @@ async function TabulateWEOData() {
         for(let x = 0; x < combined_indicators.length; x++) {
             let indicator = combined_indicators[x]
             let shortI = indicator['indicator']
-            
+
             let url = `/api/econdata/getMetricDataC/${shortI}/${iso3}/`
             let req = HTTP_GET(url).catch((error) => { console.log(error) })
             let rep = JSON.parse(await req)

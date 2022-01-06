@@ -19,7 +19,7 @@ function AddModal(props) {
     const [country, setCountry] = useState({})
     const [indicator, setIndicator] = useState({})
 
-    function onNextClick() { 
+    function onNextClick() {
         if(nextStep == true)
             setModalStep(true)
     }
@@ -73,8 +73,8 @@ function AddModal(props) {
                             </button>
                         </div>
                         )
-                        
-                    : (                        
+
+                    : (
                         <div className="form-controller">
                             <button className="controller" onClick={onNextClick} style={{background: nextStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)" }}>
                                 <span>Next</span>

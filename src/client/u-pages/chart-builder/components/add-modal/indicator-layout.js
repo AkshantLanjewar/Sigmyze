@@ -3,16 +3,16 @@ import { FcAreaChart } from "react-icons/fc"
 
 function SearchIcon() {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
+        <svg xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
             style={{cursor: "pointer"}}
-            fill="none" 
-            stroke="currentColor" 
+            fill="none"
+            stroke="currentColor"
             stroke-width="2"
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="search-icon">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -48,8 +48,8 @@ function IndicatorLayout(props) {
 
     useEffect(() => {
         if(activeDataset == {})
-            return 
-        
+            return
+
         let categoryUrl = `/api/data/v2/datasets/${activeDataset.name}/categories`
         fetch(categoryUrl)
             .then(response => response.json())
@@ -71,7 +71,7 @@ function IndicatorLayout(props) {
         for(let i = 0; i < categoryNames.length; i++) {
             let category = categoryNames[i]
             let indicatorUrl = `/api/data/v2/datasets/${activeDataset.name}/categories/${category.name}/${activeCountry.iso3}`
-            
+
             let request = new XMLHttpRequest()
             request.open('GET', indicatorUrl, false)
             request.send(null)
@@ -88,7 +88,7 @@ function IndicatorLayout(props) {
         }
 
         setIndicators(p_indicators)
-        
+
         if(activeCategory == null)
             setDisplayIndicators(p_indicators)
         else {
@@ -144,7 +144,7 @@ function IndicatorLayout(props) {
             if(pActiveCategory == null)
                 fits_category = true
             else if(pActiveCategory.name == nStep.category.name)
-                fits_category = true 
+                fits_category = true
 
             if(nLastWord.toString() == nSub.toString() && fits_category)
                 step.push(nStep)
@@ -234,7 +234,7 @@ function IndicatorLayout(props) {
                                         </div>
 
                                         <div className="actions">
-                                            
+
                                         </div>
                                     </div>
                                 )

@@ -16,6 +16,7 @@ function ContainsIndicator(indicator, list) {
 const API_ROOT = "http://34.66.146.203:8080"
 
 function HTTP_Promise(sublet) {
+
     return new Promise((resolve, reject) => {
         http.get(API_ROOT + '/' + sublet, (response) => {
             let data_chunks = []
@@ -88,14 +89,6 @@ function V2APIRouter() {
         let result = JSON.parse(await promise)
 
         let keys = Object.keys(result["data"])
-        let simpleName = result['simpleName']
-        let scale = result['scale']
-
-        if (scale == '(empty)'){
-          scale = "%";
-        }
-
-
         let data = []
         for(let i = 0; i < keys.length; i++) {
             let key = keys[i]
@@ -107,7 +100,7 @@ function V2APIRouter() {
             data.push({ date: key, value: d_val })
         }
 
-        return res.json({data:data, sName:simpleName, scale:scale})
+        return res.json(data)
     })
 
     router.get('/datasets/:dataset/categories/:category/:iso3', (req, res) => {
