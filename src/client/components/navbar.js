@@ -12,9 +12,9 @@ function Navbar() {
                 <div className="left">
                     <a className="brand" href="/">
                         <img src={Logo} width={32} height={32} />
-                        <b>Sigmyze</b>
+                        <b>Sigmyze </b>
                     </a>
-
+                    <div style={{fontSize:'0.6em'}}>Ver: Alpha</div>
 
                 </div>
 

@@ -18,7 +18,7 @@ function AboutUsPage() {
         </div>
         <div style={{marginBottom:'50px'}}>
           <p className='aboutPara' style={{fontSize:'1.1em', color:'rgb(153,204,255)'}}>
-            Our mission is to <span style={{fontWeight:'bold'}}>democratize data and analysis.</span>
+            Our mission is to <span className='aboutHighlight'>democratize data and analysis.</span>
           </p>
           <p className='aboutPara'>
             Our belief is that by enabling easy access to multiple datasets
@@ -34,7 +34,7 @@ function AboutUsPage() {
             Sigmyze is focused on enabling easy and quick access to multiple datasets on economy, society and markets.
             While most of these datasets are openly available, accessing them in one place and combining them effectively <span style={{fontStyle:'italic', fontWeight:'bold'}}> is hard. </span>
             <br/><br/>
-            <span style={{fontSize:'1.1rem', color:'rgb(153,204,255)'}}>
+            <span className='aboutHighlight'>
             Sigmyze does that hard work for you - combining multiple datasets, with beautiful visualizations, in one place - so you can focus on creating the insights that matter to you!
             </span>
             <br/><br/>
