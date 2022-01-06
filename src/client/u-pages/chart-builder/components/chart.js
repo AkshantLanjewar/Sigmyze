@@ -107,7 +107,7 @@ function OverviewChart(props) {
                 let ind3 = indicator.indicator
 
                 let data = await Indicator.FindIndicator(iso3, ind3)
-                let rData = data[0]
+                let rData = data[0]['data']
                 let values = {}
 
                 for(let i = 0; i < rData.data.length; i++) {
