@@ -6,6 +6,7 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const User = require('./user-model')
 
 function userRouter() {
+    User.SetupTable()
     const router = Router();
     const keys = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\google_keys.json'))
     
@@ -29,18 +30,21 @@ function userRouter() {
     ))
 
     router.get('/failed', (req, res) => {
-        res.send("failed")
+        res.redirect('/')
     })
 
     router.get('/success', (req, res) => {
-        console.log(req.user)
-        res.send(`welcome ${req.user}`)
+        res.redirect('/')
+    })
+
+    router.get('/isLoggedIn', (req, res) => {
+        return req.user ? res.json(true) : res.json(false)
     })
 
     router.get('/logout', (req, res) => {
-        req.session = null
         req.logout()
-        res.redirect('/')
+        
+        return res.json(true)
     })
 
     router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
@@ -49,7 +53,7 @@ function userRouter() {
             failureRedirect: '/user/failed'
         }),
         function(req, res) {
-            res.redirect('/user/success')
+            res.redirect('/')
         }
     )
 

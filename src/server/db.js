@@ -12,10 +12,6 @@ connection.connect(function(err) {
 
     connection.query(db_createstr, function(err, result) {
         if(err) throw err
-
-        connection.query('use Sigmyze;', (err, result) => {
-            if(err) throw err
-        })
     })
 })
 

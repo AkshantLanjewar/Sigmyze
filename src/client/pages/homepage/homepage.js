@@ -9,6 +9,7 @@ import Logo from '../../../svg/logo.svg';
 
 function Homepage(props) {
     let setLoginState = props.setLoginState
+    let loggedIn = props.loggedIn
 
     let viewcount = 3
     const windowWidth = window.innerWidth
@@ -32,7 +33,10 @@ function Homepage(props) {
                         <h1 className='hero__title'>Sigmyze</h1>
                         <p className='hero__subtitle'>Democratizing Data and Analysis</p>
 
-                        <button className='login_button' onClick={() => { setLoginState(true) }}>Get Started</button>
+                        {loggedIn 
+                            ? (<div></div>)  
+                            : (<button className='login_button' onClick={() => { setLoginState(true) }}>Get Started</button>)
+                        }
                     </div>
 
                     <div className='hero__map'>

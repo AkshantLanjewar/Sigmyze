@@ -199,6 +199,54 @@ main.main-content {
                 flex-direction: row;
                 align-items: center;
 
+                .user-control {
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    place-items: center;
+                    grid-gap: .25rem;
+                    position: relative;
+
+                    .profile {
+                        width: 26px;
+                        height: 26px;
+                        font-size: 13px;
+
+                        color: white;
+                        display: grid;
+                        place-items: center;
+                        font-weight: 600;
+                        background: #3aab87;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        user-select: none;
+                        text-transform: uppercase;
+                        cursor: pointer;
+                    }
+
+                    .profile:focus ~ ul.dropdown { display: block; }
+                    ul.dropdown:hover { display: block; }
+
+                    ul.dropdown {
+                        position: absolute;
+                        display: none;
+
+                        left: -100px;
+                        top: calc(1em + 14px);
+                        padding: 6px 12px;
+                        margin: 0;
+                        list-style: none;
+                        width: 140px;
+                        border-radius: 3px;
+                        background-color: $track;
+                        font-size: 16px;
+
+                        li {
+                            user-select: none;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
                 .login-btn {
                     background-color: $blue-excite;
                     user-select: none;

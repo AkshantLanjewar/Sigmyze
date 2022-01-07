@@ -40,6 +40,7 @@ function App() {
     const [loginState, setLoginState] = useState(false)
     const [userTitle, setUserTitle] = useState("Login")
     const [navState, setNavState] = useState(pageNav)
+    const [loggedIn, setLoggedIn] = useState(false)
 
     useEffect(() => {
         let path = window.location.pathname
@@ -53,8 +54,25 @@ function App() {
             tNavState[i] = nav
         }
 
+        let checkUrl = "/user/isLoggedIn"
+        fetch(checkUrl)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                setLoggedIn(data)
+            })
+
         setNavState([...tNavState])
     }, [])
+
+    function Signout() {
+        let url = '/user/logout'
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                window.location.reload()
+            })
+    }
 
     return (
         <div>
@@ -98,9 +116,22 @@ function App() {
 
                     <div className='right'>
                         <ul>
-                            <li style={{marginLeft: "1em"}}>
-                                <a className='login-btn' onClick={() => { setLoginState(true) }}>Login</a>
-                            </li>
+                            {loggedIn  
+                                ? (<li style={{marginLeft: "1em"}}>
+                                    <div className='user-control'>
+                                        <button className='profile'>
+                                            A
+                                        </button>
+
+                                        <ul className='dropdown'>
+                                            <li onClick={Signout}>Signout</li>
+                                        </ul>
+                                    </div>
+                                </li>)
+                                : (<li style={{marginLeft: "1em"}}>
+                                    <a className='login-btn' onClick={() => { setLoginState(true) }}>Login</a>
+                                </li>)
+                            }   
                         </ul>
                     </div>
                 </div>
@@ -110,7 +141,7 @@ function App() {
                 <BrowserRouter>
                     <Switch>
                         <Route exact path="/">
-                            <Homepage setLoginState={setLoginState} />
+                            <Homepage setLoginState={setLoginState} loggedIn={loggedIn} />
                         </Route> 
                         <Route exact path="/chart" component={ChartBuilderPage} />
 

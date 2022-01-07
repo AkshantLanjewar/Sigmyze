@@ -27,7 +27,7 @@ function LoginLayout(props) {
                 <div className="text">Or</div>
 
                 <div className="medias">
-                    <button className="media google">
+                    <button className="media google" onClick={() => { window.location = "/user/google" }}>
                         <FaGoogle />
                     </button>
 
