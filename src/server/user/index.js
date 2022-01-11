@@ -1,14 +1,17 @@
 const Router = require('express').Router
 const fs = require('fs')
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oauth2').Strategy
+const FacebookStrategy = require('passport-facebook')
 
 const User = require('./user-model')
 
 function userRouter() {
     User.SetupTable()
     const router = Router();
-    const keys = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\google_keys.json'))
+
+    const keys   = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\google_keys.json'))
+    const fbKeys = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\facebook_keys.json')) 
     
     passport.serializeUser(async function(user, done) {
         done(null, user)
@@ -25,6 +28,17 @@ function userRouter() {
             passReqToCallback: true
         },
         function(request, accessToken, refreshToken, profile, done) {
+            return done(null, profile)
+        }
+    ))
+
+    passport.use(new FacebookStrategy({
+            clientID: fbKeys['appID'],
+            clientSecret: fbKeys['appSecret'],
+            callbackURL: "/user/fb/callback"
+        },
+
+        function(accessToken, refreshToken, profile, done) {
             return done(null, profile)
         }
     ))
