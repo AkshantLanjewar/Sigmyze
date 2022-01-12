@@ -62,6 +62,15 @@ function userRouter() {
     })
 
     router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
+    router.get('/fb', passport.authenticate('facebook'))
+
+    router.get('/fb/callback', passport.authenticate('facebook', {
+        failureRedirect: '/user/failed'
+        }),
+        function(req, res) {
+            res.redirect('/')
+        }
+    )
 
     router.get('/google/callback', passport.authenticate('google', {
             failureRedirect: '/user/failed'
