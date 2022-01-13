@@ -14,10 +14,11 @@ EXPOSE 8050
 RUN cd ~
 RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 RUN sudo bash nodesource_setup.sh
-run sudo apt install nodejs
+RUN sudo apt install nodejs
 
 #getting the code
-WORKDIR /app
+RUN mkdir /etc/app
+WORKDIR /etc/app
 COPY /index/package*.json .
 RUN npm install
 COPY . .
@@ -25,3 +26,6 @@ RUN npm run build
 RUN npm run server
 
 #setup nginx
+RUN apt-get update && apt-get install -y nginx
+COPY app.conf /etc/nginx/conf.d/
+RUN sudo systemctl restart nginx
