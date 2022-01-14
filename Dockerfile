@@ -1,31 +1,38 @@
 FROM ubuntu:18.04 as prod
 #setting up ubuntu
 RUN apt-get update && \
-      apt-get -y install sudo
+      apt-get -y install -y sudo
 
-RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
+RUN adduser --disabled-password \
+--gecos '' docker
+
+RUN adduser docker sudo
+
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> \
+/etc/sudoers
 
 USER docker
 
 EXPOSE 80
 EXPOSE 8050
 
+RUN sudo apt-get update; sudo apt-get install -y curl 
+
 #installing nodejs
 RUN cd ~
-RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
-RUN sudo bash nodesource_setup.sh
-RUN sudo apt install nodejs
+RUN sudo curl -sL https://deb.nodesource.com/setup_14.x | sudo bash
+RUN sudo apt-get update; sudo apt install -y nodejs
 
 #getting the code
-RUN mkdir /etc/app
+RUN sudo mkdir /etc/app
 WORKDIR /etc/app
-COPY /index/package*.json .
-RUN npm install
-COPY . .
-RUN npm run build
-RUN npm run server
+COPY /index/package*.json ./
+RUN sudo npm install
+COPY . ./
+RUN sudo npm run build
+RUN sudo npm run server
 
 #setup nginx
 RUN apt-get update && apt-get install -y nginx
 COPY app.conf /etc/nginx/conf.d/
-RUN sudo systemctl restart nginx
+CMD ["nginx"]
