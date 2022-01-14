@@ -35,7 +35,8 @@ function userRouter() {
     passport.use(new FacebookStrategy({
             clientID: fbKeys['appID'],
             clientSecret: fbKeys['appSecret'],
-            callbackURL: "/user/fb/callback"
+            callbackURL: "/user/fb/callback",
+            profileFields: ['id', 'emails', 'name', 'photos']
         },
 
         function(accessToken, refreshToken, profile, done) {
@@ -62,7 +63,7 @@ function userRouter() {
     })
 
     router.get('/google', passport.authenticate('google', { scope: ['email', 'profile'] }))
-    router.get('/fb', passport.authenticate('facebook'))
+    router.get('/fb', passport.authenticate('facebook', { scope: ['email'] }))
 
     router.get('/fb/callback', passport.authenticate('facebook', {
         failureRedirect: '/user/failed'

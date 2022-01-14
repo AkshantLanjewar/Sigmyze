@@ -26,13 +26,13 @@ RUN sudo apt-get update; sudo apt install -y nodejs
 #getting the code
 RUN sudo mkdir /etc/app
 WORKDIR /etc/app
-COPY /index/package*.json ./
+COPY /package*.json ./
 RUN sudo npm install
 COPY . ./
 RUN sudo npm run build
 RUN sudo npm run server
 
 #setup nginx
-RUN apt-get update && apt-get install -y nginx
+RUN sudo apt-get update && sudo apt-get install -y nginx
 COPY app.conf /etc/nginx/conf.d/
 CMD ["nginx"]

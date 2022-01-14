@@ -31,7 +31,7 @@ function LoginLayout(props) {
                         <FaGoogle />
                     </button>
 
-                    <button className="media fb">
+                    <button className="media fb" onClick={() => { window.location = "/user/fb" }}>
                         <FaFacebookF />
                     </button>
                 </div>
