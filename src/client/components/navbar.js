@@ -25,6 +25,9 @@ function Navbar() {
                     <a className="nav-item" href="/chart">MyChart</a>
                 </div>
                 <div className="right">
+                    <a className="nav-item" href="/resources">Resources</a>
+                </div>
+                <div className="right">
                     <a className="nav-item" href="/about">About Us</a>
                 </div>
             </div>

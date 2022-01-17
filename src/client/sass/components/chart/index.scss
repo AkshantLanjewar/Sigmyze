@@ -4,6 +4,7 @@
     flex-grow: 1;
     width: 100%;
     position: relative;
+    padding-left: 5px;
 
     .yTail {
         width: 44px;
@@ -48,19 +49,19 @@
         width: 100%;
         height: 100%;
         user-select: none;
-    
+
         display: flex;
         align-items: center;
         flex-direction: column;
         justify-content: center;
-    
+
         h2 { margin-bottom: 0.4em; }
-    
+
         h4 {
             display: flex;
             flex-direction: row;
         }
-    
+
         span {
             display: flex;
             align-items: center;
@@ -98,8 +99,10 @@
 
                 margin-right: 4px;
             }
-            
+
             .label { padding-right: 8px; }
+            .value { padding-right: 8px; }
+            .units { padding-right: 8px; }
         }
     }
 }
