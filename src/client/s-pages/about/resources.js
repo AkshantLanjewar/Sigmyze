@@ -42,13 +42,17 @@ function ResourcesPage() {
               <td>IMF</td>
               <td>Apr 2021</td>
               <td>
-                Dataset includes 45+ economic indicators for 190+ countries and regions.
-                Data for most countries is from 1980 through 2025.
-                Sourced from World Economic Outlook published by the IMF (International Monetary Fund).
+                <p>
+                  Dataset includes 45+ economic indicators for 190+ countries and regions under 5 primary categories - GDP, Govt Finance, People, Trade and Investment. Savings and inflation are under Investment.
+                  Data for most countries is from 1980 through 2025.
+                </p>
+                <p style={{marginTop:'2px'}}>
+                  Sourced from World Economic Outlook published by the IMF (International Monetary Fund).
+                </p>
               </td>
               <td>
-                Bi-annual
-                <br/>Apr and Oct
+                <p>Bi-annual - Apr and Oct</p>
+                <p style={{marginTop:'2px', fontStyle:'italic', fontSize:'0.6rem'}}>Oct 2021 coming soon!</p>
               </td>
             </tr>
           </table>
