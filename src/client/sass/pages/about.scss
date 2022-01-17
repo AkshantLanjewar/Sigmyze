@@ -46,18 +46,19 @@
     border-collapse: collapse;
 
         td, th{
-            border: 1px groove rgb(230,238,255);
+            border: 1px groove rgb(150,150,150);
             text-align: left;
             padding:3px;
         }
 
         tr:nth-child(odd){
-            background-color: rgba(233,246,251,0.5);
-            color: rgb(20,20,20);
+            background-color: rgba(50,50,50);
+            //color: rgb(20,20,20);
         }
 
         th{
           background-color: rgb(135, 206, 235);
+          color: rgb(20,20,20);
         }
 }
 
