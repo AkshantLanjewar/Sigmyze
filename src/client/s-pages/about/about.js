@@ -71,7 +71,7 @@ function AboutUsPage() {
             Akshant Lanjewar - Techie & coder, intrepid taekwondo athlete, and high school senior. Dabbled in building a gaming PC and personal coding projects using React, HTML, JS, NodeJS, Express, C++, Python, etc.
           </p>
           <p className='aboutPara'>
-            Rahul Lanjewar - tech and crypto enthusiast and geek at heart. Spent many years in tech consulting. Dabbled in tech transformation consulting, corporate strategy, financial analysis & simulations, and occasional programming.
+            Rahul Lanjewar - tech and crypto enthusiast. More business and data than tech, but geek at heart. Spent many years in tech transformation consulting, corporate strategy, financial analysis & simulations.
           </p>
         </div>
 
