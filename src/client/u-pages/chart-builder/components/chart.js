@@ -91,6 +91,11 @@ function OverviewChart(props) {
     const [lTracker, setLTracker] = useState(null)
     const [legendVal, setLegendVal] = useState({})
     const [activeChartHover, setActiveChartHover] = useState(false)
+    const [units, setUnits] = useState({})
+
+
+    let unitsObj = {}
+    let rUnits = ""
 
     useEffect(() => {
         async function anon() {
@@ -101,6 +106,8 @@ function OverviewChart(props) {
 
             let t_styler = []
 
+
+
             for(let i = 0; i < indicators.length; i++) {
                 let indicator = indicators[i]
                 let iso3 = indicator.iso3
@@ -108,6 +115,8 @@ function OverviewChart(props) {
 
                 let data = await Indicator.FindIndicator(iso3, ind3)
                 let rData = data[0]['data']
+                rUnits = rData['units']
+
                 let values = {}
 
                 for(let i = 0; i < rData.data.length; i++) {
@@ -121,6 +130,7 @@ function OverviewChart(props) {
                 }
 
                 tPoints[`${iso3}-${ind3}`] = values
+                unitsObj[`${iso3}-${ind3}`] = rUnits
 
                 t_styler.push({
                     key: `${iso3}-${ind3}`,
@@ -187,7 +197,7 @@ function OverviewChart(props) {
                 misc['columns'] = dataColumns
 
                 const margin = 5
-                const innerHeight = 800 - margin * 2 //row - margin * 2
+                const innerHeight = 0.95*(window.innerHeight)-100 - margin * 2 //row - margin * 2
 
                 let rangeTop = margin
                 let rangeBottom = innerHeight - margin
@@ -202,11 +212,15 @@ function OverviewChart(props) {
                 setChartLayout(["line"])
                 setCrosshairPos({x: null, y: null, tracker: points[0][0]})
                 setLegendVal(pack)
+                setUnits(unitsObj)
+
             }
         }
 
         anon()
     }, [props.indicators])
+
+
 
     function handleTimeRangeChange(timerange) {
         setTimerange(timerange)
@@ -234,6 +248,7 @@ function OverviewChart(props) {
                 pack[name] = f(event.get(name))
             }
 
+
             setLegendVal(pack)
         }
     }
@@ -242,9 +257,10 @@ function OverviewChart(props) {
         setCrosshairPos({x: x, y: y, tracker: crosshairPos.tracker})
     }
 
+
     return (
         <div className="overview-chart">
-            <Legend indicators={props.indicators} values={legendVal} />
+            <Legend indicators={props.indicators} values={legendVal} units = {units}/>
             <XEndTail xPos={crosshairPos.x} activeChartHover={activeChartHover} gVal={lTracker} />
             <YEndTail yPos={crosshairPos.y} activeChartHover={activeChartHover} min={0} max={790} dMax={chartMisc.dMax} ticks={chartMisc.ticks}  />
 
@@ -261,7 +277,7 @@ function OverviewChart(props) {
                                 onTimeRangeChanged={handleTimeRangeChange}
                                 onMouseMove={(x, y) => handleMouseMove(x, y)}
                                 >
-                                    <ChartRow height="800">
+                                    <ChartRow height={0.95*(window.innerHeight)-100}>
                                         <Charts>
                                             {chartLayout.map((step) => {
                                                 return (

@@ -57,7 +57,7 @@ function SingleCategoryCard(props) {
                 chart.CreateChart()
 
                 setSimpleName(data['sName'])
-                setScale(data['scale'])
+                setScale(data['units'])
             })
     })
 

@@ -106,7 +106,7 @@ function V2APIRouter() {
             data.push({ date: key, value: d_val })
         }
 
-        return res.json({data:data, sName:simpleName, scale:scale})
+        return res.json({data:data, sName:simpleName, units:scale})
     })
 
     router.get('/datasets/:dataset/categories/:category/:iso3', (req, res) => {
@@ -136,6 +136,53 @@ function V2APIRouter() {
 
         return res.json(indicators)
     })
+
+    router.get('/datasets/:dataset/definitions/:indicator', async (req, res) => {
+        let dataset = req.params.dataset
+        let indicator = req.params.indicator
+
+        let folderLocation = `./indicatorDB/${dataset}`
+        if(!fs.existsSync(folderLocation))
+            return res.send("dataset_404")
+
+        let url = `api/econdata/getWEOMetricDefAll/`
+        // Also available in API urls -> api/econdata/getWEOMetricDef/<indicator>/
+        let promise = HTTP_Promise(url).catch((error) => { console.error(error) })
+        let result = JSON.parse(await promise)
+
+        let keys = Object.keys(result)
+        let def = result[indicator]
+
+        return res.json({data:def})
+    })
+
+    router.get('/datasets/:dataset/definitions', async (req, res) => {
+        let dataset = req.params.dataset
+
+        let folderLocation = `./indicatorDB/${dataset}`
+        if(!fs.existsSync(folderLocation))
+            return res.send("dataset_404")
+
+        let url1 = `api/econdata/getWEOMetricDefAll/`
+        let url2 = `api/econdata/getWEOMetricList/`
+        let defList = []
+        // Also available in API urls -> api/econdata/getWEOMetricDef/<indicator>/
+        let promise1 = HTTP_Promise(url1).catch((error) => { console.error(error) })
+        let result1 = JSON.parse(await promise1)
+
+        let promise2 = HTTP_Promise(url2).catch((error) => { console.error(error) })
+        let result2 = JSON.parse(await promise2)
+
+        let ind3 = Object.keys(result1)
+
+        for(i=0; i<ind3.length;i++){
+          defObj = {}
+          defObj[ind3[i]] = {'name': result2[ind3[i]],'def': result1[ind3[i]]}
+          defList.push(defObj)
+        }
+        return res.json({data:defList})
+    })
+
 
     return router
 }

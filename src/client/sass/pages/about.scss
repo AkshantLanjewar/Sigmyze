@@ -12,7 +12,7 @@
     margin-bottom: 10px;
     font-size: 1.3em;
     font-weight: bold;
-    color:rgb(210,210,210);
+    color:rgb(230,230,230);
 }
 
 .aboutDivider {
@@ -31,4 +31,36 @@
 .aboutHighlight {
       font-size: 1.1rem;
       color: rgb(135,206,235);
+}
+
+.aboutResource {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color:rgb(79,217,255);
+    text-align: left;
+}
+
+.aboutTable{
+  margin-bottom: 30px;
+    font-size: 0.8rem;
+    border-collapse: collapse;
+
+        td, th{
+            border: 1px groove rgb(230,238,255);
+            text-align: left;
+            padding:3px;
+        }
+
+        tr:nth-child(odd){
+            background-color: rgba(233,246,251,0.5);
+            color: rgb(20,20,20);
+        }
+
+        th{
+          background-color: rgb(135, 206, 235);
+        }
+}
+
+.resURL{
+    color: rgb(200,200,200);
 }

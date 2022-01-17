@@ -57,7 +57,7 @@ function ChartBuilderPage() {
 
         let dataPack = { iso3: iso3, fName: fName, indicator: iShort, indicatorF: indicatorF, dataIndexed: false }
         let nIndicators = indicators
-        nIndicators.push(dataPack)
+        //nIndicators.push(dataPack)
 
         let url = `/api/data/v2/datasets/WEO/${iso3}/${iShort}`
         fetch(url)
@@ -66,9 +66,11 @@ function ChartBuilderPage() {
                 await Indicator.AddIndicator(iso3, fName, iShort, indicatorF, data)
                 dataPack['dataIndexed'] = true
                 dataPack['color'] = colors[colorIndex]
-                nIndicators[nIndicators.length - 1] = dataPack
+                //nIndicators[nIndicators.length - 1] = dataPack
+                nIndicators.push(dataPack)
 
                 setIndicators([...nIndicators])
+
                 let updateColor = colorIndex
                 if(updateColor + 1 == colors.length)
                     updateColor = 0
