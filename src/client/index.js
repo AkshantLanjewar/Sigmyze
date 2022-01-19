@@ -10,6 +10,7 @@ import ChartBuilderPage from './pages/chart-builder/index';
 
 import UserAuth from './pages/homepage/components/user-auth';
 import Modal from './components/modal'
+import UserDropdown from './components/user-dropdown'
 
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
 import { RiHomeFill, RiBarChartBoxFill, RiOmega } from 'react-icons/ri'
@@ -58,21 +59,11 @@ function App() {
         fetch(checkUrl)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 setLoggedIn(data)
             })
 
         setNavState([...tNavState])
     }, [])
-
-    function Signout() {
-        let url = '/user/logout'
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                window.location.reload()
-            })
-    }
 
     return (
         <div>
@@ -117,17 +108,7 @@ function App() {
                     <div className='right'>
                         <ul>
                             {loggedIn  
-                                ? (<li style={{marginLeft: "1em"}}>
-                                    <div className='user-control'>
-                                        <button className='profile'>
-                                            A
-                                        </button>
-
-                                        <ul className='dropdown'>
-                                            <li onClick={Signout}>Signout</li>
-                                        </ul>
-                                    </div>
-                                </li>)
+                                ? ( <UserDropdown /> )
                                 : (<li style={{marginLeft: "1em"}}>
                                     <a className='login-btn' onClick={() => { setLoginState(true) }}>Login</a>
                                 </li>)

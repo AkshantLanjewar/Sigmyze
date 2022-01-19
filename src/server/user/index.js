@@ -6,15 +6,22 @@ const FacebookStrategy = require('passport-facebook')
 
 const User = require('./user-model')
 
-function userRouter() {
-    User.SetupTable()
+function isAuthenticated(req, res, next) {
+    if(req.user)
+        return next()
+    
+    return res.send("unlog")
+}
+
+async function userRouter() {
+    await User.SetupTable()
     const router = Router();
 
     const keys   = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\google_keys.json'))
     const fbKeys = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\facebook_keys.json')) 
     
     passport.serializeUser(async function(user, done) {
-        done(null, user)
+        done(null, user) 
     })
 
     passport.deserializeUser(async function(user, done) {
@@ -27,7 +34,15 @@ function userRouter() {
             "callbackURL": '/user/google/callback',
             passReqToCallback: true
         },
-        function(request, accessToken, refreshToken, profile, done) {
+        async function(request, accessToken, refreshToken, profile, done) {
+            let [rows, fields] = await User.LookupUserGoogle(profile)
+            let sig_id = ''
+            if(rows.length == 0)
+                sig_id = await User.CreateGoogleUser(profile)
+            else
+                sig_id = rows[0]['sig_id']
+
+            profile['sig_id'] = sig_id
             return done(null, profile)
         }
     ))
@@ -39,7 +54,15 @@ function userRouter() {
             profileFields: ['id', 'emails', 'name', 'photos']
         },
 
-        function(accessToken, refreshToken, profile, done) {
+        async function(accessToken, refreshToken, profile, done) {
+            let [rows, fields] = await User.LookupUserFacebook(profile)
+            let sig_id = ''
+            if(rows.length == 0)
+                sig_id = await User.CreateFacebookUser(profile)
+            else
+                sig_id = rows[0]['sig_id']
+
+            profile['sig_id'] = sig_id
             return done(null, profile)
         }
     ))
@@ -80,6 +103,21 @@ function userRouter() {
             res.redirect('/')
         }
     )
+
+    //user profile function
+    router.get('/profile', isAuthenticated, async function(req, res) {
+        let sig_id = req.user.sig_id
+        let [rows, fields] = await User.LookupUserSigid(sig_id)
+        let row = rows[0]
+
+        let package = {
+            firstname: row['firstname'],
+            lastname: row['lastname'],
+            image: row['image']
+        }
+
+        return res.send(package)
+    })
 
     return router;
 }
