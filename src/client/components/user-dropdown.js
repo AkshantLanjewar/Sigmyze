@@ -11,24 +11,31 @@ function UserDropdown(props) {
             })
     }
 
-    const [imageLoaded] = useState(true)
+    const [imageLoaded, setImageLoaded] = useState(true)
+    const [image, setImage] = useState('')
+    const [profileName, setProfileName] = useState({ firstname: "", lastname: "", firstInital: "" })
 
     useEffect(() => {
         let url = '/user/profile'
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
+                if(data['action'] == "unlog")
+                    Signout()
+                if(data['image'] == null)
+                    setImageLoaded(false)
+                setProfileName({ firstname: data['firstname'], lastname: data['lastname'], firstInital: data['firstname'].charAt(0).toUpperCase() })
+                setImage(data['image'])
             })
-    })
+    }, [])
     
     return (
         <div style={{marginLeft: "1em"}}>
             <div className='user-control'>
                 <button className='profile'>
                     {imageLoaded
-                        ? <img src="https://lh3.googleusercontent.com/a-/AOh14Gg57h_9fOyReouOqgOfbuiiSlVpX-3PZzECn2Xf=s96-c" />
-                        : <div className="word">A</div>
+                        ? <img src={image} />
+                        : <div className="word">{profileName.firstInital}</div>
                     }
                 </button>
 
@@ -36,13 +43,13 @@ function UserDropdown(props) {
                     <div className="header">
                         <div className="profile-image">
                             {imageLoaded
-                                ? <img src="https://lh3.googleusercontent.com/a-/AOh14Gg57h_9fOyReouOqgOfbuiiSlVpX-3PZzECn2Xf=s96-c" />
-                                : <div className="word">A</div>
+                                ? <img src={image} />
+                                : <div className="word">{profileName.firstInital}</div>
                             }
                         </div>
 
                         <div className="name-container">
-                            <div className="name">Akshant Lanjewar</div>
+                            <div className="name">{profileName.firstname} {profileName.lastname}</div>
 
                             <a className="options">Manage your account</a>
                         </div>

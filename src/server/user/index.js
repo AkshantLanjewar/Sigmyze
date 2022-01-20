@@ -3,6 +3,7 @@ const fs = require('fs')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth2').Strategy
 const FacebookStrategy = require('passport-facebook')
+const LocalStrategy = require('passport-local').Strategy
 
 const User = require('./user-model')
 
@@ -10,7 +11,7 @@ function isAuthenticated(req, res, next) {
     if(req.user)
         return next()
     
-    return res.send("unlog")
+    return res.json({action: "unlog"})
 }
 
 async function userRouter() {
@@ -31,12 +32,12 @@ async function userRouter() {
     passport.use(new GoogleStrategy({
             "clientID": keys['web']['client_id'],
             "clientSecret": keys['web']['client_secret'],
-            "callbackURL": '/user/google/callback',
+            "callbackURL": 'https://localhost:8050/user/google/callback',
             passReqToCallback: true
         },
         async function(request, accessToken, refreshToken, profile, done) {
             let [rows, fields] = await User.LookupUserGoogle(profile)
-            let sig_id = ''
+            let sig_id = '' 
             if(rows.length == 0)
                 sig_id = await User.CreateGoogleUser(profile)
             else
@@ -50,7 +51,7 @@ async function userRouter() {
     passport.use(new FacebookStrategy({
             clientID: fbKeys['appID'],
             clientSecret: fbKeys['appSecret'],
-            callbackURL: "/user/fb/callback",
+            callbackURL: "https://localhost:8050/user/fb/callback",
             profileFields: ['id', 'emails', 'name', 'photos']
         },
 
@@ -66,6 +67,11 @@ async function userRouter() {
             return done(null, profile)
         }
     ))
+
+    passport.use(new LocalStrategy(async function verify(email, password, cb) {
+        let sigobj = { email: email }
+        let [rows, fields] = await User.LookupUserSigmyze(sigobj)
+    }))
 
     router.get('/failed', (req, res) => {
         res.redirect('/')
@@ -113,7 +119,8 @@ async function userRouter() {
         let package = {
             firstname: row['firstname'],
             lastname: row['lastname'],
-            image: row['image']
+            image: row['image'],
+            action: "continue"
         }
 
         return res.send(package)

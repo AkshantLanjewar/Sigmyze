@@ -48,6 +48,19 @@ async function LookupUserSigid(sig_id) {
     return [rows, fields]
 }
 
+async function LookupUserSigmyze(sig_object) {
+    const db = await conn()
+    await db.query('use Sigmyze;')
+
+    let query = `
+        SELECT * FROM Users WHERE provider='sigmyze' AND email='${sig_object['email']}'
+    `
+
+    let [rows, fields] = await db.query(query)
+    await db.end()
+    return [rows, fields]
+}
+
 async function LookupUserFacebook(fb_object) {
     const db = await conn()
     await db.query('use Sigmyze;')
@@ -135,3 +148,4 @@ exports.LookupUserFacebook = LookupUserFacebook
 exports.CreateFacebookUser = CreateFacebookUser
 
 exports.LookupUserSigid = LookupUserSigid
+exports.LookupUserSigmyze = LookupUserSigmyze

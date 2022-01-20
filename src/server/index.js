@@ -3,10 +3,15 @@ const express  = require('express')
 const session = require('express-session')
 const passport = require('passport')
 const connectRedis = require('connect-redis')
+const fs = require('fs')
+const https = require('https')
 
 async function main() {
     const app = express();
     const port = Number(process.env.PORT) || 8050;
+
+    const key = fs.readFileSync(__dirname + "\\..\\keys\\key.pem")
+    const cert  = fs.readFileSync(__dirname + "\\..\\keys\\cert.pem")
 
     function isLoggedIn(req, res, next) {
         req.user ? next() : res.sendStatus(401)
@@ -38,6 +43,7 @@ async function main() {
             maxAge: 1000 * 60 * 60 * 24
         }
     }))
+
     app.use(passport.initialize())
     app.use(passport.session()) 
 
@@ -68,8 +74,8 @@ async function main() {
         res.sendFile('/dist/index.html', { root: '.' })
     })
 
-
-    app.listen(port, () => {
+    const server = https.createServer({key: key, cert: cert}, app)
+    server.listen(port, () => {
         console.log('app listening on port ' + port)
     })
 }
