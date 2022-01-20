@@ -55,6 +55,17 @@ function SignupLayout(props) {
                     <input type='text' placeholder='Enter your E-Mail' required />
                     <div className="underline"></div>
                 </div>
+
+                <div className='input-box'>
+                    <input type='text' placeholder='Enter your Firstname' required />
+                    <div className="underline"></div>
+                </div>
+
+                <div className='input-box'>
+                    <input type='text' placeholder='Enter your Lastname' required />
+                    <div className="underline"></div>
+                </div>
+
                 <div className='input-box'>
                     <input type='password' placeholder='Enter your Password' required />
                     <div className="underline"></div>

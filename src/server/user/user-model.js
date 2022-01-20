@@ -13,6 +13,12 @@ async function conn() {
     return connection
 }
 
+function getCurrTime() {
+    var currentDate = new Date().toLocaleDateString()
+    var currentTime = new Date().toLocaleTimeString()
+    return `${currentDate} - ${currentTime}`
+}
+
 async function SetupTable() {
     const db = await conn()
     await db.query('use Sigmyze;')
@@ -87,6 +93,12 @@ async function LookupUserGoogle(google_object) {
     return [rows, fields]
 }
 
+async function CreateSigmyzeUser(sig_object) {
+    let cTimeSTR = getCurrTime()
+    let provider_id_str = `${sig_object['email']}-${cTimeSTR}`
+    let provider_id = crypto.createHash('sha512').update(provider_id_str, 'utf-8').digest('hex')
+}
+
 async function CreateFacebookUser(fb_object) {
     const db = await conn()
     await db.query('use Sigmyze;')
@@ -149,3 +161,4 @@ exports.CreateFacebookUser = CreateFacebookUser
 
 exports.LookupUserSigid = LookupUserSigid
 exports.LookupUserSigmyze = LookupUserSigmyze
+exports.CreateSigmyzeUser = CreateSigmyzeUser

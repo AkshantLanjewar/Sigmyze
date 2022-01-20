@@ -68,9 +68,15 @@ async function userRouter() {
         }
     ))
 
-    passport.use(new LocalStrategy(async function verify(email, password, cb) {
+    passport.use(new LocalStrategy(async function verify(email, password, profile, cb) {
         let sigobj = { email: email }
         let [rows, fields] = await User.LookupUserSigmyze(sigobj)
+        let sig_id = ''
+
+        if(rows.length == 0) {
+            sigobj['password'] = password
+            sig_id = await User.CreateSigmyzeUser(sigobj)
+        }
     }))
 
     router.get('/failed', (req, res) => {
