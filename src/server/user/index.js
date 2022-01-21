@@ -3,9 +3,9 @@ const fs = require('fs')
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth2').Strategy
 const FacebookStrategy = require('passport-facebook')
-const LocalStrategy = require('passport-local').Strategy
 
 const User = require('./user-model')
+const crypto = require('crypto')
 
 function isAuthenticated(req, res, next) {
     if(req.user)
@@ -68,16 +68,53 @@ async function userRouter() {
         }
     ))
 
-    passport.use(new LocalStrategy(async function verify(email, password, profile, cb) {
-        let sigobj = { email: email }
-        let [rows, fields] = await User.LookupUserSigmyze(sigobj)
-        let sig_id = ''
+    router.post('/login', async(req, res) => {
+        const email = req.body.email
+        const password = req.body.password
 
-        if(rows.length == 0) {
-            sigobj['password'] = password
-            sig_id = await User.CreateSigmyzeUser(sigobj)
+        let sigobj = { email: email, password: password }
+        let [userRows, fields] = await User.LookupUserSigmyze(sigobj)
+        if(userRows.length == 0)
+            return res.json({ message: 'dn_exists', error: true })
+        
+        let user = userRows[0]
+        let hash = crypto.pbkdf2Sync(password, user.salt, 310000, 32, 'sha512').toString('hex')
+        if(!(hash == user.password))
+            return res.json({ message: 'bad_pw', error: true })
+        
+        let userOBJ = {
+            sig_id: user.sig_id,
+            email: email,
         }
-    }))
+
+        req.login(userOBJ, function(err) {
+            if(err) return res.json({ message: err, error: true })
+            res.redirect('/')
+        })
+    })
+
+    router.post('/signup', async (req, res) => {
+        const email = req.body.email
+        const firstname = req.body.firstname
+        const lastname = req.body.lastname
+        const password = req.body.password
+
+        let sigobj = { email: email, firstname: firstname, lastname: lastname, password: password }
+        let [rows, fields] = await User.LookupUserSigmyze(sigobj)
+        if(rows.length !== 0)
+            return res.json({ message: 'exists', error: true })
+        let sig_id = await User.CreateSigmyzeUser(sigobj)
+        
+        let user = {
+            sig_id: sig_id,
+            email: email
+        }
+
+        req.login(user, function(err) {
+            if(err) return res.json({ message: err, error: true })
+            return res.json({ message: 'pin', error: false })
+        })
+    })
 
     router.get('/failed', (req, res) => {
         res.redirect('/')

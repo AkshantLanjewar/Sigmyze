@@ -33,6 +33,10 @@ async function SetupTable() {
             sig_id      nvarchar(512)  NOT NULL UNIQUE,
             firstname   nvarchar(320)  NOT NULL,
             lastname    nvarchar(320)  NOT NULL,
+            password    BLOB,
+            salt        BLOB,
+            verified    BOOLEAN, 
+            accPin      nvarchar(256),
             CONSTRAINT  PK_User PRIMARY KEY (username, sig_id)
         )
     `
@@ -94,9 +98,35 @@ async function LookupUserGoogle(google_object) {
 }
 
 async function CreateSigmyzeUser(sig_object) {
+    const db = await conn()
+    await db.query('use Sigmyze;')
+
     let cTimeSTR = getCurrTime()
     let provider_id_str = `${sig_object['email']}-${cTimeSTR}`
     let provider_id = crypto.createHash('sha512').update(provider_id_str, 'utf-8').digest('hex')
+    let username = sig_object['firstname'] + sig_object['lastname']
+    let email = sig_object['email']
+
+    //hash the password
+    let password_r = sig_object['password']
+    let salt       = crypto.randomBytes(16).toString('hex')
+    let password   = crypto.pbkdf2Sync(password_r, salt, 310000, 32, 'sha512').toString('hex')
+
+    let accPinSTR = `${cTimeSTR}-${username}`
+    let pin = crypto.pbkdf2Sync(accPinSTR, salt, 310000, 32, 'sha256').toString('hex')
+
+    //create the sig_id
+    let sig_id_prehash = `sigmyze-${provider_id}-${username}-${email}`
+    let sig_id = crypto.createHash('sha512').update(sig_id_prehash, 'utf-8').digest('hex')
+    let query = `
+        INSERT INTO Users (provider, username, provider_id, email, sig_id, firstname, lastname, password, salt, verified, accPin)
+        VALUES ('sigmyze', '${username}', '${provider_id}', '${email}', '${sig_id}',
+                '${sig_object['firstname']}', '${sig_object['lastname']}', '${password}', '${salt}', 0, '${pin}')
+    `
+
+    await db.query(query)
+    await db.end()
+    return sig_id
 }
 
 async function CreateFacebookUser(fb_object) {
