@@ -1,5 +1,6 @@
 const crypto = require('crypto')
 const mysql = require('mysql2/promise')
+const mailer = require('../mailer')
 
 async function conn() {
     const connection = await mysql.createConnection({
@@ -123,6 +124,8 @@ async function CreateSigmyzeUser(sig_object) {
         VALUES ('sigmyze', '${username}', '${provider_id}', '${email}', '${sig_id}',
                 '${sig_object['firstname']}', '${sig_object['lastname']}', '${password}', '${salt}', 0, '${pin}')
     `
+
+    mailer.VerificationEmail(pin, email)
 
     await db.query(query)
     await db.end()
