@@ -11,6 +11,7 @@ import ChartBuilderPage from './pages/chart-builder/index';
 import UserAuth from './pages/homepage/components/user-auth';
 import Modal from './components/modal'
 import UserDropdown from './components/user-dropdown'
+import Toastbar from './components/toast'
 
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
 import { RiHomeFill, RiBarChartBoxFill, RiOmega } from 'react-icons/ri'
@@ -42,6 +43,7 @@ function App() {
     const [userTitle, setUserTitle] = useState("Login")
     const [navState, setNavState] = useState(pageNav)
     const [loggedIn, setLoggedIn] = useState(false)
+    const [messages, setMessages] = useState([])
 
     useEffect(() => {
         let path = window.location.pathname
@@ -67,8 +69,10 @@ function App() {
 
     return (
         <div>
+            <Toastbar messages={messages} />
+            
             <Modal viewState={loginState} setViewState={setLoginState} title={userTitle} small={true}>
-                <UserAuth setUserTitle={setUserTitle} />
+                <UserAuth setUserTitle={setUserTitle} setMessages={setMessages} />
             </Modal>
 
             <aside className='sidenav' ref={sidenavRef}>

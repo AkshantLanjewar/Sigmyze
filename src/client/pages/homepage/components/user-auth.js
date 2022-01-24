@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import SignupLayout from './signup-layout'
 
 import { FaFacebookF, FaGoogle } from "react-icons/fa"
 
@@ -45,57 +46,11 @@ function LoginLayout(props) {
     )
 }
 
-function SignupLayout(props) {
-    let setAuthState = props.setAuthState
-
-    return (
-        <div className='user-auth'>
-            <form>
-                <div className='input-box'>
-                    <input type='text' placeholder='Enter your E-Mail' required />
-                    <div className="underline"></div>
-                </div>
-
-                <div className='input-box'>
-                    <input type='text' placeholder='Enter your Firstname' required />
-                    <div className="underline"></div>
-                </div>
-
-                <div className='input-box'>
-                    <input type='text' placeholder='Enter your Lastname' required />
-                    <div className="underline"></div>
-                </div>
-
-                <div className='input-box'>
-                    <input type='password' placeholder='Enter your Password' required />
-                    <div className="underline"></div>
-                </div>
-                <div className='input-box'>
-                    <input type='password' placeholder='Password Confirmation' required />
-                    <div className="underline"></div>
-                </div>
-
-                <div className="input-box check">
-                    <input type='checkbox' name="toc" />
-                    <div className="label">By Clicking you agree to our Terms and Conditions</div>
-                </div>
-
-                <div className='input-box btn'>
-                    <input type='submit' name="" value={"Signup"} />
-                </div>
-            </form>
-
-            <div className="option" style={{marginTop: "2em"}}>
-                Have an account?
-                <span className="alt-flare" onClick={() => { setAuthState(false) }}> Login</span>
-            </div>
-        </div>
-    )
-}
 
 function UserAuth(props) {
     const [authState, setAuthState] = useState(false)
     let setUserTitle = props.setUserTitle
+    let setMessages  = props.setMessages
 
     useEffect(() => {
         if(authState == true)
@@ -106,7 +61,7 @@ function UserAuth(props) {
 
     return (
         <div>
-            {authState ? <SignupLayout setAuthState={setAuthState} /> : <LoginLayout setAuthState={setAuthState} />}
+            {authState ? <SignupLayout setAuthState={setAuthState} setMessages={setMessages} /> : <LoginLayout setAuthState={setAuthState} />}
         </div>
     )
 }
