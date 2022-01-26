@@ -98,6 +98,18 @@ async function LookupUserGoogle(google_object) {
     return [rows, fields]
 }
 
+async function VerifySigmyzeUser(sig_id) {
+    const db = await conn()
+    await db.query('use Sigmyze;')
+
+    let query = `
+        UPDATE users SET verified = 1 WHERE sig_id = '${sig_id}'
+    `
+
+    await db.query(query)
+    await db.end()
+}
+
 async function CreateSigmyzeUser(sig_object) {
     const db = await conn()
     await db.query('use Sigmyze;')
@@ -195,3 +207,4 @@ exports.CreateFacebookUser = CreateFacebookUser
 exports.LookupUserSigid = LookupUserSigid
 exports.LookupUserSigmyze = LookupUserSigmyze
 exports.CreateSigmyzeUser = CreateSigmyzeUser
+exports.VerifySigmyzeUser = VerifySigmyzeUser

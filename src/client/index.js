@@ -8,9 +8,10 @@ import LostPage from './pages/404-page'
 import IndicatorPage from './pages/country/country'
 import ChartBuilderPage from './pages/chart-builder/index';
 
-import UserAuth from './pages/homepage/components/user-auth';
+import UserAuth from './components/user/user-auth';
+import UserVerify from './components/user/user-verify'
 import Modal from './components/modal'
-import UserDropdown from './components/user-dropdown'
+import UserDropdown from './components/user/user-dropdown'
 import Toastbar from './components/toast'
 
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
@@ -39,10 +40,12 @@ function App() {
         mainRef.current.classList.toggle("expand")
     }
 
-    const [loginState, setLoginState] = useState(false)
+    const [loginState, setLoginState]   = useState(false)
+    const [verifyState, setVerifyState] = useState(false)
+
     const [userTitle, setUserTitle] = useState("Login")
     const [navState, setNavState] = useState(pageNav)
-    const [loggedIn, setLoggedIn] = useState(false)
+    const [loggedIn, setLoggedIn] = useState({ logged: false, verified: false })
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
@@ -73,6 +76,10 @@ function App() {
             
             <Modal viewState={loginState} setViewState={setLoginState} title={userTitle} small={true}>
                 <UserAuth setUserTitle={setUserTitle} setMessages={setMessages} />
+            </Modal>
+
+            <Modal viewState={verifyState} setViewState={setVerifyState} title={"Verify Account"} small={true}>
+                <UserVerify setMessages={setMessages} />
             </Modal>
 
             <aside className='sidenav' ref={sidenavRef}>
@@ -111,8 +118,14 @@ function App() {
 
                     <div className='right'>
                         <ul>
-                            {loggedIn  
-                                ? ( <UserDropdown /> )
+                            {loggedIn.logged  
+                                ? ( 
+                                    loggedIn.verified 
+                                    ? <UserDropdown /> 
+                                    : ( <li style={{marginLeft: "1em"}}>
+                                            <a className='login-btn' onClick={() => { setVerifyState(true) }}>Verify</a>
+                                        </li> )
+                                )
                                 : (<li style={{marginLeft: "1em"}}>
                                     <a className='login-btn' onClick={() => { setLoginState(true) }}>Login</a>
                                 </li>)

@@ -1,28 +1,17 @@
 import React, { useEffect, useState } from "react"
+
+import LoginForm from './login-form'
 import SignupLayout from './signup-layout'
 
 import { FaFacebookF, FaGoogle } from "react-icons/fa"
 
 function LoginLayout(props) {
     let setAuthState = props.setAuthState
+    let setMessages  = props.setMessages
 
     return (
         <div className='user-auth'>
-            <form>
-                <div className='input-box'>
-                    <input type='text' placeholder='Enter your E-Mail' required />
-                    <div className="underline"></div>
-                </div>
-
-                <div className='input-box'>
-                    <input type='password' placeholder='Enter your Password' required />
-                    <div className="underline"></div>
-                </div>
-
-                <div className='input-box btn'>
-                    <input type='submit' name="" value={"Login"} />
-                </div>
-            </form>
+            <LoginForm setMessages={setMessages} />
 
             <div className="social-media">
                 <div className="text">Or</div>
@@ -61,7 +50,7 @@ function UserAuth(props) {
 
     return (
         <div>
-            {authState ? <SignupLayout setAuthState={setAuthState} setMessages={setMessages} /> : <LoginLayout setAuthState={setAuthState} />}
+            {authState ? <SignupLayout setAuthState={setAuthState} setMessages={setMessages} /> : <LoginLayout setAuthState={setAuthState} setMessages={setMessages} />}
         </div>
     )
 }

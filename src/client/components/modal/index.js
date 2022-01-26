@@ -5,16 +5,16 @@ function Modal(props) {
     let viewState = props.viewState
     let small = props.small
 
-    if(viewState)
-        document.getElementsByTagName("body")[0].style.overflow = "hidden"
-    if(!viewState)
-        document.getElementsByTagName("body")[0].style.overflow = "visible"
-
     const [bodyOffset, setBodyOffset] = useState('0px')
     const bodyRef = React.createRef()
     useEffect(() => {
         let offSet = window.scrollY
         setBodyOffset(`${offSet}px`)
+
+        if(viewState)
+            document.getElementsByTagName("body")[0].style.overflow = "hidden"
+        if(!viewState)
+            document.getElementsByTagName("body")[0].style.overflow = "visible"
     }, [props.viewState])
 
     return (

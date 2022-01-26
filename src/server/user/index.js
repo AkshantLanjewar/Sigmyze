@@ -44,6 +44,7 @@ async function userRouter() {
                 sig_id = rows[0]['sig_id']
 
             profile['sig_id'] = sig_id
+            profile['verified'] = true
             return done(null, profile)
         }
     ))
@@ -64,9 +65,31 @@ async function userRouter() {
                 sig_id = rows[0]['sig_id']
 
             profile['sig_id'] = sig_id
+            profile['verified'] = true
             return done(null, profile)
         }
     ))
+
+    router.post('/verify', async(req, res) => {
+        if(!req.user)
+            return res.json({ error: false, message: "unlog" })
+        
+        const sig_id   = req.user.sig_id
+        const ver_code = req.body.ver_code
+
+        let [users, fields] = await User.LookupUserSigid(sig_id)
+        let user = users[0]
+        let pin  = user.accPin
+
+        if(user.verified == 1)
+            return res.json({ error: false, message: '' })
+        if(pin !== ver_code)
+            return res.json({ error: true, message: "bad_code" })
+
+        await User.VerifySigmyzeUser(sig_id)
+        req.user.verified = true
+        return res.json({ error: false, message: '' })
+    })
 
     router.post('/login', async(req, res) => {
         const email = req.body.email
@@ -85,11 +108,12 @@ async function userRouter() {
         let userOBJ = {
             sig_id: user.sig_id,
             email: email,
+            verified: user.verified
         }
 
         req.login(userOBJ, function(err) {
             if(err) return res.json({ message: err, error: true })
-            res.redirect('/')
+            return res.json({ error: false, message: "" })
         })
     })
 
@@ -107,7 +131,8 @@ async function userRouter() {
         
         let user = {
             sig_id: sig_id,
-            email: email
+            email: email,
+            verified: false
         }
 
         req.login(user, function(err) {
@@ -125,7 +150,10 @@ async function userRouter() {
     })
 
     router.get('/isLoggedIn', (req, res) => {
-        return req.user ? res.json(true) : res.json(false)
+        if(req.user)
+            return res.json({ logged: true, verified: req.user.verified })
+        else
+            return res.json({ logged: false, verified: null })
     })
 
     router.get('/logout', (req, res) => {
