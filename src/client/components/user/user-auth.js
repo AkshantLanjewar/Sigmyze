@@ -29,30 +29,61 @@ function LoginLayout(props) {
 
             <div className="option">
                 Not a member?
-                <span className="alt-flare" onClick={() => { setAuthState(true) }}> Signup</span> now
+                <span className="alt-flare" onClick={() => { setAuthState("signup") }}> Signup</span> now
             </div>
+
+            <div className="option" style={{paddingTop: "1em"}}>
+                Forgot your password?
+                <span className="alt-flare" onClick={() => { setAuthState("forgot") }}> Recover it</span>
+            </div>
+        </div>
+    )
+}
+
+function ForgotPWD(props) {
+    const setAuthState = props.setAuthState
+    const setMessages  = props.setMessages
+    const [formState, setFormState] = useState(false)
+
+    return (
+        <div>
+            {formState
+                ? (
+                    <form>
+                        
+                    </form>
+                )
+                : (
+                    <form>
+
+                    </form>
+                )
+            }
         </div>
     )
 }
 
 
 function UserAuth(props) {
-    const [authState, setAuthState] = useState(false)
+    const [authState, setAuthState] = useState("login")
     let setUserTitle = props.setUserTitle
     let setMessages  = props.setMessages
 
     useEffect(() => {
-        if(authState == true)
+        if(authState == "signup")
             setUserTitle("Signup")
-        if(authState == false)
+        if(authState == "login")
             setUserTitle("Login")
+        if(authState == "forgot")
+            setUserTitle("Recover account password")
     }, [authState])
 
-    return (
-        <div>
-            {authState ? <SignupLayout setAuthState={setAuthState} setMessages={setMessages} /> : <LoginLayout setAuthState={setAuthState} setMessages={setMessages} />}
-        </div>
-    )
+    if(authState == "login")
+        return (<LoginLayout setAuthState={setAuthState} setMessages={setMessages} />)
+    if(authState == "signup")
+        return (<SignupLayout setAuthState={setAuthState} setMessages={setMessages} />)
+    if(authState == "forgot")
+        return (<ForgotPWD setAuthState={setAuthState} setMessages={setMessages} />)
 }
 
 export default UserAuth

@@ -219,7 +219,7 @@ function SignupLayout(props) {
 
             <div className="option" style={{marginTop: "2em"}}>
                 Have an account?
-                <span className="alt-flare" onClick={() => { setAuthState(false) }}> Login</span>
+                <span className="alt-flare" onClick={() => { setAuthState("login") }}> Login</span>
             </div>
         </div>
     )

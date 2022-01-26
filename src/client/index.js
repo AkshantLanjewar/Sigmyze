@@ -15,7 +15,20 @@ import UserDropdown from './components/user/user-dropdown'
 import Toastbar from './components/toast'
 
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
-import { RiHomeFill, RiBarChartBoxFill, RiOmega } from 'react-icons/ri'
+import { RiHomeFill } from 'react-icons/ri'
+import { RiBarChartBoxFill } from 'react-icons/ri'
+
+function Omega() {
+    return (
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <path fill="none" d="M0 0h24v24H0z"></path>
+                <path fill-rule="nonzero" d="M14 20v-2.157c1.863-1.192 3.5-3.875 3.5-6.959 0-3.073-2-6.029-5.5-6.029s-5.5 2.956-5.5 6.03c0 3.083 1.637 5.766 
+                    3.5 6.958V20H3v-2h4.76C5.666 16.505 4 13.989 4 10.884 4 6.247 7.5 3 12 3s8 3.247 8 7.884c0 3.105-1.666 5.621-3.76 7.116H21v2h-7z"></path>
+            </g>
+        </svg>
+    )
+}
 
 import Logo from '../svg/logo.svg'
 import './sass/index.scss' 
@@ -23,7 +36,7 @@ import './sass/index.scss'
 let pageNav = [
     { name: "Homepage", icon: <RiHomeFill />, active: false, url: '/' },
     { name: "Indicators", icon: <RiBarChartBoxFill />, active: false, url: '/indicator' },
-    { name: "Charts", icon: <RiOmega />, active: false, url: '/chart' }
+    { name: "Charts", icon: <Omega />, active: false, url: '/chart' }
 ]
 
 function App() {
@@ -95,10 +108,9 @@ function App() {
                         <ul style={{marginTop: "1em"}}>
                             {navState.map((step) => {
                                 return (
-                                    <li className={`tooltip-right t-side ${step.active ? "active" : ""}`} data-tooltip={step.name}>
+                                    <li className={`tooltip-right t-side ${ step.active ? 'active' : '' }`} data-tooltip={step.name}>
                                         <a href={step.url}>
                                             {step.icon}
-                                            <span className='truncate'>{step.name}</span>
                                         </a>
                                     </li>
                                 )
