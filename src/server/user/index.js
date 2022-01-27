@@ -5,6 +5,7 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy
 const FacebookStrategy = require('passport-facebook')
 
 const User = require('./user-model')
+const Temp = require('./temp-model')
 const crypto = require('crypto')
 
 function isAuthenticated(req, res, next) {

@@ -43,22 +43,74 @@ function LoginLayout(props) {
 function ForgotPWD(props) {
     const setAuthState = props.setAuthState
     const setMessages  = props.setMessages
-    const [formState, setFormState] = useState(false)
+    const [formState, setFormState] = useState("email")
+
+    const emailRef = React.createRef()
+    const codeRef  = React.createRef()
+    const pwdRef   = React.createRef()
+
+    function OnEmailSubmit(e) {
+        e.preventDefault()
+    }
+
+    function OnCodeSubmit(e) {
+        e.preventDefault()
+    }
+
+    function OnNewPWDSubmit(e) {
+        e.preventDefault()
+    }
+
+    let val = ( <form></form> )
+
+    if(formState == "email")
+        val =  (
+            <form onSubmit={OnEmailSubmit}>
+                <div className="input-box">
+                    <input type='email' placeholder='Enter your E-Mail' ref={emailRef} required />
+                    <div className="underline"></div>
+                </div>
+
+                <div className='input-box btn'>
+                    <input type='submit' name="" value={"Send"} />
+                </div>
+            </form>
+        )
+    if(formState == "code")
+            val = (
+                <form onSubmit={OnCodeSubmit}>
+                    <div className="input-box">
+                        <input type='text' placeholder='Enter the code' ref={codeRef} required />
+                        <div className="underline"></div>
+                    </div>
+
+                    <div className='input-box btn'>
+                        <input type='submit' name="" value={"Verify"} />
+                    </div>
+                </form>
+            )
+    if(formState == "code")
+            val = (
+                <form onSubmit={OnNewPWDSubmit}>
+                    <div className="input-box">
+                        <input type='password' placeholder='Set new password' ref={pwdRef} required />
+                        <div className="underline"></div>
+                    </div>
+
+                    <div className='input-box btn'>
+                        <input type='submit' name="" value={"Set"} />
+                    </div>
+                </form>
+            )
 
     return (
-        <div>
-            {formState
-                ? (
-                    <form>
-                        
-                    </form>
-                )
-                : (
-                    <form>
+        <div className="user-auth">
+            {val}
 
-                    </form>
-                )
-            }
+            <div className="option" style={{paddingTop: "2em"}}>
+                Go back to
+                <span className="alt-flare" onClick={() => { setAuthState("login") }}> Login</span>
+            </div>
         </div>
     )
 }

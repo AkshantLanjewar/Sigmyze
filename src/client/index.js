@@ -111,6 +111,7 @@ function App() {
                                     <li className={`tooltip-right t-side ${ step.active ? 'active' : '' }`} data-tooltip={step.name}>
                                         <a href={step.url}>
                                             {step.icon}
+                                            <span className='truncate'>{step.name}</span>
                                         </a>
                                     </li>
                                 )
