@@ -46,53 +46,27 @@ async function SetupTable() {
     await db.end()
 }
 
-async function LookupUserSigid(sig_id) {
+async function LookupUser(params) {
     const db = await conn()
     await db.query('use Sigmyze;')
+    let query = ``
 
-    let query = `
-        SELECT * FROM Users WHERE sig_id='${sig_id}' LIMIT 1
-    `
+    const email       = params.email
+    const sig_id      = params.sig_id
+    const provider    = params.provider
+    const provider_id = params.provider_id
 
-    let [rows, fields] = await db.query(query)
-    await db.end()
-    return [rows, fields]
-}
+    if(email !== undefined)
+        query = `SELECT * FROM Users WHERE email='${email}' LIMIT 1`
+    if(sig_id !== undefined)
+        query = `SELECT * FROM Users WHERE sig_id='${sig_id}' LIMIT 1`
+    if(provider == 'sigmyze' && email !== undefined)
+        query = `SELECT * FROM Users WHERE provider='sigmyze' AND email='${email}'`
+    if(provider == 'fb' && provider_id !== undefined)
+        query = `SELECT * FROM Users WHERE provider='facebook' AND provider_id='${provider_id}`
+    if(provider == 'google' && provider_id !== undefined)
+        query = `SELECT * FROM Users WHERE provider='google' AND provider_id='${provider_id}'`
 
-async function LookupUserSigmyze(sig_object) {
-    const db = await conn()
-    await db.query('use Sigmyze;')
-
-    let query = `
-        SELECT * FROM Users WHERE provider='sigmyze' AND email='${sig_object['email']}'
-    `
-
-    let [rows, fields] = await db.query(query)
-    await db.end()
-    return [rows, fields]
-}
-
-async function LookupUserFacebook(fb_object) {
-    const db = await conn()
-    await db.query('use Sigmyze;')
-    let provider_id = fb_object['id']
-
-    let query = `
-        SELECT * FROM Users WHERE provider='facebook' AND provider_id='${provider_id}'
-    `
-    let [rows, fields] = await db.query(query)
-    await db.end()
-    return [rows, fields]
-}
-
-async function LookupUserGoogle(google_object) {
-    const db = await conn()
-    await db.query('use Sigmyze;')
-    let provider_id = google_object['id']
-
-    let query = `
-        SELECT * FROM Users WHERE provider='google' AND provider_id='${provider_id}'
-    `
     let [rows, fields] = await db.query(query)
     await db.end()
     return [rows, fields]
@@ -198,13 +172,8 @@ async function CreateGoogleUser(google_object) {
 }
 
 exports.SetupTable = SetupTable
-exports.LookupUserGoogle = LookupUserGoogle
 exports.CreateGoogleUser = CreateGoogleUser
-
-exports.LookupUserFacebook = LookupUserFacebook
 exports.CreateFacebookUser = CreateFacebookUser
-
-exports.LookupUserSigid = LookupUserSigid
-exports.LookupUserSigmyze = LookupUserSigmyze
+exports.LookupUser = LookupUser
 exports.CreateSigmyzeUser = CreateSigmyzeUser
 exports.VerifySigmyzeUser = VerifySigmyzeUser

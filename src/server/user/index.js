@@ -17,7 +17,13 @@ function isAuthenticated(req, res, next) {
 
 async function userRouter() {
     await User.SetupTable()
+    await Temp.SetupTable()
+
     const router = Router();
+
+    setInterval(async () => {
+        await Temp.DeleteCodes()
+    }, 1000 * 60 * 10)
 
     const keys   = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\google_keys.json'))
     const fbKeys = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\facebook_keys.json')) 
@@ -37,7 +43,7 @@ async function userRouter() {
             passReqToCallback: true
         },
         async function(request, accessToken, refreshToken, profile, done) {
-            let [rows, fields] = await User.LookupUserGoogle(profile)
+            let [rows, fields] = await User.LookupUser({ provider: 'google', provider_id: profile['id'] })
             let sig_id = '' 
             if(rows.length == 0)
                 sig_id = await User.CreateGoogleUser(profile)
@@ -58,7 +64,7 @@ async function userRouter() {
         },
 
         async function(accessToken, refreshToken, profile, done) {
-            let [rows, fields] = await User.LookupUserFacebook(profile)
+            let [rows, fields] = await User.LookupUser({ provider: 'fb', provider_id: profile['id'] })
             let sig_id = ''
             if(rows.length == 0)
                 sig_id = await User.CreateFacebookUser(profile)
@@ -78,7 +84,7 @@ async function userRouter() {
         const sig_id   = req.user.sig_id
         const ver_code = req.body.ver_code
 
-        let [users, fields] = await User.LookupUserSigid(sig_id)
+        let [users, fields] = await User.LookupUser({ sig_id: sig_id })
         let user = users[0]
         let pin  = user.accPin
 
@@ -96,8 +102,7 @@ async function userRouter() {
         const email = req.body.email
         const password = req.body.password
 
-        let sigobj = { email: email, password: password }
-        let [userRows, fields] = await User.LookupUserSigmyze(sigobj)
+        let [userRows, fields] = await User.LookupUser({ provider: 'sigmyze', email: email })
         if(userRows.length == 0)
             return res.json({ message: 'dn_exists', error: true })
         
@@ -125,7 +130,7 @@ async function userRouter() {
         const password = req.body.password
 
         let sigobj = { email: email, firstname: firstname, lastname: lastname, password: password }
-        let [rows, fields] = await User.LookupUserSigmyze(sigobj)
+        let [rows, fields] = await User.LookupUser({ provider: 'sigmyze', email: email })
         if(rows.length !== 0)
             return res.json({ message: 'exists', error: true })
         let sig_id = await User.CreateSigmyzeUser(sigobj)
@@ -140,6 +145,21 @@ async function userRouter() {
             if(err) return res.json({ message: err, error: true })
             return res.json({ message: 'pin', error: false })
         })
+    })
+
+    router.post('/recover_pwd', async (req, res) => {
+        const email = req.body.email
+        let [eRows, fields] = await User.LookupUser({ email: email })
+        if(eRows.length == 0)
+            return res.json({ error: true, msg: 'DNE' })
+
+        let sig_id = eRows[0].sig_id
+        let [cRows, cFields] = await Temp.FindQuery(sig_id, "pwd_recovery")
+        if(cRows.length !== 0)
+            return res.json({ error: true, msg: 'exists' })
+
+        await Temp.CreateRecovery(sig_id, email)
+        return res.json({ error: false, msg: '' })
     })
 
     router.get('/failed', (req, res) => {
@@ -185,7 +205,7 @@ async function userRouter() {
     //user profile function
     router.get('/profile', isAuthenticated, async function(req, res) {
         let sig_id = req.user.sig_id
-        let [rows, fields] = await User.LookupUserSigid(sig_id)
+        let [rows, fields] = await User.LookupUser({ sig_id: sig_id })
         let row = rows[0]
 
         let package = {

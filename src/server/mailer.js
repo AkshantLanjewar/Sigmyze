@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 
-function VerificationEmail(code, email) {
+function GetTransporter() {
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
@@ -10,6 +10,11 @@ function VerificationEmail(code, email) {
         }
     })
 
+    return transporter
+}
+
+function VerificationEmail(code, email) {
+    const transporter = GetTransporter()
     let message = {
         from: "sigmyze@gmail.com",
         to: email,
@@ -20,7 +25,26 @@ function VerificationEmail(code, email) {
 
     transporter.sendMail(message, function(err, info) {
         if(err) console.log(err)
+        transporter.close()
+    })
+}
+
+function RecoveryEmail(code, email) {
+    const transporter = GetTransporter()
+    let message = {
+        from: "sigmyze@gmail.com",
+        to: email,
+        subject: "Sigmyze Recovery Code",
+        html: `<h1>You requested a code to change your password</h1>
+               <h3>Here is your code: ${code}</h3>
+               <h4>If you didnt send this, ignore this email</h4>`
+    }
+
+    transporter.sendMail(message, function(err, info) {
+        if(err) console.log(err)
+        transporter.close()
     })
 }
 
 exports.VerificationEmail = VerificationEmail
+exports.RecoveryEmail     = RecoveryEmail

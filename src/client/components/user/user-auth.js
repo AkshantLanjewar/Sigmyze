@@ -51,6 +51,32 @@ function ForgotPWD(props) {
 
     function OnEmailSubmit(e) {
         e.preventDefault()
+        const emailValue = emailRef.current.value
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailValue })
+        }
+        fetch('/user/recover_pwd', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    let messages = []
+                    let message  = data.msg
+                    
+                    if(message == "DNE")
+                        messages.push({ subject: "User Recovery", message: "User does not exist" })
+                    if(message == "exists")
+                        messages.push({ subject: "User Recovery", message: "Request already sent out, check your email, or try again in 10 minutes" })
+                    
+                    setMessages(messages)
+                    setTimeout(() => { setMessages([]) }, 1000)
+                    return
+                } else {
+
+                }
+            })
     }
 
     function OnCodeSubmit(e) {
