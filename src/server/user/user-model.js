@@ -84,6 +84,20 @@ async function VerifySigmyzeUser(sig_id) {
     await db.end()
 }
 
+async function UpdateSigmyzeUserPWD(sig_id, n_pwd) {
+    const db = await conn()
+    await db.query('use Sigmyze;')
+
+    let salt     = crypto.randomBytes(16).toString('hex')
+    let password =  crypto.pbkdf2Sync(n_pwd, salt, 310000, 32, 'sha512').toString('hex')
+    let query    = `
+        UPDATE users SET salt = '${salt}' AND password = '${password}' WHERE sig_id = '${sig_id}'
+    ` 
+
+    await db.query(query)
+    await db.end()
+}
+
 async function CreateSigmyzeUser(sig_object) {
     const db = await conn()
     await db.query('use Sigmyze;')
@@ -177,3 +191,4 @@ exports.CreateFacebookUser = CreateFacebookUser
 exports.LookupUser = LookupUser
 exports.CreateSigmyzeUser = CreateSigmyzeUser
 exports.VerifySigmyzeUser = VerifySigmyzeUser
+exports.UpdateSigmyzeUserPWD = UpdateSigmyzeUserPWD

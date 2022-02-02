@@ -162,6 +162,39 @@ async function userRouter() {
         return res.json({ error: false, msg: '' })
     })
 
+    router.post('/verify_recover_code', async (req, res) => {
+        const code = req.body.code
+        let [tRows, fields] = await Temp.FindRequest(code)
+        if(tRows.length == 0)
+            return res.json({ error: true, msg: 'DNE' })
+        
+        let request = tRows[0]
+        if(request.code !== code)
+            return res.json({ error: true, msg: 'match' })
+        else
+            await Temp.VerifyRequest(code)
+
+        return res.json({ error: false, msg: 'set_pwd' })
+    })
+
+    router.post('/set_n_password', async (req, res) => {
+        const code = req.body.code
+        const pwd  = req.body.password
+        let [tRows, fields] = await Temp.FindRequest(code)
+        if(tRows.length == 0)
+            return res.json({ error: true, msg: 'DNE' })
+
+        let request = tRows[0]
+        if(request.code !== code)
+            return res.json({ error: true, msg: 'match' })
+        if(request.verified == false)
+            return res.json({ error: true, msg: "verify" })
+        
+        let sig_id = request.sig_id
+        await User.UpdateSigmyzeUserPWD(sig_id, pwd)
+        return res.json({ error: false, msg: '' })
+    })
+
     router.get('/failed', (req, res) => {
         res.redirect('/')
     })

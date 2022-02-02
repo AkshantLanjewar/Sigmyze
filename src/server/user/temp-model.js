@@ -29,7 +29,8 @@ async function SetupTable() {
             timestamp   datetime       NOT NULL,
             sig_id      nvarchar(512)  NOT NULL,
             request     nvarchar(512)  NOT NULL,
-            code        nvarchar(256)  NOT NULL,
+            code        nvarchar(256)  NOT NULL UNIQUE,
+            verified    BOOLEAN        NOT NULL,
             CONSTRAINT  PK_User PRIMARY KEY (request, sig_id)
         )
     `
@@ -60,6 +61,31 @@ async function FindQuery(sig_id, request) {
     return [rows, fields]
 }
 
+async function FindRequest(code) {
+    const db = await conn()
+    await db.query('use Sigmyze;')
+
+    let query = `
+        SELECT * FROM ExpiryQuery WHERE code = '${code}'
+    `
+
+    let [rows, fields] = await db.query(query)
+    await db.end()
+    return [rows, fields]
+}
+
+async function VerifyRequest(code) {
+    const db = await conn()
+    await db.query('use Sigmyze;')
+
+    let query = `
+        UPDATE ExpiryQuery SET verified = 1 WHERE code = '${code}'
+    `
+
+    await db.query(query)
+    await db.end()
+}
+
 async function CreateRecovery(sig_id, email) {
     const db = await conn()
     await db.query('use Sigmyze;')
@@ -69,8 +95,8 @@ async function CreateRecovery(sig_id, email) {
     let pin    = crypto.pbkdf2Sync(pinStr, salt, 310000, 32, 'sha256').toString('hex')
 
     let query = `
-        INSERT INTO ExpiryQuery (timestamp, sig_id, request, code)
-        VALUES (now(), '${sig_id}', 'pwd_recovery', '${pin}')
+        INSERT INTO ExpiryQuery (timestamp, sig_id, request, code, verified)
+        VALUES (now(), '${sig_id}', 'pwd_recovery', '${pin}', 0)
     `
 
     mailer.RecoveryEmail(pin, email)
@@ -79,7 +105,9 @@ async function CreateRecovery(sig_id, email) {
     await db.end()
 }
 
-exports.SetupTable = SetupTable
+exports.SetupTable     = SetupTable
 exports.CreateRecovery = CreateRecovery
-exports.FindQuery = FindQuery
+exports.FindQuery      = FindQuery
+exports.FindRequest    = FindRequest
+exports.VerifyRequest  = VerifyRequest
 exports.DeleteCodes    = DeleteCodes
