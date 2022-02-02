@@ -81,6 +81,13 @@ function ForgotPWD(props) {
 
     function OnCodeSubmit(e) {
         e.preventDefault()
+        const codeValue = codeRef.current.value
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: codeValue })
+        }
     }
 
     function OnNewPWDSubmit(e) {
