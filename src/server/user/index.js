@@ -23,7 +23,7 @@ async function userRouter() {
 
     setInterval(async () => {
         await Temp.DeleteCodes()
-    }, 1000 * 60 * 10)
+    }, 1000 * 60 * 5)
 
     const keys   = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\google_keys.json'))
     const fbKeys = JSON.parse(fs.readFileSync(__dirname + '\\..\\..\\keys\\facebook_keys.json')) 

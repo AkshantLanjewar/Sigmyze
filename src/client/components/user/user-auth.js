@@ -74,7 +74,7 @@ function ForgotPWD(props) {
                     setTimeout(() => { setMessages([]) }, 1000)
                     return
                 } else {
-
+                    setFormState("code")
                 }
             })
     }
@@ -115,7 +115,7 @@ function ForgotPWD(props) {
                     </div>
                 </form>
             )
-    if(formState == "code")
+    if(formState == "pwd")
             val = (
                 <form onSubmit={OnNewPWDSubmit}>
                     <div className="input-box">
