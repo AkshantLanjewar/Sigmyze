@@ -44,6 +44,7 @@ function ForgotPWD(props) {
     const setAuthState = props.setAuthState
     const setMessages  = props.setMessages
     const [formState, setFormState] = useState("email")
+    const [code, setCode] = useState(null)
 
     const emailRef = React.createRef()
     const codeRef  = React.createRef()
@@ -88,6 +89,24 @@ function ForgotPWD(props) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code: codeValue })
         }
+        fetch('/user/verify_recover_code', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    let messages = []
+                    let message = data.msg
+
+                    if(message == "DNE")
+                        messages.push({ subject: "User Recovery", message: "Code does not exist" })
+                    
+                    setMessages(messages)
+                    setTimeout(() => { setMessages([]) }, 1000)
+                    return
+                } else {
+                    setCode(codeValue)
+                    setFormState("pwd")
+                }
+            })
     }
 
     function OnNewPWDSubmit(e) {

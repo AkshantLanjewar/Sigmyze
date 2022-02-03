@@ -167,14 +167,10 @@ async function userRouter() {
         let [tRows, fields] = await Temp.FindRequest(code)
         if(tRows.length == 0)
             return res.json({ error: true, msg: 'DNE' })
-        
-        let request = tRows[0]
-        if(request.code !== code)
-            return res.json({ error: true, msg: 'match' })
         else
             await Temp.VerifyRequest(code)
 
-        return res.json({ error: false, msg: 'set_pwd' })
+        return res.json({ error: false, msg: 'verified' })
     })
 
     router.post('/set_n_password', async (req, res) => {
