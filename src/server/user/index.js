@@ -181,8 +181,6 @@ async function userRouter() {
             return res.json({ error: true, msg: 'DNE' })
 
         let request = tRows[0]
-        if(request.code !== code)
-            return res.json({ error: true, msg: 'match' })
         if(request.verified == false)
             return res.json({ error: true, msg: "verify" })
         

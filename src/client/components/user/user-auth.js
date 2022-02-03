@@ -72,9 +72,9 @@ function ForgotPWD(props) {
                         messages.push({ subject: "User Recovery", message: "Request already sent out, check your email, or try again in 10 minutes" })
                     
                     setMessages(messages)
-                    setTimeout(() => { setMessages([]) }, 1000)
-                    return
+                    setTimeout(() => { setMessages([]) }, 5000)
                 } else {
+                    emailRef.current.value = ""
                     setFormState("code")
                 }
             })
@@ -97,12 +97,13 @@ function ForgotPWD(props) {
                     let message = data.msg
 
                     if(message == "DNE")
-                        messages.push({ subject: "User Recovery", message: "Code does not exist" })
+                        messages.push({ subject: "User Recovery", message: "Code does not exist, try sending another email" })
                     
                     setMessages(messages)
-                    setTimeout(() => { setMessages([]) }, 1000)
-                    return
+                    setFormState("email")
+                    setTimeout(() => { setMessages([]) }, 5000)
                 } else {
+                    codeRef.current.value = ''
                     setCode(codeValue)
                     setFormState("pwd")
                 }
@@ -111,6 +112,39 @@ function ForgotPWD(props) {
 
     function OnNewPWDSubmit(e) {
         e.preventDefault()
+        const pwd = pwdRef.current.value
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: code, password: pwd })
+        }
+        fetch('/user/set_n_password', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    let messages = []
+                    let message  = data.msg
+
+                    if(message == "DNE")
+                        messages.push({ subject: "User Recovery", message: "Code does not exist" })
+                    if(message == "verify") {
+                        messages.push({ subject: "User Recovery", message: "Code has not been verified" })
+                        setFormState("code")
+                    }
+
+                    setMessages(messages)
+                    setTimeout(() => { setMessages([]) }, 5000)
+                } else {
+                    let messages = []
+                    messages.push({ subject: "User Recovery", message: "Password has been changed, Please login now" })
+                    setMessages(messages)
+
+                    setAuthState("login")
+
+                    setTimeout(() => { setMessages([]) }, 7000)
+                }
+            })
     }
 
     let val = ( <form></form> )

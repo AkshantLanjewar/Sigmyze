@@ -91,7 +91,7 @@ async function UpdateSigmyzeUserPWD(sig_id, n_pwd) {
     let salt     = crypto.randomBytes(16).toString('hex')
     let password =  crypto.pbkdf2Sync(n_pwd, salt, 310000, 32, 'sha512').toString('hex')
     let query    = `
-        UPDATE users SET salt = '${salt}' AND password = '${password}' WHERE sig_id = '${sig_id}'
+        UPDATE users SET salt = '${salt}', password = '${password}' WHERE sig_id = '${sig_id}'
     ` 
 
     await db.query(query)

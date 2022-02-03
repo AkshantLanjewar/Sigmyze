@@ -86,6 +86,18 @@ async function VerifyRequest(code) {
     await db.end()
 }
 
+async function DeleteRequest(code) {
+    const db = await conn()
+    await db.query('use Sigmyze;')
+
+    let query = `
+        DELETE FROM ExpiryQuery WHERE code = '${code}'
+    `
+
+    await db.query(query)
+    await db.end()
+}
+
 async function CreateRecovery(sig_id, email) {
     const db = await conn()
     await db.query('use Sigmyze;')
@@ -111,3 +123,4 @@ exports.FindQuery      = FindQuery
 exports.FindRequest    = FindRequest
 exports.VerifyRequest  = VerifyRequest
 exports.DeleteCodes    = DeleteCodes
+exports.DeleteRequest  = DeleteRequest
