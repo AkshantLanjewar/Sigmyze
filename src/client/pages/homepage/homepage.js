@@ -6,6 +6,8 @@ import Map from './components/map'
 
 import Logo from '../../../svg/logo.svg';
 
+import UnloggedView from './views/unlog'
+import LoggedView from './views/log'
 
 function Homepage(props) {
     let setLoginState = props.setLoginState
