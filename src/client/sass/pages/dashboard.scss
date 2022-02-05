@@ -5,7 +5,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    padding: 2.5rem;
+    padding: 3rem;
 
     .dash-header {
         display: flex;
@@ -14,5 +14,67 @@
         align-items: center;
         gap: 1.25rem;
         flex-wrap: wrap;
+
+        .text {
+            align-content: normal;
+            justify-items: stretch;
+            grid-gap: .5rem;
+
+            display: grid;
+            grid-template-columns: 1fr;
+            position: relative;
+
+            h1 { font-size: 22px; font-weight: 700; }
+            p { font-size: 14px; }
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+
+            button {
+                outline: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            .add {
+                padding-left: 14px;
+                padding-right: 14px;
+                padding-bottom: 6px;
+                padding-top: 4px;
+
+                background-color: $blue-excite;
+                color: $text-color;
+                border-radius: 16px;
+
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    .templates {
+        display: grid;
+        grid-template-columns: 1fr;
+        position: relative;
+        grid-gap: 16px;
+        align-content: normal;
+        justify-items: stretch;
+
+        p.header {
+            font-weight: 600;
+            font-size: 14px;
+            display: block;
+            width: 100%;
+        }
+
+        .grid {
+
+        }
     }
 }

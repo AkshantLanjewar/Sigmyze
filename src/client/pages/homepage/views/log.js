@@ -13,12 +13,24 @@ function LoggedView() {
                 </div>
 
                 <div className="buttons">
-                    <button>
+                    <button className="add">
                         <HiPlus />
                         <span>Create App</span>
                     </button>
                 </div>
             </div>
+
+            <section className="templates">
+                <p className="header">Starter Templates</p>
+
+                <div className="grid">
+                    
+                </div>
+            </section>
+
+            <section className="projects">
+
+            </section>
 
             <Modal viewState={false} title={"Create Project"}>
 
