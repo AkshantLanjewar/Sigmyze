@@ -55,7 +55,7 @@ function UserDropdown(props) {
                         </div>
                     </div>
 
-                    <div className="account-actions">
+                    <div className="actions">
                         <a className="action" onClick={Signout}>
                             <IoIosExit />
 
