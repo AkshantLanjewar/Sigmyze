@@ -26,7 +26,6 @@ class CrossHairs extends React.Component {
         if (!_.isNull(x) && !_.isNull(y)) {
             return (
                 <g>
-                    <line style={style} x1={0} y1={y} x2={this.props.width} y2={y} />
                     <line style={style} x1={x} y1={0} x2={x} y2={this.props.height} />
                 </g>
             );
@@ -92,6 +91,7 @@ function OverviewChart(props) {
     const [legendVal, setLegendVal] = useState({})
     const [activeChartHover, setActiveChartHover] = useState(false)
     const [units, setUnits] = useState({})
+    const [timetick, setTimetick] = useState("")
 
 
     let unitsObj = {}
@@ -116,6 +116,7 @@ function OverviewChart(props) {
                 let data = await Indicator.FindIndicator(iso3, ind3)
                 let rData = data[0]['data']
                 rUnits = rData['units']
+                setTimetick(data[0]['data']['timetick'])
 
                 let values = {}
 
@@ -245,7 +246,8 @@ function OverviewChart(props) {
             for(let i = 0; i < indicators.length; i++) {
                 let indicator = indicators[i]
                 let name = `${indicator.iso3}-${indicator.indicator}`
-                pack[name] = f(event.get(name))
+                //pack[name] = f(event.get(name))
+                pack[name] = (event.get(name))
             }
 
 
@@ -261,8 +263,6 @@ function OverviewChart(props) {
     return (
         <div className="overview-chart">
             <Legend indicators={props.indicators} values={legendVal} units = {units}/>
-            <XEndTail xPos={crosshairPos.x} activeChartHover={activeChartHover} gVal={lTracker} />
-            <YEndTail yPos={crosshairPos.y} activeChartHover={activeChartHover} min={0} max={790} dMax={chartMisc.dMax} ticks={chartMisc.ticks}  />
 
             {emptyIndicators
                 ? (
@@ -317,3 +317,7 @@ function OverviewChart(props) {
 }
 
 export default OverviewChart
+
+
+//<XEndTail xPos={crosshairPos.x} activeChartHover={activeChartHover} gVal={lTracker} />
+//<YEndTail yPos={crosshairPos.y} activeChartHover={activeChartHover} min={0} max={790} dMax={chartMisc.dMax} ticks={chartMisc.ticks}  />

@@ -56,7 +56,7 @@ function CategoryCard(props) {
 
                         formatterPre: `${indicator.name}: `,
 
-                        xAxisType: "utc",
+                        xAxisType: "Y",
                         yAxisType: "linear"
                     }
 
@@ -83,13 +83,13 @@ function CategoryCard(props) {
     return (
         <div className="carousel-card scaleHov" key={category_b}>
             <div className="title tooltip">
-                <h3 style={{marginBottom: "1em"}}>
+                <p class="titleLong" style={{marginBottom: "0.5em"}}>
                     <span>{state.countryName} {'>'} </span>
                     <span style={{color: blueColor}}>{state.longA} <span style={{color: "white"}}>:</span> </span>
                     <span style={{color: redColor}}>{state.longB}</span>
-                </h3>
+                </p>
 
-                <div>
+                <div class='titleShort'>
                     <span style={{color: blueColor}}>{state.shortA}</span>
                     <span> : </span>
                     <span style={{color: redColor}}>{state.shortB}</span>

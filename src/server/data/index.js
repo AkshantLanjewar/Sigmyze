@@ -1,5 +1,5 @@
 const Router   = require('express').Router
-const schedule = require('node-schedule') 
+const schedule = require('node-schedule')
 
 const httpData  = require('./v1/http-data')
 const indicator = require('./v1/indicator')
@@ -8,14 +8,17 @@ const map       = require('./v1/map')
 const v2 = require('./v2/index')
 
 const WEOTab = require('./weo/index')
+const COVIDTab = require('./covid/index')
 
 function DataRouter() {
     //set the cron task
     schedule.scheduleJob('0 0 * * *', httpData.IndexData)
     schedule.scheduleJob('0 0 * * *', WEOTab.TabulateWEOData)
+    schedule.scheduleJob('0 0 * * *', COVIDTab.TabulateCovidData)
 
     httpData.IndexData()
     WEOTab.TabulateWEOData()
+    COVIDTab.TabulateCovidData()
 
     const router = Router()
     router.get('/map/gdp_growth', map.gdpGrowthGlobalMAP)

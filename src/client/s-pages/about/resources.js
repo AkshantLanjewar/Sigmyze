@@ -44,15 +44,31 @@ function ResourcesPage() {
               <td>
                 <p>
                   Dataset includes 45+ economic indicators for 190+ countries and regions under 5 primary categories - GDP, Govt Finance, People, Trade and Investment. Savings and inflation are under Investment.
-                  Data for most countries is from 1980 through 2025.
+                  Data for most countries is from 1980 through 2026.
                 </p>
-                <p style={{marginTop:'2px'}}>
+                <p style={{marginTop:'3px'}}>
                   Sourced from World Economic Outlook published by the IMF (International Monetary Fund).
                 </p>
               </td>
               <td>
                 <p>Bi-annual - Apr and Oct</p>
-                <p style={{marginTop:'2px', fontStyle:'italic', fontSize:'0.6rem'}}>Oct 2021 coming soon!</p>
+                <p style={{marginTop:'3px', fontStyle:'italic', fontSize:'0.6rem'}}>Oct 2021 coming soon!</p>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>COVID</td>
+              <td>Johns Hopkins</td>
+              <td>Daily</td>
+              <td>
+                <p>
+                  4 important Covid indicators at the national level for 190+ countries - Confirmed Cases (cumulative), Confirmed Deaths (Cumulative), New Cases (Daily), New Deaths (Daily).
+                  Data for most countries is from 1980 through 2026.
+                </p>
+                <p style={{marginTop:'3px', fontStyle:'italic', fontSize:'0.6rem'}}>Coming Soon! - State and County-wise breakdown and maps</p>
+              </td>
+              <td>
+                <p>Daily</p>
               </td>
             </tr>
           </table>
@@ -73,6 +89,11 @@ function ResourcesPage() {
               <td>1</td>
               <td>WEO</td>
               <td><a href='/weodef' className='resURL'> Click here </a></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>COVID</td>
+              <td><a href='/coviddef' className='resURL'> Click here </a></td>
             </tr>
           </table>
         </div>

@@ -36,9 +36,9 @@
         align-items: center;
         justify-content: center;
 
-        button { 
-            margin-left: 8px; 
-            margin-right: 8px; 
+        button {
+            margin-left: 8px;
+            margin-right: 8px;
             box-sizing: content-box;
             cursor: pointer;
             outline: none;
@@ -117,7 +117,7 @@
                 padding: 0;
                 padding-top: 1px;
                 width: 100%;
-                
+
                 box-sizing: content-box;
             }
         }
@@ -149,7 +149,7 @@
             min-height: 145px;
             overflow-x: hidden;
             overflow-y: auto;
-            
+
             border-right: 1px solid $border;
             padding-top: 6px;
             padding-bottom: 6px;
@@ -169,9 +169,9 @@
                     height: 28px;
                     width: 28px;
 
-                    svg { 
+                    svg {
                         height: 28px;
-                        width: 28px; 
+                        width: 28px;
                     }
                 }
 
@@ -259,7 +259,7 @@
 
                 display: flex;
                 flex-direction: column;
-                
+
                 .title-item {
                     height: 40px;
                     width: 100%;
@@ -312,7 +312,7 @@
                         .indicator-title {
                             color: $text-color;
                             font-size: 14px;
-                            
+
                             overflow: hidden;
                             text-overflow: ellipsis;
                             white-space: nowrap;
@@ -442,39 +442,39 @@
 
                 .children .component-content {
                     padding: 0 1.25rem;
-    
+
                     .component {
                         color: $mute-text;
                         border-radius: 0.35rem;
                         cursor: pointer;
                         transition: background-color 130ms ease-in-out;
                         margin-bottom: 12px;
-    
-                        &:hover { 
+
+                        &:hover {
                             .inner .actions { visibility: visible; }
                         }
-    
+
                         .inner {
                             padding: 0 0.5rem;
                             height: 32px;
-    
+
                             display: flex;
                             flex-direction: row;
                             justify-content: flex-start;
                             align-items: center;
                             gap: 0.25rem;
                             color: rgb(200, 200, 200);
-    
+
                             .icon {
                                 font-size: 18px;
                                 flex: 0 0 20px;
-    
+
                                 display: flex;
                                 flex-direction: row;
                                 justify-content: center;
                                 align-items: center;
                             }
-    
+
                             .text {
                                 flex: 1 1 auto;
                                 font-weight: 600;
@@ -483,21 +483,21 @@
                                 text-overflow: ellipsis;
                                 white-space: nowrap;
                             }
-    
+
                             .actions {
                                 display: flex;
                                 visibility: hidden;
                                 position: relative;
-    
+
                                 flex-direction: row;
                                 justify-content: center;
                                 align-items: center;
-    
+
                                 font-size: 22px;
                                 width: 20px;
                                 height: 20px;
                                 cursor: pointer;
-    
+
                                 &:hover { color: $alt-text-color; }
                             }
                         }
@@ -505,7 +505,7 @@
                 }
             }
 
-            
+
 
             .components {
                 display: flex;
@@ -525,7 +525,7 @@
                     box-sizing: border-box;
                     height: 46px;
                     line-height: 46px;
-                    
+
                     text-decoration: none;
                     white-space: nowrap;
                     cursor: pointer;
@@ -559,6 +559,18 @@
                         }
                     }
                 }
+            }
+
+            .myChartWarn{
+              background-color: $dark-bg;
+              position: absolute;
+              bottom: 10%;
+              left: 2.5%;
+              width: 95%;
+              font-size: 0.5rem;
+              font-style: italic;
+              //color: rgb(135, 206, 235);
+              display:block;
             }
         }
 
@@ -610,8 +622,8 @@
                         margin-right: 4px;
                     }
 
-                    .close { 
-                        padding-top: 0px; 
+                    .close {
+                        padding-top: 0px;
                         visibility: hidden;
                         transition: visibility 130ms ease-in-out;
                     }
@@ -624,4 +636,6 @@
             }
         }
     }
+
+
 }
