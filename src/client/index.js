@@ -8,6 +8,7 @@ import IndicatorPage from './s-pages/country/country'
 import AboutUsPage from './s-pages/about/about'
 import ResourcesPage from './s-pages/about/resources'
 import WeoDef from './s-pages/about/weodef'
+import CovidDef from './s-pages/about/coviddef'
 import ChartBuilderPage from './u-pages/chart-builder/index';
 
 import './sass/index.scss'
@@ -59,6 +60,15 @@ function App() {
                         render={({ match: { url } }) => (
                             <>
                                 <Route path={`${url}/`} component={WeoDef} exact />
+                            </>
+                          )} />
+
+                    <Route
+                        path="/coviddef"
+
+                        render={({ match: { url } }) => (
+                            <>
+                                <Route path={`${url}/`} component={CovidDef} exact />
                             </>
                           )} />
 

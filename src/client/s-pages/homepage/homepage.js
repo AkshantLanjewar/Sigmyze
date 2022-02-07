@@ -45,8 +45,8 @@ function Homepage(props) {
                         <div className='container'>
                             <div className='row'>
                                 <div className='headline'>
-                                    <span className='category'>Charts</span>
-                                    <h2 className="title">Splice and Analyze Different Datasets</h2>
+                                    <p className='category'>Charts</p>
+                                    <h2 className="title">Splice & Analyze Different Datasets</h2>
                                 </div>
                             </div>
 
@@ -60,7 +60,7 @@ function Homepage(props) {
                         <div className='container'>
                             <div className="row">
                                 <div className="headline">
-                                    <span className="category">Features</span>
+                                    <p className="category">Features</p>
                                     <h2 className="title">Datasets | Analysis | Insights</h2>
                                 </div>
                             </div>
@@ -72,11 +72,14 @@ function Homepage(props) {
                                             <h2>Diverse Datasets</h2>
                                         </div>
 
-                                        <p>45+ indicators for 190+ countries, on GDP, Govt Finance, Trade, Employment and Investment from IMF WEO Dataset</p>
+
                                         <div className="body" style={{marginTop: "1em"}}>
-                                            <br></br>
+                                            <p>IMF WEO Dataset: 45+ indicators for 190+ countries, on GDP, Govt Finance, Trade, Employment and Investment</p>
+                                            <br/>
+                                            <p>Covid Dataset (Johns Hopkins): 4 indicators for 190+ countries, on cumulative & daily cases and deaths. Updated daily.</p>
+                                            <br /><br />
                                             <h4>Coming Soon...</h4>
-                                            <p>World Bank, US Weekly Jobs Data, Covid, and other datasets. </p>
+                                            <p>World Bank, US Weekly Jobs Data, Covid (state & county), and other datasets. </p>
                                         </div>
                                     </div>
                                 </div>

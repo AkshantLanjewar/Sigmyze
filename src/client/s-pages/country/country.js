@@ -13,28 +13,39 @@ import { IoIosPeople } from 'react-icons/io'
 function IndicatorPage() {
     const initialTabState = [{
         icon: <AiOutlineLineChart />,
+        dataset: "WEO",
         name: "GDP",
         short: "GDP",
         active: true
     }, {
         icon: <RiGovernmentLine />,
-        name: "Govt. Finance",
+        dataset: "WEO",
+        name: "GovtFinance",
         short: "GOVT",
         active: false
     }, {
         icon: <GiMoneyStack />,
+        dataset: "WEO",
         name: "Investment",
         short: "INVEST",
         active: false
     },{
         icon: <GiTrade />,
+        dataset: "WEO",
         name: "Trade",
         short: "TRADE",
         active: false
     },{
         icon: <IoIosPeople />,
+        dataset: "WEO",
         name: "People",
         short: "PEOPLE",
+        active: false
+    },{
+        icon: <IoIosPeople />,
+        dataset: "COVID",
+        name: "Covid",
+        short: "COVID",
         active: false
     }
 
@@ -42,7 +53,7 @@ function IndicatorPage() {
 
     const [tabsState, setTabsState] = useState(initialTabState)
     const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})
-    const [activeTab, setActiveTab] = useState({ icon: <AiOutlineLineChart />, name: "Economics", short: "GDP", active: true })
+    const [activeTab, setActiveTab] = useState({ icon: <AiOutlineLineChart />, name: "GDP", short: "GDP", dataset: 'WEO', active: true })
     const [activeCharts, setActiveCharts] = useState([])
 
     function onTabClick(e, name) {
@@ -71,15 +82,16 @@ function IndicatorPage() {
     useEffect(() => {
         if(activeCountry.iso3 == null)
             return
-        const initalCategoryURL = `/api/data/categories/${activeTab.short}`
+        //const initalCategoryURL = `/api/data/categories/${activeTab.short}`
+        const initalCategoryURL = `/api/data/v2/datasets/${activeTab.dataset}/groups/${activeTab.dataset+activeTab.name}`
         fetch(initalCategoryURL)
             .then(response => response.json())
             .then(data => {
                 let nCharts = []
 
                 for(let i = 0; i < data.length; i++) {
-                    let category = data[i]
-                    nCharts.push({category: category, iso3: activeCountry.iso3})
+                    let indicator = data[i].indicator
+                    nCharts.push({category: indicator, iso3: activeCountry.iso3})
                 }
 
                 setActiveCharts(nCharts)
@@ -116,7 +128,7 @@ function IndicatorPage() {
 
                     <div className="content">
                         {activeCharts.map((chart) => {
-                            return <SingleCategoryCard category={chart.category} iso3={chart.iso3} />
+                            return <SingleCategoryCard indicator={chart.category} iso3={chart.iso3} />
                         })}
                     </div>
                 </div>

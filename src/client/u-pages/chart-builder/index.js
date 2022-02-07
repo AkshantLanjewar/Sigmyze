@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import ChartNavbar from "./components/chart-nav"
 import OverviewChart from './components/chart'
 import Indicator from "../../data/indicator"
@@ -44,10 +44,18 @@ let colors = [
     {name: 'orange', hex: '#f8a250'}
 ]
 
+
 function ChartBuilderPage() {
     const [modalState, setModalState] = useState(false)
     const [indicators, setIndicators] = useState([])
     const [colorIndex, setColorIndex] = useState(0)
+    const [warnDisplay, setWarnDisplay] = useState({})
+    let display = {display:'none'}
+    let display2 = {display:'block'}
+    useEffect(()=>{setWarnDisplay(display)},[])
+
+
+
 
     function AddIndicator(country, indicator) {
         let iso3  = country.iso3
@@ -55,17 +63,33 @@ function ChartBuilderPage() {
         let iShort = indicator.indicator
         let indicatorF = indicator.name
 
+
+
         let dataPack = { iso3: iso3, fName: fName, indicator: iShort, indicatorF: indicatorF, dataIndexed: false }
         let nIndicators = indicators
         //nIndicators.push(dataPack)
+        let covCheck = iShort.search(/cc|cd/i)
+        let dataset=""
 
-        let url = `/api/data/v2/datasets/WEO/${iso3}/${iShort}`
+        // The below code is stop-gap. Needs a better, scalable logic
+        if (covCheck>=0){
+          dataset = 'COVID'
+        }
+        else{
+          dataset = "WEO"
+        }
+
+        let url = `/api/data/v2/datasets/${dataset}/${iso3}/${iShort}`
+
         fetch(url)
             .then(response => response.json())
             .then(async (data) => {
                 await Indicator.AddIndicator(iso3, fName, iShort, indicatorF, data)
                 dataPack['dataIndexed'] = true
                 dataPack['color'] = colors[colorIndex]
+                if(data['timetick']){
+                  setWarnDisplay(display2);
+                }
                 //nIndicators[nIndicators.length - 1] = dataPack
                 nIndicators.push(dataPack)
 
@@ -118,7 +142,17 @@ function ChartBuilderPage() {
                             </div>
                         </div>
                     </div>
+                    <div className='myChartWarn' style={warnDisplay}>
+                        <h4>Warning!</h4>
+                        <p>For Covid Indicators - X-Axis is 'Daily'. Use mouse scroll to expand axis.
+                        <br/>
+                        Other Indicators - X-Axis is 'Annual'
+                        <br/>
+                        Chart will show a break when they are combined
+                        </p>
+                    </div>
                 </div>
+
 
                 <div className="content">
                     <ChartTabs />

@@ -42,7 +42,6 @@ class ChartBuilder {
             val += 0 - min
             min = 0
         }
-
         val = val - min
         max = max - min
         return Math.max(0, Math.min(1, val / max))
@@ -50,7 +49,7 @@ class ChartBuilder {
 
     //tooltip
 
-    SetupTooltip(svg, x, y, data, height) {
+    SetupTooltip(svg, x, y, data, height, xAxType) {
 
         const tooltip = svg.append('g')
             .attr('class', 'focus')
@@ -98,7 +97,7 @@ class ChartBuilder {
             .attr('font-family', 'Inter')
             .attr('y', 25)
             .attr('x', 10)
-            .style('font-size', '12px')
+            .style('font-size', '0.7rem')
 
         let fontOffset = 25 + 30
         let textArray = []
@@ -108,6 +107,7 @@ class ChartBuilder {
                 .attr('font-family', 'Inter')
                 .attr('y', fontOffset)
                 .attr('x', 10)
+                .style('font-size', '0.7rem')
 
             textArray.push(tmpText)
             fontOffset += 22
@@ -115,7 +115,7 @@ class ChartBuilder {
 
         function Bisect(mx) {
             const bisect = d3.bisector(d => d.date).left
-            const date   = x.invert(mx)
+            const date = x.invert(mx)
             const index  = bisect(data, date, 1)
 
             let direction = "right"
@@ -149,8 +149,14 @@ class ChartBuilder {
 
             rect.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
             yTitle.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
-            //yTitle.text(charts[0].chartData[dataObj.index - 1].date.toDateString())
-            yTitle.text(charts[0].chartData[dataObj.index - 1].date)
+
+            if (xAxType=='D'){
+                yTitle.text(charts[0].chartData[dataObj.index - 1].date.toDateString())
+            }
+            else if (xAxType=='Y') {
+                yTitle.text(charts[0].chartData[dataObj.index - 1].date)
+            }
+
             for(let i = 0; i < chartCount; i++) {
                 textArray[i].attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
                 textArray[i].text(charts[i].formatterPre + charts[i].chartData[dataObj.index - 1].value)
@@ -159,9 +165,16 @@ class ChartBuilder {
     }
 
     ScaleUTC(data, dim) {
-        return d3.scaleLinear()
+        return d3.scaleTime()
             .domain(d3.extent(data, d => d.date))
             .range([this.margin.left, dim - this.margin.right])
+    }
+
+    ScalePoint(data, dim) {
+        return d3.scaleTime()
+            .domain(d3.extent(data, d => d.date))
+            .range([this.margin.left, dim - this.margin.right])
+
     }
 
     LinearAxisFormatter(data, dimParam) {
@@ -215,16 +228,24 @@ class ChartBuilder {
         //let y: d3.ScaleLinear<number, number, never>
 
         var x, y;
+        var minYr, maxYr;
 
-        if(options.xAxisType == "utc")
+        if(options.xAxisType == "Y"){
             x = this.ScaleUTC(options.chartData, rawWidth)
+            minYr = 2025
+            maxYr = 0
+        }
+        else if (options.xAxisType == 'D') {
+            x = this.ScalePoint(options.chartData, rawWidth)
+            minYr = Date.now()
+            maxYr = 0
+        }
         if(options.yAxisType == "linear")
             y = this.LinearAxisFormatter(options.chartData, rawHeight)
 
         let maxNum = 0
         let minNum = 0
-        let minYr = 2025
-        let maxYr = 0
+
 
         for(let i = 0; i < this.charts.length; i++) {
             let chartOptions = this.charts[i]
@@ -249,25 +270,31 @@ class ChartBuilder {
                 let yFormatter = this.LinearAxisFormatter(chartOptions.chartData, rawHeight)
 
                 if(options.showXAxis == 1){
-                  var stepValue = Math.round((maxYr-minYr)/6);
-                  let tickRange =[];
-                  tickRange.push(minYr);
-                  for (var j=0;j<7;j++){
-                    let val = tickRange[j]+stepValue;
+                  if (options.xAxisType == 'Y'){
+                      var stepValue = Math.round((maxYr-minYr)/6);
+                      let tickRange =[];
+                      tickRange.push(minYr);
+                      for (var j=0;j<7;j++){
+                        let val = tickRange[j]+stepValue;
 
-                    if (val>=maxYr){
-                      tickRange.push(maxYr);
-                      break
-                    }
-                    else{
-                      tickRange.push(val);
-                    }
+                        if (val>=maxYr){
+                          tickRange.push(maxYr);
+                          break
+                        }
+                        else{
+                          tickRange.push(val);
+                        }
+                      }
 
+                      svg.append('g')
+                          .attr('transform', 'translate(0,'+rawHeight+')')
+                          .call(d3.axisBottom(x).tickFormat(d3.format('d')).tickValues(tickRange))
+                    }
+                  else if (options.xAxisType == 'D') {
+                    svg.append('g')
+                        .attr('transform', 'translate(0,'+rawHeight+')')
+                        .call(d3.axisBottom(x))
                   }
-
-                  svg.append('g')
-                      .attr('transform', 'translate(0,'+rawHeight+')')
-                      .call(d3.axisBottom(x).tickFormat(d3.format('d')).tickValues(tickRange))
                 }
 
 
@@ -275,7 +302,7 @@ class ChartBuilder {
                     .datum(chartOptions.chartData)
                     .attr("fill", "none")
                     .attr("stroke", chartOptions.chartColor)
-                    .attr("stroke-width", 3)
+                    .attr("stroke-width", 2)
                     .attr("stroke-linejoin", "round")
                     .attr("stroke-linecap", "round")
                     .attr("d", this.LineChart(x, yFormatter))
@@ -285,7 +312,7 @@ class ChartBuilder {
             }
         }
 
-        this.SetupTooltip(svg, x, y, options.chartData, rawHeight)
+        this.SetupTooltip(svg, x, y, options.chartData, rawHeight, options.xAxisType)
     }
 }
 

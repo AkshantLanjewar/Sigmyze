@@ -155,6 +155,7 @@ function IndicatorLayout(props) {
 
     function onIndicatorClick(e, name) {
         let pIndicators = indicators
+
         let pDisplayInd = displayIndicators
         let pActiveIndicator = {}
 
@@ -185,6 +186,14 @@ function IndicatorLayout(props) {
         setIndicatorGlobal(pActiveIndicator)
     }
 
+    function onDataSetClick(e, name) {
+        for (let i=0;i<datasets.length;i++){
+          if (datasets[i].name==name){
+            setActiveDataset(datasets[i])
+          }
+        }
+    }
+
     return (
         <div>
             <div className="search-bar">
@@ -204,7 +213,7 @@ function IndicatorLayout(props) {
                                 <span className="icon"><FcAreaChart /></span>
 
                                 <span className="tab-title">
-                                    <span className="text">{step.name}</span>
+                                    <span className="text" onClick={(e) => { onDataSetClick(e, step.name) }}>{step.name}</span>
                                 </span>
                             </div>
                         )

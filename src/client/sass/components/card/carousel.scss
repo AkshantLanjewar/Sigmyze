@@ -21,18 +21,18 @@
     margin-top: 18px;
     margin-bottom: 18px;
 
-    .arrow { 
-        width: 24px; 
-        height: 24px; 
-        z-index: 999; 
-        cursor: pointer; 
+    .arrow {
+        width: 24px;
+        height: 24px;
+        z-index: 999;
+        cursor: pointer;
     }
 
     .children {
         display: flex;
         flex-direction: row;
-        
-        justify-content: center;        
+
+        justify-content: center;
         width: 90%;
     }
 
@@ -41,7 +41,7 @@
         &.scaleHov {
             cursor: pointer;
             transition: all .1s ease-in-out;
-    
+
             &:hover {
                 transform: scale(1.05);
             }
@@ -61,7 +61,7 @@
         margin-left: 4px;
         margin-right: 4px;
 
-        
+
         padding-top: 18px;
         padding-left: 22px;
         padding-right: 22px;
@@ -73,11 +73,22 @@
 
         .title {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 1rem;
             cursor: pointer;
 
             overflow: hidden;
         }
+
+            .titleLong{
+              font-size:0.9rem;
+              font-weight: bold;
+            }
+
+            .titleShort{
+              font-size:0.8rem;
+              font-weight: normal;
+              font-style: italic;
+            }
 
         .chart {
             display: flex;
@@ -123,4 +134,3 @@
         }
     }
 }
-
