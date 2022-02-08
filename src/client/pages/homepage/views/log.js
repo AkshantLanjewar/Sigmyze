@@ -32,7 +32,7 @@ function LoggedView() {
                 </div>
 
                 <div className="buttons">
-                    <button className="add">
+                    <button className="add" onClick={() => { setShowCreateProject(true) }}>
                         <HiPlus />
                         <span>Create App</span>
                     </button>
