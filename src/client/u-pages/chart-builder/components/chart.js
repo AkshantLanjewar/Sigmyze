@@ -307,7 +307,9 @@ function OverviewChart(props) {
 
                 : (
                     <div className="add-indicator">
-                        <h2>Currently you havent added any Indicators</h2>
+                        <h4>Splice & analyze different datasets</h4>
+                        <br/><br/>
+                        <h2>Currently you have not added any Indicators</h2>
                         <h4>Click the <span><HiPlus /></span> button on the left to add some</h4>
                     </div>
                 )
