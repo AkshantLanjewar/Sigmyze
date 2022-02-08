@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { HiPlus } from 'react-icons/hi'
 import { AiOutlineAreaChart } from 'react-icons/ai'
@@ -9,6 +9,7 @@ import { BsFillPeopleFill } from 'react-icons/bs'
 
 import Modal from  '../../../components/modal/index'
 import Project from '../components/project'
+import CreateProject from '../components/create-project'
 
 function LoggedView() {
     const templates = [
@@ -19,6 +20,8 @@ function LoggedView() {
         { templateName: "Commerce Project",      templateGroup: "ECONOMIC", icon: <GiShipBow /> },
         { templateName: "Demographic Project",   templateGroup: "ECONOMIC", icon: <BsFillPeopleFill /> }
     ]
+
+    const [showCreateProject, setShowCreateProject] = useState(false)
 
     return (
         <div className="main dash-container">
@@ -65,8 +68,8 @@ function LoggedView() {
                 <Project />
             </section>
 
-            <Modal viewState={false} title={"Create Project"}>
-
+            <Modal viewState={showCreateProject} title={"Create Project"} setViewState={setShowCreateProject}>
+                <CreateProject />
             </Modal>
         </div>
     )
