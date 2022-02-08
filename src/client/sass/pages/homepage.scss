@@ -16,22 +16,34 @@
     background-color: $primary-bg;
     color: rgb(235, 237, 240);
 
-    h1.hero__title { font-size: 3rem; }
+    h1.hero__title {
+      font-size: 3rem; }
 
     p.hero__subtitle {
-        margin: 0 auto 2rem;
+        //margin: 0 auto 2rem;
         font-size: 1.2rem;
+    }
+
+    .global{
+      display: block;
+      position: relative;
+      width: 100%;
+      text-align: left;
+      left: 0;
+      padding: 5rem 0 0 0;
     }
 
     .hero__map {
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
+        padding-top: 0;
 
         border-radius: 6px;
         height: 780px;
         max-width: 1440px;
         width: 90%;
+        left:5%;
         z-index: 2;
     }
 
@@ -57,31 +69,22 @@ section {
 
     .headline {
         margin-bottom: 2rem;
-
-        @media screen and (max-width: $medium) {
-            width: 100%;
-
-            .title {
-                width: 100%;
-                max-width: 100%!important;
-
-                text-align: center;
-            }
-
-            .category { padding-left: 2em; }
-        }
-
-        @media screen and (max-width: $xtra-small) {
-            .title { font-size: 1.8rem; }
-        }
+        width: 100%;
 
         .category {
-            align-items: center;
-            display: inline-flex;
+            //align-items: center;
+            //display: inline-flex;
+            //display: block;
+            cursor: default;
+            width:max-content;
             font-weight: 700;
             margin-bottom: 1rem;
+            margin-left: 2%;
+            padding: 2px 1rem;
 
             color: $alt-text-color;
+            border: 1px ridge;
+            border-color: $alt-text-color;
 
             text-transform: uppercase;
             &::before {
@@ -92,15 +95,53 @@ section {
         }
 
         .title {
+            width:100%;
             font-size: 2.2rem;
 
             line-height: normal;
-            max-width: 100%;
+            text-align: left;
+            margin-left: 2%;
             word-spacing: -.25rem;
+        }
+
+        @media screen and (max-width: $medium) {
+
+            //width: 100%;
+
+            .title {
+                width: 100%;
+                max-width: 100%!important;
+                margin-left: 5%;
+
+                //text-align: left;
+            }
+
+            .category { margin-left: 5%; }
+        }
+
+        @media screen and (max-width: $xtra-small) {
+          .headline{
+            align-items: center;
+          }
+            .title {
+              font-size: 1.8rem;
+              width: 100%;
+              //max-width: 100%!important;
+
+              text-align: center;
+            }
+            .category{
+              position: relative;
+              width: 80%;
+              left: 10%;
+              align-items: center;
+              text-align: center;
+            }
         }
     }
 
     .card{
       font-size: 0.8rem;
+      cursor: default;
     }
 }

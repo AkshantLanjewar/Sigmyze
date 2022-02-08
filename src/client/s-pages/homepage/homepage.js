@@ -19,6 +19,9 @@ function Homepage(props) {
     if(windowWidth <= 500)
         viewcount = 1
 
+    console.log('*******')
+    console.log(viewcount)
+
     let cards = []
     for(let i = 0; i < 8; i++)
         cards.push(<CategoryCard category_a={"GDP"} category_b={"GOVT"} />)
@@ -35,6 +38,18 @@ function Homepage(props) {
                         <p className='hero__subtitle'>Democratizing Data and Analysis</p>
                     </div>
 
+                    <section className='global'>
+                        <div className='container'>
+                            <div className='row'>
+                                <div className='headline'>
+                                      <p className='category' onClick={()=>{location.href='/indicator'}}>Global</p>
+                                    <h2 className="title">Global Coverage</h2>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
                     <div className='hero__map'>
                         <Map />
                     </div>
@@ -44,8 +59,8 @@ function Homepage(props) {
                     <section className='charts'>
                         <div className='container'>
                             <div className='row'>
-                                <div className='headline'>
-                                    <p className='category'>Charts</p>
+                                <div className='headline' >
+                                      <p className='category' onClick={()=>{location.href='/chart'}}>Charts</p>
                                     <h2 className="title">Splice & Analyze Different Datasets</h2>
                                 </div>
                             </div>
@@ -59,16 +74,16 @@ function Homepage(props) {
                     <section className='features'>
                         <div className='container'>
                             <div className="row">
-                                <div className="headline">
-                                    <p className="category">Features</p>
+                                <div className="headline" >
+                                    <p className="category" onClick={()=>{location.href='/indicator'}}>Features</p>
                                     <h2 className="title">Datasets | Analysis | Insights</h2>
                                 </div>
                             </div>
 
                             <div className="row">
-                                <div className="col col--4">
+                                <div className="col col--4" >
                                     <div className="card dark" style={{minHeight: "258px"}}>
-                                        <div className="header">
+                                        <div className="header" onClick={()=>{location.href='/resources'}}>
                                             <h2>Diverse Datasets</h2>
                                         </div>
 
@@ -84,7 +99,7 @@ function Homepage(props) {
                                     </div>
                                 </div>
 
-                                <div className="col col--4">
+                                <div className="col col--4" onClick={()=>{location.href='/indicator'}}>
                                     <div className="card dark" style={{minHeight: "258px"}}>
                                         <div className="header">
                                             <h2>Beautiful Visualizations</h2>
@@ -96,7 +111,7 @@ function Homepage(props) {
                                     </div>
                                 </div>
 
-                                <div className="col col--4">
+                                <div className="col col--4" onClick={()=>{location.href='/chart'}}>
                                     <div className="card dark" style={{minHeight: "258px"}}>
                                         <div className="header">
                                             <h2>Faster Development</h2>

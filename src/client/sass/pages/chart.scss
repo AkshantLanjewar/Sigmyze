@@ -561,13 +561,25 @@
                 }
             }
 
+            .myChartNotice{
+              background-color: $dark-bg;
+              position: absolute;
+              bottom: 25%;
+              left: 2.5%;
+              width: 95%;
+              font-size: 0.65rem;
+              font-style: italic;
+              //color: rgb(135, 206, 235);
+              display:block;
+            }
+
             .myChartWarn{
               background-color: $dark-bg;
               position: absolute;
               bottom: 10%;
               left: 2.5%;
               width: 95%;
-              font-size: 0.5rem;
+              font-size: 0.6rem;
               font-style: italic;
               //color: rgb(135, 206, 235);
               display:block;

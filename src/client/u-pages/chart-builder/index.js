@@ -50,9 +50,11 @@ function ChartBuilderPage() {
     const [indicators, setIndicators] = useState([])
     const [colorIndex, setColorIndex] = useState(0)
     const [warnDisplay, setWarnDisplay] = useState({})
+    const [noticeDisplay, setNoticeDisplay] = useState({})
     let display = {display:'none'}
     let display2 = {display:'block'}
     useEffect(()=>{setWarnDisplay(display)},[])
+    useEffect(()=>{setNoticeDisplay(display)},[])
 
 
 
@@ -84,6 +86,7 @@ function ChartBuilderPage() {
         fetch(url)
             .then(response => response.json())
             .then(async (data) => {
+                setNoticeDisplay({display:'block'})
                 await Indicator.AddIndicator(iso3, fName, iShort, indicatorF, data)
                 dataPack['dataIndexed'] = true
                 dataPack['color'] = colors[colorIndex]
@@ -142,13 +145,17 @@ function ChartBuilderPage() {
                             </div>
                         </div>
                     </div>
+
+                    <div className='myChartNotice' style={noticeDisplay}>
+                        <p>X-Axis is expandable. Use your mouse-scroll.
+                        </p>
+                    </div>
+
                     <div className='myChartWarn' style={warnDisplay}>
                         <h4>Warning!</h4>
-                        <p>For Covid Indicators - X-Axis is 'Daily'. Use mouse scroll to expand axis.
+                        <p>For Covid Indicators - X-Axis is 'Daily'. Other Indicators - X-Axis is 'Annual'
                         <br/>
-                        Other Indicators - X-Axis is 'Annual'
-                        <br/>
-                        Chart will show a break when they are combined
+                        Chart will show a break when they are combined. Currently they cannot be seamlessly spliced. We are working on that.
                         </p>
                     </div>
                 </div>
