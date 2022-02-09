@@ -70,7 +70,7 @@ function V2APIRouter() {
         let countryLocation = `./indicatorDB/${dataset}/countries/${iso3}_active.json`
         if(!fs.existsSync(countryLocation))
             return res.send("country_404")
-        
+
         let countryIndicators = JSON.parse(fs.readFileSync(countryLocation))
         let indicatorFound = false
         for(let i = 0; i < countryIndicators.length; i++) {
@@ -87,6 +87,14 @@ function V2APIRouter() {
         let result = JSON.parse(await promise)
 
         let keys = Object.keys(result["data"])
+        let simpleName = result['simpleName']
+        let scale = result['scale']
+
+        if (scale == '(empty)'){
+          scale = "%";
+        }
+
+
         let data = []
         for(let i = 0; i < keys.length; i++) {
             let key = keys[i]
@@ -98,7 +106,7 @@ function V2APIRouter() {
             data.push({ date: key, value: d_val })
         }
 
-        return res.json(data)
+        return res.json({data:data, sName:simpleName, scale:scale})
     })
 
     router.get('/datasets/:dataset/categories/:category/:iso3', (req, res) => {
