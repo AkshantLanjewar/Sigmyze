@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { FcAreaChart } from "react-icons/fc"
+//import { FcAreaChart, FcLineChart } from "react-icons/fc"
+import ChartIcons from "./charticons"
 
 function SearchIcon() {
     return (
@@ -45,6 +46,7 @@ function IndicatorLayout(props) {
                 setActiveDataset(data[0])
             })
     }, [])
+
 
     useEffect(() => {
         if(activeDataset == {})
@@ -210,7 +212,7 @@ function IndicatorLayout(props) {
                     {datasets.map((step) => {
                         return (
                             <div className="tab">
-                                <span className="icon"><FcAreaChart /></span>
+                                <span className="icon"><ChartIcons icon={step.name} /></span>
 
                                 <span className="tab-title">
                                     <span className="text" onClick={(e) => { onDataSetClick(e, step.name) }}>{step.name}</span>
