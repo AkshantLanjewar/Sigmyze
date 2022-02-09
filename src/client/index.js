@@ -7,6 +7,7 @@ import Homepage from './pages/homepage/homepage'
 import LostPage from './pages/404-page'
 import IndicatorPage from './pages/country/country'
 import ChartBuilderPage from './pages/chart-builder/index';
+import AboutUsPage from './pages/about/about'
 
 import UserAuth from './components/user/user-auth';
 import UserVerify from './components/user/user-verify'
@@ -154,7 +155,9 @@ function App() {
                         <Route exact path="/">
                             <Homepage setLoginState={setLoginState} loggedIn={loggedIn} />
                         </Route> 
+                        
                         <Route exact path="/chart" component={ChartBuilderPage} />
+                        <Route exact path="/about" component={AboutUsPage} />
 
                         <Route
                             path="/indicator"
