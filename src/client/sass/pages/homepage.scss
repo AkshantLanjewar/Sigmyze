@@ -41,10 +41,19 @@
         position: relative;
 
         border-radius: 6px;
-        height: 780px;
+        height: 760px;
         width: 80%;
         z-index: 2;
+
+        @media screen and (max-width: $small){
+          height: 500px;
+        }
+
+        @media screen and (max-width: $xtra-small){
+          height: 300px;
+        }
     }
+
 
     &::after {
         bottom: 0;
@@ -56,7 +65,22 @@
 
         background-color: $dark-bg;
     }
+
+    .exploreMore{
+      padding-top: 10px;
+      position: relative;
+      text-align:left;
+      width: 85%;
+      //padding-left: 5%;
+      font-size: 0.75rem;
+      color: $alt-text-color;
+      z-index: 99;
+      font-style: italic;
+      text-decoration: none;
+    }
 }
+
+
 
 .main .charts { background-color: $dark-bg; }
 .main .features { background-color: $primary-bg; }
@@ -137,6 +161,18 @@ section {
               text-align: center;
             }
         }
+    }
+
+    .exploreMore{
+      margin-left: 2%;
+      font-size: 0.75rem;
+      color: $alt-text-color;
+      font-style: italic;
+      text-decoration: none;
+
+      @media screen and (max-width: $medium){
+        margin-left: 5%;
+      }
     }
 
     .card{

@@ -40,7 +40,7 @@ function ResourcesPage() {
               <td>1</td>
               <td>World Economic Outlook (WEO)</td>
               <td>IMF</td>
-              <td>Apr 2021</td>
+              <td>Oct 2021</td>
               <td>
                 <p>
                   Dataset includes 45+ economic indicators for 190+ countries and regions under 5 primary categories - GDP, Govt Finance, People, Trade and Investment. Savings and inflation are under Investment.
@@ -52,7 +52,6 @@ function ResourcesPage() {
               </td>
               <td>
                 <p>Bi-annual - Apr and Oct</p>
-                <p style={{marginTop:'3px', fontStyle:'italic', fontSize:'0.6rem'}}>Oct 2021 coming soon!</p>
               </td>
             </tr>
             <tr>

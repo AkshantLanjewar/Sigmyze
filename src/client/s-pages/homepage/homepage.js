@@ -53,7 +53,10 @@ function Homepage(props) {
                     <div className='hero__map'>
                         <Map />
                     </div>
+
+                    <a className='exploreMore' href="/indicator">Explore More</a>
                 </header>
+
 
                 <main className='main'>
                     <section className='charts'>
@@ -68,6 +71,7 @@ function Homepage(props) {
                             <Carousel displayCount={viewcount}>
                                 {cards}
                             </Carousel>
+                            <a className='exploreMore' href="/chart">Explore More</a>
                         </div>
                     </section>
 
@@ -75,7 +79,7 @@ function Homepage(props) {
                         <div className='container'>
                             <div className="row">
                                 <div className="headline" >
-                                    <p className="category" onClick={()=>{location.href='/indicator'}}>Features</p>
+                                    <p className="category">Features</p>
                                     <h2 className="title">Datasets | Analysis | Insights</h2>
                                 </div>
                             </div>
@@ -95,6 +99,8 @@ function Homepage(props) {
                                             <br /><br />
                                             <h4>Coming Soon...</h4>
                                             <p>World Bank, US Weekly Jobs Data, Covid (state & county), and other datasets. </p>
+                                            <br/><br/>
+                                            <a className='exploreMore' href="/resources">Explore More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -107,6 +113,8 @@ function Homepage(props) {
 
                                         <div className="body" style={{marginTop: "1em"}}>
                                             <p>Dont let cookie cutter data visualizations, that limit the ways you can display and understand data hold your analysis back</p>
+                                            <br/><br/><br/>
+                                            <a className='exploreMore' href="/indicator">Explore More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -119,6 +127,8 @@ function Homepage(props) {
 
                                         <div className="body" style={{marginTop: "1em"}}>
                                             <p>Dont let complex tools and pipelines slow down your development, simplify the process by doing all your analysis on one platform</p>
+                                            <br/><br/><br/>
+                                            <a className='exploreMore' href="/chart">Explore More</a>
                                         </div>
                                     </div>
                                 </div>
