@@ -1,0 +1,136 @@
+@import '../vars.scss';
+
+.resources {
+    overflow-y: auto!important;
+    flex: 1 1 0%!important;
+
+    header {
+        width: 100%;
+        
+        .inner {
+            margin-left: 1.5rem;
+            margin-right: 1.5rem;
+            padding-top: 1.5rem;
+
+            .t-row {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: center;
+
+                margin-top: 0;
+                margin-left: calc(1.5rem * -.5);
+                margin-right: calc(1.5rem * -.5);
+
+                h1 {
+                    letter-spacing: -.025em!important;
+                    text-align: center;
+                    font-size: 1.75rem;
+                }
+            }
+
+            .tabs {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 1px;
+
+                list-style: none;
+                margin: 0;
+                padding-left: 0;
+                border-bottom: 2px solid $border;
+
+                li:first-child { margin-left: 0; }
+
+                li {
+                    margin-left: 0;
+                    
+                    flex: 0 0 auto;
+                    max-width: 100%;
+                    width: auto;
+
+                    margin-left: 1.25rem;
+                    margin-right: 1.25rem;
+
+                    &.active { 
+                        a { 
+                            color: $alt-text-color; 
+                            border-bottom: 2px solid $alt-text-color; 
+                        }
+                    }
+
+                    a {
+                        border-bottom: 1px solid $border;
+                        border-left-width: 0;
+                        border-right-width: 0;
+                        border-top-width: 0;
+                        padding: 1.25rem 0;
+                        text-decoration: none;
+
+                        background: none;
+                        margin-bottom: -1px;
+                        display: block;
+                        font-size: .875rem;
+                        font-weight: 500;
+                        color: $text-color;
+                    }
+                }
+            }
+        }
+    }
+
+    main {
+        padding-bottom: 1.5rem!important;
+        padding-top: 1.5rem!important;
+
+        .inner {
+            margin-left: 1.5rem;
+            margin-right: 1.5rem;
+            padding-top: 1.5rem;
+            
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+
+            .dataset {
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                background: $dark-bg;
+                cursor: pointer;
+                transition: all .1s ease-in-out;
+
+                &:hover { transform: scale(1.1); }
+
+                margin-left: 1em;
+                margin-right: 1em;
+                border-radius: .75rem;
+                width: 25%;
+
+                .body {
+                    padding-bottom: 1.25rem!important;
+                    flex: 1 1 auto;
+                    padding: 1.5rem;
+
+                    .title {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        text-align: right;
+                        user-select: none;
+                        
+                        h6 {
+                            font-size: .875rem;
+                            height: 100%;
+                        }
+                    }
+
+                    .body {
+                        margin-top: .5rem;
+                        p { font-size: .875rem!important; }
+                    }
+                }
+            }
+        }
+    }
+}

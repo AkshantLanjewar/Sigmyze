@@ -8,6 +8,8 @@ import LostPage from './pages/404-page'
 import IndicatorPage from './pages/country/country'
 import ChartBuilderPage from './pages/chart-builder/index';
 import AboutUsPage from './pages/about/about'
+import ResourcesPage from './pages/resources-page'
+import DatasetPage from './pages/resources-page/dataset'
 
 import UserAuth from './components/user/user-auth';
 import UserVerify from './components/user/user-verify'
@@ -18,6 +20,7 @@ import Toastbar from './components/toast'
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
 import { RiHomeFill } from 'react-icons/ri'
 import { RiBarChartBoxFill } from 'react-icons/ri'
+import { AiOutlineQuestionCircle, AiFillDatabase } from 'react-icons/ai'
 
 function Omega() {
     return (
@@ -37,8 +40,12 @@ import './sass/index.scss'
 let pageNav = [
     { name: "Homepage", icon: <RiHomeFill />, active: false, url: '/' },
     { name: "Indicators", icon: <RiBarChartBoxFill />, active: false, url: '/indicator' },
-    { name: "Charts", icon: <Omega />, active: false, url: '/chart' }
+    { name: "Charts", icon: <Omega />, active: false, url: '/chart' },
+    { name: "Datasets", icon: <AiFillDatabase />, active: false, url: '/datasets' },
+    { name: "About Us", icon: <AiOutlineQuestionCircle />, active: false, url: '/about' }
 ]
+
+// tt racist
 
 function App() {
     //refs
@@ -158,12 +165,21 @@ function App() {
                         
                         <Route exact path="/chart" component={ChartBuilderPage} />
                         <Route exact path="/about" component={AboutUsPage} />
+                        
+                        <Route
+                            path="/datasets"
+                            render={({match: { url }}) => (
+                                <>
+                                    <Route path={`${url}/`} component={ResourcesPage} exact />
+                                </>
+                            )} />
 
                         <Route
                             path="/indicator"
                             render={({ match: { url } }) => (
                                 <>
                                     <Route path={`${url}/`} component={IndicatorPage} exact />
+                                    <Route path={`${url}/dataset/:dataset`} component={DatasetPage} />
                                 </>
                             )} />
                         <Route component={LostPage} />
