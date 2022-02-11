@@ -1,5 +1,41 @@
 @import '../vars.scss';
 
+.datasets {
+    margin-left: 15rem;
+    margin-right: 15rem;
+    margin-top: 7.5rem;
+    padding: 1.5rem;
+
+    background: $dark-bg;
+    border-radius: .75rem;
+
+    .header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            
+            margin-top: 2rem;
+            margin-bottom: 2.5rem;
+            h1 { margin-left: 0.5em; margin-right: 0.5em; }
+        }
+    }
+
+    .body {
+        margin-top: 3rem;
+        
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
 .resources {
     overflow-y: auto!important;
     flex: 1 1 0%!important;
@@ -8,8 +44,8 @@
         width: 100%;
         
         .inner {
-            margin-left: 1.5rem;
-            margin-right: 1.5rem;
+            margin-left: 15rem;
+            margin-right: 15rem;
             padding-top: 1.5rem;
 
             .t-row {

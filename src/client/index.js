@@ -39,7 +39,6 @@ import './sass/index.scss'
 
 let pageNav = [
     { name: "Homepage", icon: <RiHomeFill />, active: false, url: '/' },
-    { name: "Indicators", icon: <RiBarChartBoxFill />, active: false, url: '/indicator' },
     { name: "Charts", icon: <Omega />, active: false, url: '/chart' },
     { name: "Datasets", icon: <AiFillDatabase />, active: false, url: '/datasets' },
     { name: "About Us", icon: <AiOutlineQuestionCircle />, active: false, url: '/about' }
@@ -171,6 +170,7 @@ function App() {
                             render={({match: { url }}) => (
                                 <>
                                     <Route path={`${url}/`} component={ResourcesPage} exact />
+                                    <Route path={`${url}/:dataset`} component={DatasetPage} />
                                 </>
                             )} />
 
@@ -179,7 +179,6 @@ function App() {
                             render={({ match: { url } }) => (
                                 <>
                                     <Route path={`${url}/`} component={IndicatorPage} exact />
-                                    <Route path={`${url}/dataset/:dataset`} component={DatasetPage} />
                                 </>
                             )} />
                         <Route component={LostPage} />

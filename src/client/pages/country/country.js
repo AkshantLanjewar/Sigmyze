@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 
-import CountrySearch from './components/country-search'
+import CountrySearch from '../resources-page/components/country-search'
 import SingleCategoryCard from './components/s-category-card'
 
 import { AiOutlineLineChart } from 'react-icons/ai'
