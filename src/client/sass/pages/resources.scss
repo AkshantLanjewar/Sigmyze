@@ -1,38 +1,43 @@
 @import '../vars.scss';
 
 .datasets {
-    margin-left: 15rem;
-    margin-right: 15rem;
-    margin-top: 7.5rem;
+    margin-left: 12rem;
+    margin-right: 12rem;
     padding: 1.5rem;
+    padding-top: 4rem;
+    flex-grow: 1;
 
-    background: $dark-bg;
-    border-radius: .75rem;
+    .inner {
+        background: $dark-bg;
+        border-radius: .75rem;
+        height: 100%;
 
-    .header {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        .title {
+        .header {
             display: flex;
-            flex-direction: row;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            
-            margin-top: 2rem;
-            margin-bottom: 2.5rem;
-            h1 { margin-left: 0.5em; margin-right: 0.5em; }
+            align-items: center;
+    
+            .title {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                
+                margin-top: 2rem;
+                margin-bottom: 2.5rem;
+                h1 { margin-left: 0.5em; margin-right: 0.5em; }
+            }
         }
-    }
-
-    .body {
-        margin-top: 3rem;
-        
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+    
+        .body {
+            margin-top: 5rem;
+            margin-bottom: 1.5rem;
+            
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
     }
 }
 

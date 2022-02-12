@@ -9,11 +9,9 @@
 
 .tab-container {
     display: flex;
-    flex-direction: column;
-
+    flex-direction: row;
     width: 100%;
-    height: auto;
-    margin: 0 auto;
+    justify-content: center;
 
     @media screen and (max-width: $small) { 
         .content .card { 
@@ -47,15 +45,13 @@
 
     .tabs {
         display: flex;
-        align-items: stretch;
+        flex-direction: row;
         font-size: 1rem;
-        justify-content: space-between;
+        justify-self: center;
         white-space: nowrap;
         
         overflow: hidden;
         overflow-x: auto;
-        width: 80%;
-        margin: 0 auto;
 
         ul {
 
