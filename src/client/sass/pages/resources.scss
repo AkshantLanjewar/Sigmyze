@@ -10,7 +10,8 @@
     .inner {
         background: $dark-bg;
         border-radius: .75rem;
-        height: 100%;
+        min-height: 100%;
+        height: auto;
 
         .header {
             display: flex;

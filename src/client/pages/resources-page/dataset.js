@@ -1,11 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
 
 import CountrySearch from './components/country-search'
 import ChartCard from './components/chart-card'
+import IconHash from '../../components/icon-hash'
 
-import { AiOutlineLineChart } from 'react-icons/ai'
+import { CgMenuGridO } from 'react-icons/cg'
+import { BsListUl } from 'react-icons/bs'
 
 function DatasetPage() {
+    let { dataset } = useParams()
+    dataset = dataset.toUpperCase()
+
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        let category_url = `/api/data/v2/datasets/${dataset}/categories`
+        fetch(category_url)
+            .then(response => response.json())
+            .then(data => {
+                let rCategory = []
+                for(let i = 0; i < data.length; i++)
+                    rCategory.push({dataset: data[i].replace(dataset, ""), active: false})
+                rCategory[0].active = true
+                setCategories([...rCategory])
+            })
+    }, [])
+
+    function SetTab(tabname) {
+        let tCategories = categories
+        for(let i = 0; i < tCategories.length; i++) {
+            tCategories[i].active = false
+            if(tCategories[i].dataset == tabname)
+                tCategories[i].active = true
+        }
+
+        setCategories([...tCategories])
+    }
+
     return (
         <div className="datasets" style={{height: "100%"}}>
             <div className='inner'>
@@ -20,27 +52,36 @@ function DatasetPage() {
                     <div className='tab-container' style={{marginTop: "-1em"}}>
                         <div className='tabs' style={{ justifySelf: "center" }}>
                             <ul>
-                                <li>
-                                    <a className='active'>
-                                        <span><AiOutlineLineChart /></span>
-                                        <span>GDP</span>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a className=''>
-                                        <span><AiOutlineLineChart /></span>
-                                        <span>Trade</span>
-                                    </a>
-                                </li>
+                                {categories.map((step) => (
+                                    <li>
+                                        <a className={step.active ? 'active' : ''} onClick={() => { SetTab(step.dataset) }}>
+                                            <span>{IconHash[step.dataset]}</span>
+                                            <span>{step.dataset}</span>
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <div className='body'>
-                    <div className='tab-container' style={{ justifyContent: "flex-end" }}>
+                <div className='body' style={{ paddingBottom: "2rem" }}>
+                    <div className='tab-container' style={{ justifyContent: "flex-end", width: "95%", marginBottom: "1rem" }}>
+                        <div className='tabs'>
+                            <ul>
+                                <li>
+                                    <a className='active'>
+                                        <span><CgMenuGridO /></span>
+                                    </a>
+                                </li>
 
+                                <li>
+                                    <a className=''>
+                                        <span><BsListUl /></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     
                     <ChartCard iso3={"USA"} indicator={"NGDP"} />

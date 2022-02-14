@@ -6,16 +6,18 @@ const indicator = require('./v1/indicator')
 const map       = require('./v1/map')
 
 const v2 = require('./v2/index')
-
-const WEOTab = require('./weo/index')
+const WEOTab = require('./scraper/weo.js')
+const COVIDTab = require('./scraper/covid')
 
 function DataRouter() {
     //set the cron task
     schedule.scheduleJob('0 0 * * *', httpData.IndexData)
     schedule.scheduleJob('0 0 * * *', WEOTab.TabulateWEOData)
+    schedule.scheduleJob('0 0 * * *', COVIDTab.TabulateCovidData)
 
     httpData.IndexData()
     WEOTab.TabulateWEOData()
+    COVIDTab.TabulateCovidData()
 
     const router = Router()
     router.get('/map/gdp_growth', map.gdpGrowthGlobalMAP)

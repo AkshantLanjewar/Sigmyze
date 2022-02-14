@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 
 import Homepage from './pages/homepage/homepage'
 import LostPage from './pages/404-page'
-import IndicatorPage from './pages/country/country'
 import ChartBuilderPage from './pages/chart-builder/index';
 import AboutUsPage from './pages/about/about'
 import ResourcesPage from './pages/resources-page'
@@ -19,7 +18,6 @@ import Toastbar from './components/toast'
 
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
 import { RiHomeFill } from 'react-icons/ri'
-import { RiBarChartBoxFill } from 'react-icons/ri'
 import { AiOutlineQuestionCircle, AiFillDatabase } from 'react-icons/ai'
 
 function Omega() {
@@ -171,14 +169,6 @@ function App() {
                                 <>
                                     <Route path={`${url}/`} component={ResourcesPage} exact />
                                     <Route path={`${url}/:dataset`} component={DatasetPage} />
-                                </>
-                            )} />
-
-                        <Route
-                            path="/indicator"
-                            render={({ match: { url } }) => (
-                                <>
-                                    <Route path={`${url}/`} component={IndicatorPage} exact />
                                 </>
                             )} />
                         <Route component={LostPage} />
