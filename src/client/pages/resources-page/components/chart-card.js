@@ -14,9 +14,6 @@ function ChartCard(props) {
 
     const [simpleName, setSimpleName] = useState("")
     const [scale, setScale] = useState()
-    const [chartOptions, setChartOptions] = useState({})
-    const [selfDisplay, setSelfDisplay] = useState({})
-    const [cardSize, setCardSize] = useState({})
 
     useEffect(() => {
         chartRef.current.innerHTML = ""
@@ -37,13 +34,14 @@ function ChartCard(props) {
         let url = `/api/data/v2/datasets/${dataset}/${iso3}/${category}`
         let xAxType = ""
 
-
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 let chart = new ChartBuilder(chartRef)
                 let chartData = []
                 var lowerI
+                const containerHeight = chartRef.current.clientHeight
+                console.log(containerHeight)
 
                 if (covCheck >= 0) {
                     //lowerI = Math.round(data['data'].length*1/3)
@@ -68,9 +66,7 @@ function ChartCard(props) {
 
                     object["value"] = data['data'][i]["value"]
                     chartData.push(object)
-                }
-
-                
+                }                    
 
                 let chartOptions = {
                     chartType: "line",
@@ -88,15 +84,15 @@ function ChartCard(props) {
                 }
 
                 chart.AddLineChart(chartOptions)
-                chart.CreateChart()
+                chart.CreateChart(186)
 
                 setSimpleName(data['sName'])
                 setScale(data['units'])
             })
-    })
+    },[])
 
     return (
-        <div className="card light scaleHov" ref={cardRef} style={{marginTop: "0.5em"}}>
+        <div className="card light scaleHov" ref={cardRef} style={{marginTop: "0.5em", width: "25%", height: "264px"}}>
             <div className="title tooltip">
                 <p className="titleLong" style={{ marginBottom: "0.5em" }}>
                     <span>{iso3} {'> '}</span>
@@ -108,7 +104,7 @@ function ChartCard(props) {
                 <span className="tooltiptext">United States National GDP</span>
             </div>
 
-            <div className="chart" ref={chartRef}></div>
+            <div className="chart" style={{ height: "186px" }} ref={chartRef}></div>
         </div>
     )
 }

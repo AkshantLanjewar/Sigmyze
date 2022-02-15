@@ -32,23 +32,35 @@ function DatasetPage() {
     }, [])
 
     useEffect(() => {
-        if(activeCountry.iso3 == null)
-            return
         if(activeCategory.dataset == null)
             return
-b
-        
+
+        let url = `/api/data/v2/datasets/${dataset}/groups/${dataset + activeCategory.dataset}`    
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                let nCharts = []
+
+                for(let i = 0; i < data.length; i++)
+                    nCharts.push({ category: data[i].indicator, iso3: activeCountry.iso3 })
+                setActiveCharts(nCharts)
+            })
     }, [activeCountry, categories, activeCategory])
 
     function SetTab(tabname) {
         let tCategories = categories
+        let fCategory   = null
+
         for(let i = 0; i < tCategories.length; i++) {
             tCategories[i].active = false
-            if(tCategories[i].dataset == tabname)
+            if(tCategories[i].dataset == tabname) {
                 tCategories[i].active = true
+                fCategory = tCategories[i]
+            }
         }
 
         setCategories([...tCategories])
+        setActiveCategory({...fCategory})
     }
 
     return (
