@@ -13,6 +13,9 @@ function DatasetPage() {
     dataset = dataset.toUpperCase()
 
     const [categories, setCategories] = useState([])
+    const [activeCategory, setActiveCategory] = useState({ dataset: null, active: true })
+    const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})
+    const [activeCharts, setActiveCharts] = useState([])
 
     useEffect(() => {
         let category_url = `/api/data/v2/datasets/${dataset}/categories`
@@ -24,8 +27,18 @@ function DatasetPage() {
                     rCategory.push({dataset: data[i].replace(dataset, ""), active: false})
                 rCategory[0].active = true
                 setCategories([...rCategory])
+                setActiveCategory({...rCategory[0]})
             })
     }, [])
+
+    useEffect(() => {
+        if(activeCountry.iso3 == null)
+            return
+        if(activeCategory.dataset == null)
+            return
+b
+        
+    }, [activeCountry, categories, activeCategory])
 
     function SetTab(tabname) {
         let tCategories = categories
@@ -47,7 +60,7 @@ function DatasetPage() {
                         <h5>WEO</h5>
                     </div>
 
-                    <CountrySearch />
+                    <CountrySearch initalFullName={activeCountry.fullname} setActiveSearch={setActiveCountry} />
 
                     <div className='tab-container' style={{marginTop: "-1em"}}>
                         <div className='tabs' style={{ justifySelf: "center" }}>
@@ -83,10 +96,8 @@ function DatasetPage() {
                             </ul>
                         </div>
                     </div>
-                    
-                    <ChartCard iso3={"USA"} indicator={"NGDP"} />
-                    <ChartCard iso3={"USA"} indicator={"NGDP"} />
-                    <ChartCard iso3={"USA"} indicator={"NGDP"} />
+
+                    {activeCharts.map((step) => ( <ChartCard indicator={step.category} iso3={step.iso3} /> ))}
                 </div>
             </div>
         </div>
