@@ -14,6 +14,7 @@ function ChartCard(props) {
 
     const [simpleName, setSimpleName] = useState("")
     const [scale, setScale] = useState()
+    const [display, setDisplay] = useState(true)
 
     useEffect(() => {
         chartRef.current.innerHTML = ""
@@ -41,7 +42,9 @@ function ChartCard(props) {
                 let chartData = []
                 var lowerI
                 const containerHeight = chartRef.current.clientHeight
-                console.log(containerHeight)
+                console.log(data)
+                if(data.error)
+                    setDisplay(false)
 
                 if (covCheck >= 0) {
                     //lowerI = Math.round(data['data'].length*1/3)
@@ -92,7 +95,7 @@ function ChartCard(props) {
     },[])
 
     return (
-        <div className="card light scaleHov" ref={cardRef} style={{marginTop: "0.5em", width: "25%", height: "264px"}}>
+        <div className="card light scaleHov" ref={cardRef} style={{marginTop: "0.5em", width: "25%", height: "264px", display: display ? "flex" : "none"}}>
             <div className="title tooltip">
                 <p className="titleLong" style={{ marginBottom: "0.5em" }}>
                     <span>{iso3} {'> '}</span>

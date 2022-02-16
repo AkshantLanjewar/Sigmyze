@@ -1,6 +1,61 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
+
+function Dataset(props) {
+    const [display, setDispay] = useState(true)
+    const [dataInfo, setDataInfo] = useState({})
+
+    const dataset = props.dataset
+    let fileExtension = ".svg"
+    if(dataset == "COVID")
+        fileExtension = ".png"
+
+    useEffect(() => {
+        let url = `/api/data/v2/datasets/${dataset}/info`
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    setDispay(false)
+                    return
+                }
+
+                setDataInfo(data.data)
+            })
+    }, [])
+    
+    return (
+        <div className="dataset" style={{ display: display ? "flex" : "none" }}>
+            <div className="body">
+                <div className="title">
+                    <img src={`/logos/${dataset}${fileExtension}`} width={"50px"} height={"50px"} />
+                    <h6>World Economic Outlook ({dataset})</h6>
+                </div>
+
+                <div className="body">
+                    <p>
+                        Dataset includes 45+ economic indicators for 190+ countries and regions under 5 primary categories - GDP, 
+                        Govt Finance, People, Trade and Investment. Savings and inflation are under Investment. 
+                        Data for most countries is from 1980 through 2026.
+                    </p>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 function ResourcesPage() {
+
+    const [datasets, setDatasets] = useState([])
+
+    useEffect(() => {
+        const url = `/api/data/v2/datasets`
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                setDatasets(data.data)
+            })
+    }, [])
+
     return (
         <div className="resources">
             <header>
@@ -20,31 +75,7 @@ function ResourcesPage() {
 
             <main>
                 <div className="inner">
-                    <div className="dataset">
-                        <div className="body">
-                            <div className="title">
-                                <img src="/logos/IMF.svg" width={"50px"} height={"50px"} />
-                                <h6>World Economic Outlook (WEO)</h6>
-                            </div>
-
-                            <div className="body">
-                                <p>
-                                    Dataset includes 45+ economic indicators for 190+ countries and regions under 5 primary categories - GDP, 
-                                    Govt Finance, People, Trade and Investment. Savings and inflation are under Investment. 
-                                    Data for most countries is from 1980 through 2026.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="dataset">
-                        <div className="body">
-                            <div className="title">
-                                <img src="/logos/COVID.png" width={"50px"} height={"50px"} />
-                                <h6>Coronavirus (COVID)</h6>
-                            </div>
-                        </div>
-                    </div>
+                    {datasets.map((step) => ( <Dataset dataset={step.name} /> ))}
                 </div>
             </main>
         </div>

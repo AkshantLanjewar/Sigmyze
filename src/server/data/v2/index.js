@@ -1,42 +1,10 @@
 const Router = require('express').Router
 const fs = require('fs')
-const http = require('http')
+const utils = require('./utils')
 
-function ContainsIndicator(indicator, list) {
-    for (let i = 0; i < list.length; i++) {
-        let indicator_t = list[i]
-        if (indicator_t.indicator == indicator.indicator)
-            return true
-    }
+const ContainsIndicator = utils.ContainsIndicator
+const HTTP_Promise = utils.HTTP_Promise
 
-    return false
-}
-
-//const API_ROOT = "http://34.70.145.116:8080"
-const API_ROOT = "http://34.66.146.203:8080"
-//const API_ROOT = 'http://127.0.0.1'
-
-function HTTP_Promise(sublet) {
-
-    return new Promise((resolve, reject) => {
-        http.get(API_ROOT + '/' + sublet, (response) => {
-            let data_chunks = []
-
-            response.on('data', (fragments) => {
-                data_chunks.push(fragments)
-            })
-
-            response.on('end', () => {
-                let response_body = Buffer.concat(data_chunks)
-                resolve(response_body.toString())
-            })
-
-            response.on('error', (error) => {
-                reject(error)
-            })
-        })
-    }).catch((error) => { console.error(error) })
-}
 
 function V2APIRouter() {
     const router = Router()
@@ -50,28 +18,39 @@ function V2APIRouter() {
     })
 
     router.get('/datasets', (req, res) => {
-        return res.json(datasets)
+        return res.json({ error: false, msg: "", data: datasets })
+    })
+
+    router.get('/datasets/:dataset/info/', (req, res) => {
+        let dataset = req.params.dataset
+        let folderLocation = `./indicatorDB/${dataset}`
+        if (!fs.existsSync(folderLocation))
+            return res.json({ error: true, msg: "dataset_404" })
+        
+        let filepath = `./data/descriptions.json`
+        let json = JSON.parse(fs.readFileSync(filepath))
+        return res.json({ error: false, msg: "", data: json[dataset] })
     })
 
     router.get('/countries', (req, res) => {
         let fileLocation = `./indicatorDB/countries.json`
         if (!fs.existsSync(fileLocation))
-            return res.send("country_404")
+            return res.json({ error: true, msg: "country_404" })
 
         dataJSON = JSON.parse(fs.readFileSync(fileLocation))
-        return res.json(dataJSON)
+        return res.json({ error: false, msg: "", data: dataJSON })
     })
 
     router.get('/datasets/:dataset/categories/', (req, res) => {
         let dataset = req.params.dataset
         let folderLocation = `./indicatorDB/${dataset}`
         if (!fs.existsSync(folderLocation))
-            return res.send("dataset_404")
+            return res.json({ error: true, msg: "dataset_404" })
 
         let filepath = `./indicatorDB/${dataset}/categories.json`
         let json = JSON.parse(fs.readFileSync(filepath))
 
-        return res.json(json)
+        return res.json({ error: false, msg: "", data: json })
     })
 
     router.get('/datasets/:dataset/groups/:group', (req, res) => {
@@ -79,14 +58,14 @@ function V2APIRouter() {
         let group = req.params.group
         let folderLocation = `./indicatorDB/${dataset}`
         if (!fs.existsSync(folderLocation))
-            return res.send("dataset_404")
+            return res.json({ error: true, msg: "dataset_404" })
         let groupLocation = `./indicatorDB/${dataset}/groups/${group}_indicators.json`
         if (!fs.existsSync(groupLocation))
-            return res.send("group_404")
+            return res.json({ error: true, msg: "group_404" })
 
         let jsonData = JSON.parse(fs.readFileSync(groupLocation))
 
-        return res.json(jsonData)
+        return res.json({ error: false, msg: "", data: jsonData })
     })
 
     router.get('/datasets/:dataset/:iso3/:indicator', async (req, res) => {
@@ -103,10 +82,10 @@ function V2APIRouter() {
 
         let folderLocation = `./indicatorDB/${dataset}`
         if (!fs.existsSync(folderLocation))
-            return res.send("dataset_404")
+            return res.json({ error: true, msg: "dataset_404" })
         let countryLocation = `./indicatorDB/${dataset}/countries/${iso3}_active.json`
         if (!fs.existsSync(countryLocation))
-            return res.send("country_404")
+            return res.json({ error: true, msg: "country_404" })
 
         let countryIndicators = JSON.parse(fs.readFileSync(countryLocation))
         let indicatorFound = false
@@ -117,7 +96,7 @@ function V2APIRouter() {
         }
 
         if (!indicatorFound)
-            return res.send("indicatr_404")
+            return res.json({ error: true, msg: "indicator_404" })
 
         let url = `api/${datatype}/getMetricDataC/${indicator}/${iso3}/`
         let promise = HTTP_Promise(url).catch((error) => { console.error(error) })
@@ -151,7 +130,7 @@ function V2APIRouter() {
             data.push({ date: key, value: d_val })
         }
 
-        return res.json({ data: data, sName: simpleName, units: scale, timetick: timetick })
+        return res.json({ error: false, msg: "", data: data, sName: simpleName, units: scale, timetick: timetick })
     })
 
     router.get('/datasets/:dataset/categories/:category/:iso3', (req, res) => {
@@ -161,13 +140,13 @@ function V2APIRouter() {
 
         let folderLocation = `./indicatorDB/${dataset}`
         if (!fs.existsSync(folderLocation))
-            return res.send("dataset_404")
+            return res.json({ error: true, msg: "dataset_404" })
         let fileLocation = `./indicatorDB/${dataset}/groups/${dataset}${category}_indicators.json`
         if (!fs.existsSync(fileLocation))
-            return res.send("category_404")
+            return res.json({ error: true, msg: "category_404" })
         let countryFileLocation = `./indicatorDB/${dataset}/countries/${iso3}_active.json`
         if (!fs.existsSync(countryFileLocation))
-            return res.send("country_404")
+            return res.json({ error: true, msg: "country_404" })
 
         let categoryJSON = JSON.parse(fs.readFileSync(fileLocation))
         let countryJSON = JSON.parse(fs.readFileSync(countryFileLocation))
@@ -179,7 +158,7 @@ function V2APIRouter() {
                 indicators.push(indicator)
         }
 
-        return res.json(indicators)
+        return res.json({ error: false, msg: "", indicators })
     })
 
     router.get('/datasets/:dataset/definitions/:indicator', async (req, res) => {
@@ -188,7 +167,7 @@ function V2APIRouter() {
 
         let folderLocation = `./indicatorDB/${dataset}`
         if (!fs.existsSync(folderLocation))
-            return res.send("dataset_404")
+            return res.json({ error: true, msg: "dataset_404" })
 
         let url = `api/econdata/getWEOMetricDefAll/`
         // Also available in API urls -> api/econdata/getWEOMetricDef/<indicator>/
@@ -198,7 +177,7 @@ function V2APIRouter() {
         let keys = Object.keys(result)
         let def = result[indicator]
 
-        return res.json({ data: def })
+        return res.json({ error: false, msg: "", data: def })
     })
 
     router.get('/datasets/:dataset/definitions', async (req, res) => {
@@ -206,7 +185,7 @@ function V2APIRouter() {
 
         let folderLocation = `./indicatorDB/${dataset}`
         if (!fs.existsSync(folderLocation))
-            return res.send("dataset_404")
+            return res.json({ error: true, msg: "dataset_404" })
 
         let url1 = `api/econdata/getWEOMetricDefAll/`
         let url2 = `api/econdata/getWEOMetricList/`
@@ -225,7 +204,7 @@ function V2APIRouter() {
             defObj[ind3[i]] = { 'name': result2[ind3[i]], 'def': result1[ind3[i]] }
             defList.push(defObj)
         }
-        return res.json({ data: defList })
+        return res.json({ error: false, msg: "", data: defList })
     })
 
 
