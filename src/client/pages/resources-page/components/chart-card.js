@@ -17,81 +17,82 @@ function ChartCard(props) {
     const [display, setDisplay] = useState(true)
 
     useEffect(() => {
-        chartRef.current.innerHTML = ""
+        setTimeout(() => {
+            chartRef.current.innerHTML = ""
 
-        // Check for Covid. Set URL accorindgly //
+            // Check for Covid. Set URL accorindgly //
 
-        let covCheck = category.search(/cc|cd/i)
-        let dataset = ""
+            let covCheck = category.search(/cc|cd/i)
+            let dataset = ""
 
-        // The below code is stop-gap. Needs a better, scalable logic
-        if (covCheck >= 0) {
-            dataset = 'COVID'
-        }
-        else {
-            dataset = "WEO"
-        }
+            // The below code is stop-gap. Needs a better, scalable logic
+            if (covCheck >= 0) {
+                dataset = 'COVID'
+            }
+            else {
+                dataset = "WEO"
+            }
 
-        let url = `/api/data/v2/datasets/${dataset}/${iso3}/${category}`
-        let xAxType = ""
+            let url = `/api/data/v2/datasets/${dataset}/${iso3}/${category}`
+            let xAxType = ""
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                let chart = new ChartBuilder(chartRef)
-                let chartData = []
-                var lowerI
-                const containerHeight = chartRef.current.clientHeight
-                console.log(data)
-                if(data.error)
-                    setDisplay(false)
-
-                if (covCheck >= 0) {
-                    //lowerI = Math.round(data['data'].length*1/3)
-                    lowerI = 0
-                }
-                else {
-                    lowerI = 0
-                }
-
-                for (let i = lowerI; i < data['data'].length; i++) {
-                    let object = {}
-                    let dt = new Date(data['data'][i]["date"])
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let chart = new ChartBuilder(chartRef)
+                    let chartData = []
+                    var lowerI
+                    const containerHeight = chartRef.current.clientHeight
+                    if(data.error)
+                        setDisplay(false)
 
                     if (covCheck >= 0) {
-                        object["date"] = dt
-                        xAxType = 'D'
+                        //lowerI = Math.round(data['data'].length*1/3)
+                        lowerI = 0
                     }
                     else {
-                        object["date"] = dt.getUTCFullYear()
-                        xAxType = 'Y'
+                        lowerI = 0
                     }
 
-                    object["value"] = data['data'][i]["value"]
-                    chartData.push(object)
-                }                    
+                    for (let i = lowerI; i < data['data'].length; i++) {
+                        let object = {}
+                        let dt = new Date(data['data'][i]["date"])
 
-                let chartOptions = {
-                    chartType: "line",
-                    chartData: chartData,
-                    chartName: category,
-                    chartColor: blueColor,
+                        if (covCheck >= 0) {
+                            object["date"] = dt
+                            xAxType = 'D'
+                        }
+                        else {
+                            object["date"] = dt.getUTCFullYear()
+                            xAxType = 'Y'
+                        }
 
-                    showXAxis: 1,
-                    showYAxis: 0,
+                        object["value"] = data['data'][i]["value"]
+                        chartData.push(object)
+                    }                    
 
-                    formatterPre: `${category}: `,
+                    let chartOptions = {
+                        chartType: "line",
+                        chartData: chartData,
+                        chartName: category,
+                        chartColor: blueColor,
 
-                    xAxisType: xAxType,
-                    yAxisType: "linear"
-                }
+                        showXAxis: 1,
+                        showYAxis: 0,
 
-                chart.AddLineChart(chartOptions)
-                chart.CreateChart(186)
+                        formatterPre: `${category}: `,
 
-                setSimpleName(data['sName'])
-                setScale(data['units'])
-            })
+                        xAxisType: xAxType,
+                        yAxisType: "linear"
+                    }
+
+                    chart.AddLineChart(chartOptions)
+                    chart.CreateChart(186)
+
+                    setSimpleName(data['sName'])
+                    setScale(data['units'])
+                })
+        }, 500)
     },[])
 
     return (
@@ -107,7 +108,7 @@ function ChartCard(props) {
                 <span className="tooltiptext">United States National GDP</span>
             </div>
 
-            <div className="chart" style={{ height: "186px" }} ref={chartRef}></div>
+            <div className="chart" style={{ height: "186px", width: "100%" }} ref={chartRef}></div>
         </div>
     )
 }

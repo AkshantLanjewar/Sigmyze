@@ -9,6 +9,10 @@ function Dataset(props) {
     if(dataset == "COVID")
         fileExtension = ".png"
 
+    function OnDataset() {
+        window.location.href = `/datasets/${dataset}`
+    }
+
     useEffect(() => {
         let url = `/api/data/v2/datasets/${dataset}/info`
         fetch(url)
@@ -24,19 +28,15 @@ function Dataset(props) {
     }, [])
     
     return (
-        <div className="dataset" style={{ display: display ? "flex" : "none" }}>
+        <div className="dataset" style={{ display: display ? "flex" : "none" }} onClick={OnDataset}>
             <div className="body">
                 <div className="title">
                     <img src={`/logos/${dataset}${fileExtension}`} width={"50px"} height={"50px"} />
-                    <h6>World Economic Outlook ({dataset})</h6>
+                    <h6>{dataInfo.fulltitle} ({dataset})</h6>
                 </div>
 
                 <div className="body">
-                    <p>
-                        Dataset includes 45+ economic indicators for 190+ countries and regions under 5 primary categories - GDP, 
-                        Govt Finance, People, Trade and Investment. Savings and inflation are under Investment. 
-                        Data for most countries is from 1980 through 2026.
-                    </p>
+                    <p>{dataInfo.desc}</p>
                 </div>
             </div>
         </div>

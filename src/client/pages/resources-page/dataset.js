@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 import CountrySearch from './components/country-search'
-import ChartCard from './components/chart-card'
 import IconHash from '../../components/icon-hash'
+
+import GridView from './views/grid'
+import TableView from './views/table'
 
 import { CgMenuGridO } from 'react-icons/cg'
 import { BsListUl } from 'react-icons/bs'
@@ -15,8 +17,8 @@ function DatasetPage() {
     const [categories, setCategories] = useState([])
     const [activeCategory, setActiveCategory] = useState({ dataset: null, active: true })
     const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})
-    const [activeCharts, setActiveCharts] = useState([])
     const [validSet, setValidSet] = useState(true)
+    const [viewType, setViewType] = useState(true)
 
     useEffect(() => {
         let category_url = `/api/data/v2/datasets/${dataset}/categories`
@@ -36,22 +38,6 @@ function DatasetPage() {
                 setActiveCategory({...rCategory[0]})
             })
     }, [])
-
-    useEffect(() => {
-        if(activeCategory.dataset == null)
-            return
-
-        let url = `/api/data/v2/datasets/${dataset}/groups/${dataset + activeCategory.dataset}`    
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                let nCharts = []
-
-                for(let i = 0; i < data.data.length; i++)
-                    nCharts.push({ category: data.data[i].indicator, iso3: activeCountry.iso3 })
-                setActiveCharts(nCharts)
-            })
-    }, [activeCountry, categories, activeCategory])
 
     function SetTab(tabname) {
         let tCategories = categories
@@ -103,21 +89,24 @@ function DatasetPage() {
                                 <div className='tabs'>
                                     <ul>
                                         <li>
-                                            <a className='active'>
+                                            <a className={viewType ? 'active' : ''} onClick={() => { setViewType(true) }}>
                                                 <span><CgMenuGridO /></span>
                                             </a>
                                         </li>
 
                                         <li>
-                                            <a className=''>
+                                            <a className={viewType ? '' : 'active'} onClick={() => { setViewType(false) }}>
                                                 <span><BsListUl /></span>
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-
-                            {activeCharts.map((step) => ( <ChartCard indicator={step.category} iso3={step.iso3} /> ))}
+                            
+                            {viewType
+                                ? <GridView dataset={dataset} activeCategory={activeCategory} activeCountry={activeCountry} />
+                                : <TableView dataset={dataset} activeCategory={activeCategory} activeCountry={activeCountry} />
+                            }
                         </div>
                     </div>
                 )
