@@ -18,7 +18,7 @@ function DatasetPage() {
     const [activeCategory, setActiveCategory] = useState({ dataset: null, active: true })
     const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})
     const [validSet, setValidSet] = useState(true)
-    const [viewType, setViewType] = useState(true)
+    const [viewType, setViewType] = useState(false)
 
     useEffect(() => {
         let category_url = `/api/data/v2/datasets/${dataset}/categories`

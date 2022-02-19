@@ -23,7 +23,19 @@ function TableView(props) {
     }, [activeCategory, activeCountry])
 
     return (
-        <div>
+        <div className="body table" style={{ marginTop: "15px", width: "100%" }}>
+            <h3 className="table-title"></h3>
+
+            <div className="t-head">
+                <div className="elem">Indicator Name</div>
+                <div className="elem">Indicator Short</div>
+                <div className="elem">Indicator Category</div>
+                <div className="elem">Unit</div>
+            </div>
+
+            <div className="t-elem">
+
+            </div>
         </div>
     )
 }
