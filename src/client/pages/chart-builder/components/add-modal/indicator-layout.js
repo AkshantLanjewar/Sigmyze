@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react"
-import { FcAreaChart } from "react-icons/fc"
+//import { FcAreaChart, FcLineChart } from "react-icons/fc"
+import ChartIcons from "./charticons"
 
 function SearchIcon() {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
-            style={{cursor: "pointer"}}
-            fill="none" 
-            stroke="currentColor" 
+        <svg xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            style={{ cursor: "pointer" }}
+            fill="none"
+            stroke="currentColor"
             stroke-width="2"
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="search-icon">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -41,45 +42,47 @@ function IndicatorLayout(props) {
         fetch(datasetURL)
             .then(response => response.json())
             .then(data => {
-                setDatasets(data)
-                setActiveDataset(data[0])
+                setDatasets(data.data)
+                setActiveDataset(data.data[0])
             })
     }, [])
 
+
     useEffect(() => {
-        if(activeDataset == {})
-            return 
-        
+        if (activeDataset == {})
+            return
+
         let categoryUrl = `/api/data/v2/datasets/${activeDataset.name}/categories`
         fetch(categoryUrl)
             .then(response => response.json())
             .then(data => {
                 let updatedList = []
-                for(let i = 0; i < data.length; i++)
-                    updatedList.push({name: data[i].replace(activeDataset.name, ''), class: ''})
+                for (let i = 0; i < data.data.length; i++)
+                    updatedList.push({ name: data.data[i].replace(activeDataset.name, ''), class: '' })
                 setCategoryNames(updatedList)
             })
     }, [activeDataset])
 
     useEffect(() => {
-        if(categoryNames == [])
+        if (categoryNames == [])
             return
-        if(activeCountry == {})
+        if (activeCountry == {})
             return
 
         let p_indicators = []
-        for(let i = 0; i < categoryNames.length; i++) {
+        for (let i = 0; i < categoryNames.length; i++) {
             let category = categoryNames[i]
             let indicatorUrl = `/api/data/v2/datasets/${activeDataset.name}/categories/${category.name}/${activeCountry.iso3}`
-            
+
             let request = new XMLHttpRequest()
             request.open('GET', indicatorUrl, false)
             request.send(null)
-            if(request.status == 200) {
+            if (request.status == 200) {
                 let json = JSON.parse(request.responseText)
+                let data = json.indicators
 
-                for(let i = 0; i < json.length; i++) {
-                    let indicator = json[i]
+                for (let i = 0; i < data.length; i++) {
+                    let indicator = data[i]
                     indicator['category'] = category
                     indicator['class'] = ''
                     p_indicators.push(indicator)
@@ -88,16 +91,16 @@ function IndicatorLayout(props) {
         }
 
         setIndicators(p_indicators)
-        
-        if(activeCategory == null)
+
+        if (activeCategory == null)
             setDisplayIndicators(p_indicators)
         else {
             let updatedIndicators = []
-            for(let i = 0; i < indicators.length; i++) {
+            for (let i = 0; i < indicators.length; i++) {
                 let indicator = indicators[i]
                 let uCat = indicator.category
 
-                if(uCat.name == activeCategory.name)
+                if (uCat.name == activeCategory.name)
                     updatedIndicators.push(indicator)
             }
 
@@ -111,11 +114,11 @@ function IndicatorLayout(props) {
         let categoryList = categoryNames
         let p_activeCategory = {}
 
-        for(let i = 0; i < categoryList.length; i++) {
+        for (let i = 0; i < categoryList.length; i++) {
             let uCat = categoryList[i]
             uCat.class = ''
 
-            if(uCat.name == category) {
+            if (uCat.name == category) {
                 uCat.class = 'active'
                 p_activeCategory = uCat
             }
@@ -133,7 +136,7 @@ function IndicatorLayout(props) {
         let pActiveCategory = activeCategory
 
         let step = []
-        for(let i = 0; i < indicators.length; i++) {
+        for (let i = 0; i < indicators.length; i++) {
             const nLastWord = currentInput.toLowerCase().replace(/\s/g, '').split("")
 
             let nStep = indicators[i]
@@ -141,12 +144,12 @@ function IndicatorLayout(props) {
             nSub.length = nLastWord.length
 
             let fits_category = false
-            if(pActiveCategory == null)
+            if (pActiveCategory == null)
                 fits_category = true
-            else if(pActiveCategory.name == nStep.category.name)
-                fits_category = true 
+            else if (pActiveCategory.name == nStep.category.name)
+                fits_category = true
 
-            if(nLastWord.toString() == nSub.toString() && fits_category)
+            if (nLastWord.toString() == nSub.toString() && fits_category)
                 step.push(nStep)
         }
 
@@ -155,14 +158,15 @@ function IndicatorLayout(props) {
 
     function onIndicatorClick(e, name) {
         let pIndicators = indicators
+
         let pDisplayInd = displayIndicators
         let pActiveIndicator = {}
 
-        for(let i = 0; i < pIndicators.length; i++) {
+        for (let i = 0; i < pIndicators.length; i++) {
             let indicator = pIndicators[i]
             indicator.class = ''
 
-            if(indicator.name == name) {
+            if (indicator.name == name) {
                 indicator.class = 'active'
                 pActiveIndicator = indicator
             }
@@ -170,11 +174,11 @@ function IndicatorLayout(props) {
             pIndicators[i] = indicator
         }
 
-        for(let i = 0; i < pDisplayInd.length; i++) {
+        for (let i = 0; i < pDisplayInd.length; i++) {
             let indicator = pDisplayInd[i]
             indicator.class = ''
 
-            if(indicator.name == name)
+            if (indicator.name == name)
                 indicator.class = 'focus'
             pDisplayInd[i] = indicator
         }
@@ -183,6 +187,14 @@ function IndicatorLayout(props) {
         setDisplayIndicators([...pDisplayInd])
         submitStep(true)
         setIndicatorGlobal(pActiveIndicator)
+    }
+
+    function onDataSetClick(e, name) {
+        for (let i = 0; i < datasets.length; i++) {
+            if (datasets[i].name == name) {
+                setActiveDataset(datasets[i])
+            }
+        }
     }
 
     return (
@@ -201,10 +213,10 @@ function IndicatorLayout(props) {
                     {datasets.map((step) => {
                         return (
                             <div className="tab">
-                                <span className="icon"><FcAreaChart /></span>
+                                <span className="icon"><ChartIcons icon={step.name} /></span>
 
                                 <span className="tab-title">
-                                    <span className="text">{step.name}</span>
+                                    <span className="text" onClick={(e) => { onDataSetClick(e, step.name) }}>{step.name}</span>
                                 </span>
                             </div>
                         )
@@ -234,7 +246,7 @@ function IndicatorLayout(props) {
                                         </div>
 
                                         <div className="actions">
-                                            
+
                                         </div>
                                     </div>
                                 )

@@ -3,7 +3,7 @@ import _ from "underscore"
 import { HiPlus } from "react-icons/hi"
 import { format } from "d3-format"
 
-import Indicator from "../../../data/indicator";
+import { GetIndicator } from "../../../data/indicator";
 import { scaleLinear } from "d3-scale";
 import Legend from './legend'
 
@@ -26,7 +26,6 @@ class CrossHairs extends React.Component {
         if (!_.isNull(x) && !_.isNull(y)) {
             return (
                 <g>
-                    <line style={style} x1={0} y1={y} x2={this.props.width} y2={y} />
                     <line style={style} x1={x} y1={0} x2={x} y2={this.props.height} />
                 </g>
             );
@@ -34,45 +33,6 @@ class CrossHairs extends React.Component {
             return <g />;
         }
     }
-}
-
-function Normalize(val, min, max) {
-    return (val - min) / (max - min);
-}
-
-function YEndTail(props) {
-    let displayStyle = "flex"
-    if(props.activeChartHover == false)
-        displayStyle = "none"
-
-    let min = props.min
-    let max = props.max
-    let tYpos = max - props.yPos
-
-    let index = Number(Normalize(tYpos, min, max) * (props.ticks.length - 1)).toFixed(0)
-    let val = props.ticks[index]
-
-    return (
-        <div className="yTail" style={{height: `790px`}}>
-            <div className="tail" style={{transform: `translateY(${props.yPos - 12.5}px)`, display: displayStyle}}> {val} </div>
-        </div>
-    )
-}
-
-function XEndTail(props) {
-    let displayStyle = "flex"
-    if(props.activeChartHover == false)
-        displayStyle = "none"
-
-    let value = props.gVal
-    let strVal = "swag"
-    if(value !== null)
-        strVal = value.getFullYear()
-    return (
-        <div className="xTail">
-            <div className="tail" style={{transform: `translateX(${props.xPos - 23}px)`, display: displayStyle}}> {strVal} </div>
-        </div>
-    )
 }
 
 let dummyPoints = new TimeSeries({
@@ -85,51 +45,50 @@ function OverviewChart(props) {
     const [emptyIndicators, setEmpty] = useState(false)
     const [indicatorSeries, setIndicatorSeries] = useState(dummyPoints)
     const [timerange, setTimerange] = useState(dummyPoints.range())
-    const [crosshairPos, setCrosshairPos] = useState({x: null, y: null, tracker: null})
+    const [crosshairPos, setCrosshairPos] = useState({ x: null, y: null, tracker: null })
     const [chartLayout, setChartLayout] = useState([])
     const [chartMisc, setChartMisc] = useState({ min: 0, max: 0, style: styler([]), columns: [], dMax: 0, ticks: [] })
     const [lTracker, setLTracker] = useState(null)
     const [legendVal, setLegendVal] = useState({})
     const [activeChartHover, setActiveChartHover] = useState(false)
-    const [rowHeight, setRowHeight] = useState(800)
+    const [units, setUnits] = useState({})
+    const [timetick, setTimetick] = useState("")
 
-    const overViewRef = React.createRef()
 
-    useEffect(() => {
-        let containerHeight  = overViewRef.current.clientHeight
-        containerHeight = containerHeight - 40
-        setRowHeight(containerHeight)
-    }, [])
+    let unitsObj = {}
+    let rUnits = ""
 
     useEffect(() => {
         async function anon() {
             let indicators = props.indicators
-
             let years = []
             let tPoints = {}
-
             let t_styler = []
 
-            for(let i = 0; i < indicators.length; i++) {
+            for (let i = 0; i < indicators.length; i++) {
                 let indicator = indicators[i]
                 let iso3 = indicator.iso3
                 let ind3 = indicator.indicator
 
-                let data = await Indicator.FindIndicator(iso3, ind3)
-                let rData = data[0]
+                let data = await GetIndicator(iso3, ind3)
+                let rData = data[0]['data']
+                rUnits = rData['units']
+                setTimetick(data[0]['data']['timetick'])
+
                 let values = {}
 
-                for(let i = 0; i < rData.data.length; i++) {
+                for (let i = 0; i < rData.data.length; i++) {
                     let iData = rData.data[i]
                     let date = iData.date
                     let value = iData.value
 
-                    if(years.indexOf(date) == -1)
+                    if (years.indexOf(date) == -1)
                         years.push(date)
                     values[date] = value
                 }
 
                 tPoints[`${iso3}-${ind3}`] = values
+                unitsObj[`${iso3}-${ind3}`] = rUnits
 
                 t_styler.push({
                     key: `${iso3}-${ind3}`,
@@ -148,27 +107,27 @@ function OverviewChart(props) {
 
             let pack = {}
 
-            for(let i = 0; i < years.length; i++) {
+            for (let i = 0; i < years.length; i++) {
                 let year = years[i]
                 let pPoints = [new Date(year)]
 
-                for(let x = 0; x < dataColumns.length; x++) {
+                for (let x = 0; x < dataColumns.length; x++) {
                     let col = dataColumns[x]
                     let row = tPoints[col]
 
-                    if(year in row) {
+                    if (year in row) {
                         pPoints.push(row[year])
 
-                        if(i == 0)
+                        if (i == 0)
                             pack[col] = row[year]
 
-                        if(row[year] > max)
+                        if (row[year] > max)
                             max = row[year]
-                        if(row[year] < min)
+                        if (row[year] < min)
                             min = row[year]
                     }
                     else {
-                        if(i == 0)
+                        if (i == 0)
                             pack[col] = row[year]
 
                         pPoints.push(null)
@@ -184,8 +143,8 @@ function OverviewChart(props) {
                 columns: cols,
                 points
             })
-            
-            if(indicators.length !== 0) {
+
+            if (indicators.length !== 0) {
                 setIndicatorSeries(series)
                 setTimerange(series.range())
 
@@ -196,7 +155,7 @@ function OverviewChart(props) {
                 misc['columns'] = dataColumns
 
                 const margin = 5
-                const innerHeight = 800 - margin * 2 //row - margin * 2
+                const innerHeight = 0.95 * (window.innerHeight) - 100 - margin * 2 //row - margin * 2
 
                 let rangeTop = margin
                 let rangeBottom = innerHeight - margin
@@ -209,8 +168,10 @@ function OverviewChart(props) {
 
                 setEmpty(true)
                 setChartLayout(["line"])
-                setCrosshairPos({x: null, y: null, tracker: points[0][0]})
+                setCrosshairPos({ x: null, y: null, tracker: points[0][0] })
                 setLegendVal(pack)
+                setUnits(unitsObj)
+
             }
         }
 
@@ -222,14 +183,14 @@ function OverviewChart(props) {
     }
 
     function handleTrackerChange(tracker) {
-        if(!tracker) {
-            setCrosshairPos({tracker: tracker, x: null, y: null})
+        if (!tracker) {
+            setCrosshairPos({ tracker: tracker, x: null, y: null })
             setActiveChartHover(false)
         }
         else {
             setActiveChartHover(true)
             setLTracker(tracker)
-            setCrosshairPos({tracker: tracker, x: crosshairPos.x, y: crosshairPos.y})
+            setCrosshairPos({ tracker: tracker, x: crosshairPos.x, y: crosshairPos.y })
             const f = format(",.2f")
 
             let index = indicatorSeries.bisect(tracker)
@@ -237,25 +198,25 @@ function OverviewChart(props) {
             let indicators = props.indicators
             let pack = {}
 
-            for(let i = 0; i < indicators.length; i++) {
+            for (let i = 0; i < indicators.length; i++) {
                 let indicator = indicators[i]
                 let name = `${indicator.iso3}-${indicator.indicator}`
-                pack[name] = f(event.get(name))
+                //pack[name] = f(event.get(name))
+                pack[name] = (event.get(name))
             }
+
 
             setLegendVal(pack)
         }
     }
 
     function handleMouseMove(x, y) {
-        setCrosshairPos({x: x, y: y, tracker: crosshairPos.tracker})
-    }  
+        setCrosshairPos({ x: x, y: y, tracker: crosshairPos.tracker })
+    }
 
     return (
-        <div className="overview-chart" ref={overViewRef}>
-            <Legend indicators={props.indicators} values={legendVal} />
-            <XEndTail xPos={crosshairPos.x} activeChartHover={activeChartHover} gVal={lTracker} />
-            <YEndTail yPos={crosshairPos.y} activeChartHover={activeChartHover} min={0} max={790} dMax={chartMisc.dMax} ticks={chartMisc.ticks}  />
+        <div className="overview-chart">
+            <Legend indicators={props.indicators} values={legendVal} units={units} />
 
             {emptyIndicators
                 ? (
@@ -265,34 +226,34 @@ function OverviewChart(props) {
                                 timeRange={timerange}
                                 maxTime={indicatorSeries.range().end()}
                                 minTime={indicatorSeries.range().begin()}
-                                onTrackerChanged={(tracker) => {handleTrackerChange(tracker)}}
+                                onTrackerChanged={(tracker) => { handleTrackerChange(tracker) }}
                                 enablePanZoom={true}
                                 onTimeRangeChanged={handleTimeRangeChange}
                                 onMouseMove={(x, y) => handleMouseMove(x, y)}
-                                >
-                                    <ChartRow height={rowHeight}>
-                                        <Charts>
-                                            {chartLayout.map((step) => {
-                                                return (
-                                                    <LineChart
-                                                        axis="y"
-                                                        series={indicatorSeries}
-                                                        style={chartMisc.style}
-                                                        columns={chartMisc.columns}
-                                                        interpolation="curveBasis" />
-                                                )
-                                            })}
+                            >
+                                <ChartRow height={0.95 * (window.innerHeight) - 100}>
+                                    <Charts>
+                                        {chartLayout.map((step) => {
+                                            return (
+                                                <LineChart
+                                                    axis="y"
+                                                    series={indicatorSeries}
+                                                    style={chartMisc.style}
+                                                    columns={chartMisc.columns}
+                                                    interpolation="curveBasis" />
+                                            )
+                                        })}
 
-                                            <CrossHairs x={crosshairPos.x} y={crosshairPos.y} />
-                                        </Charts>
+                                        <CrossHairs x={crosshairPos.x} y={crosshairPos.y} />
+                                    </Charts>
 
-                                        <YAxis
-                                            id="y"
-                                            min={chartMisc.min}
-                                            max={chartMisc.max}
-                                            format=".2s"
-                                            width="45" />
-                                    </ChartRow>
+                                    <YAxis
+                                        id="y"
+                                        min={chartMisc.min}
+                                        max={chartMisc.max}
+                                        format=".2s"
+                                        width="45" />
+                                </ChartRow>
                             </ChartContainer>
                         </Resizable>
                     </div>
@@ -300,7 +261,9 @@ function OverviewChart(props) {
 
                 : (
                     <div className="add-indicator">
-                        <h2>Currently you havent added any Indicators</h2>
+                        <h4>Splice & analyze different datasets</h4>
+                        <br /><br />
+                        <h2>Currently you have not added any Indicators</h2>
                         <h4>Click the <span><HiPlus /></span> button on the left to add some</h4>
                     </div>
                 )

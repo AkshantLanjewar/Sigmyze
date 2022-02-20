@@ -3,16 +3,16 @@ import { AiOutlineLineChart } from "react-icons/ai"
 
 function SearchIcon() {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
-            style={{cursor: "pointer"}}
-            fill="none" 
-            stroke="currentColor" 
+        <svg xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            style={{ cursor: "pointer" }}
+            fill="none"
+            stroke="currentColor"
             stroke-width="2"
-            stroke-linecap="round" 
-            stroke-linejoin="round" 
+            stroke-linecap="round"
+            stroke-linejoin="round"
             className="search-icon">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -21,11 +21,11 @@ function SearchIcon() {
 }
 
 
-const stepOneChoices = [{icon: <AiOutlineLineChart />, name: "Internet Not Loading", iso3: "USA"}]
+const stepOneChoices = [{ icon: <AiOutlineLineChart />, name: "Internet Not Loading", iso3: "USA" }]
 
 function CountryLayout(props) {
     const nextSubmit = props.nextSubmit
-    const setCountry = props.setCountry 
+    const setCountry = props.setCountry
 
     const inputRef = React.createRef()
     const [currentCountryStep, setCurrentCountryStep] = useState(stepOneChoices)
@@ -40,11 +40,11 @@ function CountryLayout(props) {
             .then(data => {
                 let step = []
 
-                for(let i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.length; i++) {
                     let country = data[i]
                     let img = <img src={`/country/${country.iso2.toLowerCase()}.svg`} width="16px" height="16px" />
 
-                    step.push({icon: img, name: country.name, iso3: country.iso3, refIndex: i, focus: ""})
+                    step.push({ icon: img, name: country.name, iso3: country.iso3, refIndex: i, focus: "" })
                 }
 
                 setCurrentCountryStep(step)
@@ -57,12 +57,12 @@ function CountryLayout(props) {
         let currentInput = inputRef.current.value.toLowerCase()
 
         let step = []
-        for(let i = 0; i < currentCountryStep.length; i++) {
+        for (let i = 0; i < currentCountryStep.length; i++) {
             const lastWord = currentInput.split(" ")[currentInput.split(" ").length - 1]
             let nStep = currentCountryStep[i]
             let sub = nStep.name.substring(0, lastWord.length).toLowerCase()
 
-            if(lastWord == sub)
+            if (lastWord == sub)
                 step.push(nStep)
         }
 
@@ -74,22 +74,22 @@ function CountryLayout(props) {
         let displayCountryT = displayCountryStep
         let activeCountry = {}
 
-        for(let i = 0; i < currentCountryT.length; i++) {
+        for (let i = 0; i < currentCountryT.length; i++) {
             let country = currentCountryT[i]
             country.focus = ""
 
-            if(country.iso3 == id) {
+            if (country.iso3 == id) {
                 country.focus = "focus"
                 activeCountry = country
             }
             currentCountryT[i] = country
         }
 
-        for(let i = 0; i < displayCountryT.length; i++) {
+        for (let i = 0; i < displayCountryT.length; i++) {
             let country = displayCountryT[i]
             country.focus = ""
 
-            if(country.iso3 == id) {
+            if (country.iso3 == id) {
                 country.focus = "focus"
                 activeCountry = country
             }

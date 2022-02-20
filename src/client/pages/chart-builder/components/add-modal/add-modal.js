@@ -19,8 +19,8 @@ function AddModal(props) {
     const [country, setCountry] = useState({})
     const [indicator, setIndicator] = useState({})
 
-    function onNextClick() { 
-        if(nextStep == true)
+    function onNextClick() {
+        if (nextStep == true)
             setModalStep(true)
     }
 
@@ -32,7 +32,7 @@ function AddModal(props) {
     }
 
     useEffect(() => {
-        if(modalState == true) {
+        if (modalState == true) {
             setCountry({})
             setIndicator({})
             setModalStep(false)
@@ -40,7 +40,7 @@ function AddModal(props) {
     }, [modalState])
 
     return (
-        <div style={{display: modalState ? "flex" : "none", justifyContent: "center", width: "100vw", height: "100vh", position: "absolute", top: 0}}>
+        <div style={{ display: modalState ? "flex" : "none", justifyContent: "center", width: "100vw", height: "100%", position: "absolute", top: 0 }}>
             <div className="absolute-black-bg"></div>
 
             <div className="chart-modal">
@@ -62,25 +62,25 @@ function AddModal(props) {
                 }
 
                 {modalStep
-                    ?  (
+                    ? (
                         <div className="form-controller">
                             <button className="controller" onClick={() => { setModalStep(false); setNextStep(false) }}>
                                 <BsFillCaretLeftFill />
                                 <span>Prev</span>
                             </button>
-                            <button className="controller" onClick={onSubmitClick} style={{background: submitStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)"}}>
+                            <button className="controller" onClick={onSubmitClick} style={{ background: submitStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)" }}>
                                 <span>Submit</span>
                             </button>
                         </div>
-                        )
-                        
-                    : (                        
+                    )
+
+                    : (
                         <div className="form-controller">
-                            <button className="controller" onClick={onNextClick} style={{background: nextStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)" }}>
+                            <button className="controller" onClick={onNextClick} style={{ background: nextStep ? "rgba(20, 98, 255, 0.4)" : "rgb(18, 18, 18)" }}>
                                 <span>Next</span>
                             </button>
                         </div>
-                        )
+                    )
                 }
             </div>
         </div>

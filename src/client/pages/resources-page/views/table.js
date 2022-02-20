@@ -1,5 +1,39 @@
 import React, { useState, useEffect } from "react"
 
+import { GetIndicatorV } from "../../../data/indicator"
+
+function TableElem(props) {
+    let dataset = props.dataset
+    let iso3 = props.iso3
+    let ind3 = props.ind3
+
+    const [indicatorData, setIndicatorData] = useState({ fName: null, unit: null })
+    const [display, setDisplay] = useState(true)
+
+    useEffect(() => {
+        async function anon() {
+            let pack = await GetIndicatorV(iso3, ind3, dataset)
+            setIndicatorData({
+                fName: pack['fullname'],
+                unit: pack['units'] 
+            })
+
+            if(pack['data'] == undefined)
+                setDisplay(false)
+        }
+
+        anon()
+    })
+
+    return (
+        <div className="t-elem" style={{ display: display ? "flex" : "none" }}>
+            <div className="elem fName">{indicatorData.fName}</div>
+            <div className="elem sName">{ind3}</div>
+            <div className="elem unit">{indicatorData.unit}</div>
+        </div>
+    )
+}
+
 function TableView(props) {
     let dataset        = props.dataset
     let activeCategory = props.activeCategory
@@ -27,15 +61,12 @@ function TableView(props) {
             <h3 className="table-title"></h3>
 
             <div className="t-head">
-                <div className="elem">Indicator Name</div>
-                <div className="elem">Indicator Short</div>
-                <div className="elem">Indicator Category</div>
-                <div className="elem">Unit</div>
+                <div className="elem fName">Indicator Name</div>
+                <div className="elem sName">Indicator Short</div>
+                <div className="elem unit">Unit</div>
             </div>
 
-            <div className="t-elem">
-
-            </div>
+            {activeCharts.map((step) => ( <TableElem iso3={step.iso3} ind3={step.category} dataset={dataset} /> ))}
         </div>
     )
 }
