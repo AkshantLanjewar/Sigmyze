@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io"
 function Modal(props) {
     let viewState = props.viewState
     let small = props.small
+    let large = props.large
 
     const [bodyOffset, setBodyOffset] = useState('0px')
     const bodyRef = React.createRef()
@@ -31,7 +32,7 @@ function Modal(props) {
                 zIndex: "20000"}}>
             <div className="absolute-black-bg" onClick={() => { props.setViewState(false) }}></div>
 
-            <div className={`chart-modal ${small ? "sm" : ""}`}>
+            <div className={`chart-modal ${small ? "sm" : ""} ${large ? "lg" : ""}`}>
                 <div className="title">
                     <div className="text">{props.title}</div>
                     <span className="close" onClick={() => { props.setViewState(false) }}><IoMdClose /></span>

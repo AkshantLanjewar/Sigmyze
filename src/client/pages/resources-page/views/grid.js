@@ -26,7 +26,9 @@ function GridVeiw(props) {
 
     return (
         <div className="body" style={{ marginTop: "15px", width: "100%" }}>
-            {activeCharts.map((step) => ( <ChartCard indicator={step.category} iso3={step.iso3} /> ))}
+            {activeCharts.map((step) => ( 
+                <ChartCard indicator={step.category} iso3={step.iso3} setModalState={props.setModalState} setActiveIndicator={props.setActiveIndicator} /> 
+            ))}
         </div>
     )
 }

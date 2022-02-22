@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import ChartBuilder, { ChartOptions, blueColor, redColor } from '../../../components/chart-builder'
+import ChartBuilder, { ChartOptions, blueColor, redColor } from '../../../components/charts/chart-builder'
 
 function CategoryCard(props) {
     let category_a = props.category_a

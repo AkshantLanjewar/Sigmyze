@@ -6,6 +6,8 @@ import IconHash from '../../components/icon-hash'
 
 import GridView from './views/grid'
 import TableView from './views/table'
+import IndicatorView from './views/modal-view'
+import Modal from '../../components/modal'
 
 import { CgMenuGridO } from 'react-icons/cg'
 import { BsListUl } from 'react-icons/bs'
@@ -17,8 +19,11 @@ function DatasetPage() {
     const [categories, setCategories] = useState([])
     const [activeCategory, setActiveCategory] = useState({ dataset: null, active: true })
     const [activeCountry, setActiveCountry] = useState({iso3: "USA", fullname: "United States"})
+    const [activeIndicator, setActiveIndicator] = useState(null)
+
     const [validSet, setValidSet] = useState(true)
     const [viewType, setViewType] = useState(true)
+    const [modalState, setModalState] = useState(false)
 
     useEffect(() => {
         let category_url = `/api/data/v2/datasets/${dataset}/categories`
@@ -104,10 +109,22 @@ function DatasetPage() {
                             </div>
                             
                             {viewType
-                                ? <GridView dataset={dataset} activeCategory={activeCategory} activeCountry={activeCountry} />
-                                : <TableView dataset={dataset} activeCategory={activeCategory} activeCountry={activeCountry} />
+                                ? <GridView dataset={dataset} 
+                                    activeCategory={activeCategory} 
+                                    activeCountry={activeCountry} 
+                                    setModalState={setModalState} 
+                                    setActiveIndicator={setActiveIndicator}  />
+                                : <TableView dataset={dataset} 
+                                    activeCategory={activeCategory} 
+                                    activeCountry={activeCountry} 
+                                    setModalState={setModalState} 
+                                    setActiveIndicator={setActiveIndicator}  />
                             }
                         </div>
+
+                        <Modal viewState={modalState} setViewState={setModalState} title={""} large={true}>
+                            <IndicatorView activeCountry={activeCountry} activeIndicator={activeIndicator} />
+                        </Modal>
                     </div>
                 )
                 : ( 

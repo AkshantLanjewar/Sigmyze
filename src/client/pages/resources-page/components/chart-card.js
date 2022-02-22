@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import ChartBuilder, { ChartOptions, blueColor, redColor } from "../../../components/chart-builder"
+import ChartBuilder, { ChartOptions, blueColor, redColor } from "../../../components/charts/chart-builder"
 import * as countries from 'i18n-iso-countries'
 import * as d3 from 'd3'
 
@@ -8,6 +8,9 @@ countries.registerLocale(require("i18n-iso-countries/langs/en.json"))
 function ChartCard(props) {
     let category = props.indicator
     let iso3 = props.iso3
+
+    const setModalState      = props.setModalState
+    const setActiveIndicator = props.setActiveIndicator
 
     const chartRef = React.createRef()
     const cardRef = React.createRef()
@@ -43,7 +46,7 @@ function ChartCard(props) {
                     let chartData = []
                     var lowerI
                     const containerHeight = chartRef.current.clientHeight
-                    if(data.error)
+                    if (data.error)
                         setDisplay(false)
 
                     if (covCheck >= 0) {
@@ -69,7 +72,7 @@ function ChartCard(props) {
 
                         object["value"] = data['data'][i]["value"]
                         chartData.push(object)
-                    }                    
+                    }
 
                     let chartOptions = {
                         chartType: "line",
@@ -93,10 +96,13 @@ function ChartCard(props) {
                     setScale(data['units'])
                 })
         }, 500)
-    },[])
+    }, [])
 
     return (
-        <div className="card light scaleHov" ref={cardRef} style={{marginTop: "0.5em", width: "25%", height: "264px", display: display ? "flex" : "none"}}>
+        <div className="card light scaleHov"
+            ref={cardRef}
+            style={{ marginTop: "0.5em", width: "25%", height: "264px", display: display ? "flex" : "none" }}
+            onClick={() => { setModalState(true); setActiveIndicator(category) }}>
             <div className="title tooltip">
                 <p className="titleLong" style={{ marginBottom: "0.5em" }}>
                     <span>{iso3} {'> '}</span>
