@@ -123,7 +123,7 @@ function DatasetPage() {
                         </div>
 
                         <Modal viewState={modalState} setViewState={setModalState} title={""} large={true}>
-                            <IndicatorView activeCountry={activeCountry} activeIndicator={activeIndicator} />
+                            <IndicatorView activeCountry={activeCountry} activeIndicator={activeIndicator} dataset={dataset} />
                         </Modal>
                     </div>
                 )

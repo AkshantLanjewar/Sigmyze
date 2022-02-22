@@ -1,19 +1,37 @@
 import React, { useEffect } from "react"
 import { GetIndicatorV } from "../../../data/indicator"
+import CreateChart from '../../../components/charts/lunar-charts'
 
 function IndicatorView(props) {
     const activeCountry   = props.activeCountry
     const activeIndicator = props.activeIndicator
+    const chartRef        = React.createRef()
 
     useEffect(() => {        
         async function anon() {
+            let cData = []
             if(activeIndicator == null)
                 return
+            let data  = await GetIndicatorV(activeCountry.iso3, activeIndicator)
+            let _data = data.data
+            for(let i = 0; i < _data.length; i++) {
+                let obj = {}
+                let dt  = new Date(_data[i]["date"])
 
-            let data = await GetIndicatorV(activeCountry.iso3, activeIndicator)
-            console.log(data)
+            } 
+
+            let chartOpts = {
+                container: chartRef,
+                containerHeight: 328,
+                type: 'line',
+                name: "resources-overview-chart",
+                dataset: props.dataset
+            }
+
+            CreateChart(chartOpts)
         }
 
+        chartRef.current.innerHTML = ''
         anon()
     }, [activeIndicator])
 
@@ -25,9 +43,7 @@ function IndicatorView(props) {
                     <h3>(Billions)</h3>
                 </div>
 
-                <div className="chart-container">
-
-                </div>
+                <div className="chart-container" ref={chartRef}></div>
             </div>
 
             <div className="chart-desc">
