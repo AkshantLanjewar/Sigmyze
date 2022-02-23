@@ -14,14 +14,15 @@ function IndicatorView(props) {
                 return
             let data  = await GetIndicatorV(activeCountry.iso3, activeIndicator)
             let _data = data.data
+
             for(let i = 0; i < _data.length; i++) {
                 let obj = {}
                 let dt  = new Date(_data[i]["date"])
 
                 if(props.dataset == "WEO")
-                    obj['date'] = dt
-                if(props.dataset == "COVID")
                     obj['date'] = dt.getUTCFullYear()
+                if(props.dataset == "COVID")
+                    obj['date'] = dt
 
                 obj['value'] = _data[i]["value"]
                 cData.push(obj)

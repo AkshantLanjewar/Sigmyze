@@ -12,8 +12,10 @@ function ScalePoint(data, dim, margin) {
         .range([margin.left, dim - margin.right])
 }
 
-function LinearAxisFormatter() {
-    
+function LinearAxisFormatter(data, dimParam, margin) {
+    return d3.scaleLinear()
+        .domain([d3.min(data, d => d.value), d3.max(data, d => d.value)]).nice()
+        .range([dimParam - margin.bottom, margin.top])
 }
 
-export { ScalePoint, ScaleUTC }
+export { ScalePoint, ScaleUTC, LinearAxisFormatter }

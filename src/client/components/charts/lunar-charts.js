@@ -41,7 +41,7 @@ function CreateChart(opts) {
     opts['height'] = rawHeight
 
     if(chartType == 'line')
-        LineChart(opts, margin)
+        LineChart(opts, margin, svg)
 }
 
 export default CreateChart
