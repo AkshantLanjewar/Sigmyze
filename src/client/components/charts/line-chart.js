@@ -11,9 +11,14 @@ function LineChart(opts, margin) {
         xAxisType = 'Y' 
 
     let x, y, minYr, maxYr
-    if(xAxisType == 'Y') {
-        
-    }
+    minYr = Date.now()
+    maxYr = 0
+
+    if(xAxisType == 'Y')
+        x = ScaleUTC(opts['data'], width)
+    if(xAxisType == 'D')
+        x = ScalePoint(opts['data'], width)
+    
 }
 
 export default LineChart

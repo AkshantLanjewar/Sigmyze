@@ -12,4 +12,8 @@ function ScalePoint(data, dim, margin) {
         .range([margin.left, dim - margin.right])
 }
 
+function LinearAxisFormatter() {
+    
+}
+
 export { ScalePoint, ScaleUTC }

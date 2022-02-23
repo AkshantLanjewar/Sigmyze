@@ -18,6 +18,13 @@ function IndicatorView(props) {
                 let obj = {}
                 let dt  = new Date(_data[i]["date"])
 
+                if(props.dataset == "WEO")
+                    obj['date'] = dt
+                if(props.dataset == "COVID")
+                    obj['date'] = dt.getUTCFullYear()
+
+                obj['value'] = _data[i]["value"]
+                cData.push(obj)
             } 
 
             let chartOpts = {
@@ -25,7 +32,8 @@ function IndicatorView(props) {
                 containerHeight: 328,
                 type: 'line',
                 name: "resources-overview-chart",
-                dataset: props.dataset
+                dataset: props.dataset,
+                data: cData
             }
 
             CreateChart(chartOpts)
