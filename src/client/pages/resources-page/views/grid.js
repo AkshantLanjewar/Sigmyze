@@ -20,7 +20,8 @@ function GridVeiw(props) {
 
                 for(let i = 0; i < data.data.length; i++)
                     nCharts.push({ category: data.data[i].indicator, iso3: activeCountry.iso3 })
-                setActiveCharts(nCharts)
+                setActiveCharts([])
+                setActiveCharts([...nCharts])
             })
     }, [activeCategory, activeCountry])
 

@@ -7,7 +7,7 @@ import { RiGovernmentLine } from 'react-icons/ri'
 import { IoIosPeople } from 'react-icons/io'
 import { FaVirus } from 'react-icons/fa'
 
-const iconHash = {
+const IconHash = {
     "GovtFinance": <RiGovernmentLine />,
     "People": <IoIosPeople />,
     "GDP": <AiOutlineLineChart />,
@@ -16,4 +16,4 @@ const iconHash = {
     "Covid": <FaVirus />
 }
 
-export default iconHash
+export default IconHash

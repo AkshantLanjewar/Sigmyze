@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { GetIndicatorV } from "../../../data/indicator"
 import CreateChart from '../../../components/charts/lunar-charts'
 
@@ -7,12 +7,15 @@ function IndicatorView(props) {
     const activeIndicator = props.activeIndicator
     const chartRef        = React.createRef()
 
+    const [fullname, setFullname] = useState(null)
+    const [units, setUnits] = useState(null)
+
     useEffect(() => {        
         async function anon() {
             let cData = []
             if(activeIndicator == null)
                 return
-            let data  = await GetIndicatorV(activeCountry.iso3, activeIndicator)
+            let data  = await GetIndicatorV(activeCountry.iso3, activeIndicator, props.dataset)
             let _data = data.data
 
             for(let i = 0; i < _data.length; i++) {
@@ -38,6 +41,9 @@ function IndicatorView(props) {
             }
 
             CreateChart(chartOpts)
+
+            setFullname(data['fullname'])
+            setUnits(data['units'])
         }
 
         chartRef.current.innerHTML = ''
@@ -48,8 +54,8 @@ function IndicatorView(props) {
         <div>
             <div className="card-chart">
                 <div className="title">
-                    <h1>United States - Current AC Balance</h1>
-                    <h3>(Billions)</h3>
+                    <h1>{activeCountry.fullname} - {fullname}</h1>
+                    <h3>({units})</h3>
                 </div>
 
                 <div className="chart-container" ref={chartRef}></div>

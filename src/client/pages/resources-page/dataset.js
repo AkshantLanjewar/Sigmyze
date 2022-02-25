@@ -34,13 +34,14 @@ function DatasetPage() {
                     setValidSet(false)
                     return
                 }
+
                 let rCategory = []
 
                 for(let i = 0; i < data.data.length; i++)
                     rCategory.push({dataset: data.data[i].replace(dataset, ""), active: false})
                 rCategory[0].active = true
-                setCategories([...rCategory])
-                setActiveCategory({...rCategory[0]})
+                setCategories(rCategory)
+                setActiveCategory(rCategory[0])
             })
     }, [])
 
@@ -76,14 +77,16 @@ function DatasetPage() {
                             <div className='tab-container' style={{marginTop: "-1em"}}>
                                 <div className='tabs' style={{ justifySelf: "center" }}>
                                     <ul>
-                                        {categories.map((step) => (
-                                            <li>
-                                                <a className={step.active ? 'active' : ''} onClick={() => { SetTab(step.dataset) }}>
-                                                    <span>{IconHash[step.dataset]}</span>
-                                                    <span>{step.dataset}</span>
-                                                </a>
-                                            </li>
-                                        ))}
+                                        {categories.map((step) => {
+                                            return (
+                                                <li>
+                                                    <a className={step.active ? 'active' : ''} onClick={() => { SetTab(step.dataset) }}>
+                                                        <span>{IconHash['Covid']}</span>
+                                                        <span>{step.dataset}</span>
+                                                    </a>
+                                                </li>
+                                            )
+                                        })}
                                     </ul>
                                 </div>
                             </div>

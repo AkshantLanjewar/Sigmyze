@@ -30,15 +30,16 @@ async function GetIndicatorV(iso3, ind3, dataset) {
         let rep = await (await fetch(url)).json()
         let data = rep.data
 
-        db.indicators.put({
+        let obj = {
             iso3: iso3,
             fullname: rep['sName'],
             ind3: ind3,
             units: rep['units'],
             data: data
-        })
+        }
 
-        return await db.indicators.where({ iso3: iso3, ind3: ind3 }).toArray()[0]
+        db.indicators.put(obj)
+        return obj 
     } else
         return data[0]
 }
