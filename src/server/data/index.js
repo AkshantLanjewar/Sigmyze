@@ -13,11 +13,11 @@ function DataRouter() {
     //set the cron task
     schedule.scheduleJob('0 0 * * *', httpData.IndexData)
     schedule.scheduleJob('0 0 * * *', WEOTab.TabulateWEOData)
-    schedule.scheduleJob('0 0 * * *', COVIDTab.TabulateCovidData)
+    //schedule.scheduleJob('0 0 * * *', COVIDTab.TabulateCovidData)
 
     httpData.IndexData()
     WEOTab.TabulateWEOData()
-    COVIDTab.TabulateCovidData()
+    //COVIDTab.TabulateCovidData()
 
     const router = Router()
     router.get('/map/gdp_growth', map.gdpGrowthGlobalMAP)

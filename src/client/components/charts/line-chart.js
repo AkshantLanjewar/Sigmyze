@@ -84,6 +84,8 @@ function LineChart(opts, margin, svg) {
         .attr("d", LinePath(x, y))
         .attr("transform", `translate(0, ${margin.top})`)
         .attr("clip-path", `url(#${opts['name']})`)
+
+    return { x: x, y: y, xAxisType: xAxisType }
 }
 
 export default LineChart

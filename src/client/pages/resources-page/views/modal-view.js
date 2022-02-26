@@ -35,7 +35,7 @@ function IndicatorView(props) {
                 container: chartRef,
                 containerHeight: 328,
                 type: 'line',
-                name: "resources-overview-chart",
+                name: `${data['fullname']}`,
                 dataset: props.dataset,
                 data: cData
             }

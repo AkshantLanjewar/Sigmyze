@@ -1,4 +1,6 @@
 import * as d3 from 'd3'
+
+import SetupTooltip from './tooltip'
 import LineChart from './line-chart'
 
 function CreateChart(opts) {
@@ -41,7 +43,8 @@ function CreateChart(opts) {
     opts['height'] = rawHeight
 
     if(chartType == 'line')
-        LineChart(opts, margin, svg)
+        opts['axis'] = LineChart(opts, margin, svg)
+    SetupTooltip(opts, margin, svg)
 }
 
 export default CreateChart

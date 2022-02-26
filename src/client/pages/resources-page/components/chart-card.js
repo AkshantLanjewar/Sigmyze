@@ -46,8 +46,15 @@ function ChartCard(props) {
                     let chartData = []
                     var lowerI
                     const containerHeight = chartRef.current.clientHeight
-                    if (data.error)
+
+                    if (data.error) {
                         setDisplay(false)
+                        return
+                    }
+                    if(data.data.length == 0) {
+                        setDisplay(false)
+                        return
+                    }
 
                     if (covCheck >= 0) {
                         //lowerI = Math.round(data['data'].length*1/3)

@@ -2,11 +2,9 @@
 const fs = require('fs')
 const http = require('http')
 
-//const API_ROOT = "http://34.70.145.116:8080"
 const API_ROOT = "http://34.70.145.116:8080"
-//const API_ROOT = 'http://127.0.0.1'
 const dataset = 'COVID'
-const datatype = 'covid' // This is for backend API segregration - e.g. /api/econdata/, /api/covid/
+const datatype = 'covid'
 
 function HTTP_GET(sublet) {
     return new Promise((resolve, reject) => {
@@ -42,14 +40,7 @@ async function TabulateCovidData() {
 
 
     let combined_indicators = []
-
-    //start with categories
     let categories_rep = ['COVIDCovid']
-    //let categories_url = "/api/econdata/metricgroups/"
-    //let categories_req = HTTP_GET(categories_url).catch((error) => {console.error(error)})
-    //let categories_rep = JSON.parse(await categories_req)
-
-    //save the file
     fs.writeFileSync(`./indicatorDB/${dataset}/categories.json`, JSON.stringify(categories_rep))
 
     //let combined_indicators = []
@@ -59,8 +50,8 @@ async function TabulateCovidData() {
         let url = `/api/${datatype}/getMetrics/`
         let req = HTTP_GET(url).catch((error) => { console.log(error) })
 
-        let rep = JSON.parse(await req)
-        let rep_keys = Object.keys(rep)
+        console.log(await req)
+        /*let rep_keys = Object.keys(rep)
         let fin_rep = []
 
         for (let x = 0; x < rep_keys.length; x++) {
@@ -72,6 +63,7 @@ async function TabulateCovidData() {
         }
 
         fs.writeFileSync(`./indicatorDB/${dataset}/groups/${category}_indicators.json`, JSON.stringify(fin_rep))
+        */
     }
 
     let url = `/api/${datatype}/getMetrics/`

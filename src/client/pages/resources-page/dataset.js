@@ -81,7 +81,7 @@ function DatasetPage() {
                                             return (
                                                 <li>
                                                     <a className={step.active ? 'active' : ''} onClick={() => { SetTab(step.dataset) }}>
-                                                        <span>{IconHash['Covid']}</span>
+                                                        <span>{IconHash[step.dataset]}</span>
                                                         <span>{step.dataset}</span>
                                                     </a>
                                                 </li>
