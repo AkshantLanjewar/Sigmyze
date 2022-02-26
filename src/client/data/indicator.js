@@ -19,6 +19,22 @@ async function GetIndicator(iso3, ind3) {
     return data
 }
 
+async function GetIndicatorDetails(iso3, ind3, dataset) {
+    let data = await db.descriptions.where({
+        iso3: iso3,
+        ind3: ind3
+    }).toArray()
+
+    if(data.length == 0) {
+        let url  = `/api/data/v2/datasets/${dataset}/definitions/${ind3}`
+        let rep  = await ( await fetch(url) ).json()
+        let data = rep.data
+
+        console.log(data)
+    } else
+        return data[0]
+}
+
 async function GetIndicatorV(iso3, ind3, dataset) {
     let data = await db.indicators.where({
         iso3: iso3,
@@ -44,4 +60,4 @@ async function GetIndicatorV(iso3, ind3, dataset) {
         return data[0]
 }
 
-export { AddIndicator, GetIndicator, GetIndicatorV }
+export { AddIndicator, GetIndicator, GetIndicatorV, GetIndicatorDetails }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { GetIndicatorV } from "../../../data/indicator"
+import { GetIndicatorV, GetIndicatorDetails } from "../../../data/indicator"
 import CreateChart from '../../../components/charts/lunar-charts'
 
 function IndicatorView(props) {
@@ -41,7 +41,6 @@ function IndicatorView(props) {
             }
 
             CreateChart(chartOpts)
-
             setFullname(data['fullname'])
             setUnits(data['units'])
         }
@@ -63,6 +62,7 @@ function IndicatorView(props) {
 
             <div className="chart-desc">
                 <div className="chart-row">
+                    {/**
                     <section>
                         <h4>Profile</h4>
                         <p>
@@ -74,7 +74,7 @@ function IndicatorView(props) {
 
                     <section>
                         
-                    </section>
+                    </section> */}
                 </div>
             </div>
         </div>
