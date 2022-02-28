@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import { ScaleUTC, ScalePoint, LinearAxisFormatter } from './scales'
+import { ProcessSigmyzeData } from './data'
 
 function LineChart(opts, margin, svg) {
     function LinePath(x, y) {
@@ -22,6 +23,7 @@ function LineChart(opts, margin, svg) {
     let x, y, minYr, maxYr
     minYr = Date.now()
     maxYr = 0
+    opts['data'] = ProcessSigmyzeData(opts['data'], dataset)
 
     if(xAxisType == 'Y')
         x = ScaleUTC(opts['data'], width, margin)

@@ -16,20 +16,6 @@ function IndicatorView(props) {
             if(activeIndicator == null)
                 return
             let data  = await GetIndicatorV(activeCountry.iso3, activeIndicator, props.dataset)
-            let _data = data.data
-
-            for(let i = 0; i < _data.length; i++) {
-                let obj = {}
-                let dt  = new Date(_data[i]["date"])
-
-                if(props.dataset == "WEO")
-                    obj['date'] = dt.getUTCFullYear()
-                if(props.dataset == "COVID")
-                    obj['date'] = dt
-
-                obj['value'] = _data[i]["value"]
-                cData.push(obj)
-            } 
 
             let chartOpts = {
                 container: chartRef,
@@ -37,7 +23,7 @@ function IndicatorView(props) {
                 type: 'line',
                 name: `${data['fullname']}`,
                 dataset: props.dataset,
-                data: cData
+                data: data.data
             }
 
             CreateChart(chartOpts)

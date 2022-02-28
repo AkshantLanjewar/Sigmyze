@@ -7,6 +7,9 @@ function TableElem(props) {
     let iso3 = props.iso3
     let ind3 = props.ind3
 
+    const setActiveIndicator = props.setActiveIndicator
+    const setModalState      = props.setModalState
+
     const [indicatorData, setIndicatorData] = useState({ fName: null, unit: null })
     const [display, setDisplay] = useState(true)
 
@@ -20,16 +23,21 @@ function TableElem(props) {
 
             if(pack['data'] == undefined)
                 setDisplay(false)
+            if(pack['data'].length == 0)
+                setDisplay(false)
         }
 
         anon()
     })
 
     return (
-        <div className="t-elem" style={{ display: display ? "flex" : "none" }}>
-            <div className="elem fName">{indicatorData.fName}</div>
-            <div className="elem sName">{ind3}</div>
-            <div className="elem unit">{indicatorData.unit}</div>
+        <div 
+            className="t-elem" 
+            style={{ display: display ? "flex" : "none" }}
+            onClick={() => { setModalState(true); setActiveIndicator(ind3); }}>
+                <div className="elem fName">{indicatorData.fName}</div>
+                <div className="elem sName">{ind3}</div>
+                <div className="elem unit">{indicatorData.unit}</div>
         </div>
     )
 }
@@ -38,6 +46,9 @@ function TableView(props) {
     let dataset        = props.dataset
     let activeCategory = props.activeCategory
     let activeCountry  = props.activeCountry
+
+    const setModalState      = props.setModalState
+    const setActiveIndicator = props.setActiveIndicator
 
     const [activeCharts, setActiveCharts] = useState([])
     useEffect(() => {
@@ -66,7 +77,14 @@ function TableView(props) {
                 <div className="elem unit">Unit</div>
             </div>
 
-            {activeCharts.map((step) => ( <TableElem iso3={step.iso3} ind3={step.category} dataset={dataset} /> ))}
+            {activeCharts.map((step) => ( 
+                <TableElem 
+                    iso3={step.iso3} 
+                    ind3={step.category} 
+                    dataset={dataset} 
+                    setModalState={setModalState} 
+                    setActiveIndicator={setActiveIndicator}/> 
+            ))}
         </div>
     )
 }

@@ -58,26 +58,31 @@ function ResourcesPage() {
 
     return (
         <div className="resources">
-            <header>
-                <div className="inner">
-                    <div className="t-row">
-                        <h1>Datasets</h1>
+            <section className="dark">
+
+            </section>
+
+            <section className="wave">
+                <div className="card-container">
+                    <div className="row">
+                        <div className="card">
+                            
+                        </div>
+
+                        <div className="card">
+                            
+                        </div>
+
+                        <div className="card">
+                            
+                        </div>
                     </div>
-
-                    <ul className="tabs">
-                        <li className="active">
-                            <a href="#" className="">View All</a>
-                        </li>
-
-                    </ul>
                 </div>
-            </header>
+            </section>
 
-            <main>
-                <div className="inner">
-                    {datasets.map((step) => ( <Dataset dataset={step.name} /> ))}
-                </div>
-            </main>
+            <section className="light">
+
+            </section>
         </div>
     )
 }
