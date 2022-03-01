@@ -53,7 +53,7 @@
     }
 
     section.wave {
-        padding-bottom: 8rem;
+        padding-bottom: 2rem;
         position: relative;
         padding-top: 0;
 
@@ -95,6 +95,20 @@
                     word-wrap: break-word;
                     background-clip: border-box;
                     border-radius: 0.5rem;
+
+                    svg {
+                        display: inline-flex;
+                        text-align: center;
+                        align-items: center;
+                        font-size: 2.75rem;
+                    }
+
+                    h4 {
+                        margin-bottom: 1.5rem;
+                        font-size: 24px;
+                    }
+
+                    p { font-size: 16px; }
                 }
             }
         }
@@ -103,6 +117,57 @@
     section.light {
         padding-bottom: 8rem;
         position: relative;
+        display: flex;
+        justify-content: center;
+
+        .inner {
+            max-width: 1140px;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+
+            .row {
+                margin-left: -15px;
+                margin-right: -15px;
+
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                flex-direction: column;
+
+                &.title {
+                    text-align: center;
+                    flex: 0 0 100%;
+                    max-width: 100%;
+
+                    h2 {
+                        font-size: 2.5rem;
+                        margin-bottom: 1rem;
+                        font-weight: 600;
+                    }
+
+                    p {
+                        padding-left: 8rem!important;
+                        padding-right: 8rem!important;
+                        font-size: 1.25rem;
+                        font-weight: 400;
+                    }
+                }
+
+                .dataset {
+                    margin-bottom: 1.5rem;
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                    min-width: 0;
+
+                    position: relative;
+                    background-color: $dark-bg;
+                    
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+        }
     }
 }
 

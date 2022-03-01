@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react"
 
+import { FaBoxes, FaChartBar, FaGraduationCap } from 'react-icons/fa'
+
 function Dataset(props) {
     const [display, setDispay] = useState(true)
     const [dataInfo, setDataInfo] = useState({})
@@ -66,22 +68,51 @@ function ResourcesPage() {
                 <div className="card-container">
                     <div className="row">
                         <div className="card">
-                            
+                            <FaBoxes />
+                            <h4>Wide Variety</h4>
+
+                            <p>
+                                Explore a wide variety of different datasets covering different topics.
+                                From Economic data, to the COVID pandemic, we have you covered. 
+                            </p>
                         </div>
 
                         <div className="card">
-                            
+                            <FaChartBar />
+                            <h4>Visuals</h4>
+
+                            <p>
+                                Easily create visualisations, without worrying about cleaning and processing 
+                                thousands of lines of data.
+                            </p>
                         </div>
 
                         <div className="card">
-                            
+                            <FaGraduationCap />
+                            <h4>Accurate</h4>
+
+                            <p>
+                                Dont every worry about accuracy or revisions again. 
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
             <section className="light">
+                <div className="inner">
+                    <div className="row title">
+                        <h2>Available Datasets</h2>
 
+                        <p>
+                            Active Datasets currently hosted by Sigmyze
+                        </p>
+                    </div>
+
+                    <div className="row datasets">
+                        <Dataset dataset={"WEO"} />
+                    </div>
+                </div>
             </section>
         </div>
     )
