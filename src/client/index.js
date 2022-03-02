@@ -15,9 +15,11 @@ import UserVerify from './components/user/user-verify'
 import Modal from './components/modal'
 import UserDropdown from './components/user/user-dropdown'
 import Toastbar from './components/toast'
+import ChartComponents from './components/chart-builder/side-components'
 
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
 import { RiHomeFill } from 'react-icons/ri'
+import { FiPlusSquare } from 'react-icons/fi'
 import { AiOutlineQuestionCircle, AiFillDatabase } from 'react-icons/ai'
 
 function Omega() {
@@ -33,7 +35,7 @@ function Omega() {
 }
 
 import Logo from '../svg/logo.svg'
-import './sass/index.scss' 
+import './sass/index.scss'
 
 let pageNav = [
     { name: "Homepage", icon: <RiHomeFill />, active: false, url: '/' },
@@ -41,8 +43,6 @@ let pageNav = [
     { name: "Datasets", icon: <AiFillDatabase />, active: false, url: '/datasets' },
     { name: "About Us", icon: <AiOutlineQuestionCircle />, active: false, url: '/about' }
 ]
-
-// tt racist
 
 function App() {
     //refs
@@ -52,13 +52,22 @@ function App() {
     const mainRef = React.createRef()
 
     function ToggleSidenav() {
+        let activePage = {}
+        for (let i = 0; i < navState.length; i++) {
+            if (navState[i].active == true)
+                activePage = navState[i]
+        }
+
+        if (activePage.name == "Charts")
+            return
+
         sidenavRef.current.classList.toggle("expand")
         togglerRef.current.classList.toggle("expand")
         topRef.current.classList.toggle("expand")
         mainRef.current.classList.toggle("expand")
     }
 
-    const [loginState, setLoginState]   = useState(false)
+    const [loginState, setLoginState] = useState(false)
     const [verifyState, setVerifyState] = useState(false)
 
     const [userTitle, setUserTitle] = useState("Login")
@@ -69,11 +78,11 @@ function App() {
     useEffect(() => {
         let path = window.location.pathname
         let tNavState = navState
-        for(let i = 0; i < tNavState.length; i++) {
+        for (let i = 0; i < tNavState.length; i++) {
             let nav = tNavState[i]
             nav['active'] = false
 
-            if(nav.url == path)
+            if (nav.url == path)
                 nav['active'] = true
             tNavState[i] = nav
         }
@@ -88,10 +97,16 @@ function App() {
         setNavState([...tNavState])
     }, [])
 
+    const [chartPage, setChartPage] = useState(false)
+    function OnChartBuilder() {
+        togglerRef.current.click()
+        setChartPage(true)
+    }
+
     return (
         <div>
             <Toastbar messages={messages} />
-            
+
             <Modal viewState={loginState} setViewState={setLoginState} title={userTitle} small={true}>
                 <UserAuth setUserTitle={setUserTitle} setMessages={setMessages} />
             </Modal>
@@ -110,10 +125,10 @@ function App() {
                     </div>
 
                     <div className='content'>
-                        <ul style={{marginTop: "1em"}}>
+                        <ul style={{ marginTop: "1em" }}>
                             {navState.map((step) => {
                                 return (
-                                    <li className={`tooltip-right t-side ${ step.active ? 'active' : '' }`} data-tooltip={step.name}>
+                                    <li className={`tooltip-right t-side ${step.active ? 'active' : ''}`} data-tooltip={step.name}>
                                         <a href={step.url}>
                                             {step.icon}
                                             <span className='truncate'>{step.name}</span>
@@ -122,6 +137,8 @@ function App() {
                                 )
                             })}
                         </ul>
+                        
+                        <ChartComponents />
                     </div>
                 </div>
             </aside>
@@ -136,18 +153,21 @@ function App() {
 
                     <div className='right'>
                         <ul>
-                            {loggedIn.logged  
-                                ? ( 
-                                    loggedIn.verified 
-                                    ? <UserDropdown /> 
-                                    : ( <li style={{marginLeft: "1em"}}>
+                            <li className='add-component tooltip-bottom' data-tooltip="Add Component">
+                                <FiPlusSquare />
+                            </li>
+                            {loggedIn.logged
+                                ? (
+                                    loggedIn.verified
+                                        ? <UserDropdown />
+                                        : (<li style={{ marginLeft: "1em" }}>
                                             <a className='login-btn' onClick={() => { setVerifyState(true) }}>Verify</a>
-                                        </li> )
+                                        </li>)
                                 )
-                                : (<li style={{marginLeft: "1em"}}>
+                                : (<li style={{ marginLeft: "1em" }}>
                                     <a className='login-btn' onClick={() => { setLoginState(true) }}>Login</a>
                                 </li>)
-                            }   
+                            }
                         </ul>
                     </div>
                 </div>
@@ -158,14 +178,16 @@ function App() {
                     <Switch>
                         <Route exact path="/">
                             <Homepage setLoginState={setLoginState} loggedIn={loggedIn} />
-                        </Route> 
-                        
-                        <Route exact path="/chart" component={ChartBuilderPage} />
+                        </Route>
+
+                        <Route exact path="/chart">
+                            <ChartBuilderPage OnChartBuilder={OnChartBuilder} />
+                        </Route>
                         <Route exact path="/about" component={AboutUsPage} />
-                        
+
                         <Route
                             path="/datasets"
-                            render={({match: { url }}) => (
+                            render={({ match: { url } }) => (
                                 <>
                                     <Route path={`${url}/`} component={ResourcesPage} exact />
                                     <Route path={`${url}/:dataset`} component={DatasetPage} />
@@ -181,6 +203,6 @@ function App() {
 
 ReactDOM.render(<App />, document.getElementById("root"))
 
-window.onerror = function(message, url, lineNumber) {
+window.onerror = function (message, url, lineNumber) {
     return true
 }
