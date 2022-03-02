@@ -21,7 +21,7 @@ function IndicatorView(props) {
                 container: chartRef,
                 containerHeight: 328,
                 type: 'line',
-                name: `${data['fullname']}`,
+                name: `${data['fullname']}-modal`,
                 dataset: props.dataset,
                 data: data.data
             }

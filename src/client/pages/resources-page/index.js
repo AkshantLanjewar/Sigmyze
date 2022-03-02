@@ -31,9 +31,9 @@ function Dataset(props) {
     
     return (
         <div className="dataset" style={{ display: display ? "flex" : "none" }} onClick={OnDataset}>
-            <div className="body">
+            <div className="inner">
                 <div className="title">
-                    <img src={`/logos/${dataset}${fileExtension}`} width={"50px"} height={"50px"} />
+                    <img src={`/logos/${dataset}${fileExtension}`} width={"70px"} height={"70px"} />
                     <h6>{dataInfo.fulltitle} ({dataset})</h6>
                 </div>
 
@@ -59,41 +59,61 @@ function ResourcesPage() {
     }, [])
 
     return (
-        <div className="resources">
+        <div className="info-page">
             <section className="dark">
-
+                <div className="inner">
+                    <h1>Datasets</h1>
+                </div>
             </section>
 
             <section className="wave">
                 <div className="card-container">
                     <div className="row">
                         <div className="card">
-                            <FaBoxes />
-                            <h4>Wide Variety</h4>
+                            <div className="header">
+                                <div className="circle-icon">
+                                    <FaBoxes />
+                                </div>
+                                <h4>Wide Variety</h4>
+                            </div>
 
-                            <p>
-                                Explore a wide variety of different datasets covering different topics.
-                                From Economic data, to the COVID pandemic, we have you covered. 
-                            </p>
+                            <div className="body">
+                                <p>
+                                    Explore a wide variety of different datasets covering different topics.
+                                    From Economic data, to the COVID pandemic, we have you covered. 
+                                </p>
+                            </div>
                         </div>
 
                         <div className="card">
-                            <FaChartBar />
-                            <h4>Visuals</h4>
+                            <div className="header">
+                                <div className="circle-icon">
+                                    <FaChartBar />
+                                </div>
+                                <h4>Visuals</h4>
+                            </div>
 
-                            <p>
-                                Easily create visualisations, without worrying about cleaning and processing 
-                                thousands of lines of data.
-                            </p>
+                            <div className="body">
+                                <p>
+                                    Easily create visualisations, without worrying about cleaning and processing 
+                                    thousands of lines of data. 
+                                </p>
+                            </div>
                         </div>
 
                         <div className="card">
-                            <FaGraduationCap />
-                            <h4>Accurate</h4>
+                            <div className="header">
+                                <div className="circle-icon">
+                                    <FaGraduationCap />
+                                </div>
+                                <h4>Accurate</h4>
+                            </div>
 
-                            <p>
-                                Dont every worry about accuracy or revisions again. 
-                            </p>
+                            <div className="body">
+                                <p>
+                                    Dont every worry about accuracy or revisions again. 
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,7 +130,9 @@ function ResourcesPage() {
                     </div>
 
                     <div className="row datasets">
-                        <Dataset dataset={"WEO"} />
+                        {datasets.map((step) => (
+                            <Dataset dataset={step.name} />
+                        ))}
                     </div>
                 </div>
             </section>
