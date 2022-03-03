@@ -16,6 +16,7 @@ import Modal from './components/modal'
 import UserDropdown from './components/user/user-dropdown'
 import Toastbar from './components/toast'
 import ChartComponents from './components/chart-builder/side-components'
+import ComponentModal from './components/chart-builder/component-adder'
 
 import { HiOutlineMenuAlt1 } from 'react-icons/hi'
 import { RiHomeFill } from 'react-icons/ri'
@@ -98,6 +99,7 @@ function App() {
     }, [])
 
     const [chartPage, setChartPage] = useState(false)
+    const [chartModal, setChartModal] = useState(false)
     function OnChartBuilder() {
         togglerRef.current.click()
         setChartPage(true)
@@ -114,6 +116,8 @@ function App() {
             <Modal viewState={verifyState} setViewState={setVerifyState} title={"Verify Account"} small={true}>
                 <UserVerify setMessages={setMessages} />
             </Modal>
+
+            <ComponentModal viewState={chartModal} setViewState={setChartModal} />
 
             <aside className='sidenav' ref={sidenavRef}>
                 <div className='nav'>
@@ -153,7 +157,7 @@ function App() {
 
                     <div className='right'>
                         <ul>
-                            <li className='add-component tooltip-bottom' data-tooltip="Add Component">
+                            <li className='add-component tooltip-bottom' data-tooltip="Add Component" onClick={() => { setChartModal(true) }}>
                                 <FiPlusSquare />
                             </li>
                             {loggedIn.logged
