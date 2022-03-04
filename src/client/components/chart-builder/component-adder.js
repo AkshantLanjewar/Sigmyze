@@ -1,6 +1,18 @@
 import React, { useState } from "react"
 
+import DatasetView from './adder-views/dataset-view'
+import IndicatorView from './adder-views/indicator-view'
+
 function ComponentModal(props) {
+    const [activeBtn, setActiveBtn] = useState(false)
+    const [activeView, setActiveView] = useState("indicator")
+
+    let view = null
+    if(activeView == "dataset")
+        view = <DatasetView setActiveBtn={setActiveBtn} />
+    if(activeView == "indicator")
+        view = <IndicatorView dataset={"WEO"} />
+
     return (
         <div className="component-sidebar">
             <div className="header">
@@ -9,35 +21,11 @@ function ComponentModal(props) {
             </div>
 
             <div className="body">
-                <div className="dataset">
-                    <div className="inner">
-                        <div className="title">
-                            <img src={"/logos/WEO.svg"} width={"70px"} height={"70px"} />
-                            <h6>World Economic Outlook (WEO)</h6>
-                        </div>
-
-                        <div className="body">
-                            <p>Indicator Description</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="dataset">
-                    <div className="inner">
-                        <div className="title">
-                            <img src={"/logos/WEO.svg"} width={"70px"} height={"70px"} />
-                            <h6>World Economic Outlook (WEO)</h6>
-                        </div>
-
-                        <div className="body">
-                            <p>Indicator Description</p>
-                        </div>
-                    </div>
-                </div>
+                {view}
             </div>
 
             <div className="footer">
-                <button>Continue</button>
+                <button className={`${activeBtn ? 'primary' : ''}`}>Continue</button>
             </div>
         </div>
     )
