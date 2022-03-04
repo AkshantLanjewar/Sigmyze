@@ -13,7 +13,7 @@ function ComponentModal(props) {
             </div>
 
             <div className="footer">
-
+                <button>Continue</button>
             </div>
         </div>
     )
