@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import IconHash from "../../icon-hash"
+
 import { GetDatasetIndicators } from '../../../data/indicator'
+import CountrySearch from "../../../pages/resources-page/components/country-search"
 
 function Indicator(props) {
     const obj = props.indicator_obj
@@ -83,6 +85,7 @@ function IndicatorView(props) {
 
     return (
         <div>
+            <CountrySearch />
             <div className="pills">                
                 {categories.map((step) => (
                     <span className={`pill ${step.active ? 'active' : ''}`} onClick={() => { SetActiveCategory(step.dataset) }}>
