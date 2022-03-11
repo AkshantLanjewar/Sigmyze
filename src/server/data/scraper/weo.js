@@ -74,9 +74,9 @@ async function TabulateWEOData() {
     
     fs.writeFileSync(`./indicatorDB/countries.json`, JSON.stringify(country_rep))
 
-    for(let i = 0; i < country_rep.length; i++) {
-        let country = country_rep[i]
+    async function validate_indicator(country) {
         let iso3 = country['iso3']
+        console.log('[DEBUG] : Validating ' + iso3)
         let active_indicators = []
 
         for(let x = 0; x < combined_indicators.length; x++) {
@@ -94,6 +94,8 @@ async function TabulateWEOData() {
             for(let y = 0; y < data_keys.length; y++) {
                 let date  = data_keys[y]
                 let value = rep_data[date]
+                if(value == null)
+                    continue
                 data.push({ date: date, value: value })
             }
 
@@ -103,6 +105,11 @@ async function TabulateWEOData() {
         }
 
         fs.writeFileSync(`./indicatorDB/WEO/countries/${iso3}_active.json`, JSON.stringify(active_indicators))
+    }
+
+    for(let i = 0; i < country_rep.length; i++) {
+        let country = country_rep[i]
+        validate_indicator(country)
     }
 }
 

@@ -43,6 +43,7 @@
 		"express-session": "^1.17.2",
 		"forever": "^4.0.1",
 		"i18n-iso-countries": "^6.8.0",
+		"idb": "^7.0.0",
 		"mongoose": "^5.10.11",
 		"mysql2": "^2.2.5",
 		"node-schedule": "^2.0.0",

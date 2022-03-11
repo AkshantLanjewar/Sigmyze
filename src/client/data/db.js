@@ -1,7 +1,15 @@
-import Dexie from 'dexie'
+import { openDB } from 'idb/with-async-ittr.js'
 
-export const db = new Dexie('lunar')
-db.version(1).stores({
-    indicators: '[iso3+ind3],iso3,fullname,ind3,units,&*data',
-    descriptions: '[iso3+ind3], iso3, ind3, profile'
-})
+async function CreateDB() {
+    const db = await openDB('sigmyze', 1, {
+        upgrade(db) {
+            //create stores
+            const indicatorStore         = db.createObjectStore('indicator_v')
+            const countryIndicatorsStore = db.createObjectStore('country_indicators') 
+        }
+    })
+
+    return db
+}
+
+export default CreateDB

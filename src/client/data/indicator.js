@@ -1,47 +1,11 @@
-import { db } from './db'
-
-async function AddIndicator(iso3, fullname, ind3, indicator, data) {
-    db.indicators.put({
-        iso3: iso3,
-        fullname: fullname,
-        ind3: ind3,
-        units: indicator,
-        data: data
-    })
-}
-
-async function GetIndicator(iso3, ind3) {
-    let data = await db.indicators.where({
-        iso3: iso3,
-        ind3: ind3
-    }).toArray()
-
-    return data
-}
-
-async function GetIndicatorDetails(iso3, ind3, dataset) {
-    let data = await db.descriptions.where({
-        iso3: iso3,
-        ind3: ind3
-    }).toArray()
-
-    if(data.length == 0) {
-        let url  = `/api/data/v2/datasets/${dataset}/definitions/${ind3}`
-        let rep  = await ( await fetch(url) ).json()
-        let data = rep.data
-
-        console.log(data)
-    } else
-        return data[0]
-}
+import CreateDB from './db'
 
 async function GetIndicatorV(iso3, ind3, dataset) {
-    let data = await db.indicators.where({
-        iso3: iso3,
-        ind3: ind3
-    }).toArray()
+    let db  = await CreateDB()
+    let key = `${iso3}${ind3}`
+    let res = await db.get('indicator_v', key) 
 
-    if(data.length == 0) {
+    if(res == undefined) {
         let url = `/api/data/v2/datasets/${dataset}/${iso3}/${ind3}`
         let rep = await (await fetch(url)).json()
         let data = rep.data
@@ -54,10 +18,50 @@ async function GetIndicatorV(iso3, ind3, dataset) {
             data: data
         }
 
-        db.indicators.put(obj)
+        await db.put('indicator_v', obj, key)
         return obj 
     } else
-        return data[0]
+        return res
 }
 
-export { AddIndicator, GetIndicator, GetIndicatorV, GetIndicatorDetails }
+async function GetDatasetIndicators(dataset, iso3) {
+    let db  = await CreateDB()
+    let key = `${dataset}${iso3}`
+    let res = await db.get('country_indicators', key)
+
+    if(res == undefined) {
+        let catUrl  = `/api/data/v2/datasets/${dataset}/categories`
+        let catRep  = await ( await fetch(catUrl) ).json()
+        let catData = catRep.data
+
+        let indicator_list = []
+        
+        for(let i = 0; i < catData.length; i++) {
+            let category = catData[i].replace(dataset, '')
+            let subUrl   = `/api/data/v2/datasets/${dataset}/categories/${category}/${iso3}`
+            let subRep   = await ( await fetch(subUrl) ).json()
+            let subData  = subRep.indicators
+
+            for(let i = 0; i < subData.length; i++) {
+                let indicator = subData[i]
+                indicator['category'] = category.replace(dataset, '')
+                indicator_list.push(indicator) 
+            }
+        }
+
+        let obj = {
+            dataset: dataset,
+            iso3: iso3,
+            indicators: indicator_list
+        }
+
+        await db.put('country_indicators', obj, key)
+        return obj
+    } else
+        return res
+}
+
+export { 
+    GetIndicatorV, 
+    GetDatasetIndicators 
+}

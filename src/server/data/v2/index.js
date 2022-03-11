@@ -9,8 +9,7 @@ const HTTP_Promise = utils.HTTP_Promise
 function V2APIRouter() {
     const router = Router()
     const datasets = [
-        { name: 'WEO', type: 'econdata' },
-        { name: 'COVID', type: 'covid' }
+        { name: 'WEO', type: 'econdata' }
     ]
 
     router.get('/', (req, res) => {
