@@ -7,7 +7,6 @@ const map       = require('./v1/map')
 
 const v2 = require('./v2/index')
 const WEOTab = require('./scraper/weo.js')
-const COVIDTab = require('./scraper/covid')
 
 function DataRouter() {
     //set the cron task

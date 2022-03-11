@@ -6,12 +6,13 @@ import IndicatorView from './adder-views/indicator-view'
 function ComponentModal(props) {
     const [activeBtn, setActiveBtn] = useState(false)
     const [activeView, setActiveView] = useState("indicator")
+    const [activeCountry, setActiveCountry] = useState("USA")
 
     let view = null
     if(activeView == "dataset")
         view = <DatasetView setActiveBtn={setActiveBtn} />
     if(activeView == "indicator")
-        view = <IndicatorView dataset={"WEO"} />
+        view = <IndicatorView dataset={"WEO"} activeCountry={activeCountry} />
 
     return (
         <div className="component-sidebar">
