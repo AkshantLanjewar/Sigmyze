@@ -4,6 +4,7 @@ import Dataset from "../../../pages/resources-page/components/dataset-card"
 function DatasetView(props) {
     const [datasets, setDatasets] = useState([])
     const setActiveBtn = props.setActiveBtn
+    const setDataset   = props.setDataset
 
     useEffect(() => {
         const url = `/api/data/v2/datasets`
@@ -18,17 +19,21 @@ function DatasetView(props) {
     }, [])
 
     function SetActive(dataset) {
-        const stepName = dataset.name
+        const stepName    = dataset.name
+        let tmpDatasets   = datasets
+        let activeDataset = null
 
-        let tmpDatasets = datasets
         for(let i = 0; i < tmpDatasets.length; i++) {
             tmpDatasets[i]['active'] = false
-            if(tmpDatasets[i].name == stepName)
+            if(tmpDatasets[i].name == stepName) {
                 tmpDatasets[i]['active'] = true
+                activeDataset = tmpDatasets[i]
+            }
         }
 
         setDatasets([...tmpDatasets])
         setActiveBtn(true)
+        setDataset({...activeDataset})
     }
 
     return (

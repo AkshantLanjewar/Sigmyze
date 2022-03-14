@@ -275,7 +275,9 @@
                 padding-left: 6px;
                 padding-right: 16px;
                 justify-content: space-between;
+                margin-bottom: 6px;
 
+                &.active { background-color: $primary-bg; }
                 &:hover { background-color: $primary-bg; }
 
                 .title {
@@ -307,7 +309,7 @@
 
                 .chart {
                     height: 80%;
-                    width: 25%;
+                    width: 20%;
                 }
             }
         }
