@@ -9,6 +9,7 @@ import AboutUsPage from './s-pages/about/about'
 import ResourcesPage from './s-pages/about/resources'
 import WeoDef from './s-pages/about/weodef'
 import CovidDef from './s-pages/about/coviddef'
+import CustomMap from './s-pages/custommap/custommap'
 import ChartBuilderPage from './u-pages/chart-builder/index';
 
 import './sass/index.scss'
@@ -19,9 +20,15 @@ function App() {
             <BrowserRouter>
                 <Switch>
                     <Route exact path="/" component={Homepage} />
-                    //<Route exact path="/chart" component={ChartBuilderPage} />
-                    //<Route exact path="/about" component={AboutUsPage} />
+                    <Route exact path="/indicator" component={IndicatorPage} />
+                    <Route exact path="/about" component={AboutUsPage} />
+                    <Route exact path="/chart" component={ChartBuilderPage} />
+                    <Route exact path="/resources" component={ResourcesPage} />
+                    <Route exact path="/weodef" component={WeoDef} />
+                    <Route exact path="/coviddef" component={CovidDef} />
+                    <Route exact path="/custommap" component={CustomMap} />
 
+                    /*
                     <Route
                         path="/indicator"
                         render={({ match: { url } }) => (
@@ -71,6 +78,7 @@ function App() {
                                 <Route path={`${url}/`} component={CovidDef} exact />
                             </>
                           )} />
+                      */
 
                     {/*<Route exact path="/business" component={Projectpage} />
                     <Route path="/dashboard/:dashboard" children={<DashboardPage />} />*/}

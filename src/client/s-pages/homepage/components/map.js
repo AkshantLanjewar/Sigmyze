@@ -46,7 +46,7 @@ function Legend(props) {
         let x = d3.scaleLinear().domain([mapMin, mapMax]).range([0, svgDims.width - 1])
         let g = svg.append("g")
             .attr("transform", `translate(0, ${30})`)
-        
+
         svg.append("image")
             .attr("preserveAspectRatio", "none")
             .attr("width", `${svgDims.width}px`)
@@ -71,15 +71,16 @@ function Legend(props) {
 
 function Map() {
     const InitialViewState = {
-        longitude: 65.41669,
-        latitude: 37.7853,
-        zoom: 2,
-        pitch: 0,
-        bearing: 0
+      longitude: 10,
+      latitude: 37.7853,
+      zoom: 1,
+      pitch: 0,
+      bearing: 0
     }
 
     const [mapdata, setMapData] = useState(null)
     const [colorscale, setColorScale] = useState({min: 0, max: 0})
+    const [mapInfo, setMapInfo] = useState({})
 
     function HexToArr(hex) {
         var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -98,17 +99,17 @@ function Map() {
                 setColorScale({min: data["minGrowth"], max: data["maxGrowth"]})
                 setMapData(geojson)
             })
-    }, []) 
+    }, [])
 
     const interpolater = d3.scaleSequential(d3.interpolatePlasma).domain([colorscale.min, colorscale.max])
     const geoLayer = new GeoJsonLayer({
         id: "geomap",
         data: mapdata,
         opacity: 0.8,
-        stroked: false,
+        stroked: true,
         visible: true,
         filled: true,
-        extruded: true,
+        extruded: false,
         wireframe: true,
         getElevation: (f) => 1000,
         getFillColor: (f) => {
@@ -118,23 +119,32 @@ function Map() {
             if(growth == null)
                 return [255, 255, 255]
         },
-        getLineColor: [255, 255, 255],
-        pickable: true
+        getLineColor: [200,200,200],
+        getLineWidth: 1,
+        lineWidthMinPixels:1,
+        pickable: true,
+        onClick: info => setMapInfo(info),
+        onHover: info => setMapInfo(info)
     })
 
     const layers = [geoLayer]
 
     return (
         <section className="home-map">
-            <DeckGL initialViewState={InitialViewState} 
+            <DeckGL initialViewState={InitialViewState}
                     controller={true}
                     layers={layers}>
                 <Legend
-                    mapName={"Global GDP Growth"}
+                    mapName={"GDP Growth"}
                     mapDesc={"from 2020 in %"}
                     mapMin={colorscale.min}
                     mapMax={colorscale.max} />
                 <StaticMap mapStyle={BASEMAP.POSITRON_NOLABELS} />
+                {mapInfo.object && (
+                  <div className='mapToolTip' style={{position:'absolute', zIndex: 999, pointerEvents: 'none', left:mapInfo.x+10, top:mapInfo.y-10}}>
+                    {mapInfo.object.properties.name + ', '+mapInfo.object.properties.growth}
+                  </div>
+                )}
             </DeckGL>
         </section>
     )

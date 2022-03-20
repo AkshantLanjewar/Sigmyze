@@ -54,7 +54,7 @@ function Homepage(props) {
                         <Map />
                     </div>
 
-                    <a className='exploreMore' href="/indicator">Explore More</a>
+                    <a className='exploreMore' href="/custommap">Explore More</a>
                 </header>
 
 
