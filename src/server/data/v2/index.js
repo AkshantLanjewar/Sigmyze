@@ -14,7 +14,7 @@ function ContainsIndicator(indicator, list) {
 
 //const API_ROOT = "http://34.70.145.116:8080"
 const API_ROOT = "http://34.66.146.203:8080"
-//const API_ROOT = 'http://127.0.0.1'
+
 
 function HTTP_Promise(sublet) {
 

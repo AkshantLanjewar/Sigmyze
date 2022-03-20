@@ -19,8 +19,7 @@ function Homepage(props) {
     if(windowWidth <= 500)
         viewcount = 1
 
-    console.log('*******')
-    console.log(viewcount)
+
 
     let cards = []
     for(let i = 0; i < 8; i++)
