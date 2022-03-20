@@ -4,6 +4,9 @@ import DatasetView from './adder-views/dataset-view'
 import IndicatorView from './adder-views/indicator-view'
 
 function ComponentModal(props) {
+    const viewState    = props.viewState
+    const setViewState = props.setViewState 
+
     const [activeBtn, setActiveBtn] = useState(false)
     const [submitBtn, setSubmitBtn] = useState(false)
     const [activeView, setActiveView] = useState("dataset")
@@ -23,10 +26,10 @@ function ComponentModal(props) {
     }
 
     return (
-        <div className="component-sidebar">
+        <div className={`component-sidebar ${ viewState ? 'view' : '' }`}>
             <div className="header">
                 <h5>Select Dataset</h5>
-                <button className="close"></button>
+                <button className="close" onClick={() => { setViewState(false) }}></button>
             </div>
 
             <div className="body">

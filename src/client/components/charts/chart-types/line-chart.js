@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
-import { ScaleUTC, ScalePoint, LinearAxisFormatter } from './scales'
-import { ProcessSigmyzeData } from './data'
+import { ScaleUTC, ScalePoint, LinearAxisFormatter } from '../addons/scales'
+import { ProcessSigmyzeData } from '../addons/data'
 
 function LineChart(opts, margin, svg) {
     function LinePath(x, y) {
@@ -31,16 +31,23 @@ function LineChart(opts, margin, svg) {
         x = ScalePoint(opts['data'], width, margin)
     y = LinearAxisFormatter(opts['data'], height, margin)
 
-    let showXAxis = true
-    let showYAxis = true
+    let showXAxis   = false
+    let showYAxis   = false
+    let sharedYAxis = false
     if("showXAxis" in opts)
         showXAxis = opts['showXAxis']
     if("showYAxis" in opts)
         showYAxis = opts['showYAxis']
+    if("sharedYAxis" in opts)
+        sharedYAxis = opts['sharedYAxis']
     
-    let maxNum, minNum = 0
+    let maxNum = 0
+    let minNum = 0
     for(let i = 0; i < opts['data'].length; i++) {
         let data = opts['data'][i]
+        if(i == 0)
+            minNum = data.value
+
         if(data.value > maxNum)
             maxNum = data.value
         if(data.value < minNum)
@@ -50,6 +57,8 @@ function LineChart(opts, margin, svg) {
         if(data.date < minYr)
             minYr = data.date
     }
+
+    let yAxisOuptut, xAxisOutput
 
     if(showXAxis && xAxisType == 'Y') {
         let stepValue = Math.round((maxYr - minYr) / 6)
@@ -67,16 +76,43 @@ function LineChart(opts, margin, svg) {
             }
         }
 
-        svg.append("g")
+        xAxisOutput = svg.append("g")
             .attr('transform', `translate(0, ${height})`)
             .call(d3.axisBottom(x).tickFormat(d3.format('d')).tickValues(tickRange))
     } else if(showXAxis && xAxisType == 'D') {
-        svg.append("g")
+        xAxisOutput = svg.append("g")
             .attr("transform", `translate(0, ${height})`)
             .call(d3.axisBottom(x))
     }
 
-    svg.append("path")
+    if(showYAxis) {
+        const yAxis = d3.axisRight(y).ticks(height / 120)
+        yAxisOuptut = svg.append("g")
+            .attr("transform", `translate(${opts['width'] - margin['right']}, 0)`)
+            .call(yAxis)
+    }
+
+    if(sharedYAxis) {
+        let stepValue = Math.round((maxNum - minNum) / 8)
+        let tickRange = []
+        tickRange.push(minNum)
+
+        for(let i = 0; i < 10; i++) {
+            let val = tickRange[i] + stepValue
+
+            if(val >= maxNum) {
+                tickRange.push(maxNum)
+                break
+            } else {
+                tickRange.push(val)
+            }
+        }
+
+        if(opts['sharedState']['yFlagSet'] != true)
+            opts['setSharedState']({ y: y, yTickRange: tickRange, stepSize: stepValue,  yFlagSet: true})
+    }
+
+    opts['monitor'].append("path")
         .datum(opts['data'])
         .attr("fill", "none")
         .attr("stroke", "#456ef7")

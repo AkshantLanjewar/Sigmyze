@@ -18,9 +18,8 @@ import Toastbar from './components/toast'
 import ChartComponents from './components/chart-builder/side-components'
 import ComponentModal from './components/chart-builder/component-adder'
 
-import { HiOutlineMenuAlt1 } from 'react-icons/hi'
+import { HiOutlineMenuAlt1, HiOutlinePlusCircle } from 'react-icons/hi'
 import { RiHomeFill } from 'react-icons/ri'
-import { FiPlusSquare } from 'react-icons/fi'
 import { AiOutlineQuestionCircle, AiFillDatabase } from 'react-icons/ai'
 
 function Omega() {
@@ -98,11 +97,10 @@ function App() {
         setNavState([...tNavState])
     }, [])
 
-    const [chartPage, setChartPage] = useState(false)
+
     const [chartModal, setChartModal] = useState(false)
     function OnChartBuilder() {
         togglerRef.current.click()
-        setChartPage(true)
     }
 
     return (
@@ -158,8 +156,9 @@ function App() {
                     <div className='right'>
                         <ul>
                             <li className='add-component tooltip-bottom' data-tooltip="Add Component" onClick={() => { setChartModal(true) }}>
-                                <FiPlusSquare />
+                                <HiOutlinePlusCircle />
                             </li>
+                            
                             {loggedIn.logged
                                 ? (
                                     loggedIn.verified

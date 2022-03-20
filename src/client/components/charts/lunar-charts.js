@@ -1,11 +1,11 @@
 import * as d3 from 'd3'
 
-import SetupTooltip from './tooltip'
-import LineChart from './line-chart'
+import SetupTooltip from './addons/tooltip'
+import LargeTooltip from './addons/l-tooltip'
+import LineChart from './chart-types/line-chart'
 
 function CreateChart(opts) {
     let container       = opts['container']
-    let name            = opts['name']
     let chartType       = opts['type']
     let containerHeight = 0
 
@@ -13,7 +13,7 @@ function CreateChart(opts) {
         top: 20,
         right: 10,
         bottom: 20,
-        left: 10
+        left: 0
     }
 
     if("margin" in opts) {
@@ -39,24 +39,26 @@ function CreateChart(opts) {
                 .style('overflow', 'visible')
                 .style('z-index', '999')
 
-    let boundingBox = svg.node().getBoundingClientRect()
+    let boundingBox
+    if("boundingRect" in opts)
+        boundingBox = opts['boundingRect']
+    else
+        boundingBox = svg.node().getBoundingClientRect()
+        
     const rawWidth = boundingBox.width
-    const rawHeight = boundingBox.height - margin.top
-    
-    svg.append("defs")
-        .append("clipPath")
-        .attr("id", name)
-        .append('rect')
-        .attr("width", rawWidth)
-        .attr("height", rawHeight)
+    const rawHeight = boundingBox.height - margin.top - margin.bottom
 
+    let monitor = svg.append("g")
     opts['width']  = rawWidth
     opts['height'] = rawHeight
+    opts['monitor'] = monitor
 
     if(chartType == 'line')
         opts['axis'] = LineChart(opts, margin, svg)
     if(opts['tooltip'] !== false)
         SetupTooltip(opts, margin, svg)
+    if(opts['lTooltip'] == true)
+        LargeTooltip(opts, margin, svg)
 }
 
 export default CreateChart

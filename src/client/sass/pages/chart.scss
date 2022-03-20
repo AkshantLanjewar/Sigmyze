@@ -1,5 +1,71 @@
 @import '../vars.scss';
 
+.chart-builder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0 auto;
+
+    .chart-container {
+        width: calc(100% - 55px);
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        svg {
+            width: 100%;
+            height: calc(100% - 28px);
+        }
+
+        .x-axis {
+            height: 28px;
+            border-top: 1px solid $border;
+            background: $second-bg;
+        }
+    }
+
+    .y-axis {
+        width: 55px;
+        background: $second-bg;
+        overflow: hidden;
+        position: relative;
+        border-left: 1px solid $border;
+
+        .inner {
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            position: relative;
+            height: calc(100% - 28px);
+
+            .tick {
+                position: absolute;
+                padding-left: 10px;
+            }
+    
+            .tickValue {
+                background-color: $track;
+                width: 90%;
+                height: 25px;
+                z-index: 10;
+    
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                position: absolute;
+    
+                padding-left: 10px;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+        }
+    }
+}
+
 .add-component {
     width: auto;
     height: auto;
@@ -131,10 +197,12 @@
 }
 
 .component-sidebar {
-    display: flex;
+    display: none;
     flex-direction: column;
     transform: none;
     width: 33.3333333%!important;
+
+    &.view { display: flex; }
     
     border-left: 1px solid $border;
     right: 0;
