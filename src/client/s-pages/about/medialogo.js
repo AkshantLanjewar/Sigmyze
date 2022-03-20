@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react"
 
 import Navbar from '../../components/navbar';
 
-function ResourcesPage() {
+function MediaLogoPage() {
 
   const [definitions, setDefinitions] = useState([])
 
@@ -105,4 +105,4 @@ function ResourcesPage() {
   )
 }
 
-export default ResourcesPage
+export default MediaLogoPage

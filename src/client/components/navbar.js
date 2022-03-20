@@ -19,7 +19,10 @@ function Navbar() {
                 </div>
 
                 <div className="right">
-                    <a className="nav-item" href="/indicator">Country Charts</a>
+                    <a className="nav-item" href="/custommap">Maps</a>
+                </div>
+                <div className="right">
+                    <a className="nav-item" href="/indicator">Charts</a>
                 </div>
                 <div className="right">
                     <a className="nav-item" href="/chart">MyChart</a>
