@@ -68,9 +68,9 @@ function SetupTooltip(opts, margin, svg) {
         const index  = bisect(opts['data'], date, 1)
         
         let direction = "right"
-        if(opts['data'].length / 4 < index)
+        if(opts['data'].length / 2 < index)
             direction = "left"
-        return { data: opts['data'][index], direction: direction, index: index }
+        return { data: opts['data'][index - 1], direction: direction, index: index }
     }
 
     svg.on('mouseover', function () {
@@ -100,12 +100,12 @@ function SetupTooltip(opts, margin, svg) {
         yTitle.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
 
         if(axis['xAxisType'] == 'D')
-            yTitle.text(opts['data'][data.index].date.toDateString())
+            yTitle.text(opts['data'][data.index - 1].date.toDateString())
         if(axis['xAxisType'] == 'Y')
-            yTitle.text(opts['data'][data.index].date)
+            yTitle.text(opts['data'][data.index - 1].date)
 
         text.attr("transform", `translate(${boxTransform.x}, ${boxTransform.y})`)
-        text.text(preMSG + ": " + opts['data'][data.index].value)
+        text.text(preMSG + ": " + opts['data'][data.index - 1].value)
     })
 }
 

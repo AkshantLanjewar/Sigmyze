@@ -26,47 +26,49 @@ function ComponentModal(props) {
     }
 
     return (
-        <div className={`component-sidebar ${ viewState ? 'view' : '' }`}>
-            <div className="header">
-                <h5>Select Dataset</h5>
-                <button className="close" onClick={() => { setViewState(false) }}></button>
-            </div>
+        <div className={`background-ts ${ viewState ? 'view' : '' }`}>
+            <div className={`component-sidebar ${ viewState ? 'view' : '' }`}>
+                <div className="header">
+                    <h5>Select Dataset</h5>
+                    <button className="close" onClick={() => { setViewState(false) }}></button>
+                </div>
 
-            <div className="body">
-                {view}
-            </div>
+                <div className="body">
+                    {view}
+                </div>
 
-            <div className="footer">
-                {activeView == "dataset" &&
-                    <button
-                        onClick={() => {
-                            if (activeBtn)
-                                setActiveView("indicator")
-                        }}
-                        className={`${activeBtn ? 'primary' : ''}`}
-                    >
-                        Continue
-                    </button>
-                }
-
-                {activeView == "indicator" &&
-                    <>
-                        <button className=""
-                            onClick={() => {
-                                setActiveView("dataset")
-                            }}
-                        >
-                            Previous
-                        </button>
-
+                <div className="footer">
+                    {activeView == "dataset" &&
                         <button
-                            className={`${submitBtn ? 'primary' : ''}`}
-                            onClick={SubmitIndicator}
+                            onClick={() => {
+                                if (activeBtn)
+                                    setActiveView("indicator")
+                            }}
+                            className={`${activeBtn ? 'primary' : ''}`}
                         >
-                            Add
+                            Continue
                         </button>
-                    </>
-                }
+                    }
+
+                    {activeView == "indicator" &&
+                        <>
+                            <button className=""
+                                onClick={() => {
+                                    setActiveView("dataset")
+                                }}
+                            >
+                                Previous
+                            </button>
+
+                            <button
+                                className={`${submitBtn ? 'primary' : ''}`}
+                                onClick={SubmitIndicator}
+                            >
+                                Add
+                            </button>
+                        </>
+                    }
+                </div>
             </div>
         </div>
     )

@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react"
 import * as d3 from 'd3'
 
 import GenerateLinePath from './types/line'
-import YAxis from "./y-axis"
-import XAxis from './x-axis'
+import YAxis from "./axis/y-axis"
+import XAxis from './axis/x-axis'
 import { GetIndicatorV } from '../../../data/indicator'
+
+//scales
+import { ScaleUTC, LinearAxisFormatter } from './scales'
 
 function ChartBuilder(props) {
     const chartList = props.charts
@@ -21,7 +24,7 @@ function ChartBuilder(props) {
     let margin = {
         top: 0,
         right: 5,
-        bottom: 0,
+        bottom: 10,
         left: 5
     }
 
@@ -42,31 +45,122 @@ function ChartBuilder(props) {
 
             setSvgDims({ width: rawWidth, height: boundingBox.height, paddedHeight: rawHeight })
             setSvgPoint(point)
-            
-            let tmpLinePaths = []
+
+            let data_points = []
             for(let i = 0; i < chartList.length; i++) {
                 let chart = chartList[i]
-
-                //grab the data
                 let data = await GetIndicatorV(chart['iso3'], chart['ind3'], chart['dataset'])
-                
-                let chart_return = {}
-                let options = chartOptions
-                options['dataset'] = chart['dataset']
-                options['data']    = data['data'] 
-
-                if(chart['type'] === 'line')
-                    chart_return = GenerateLinePath(options)
-
-                let path = chart_return['path']
-                let y    = chart_return['y']
-                let x    = chart_return['x']
-                tmpLinePaths.push({ path: path, y: y, x: x, data: data['data'] })
+                data_points.push(data)
             }
 
-            setActiveAxis({ x: tmpLinePaths[0].x, 
-                            y: tmpLinePaths[0].y, 
-                            data: tmpLinePaths[0].data })
+            let longest_set_num = 0
+            let longest_set
+
+            let min_value = 0
+            let max_value = 0
+            let max_date  = 0
+            let min_date  = 0
+
+            for(let i = 0; i < data_points.length; i++) {
+                let data    = data_points[i]
+                let arr     = data['data']
+                let arr_len = arr.length
+
+                if(arr_len > longest_set_num || i == 0) {
+                    longest_set_num = arr_len
+                    longest_set = arr
+                }
+
+                for(let x = 0; x < arr.length; x++) {
+                    let dp   = arr[x]
+                    let val  = dp.value
+                    let date = parseInt(dp.date)
+
+                    if(x == 0 && i == 0) {
+                        min_value = val
+                        max_value = val
+                        min_date  = date
+                        max_date  = date
+                    }
+
+                    if(val > max_value)
+                        max_value = val
+                    if(val < min_value)
+                        min_value = val
+                    if(date < min_date)
+                        min_date = date
+                    if(date > max_date)
+                        max_date = date
+                }
+            }
+
+            //generate the scales now
+            const x = ScaleUTC(longest_set, rawWidth, margin)
+            const y = LinearAxisFormatter(min_value, max_value, rawHeight, margin)
+
+            //generate the steps for x
+            let xStepValue = Math.round((max_date - min_date) / 6)
+            let xTickRange = []
+            xTickRange.push(min_date)
+
+            for(let i = 0; i < 7; i++) {
+                let val = xTickRange[i] + xStepValue
+
+                if(val >= max_date) {
+                    xTickRange.push(max_date)
+                    break
+                } else {
+                    xTickRange.push(val)
+                }
+            }
+
+            //generate the steps for y
+            let yStepValue = Math.round((max_value - min_value) / 20)
+            let yTickRange = []
+            yTickRange.push(min_value)
+
+            for(let i = 0; i < 20; i++) {
+                let val = yTickRange[i] + yStepValue
+
+                if(val >= max_value) {
+                    yTickRange.push(max_value)
+                    break
+                } else {
+                    yTickRange.push(val)
+                }
+            }
+            
+            let tmpLinePaths = []
+            
+            let xPackage = {
+                x: x,
+                tickRange: xTickRange,
+                stepValue: xStepValue
+            }
+
+            let yPackage = {
+                y: y,
+                tickRange: yTickRange,
+                stepValue: yStepValue
+            }
+
+
+            //setup the paths
+            for(let i = 0; i < data_points.length; i++) {
+                let data = data_points[i]
+                
+                let options     = chartOptions
+                options['x']    = xPackage
+                options['y']    = yPackage
+                options['data'] = data
+
+                let path = GenerateLinePath(options)
+                tmpLinePaths.push({ path: path, data: data['data'] })
+            }
+
+            setActiveAxis({ x: xPackage, 
+                            y: yPackage, 
+                            data: longest_set })
             setLinePaths(tmpLinePaths)
             setChartBuilt(true)
         }
@@ -97,7 +191,7 @@ function ChartBuilder(props) {
 
         const data = Bisect(d3.pointer(event)[0])
         let ry = CursorPoint(event).y
-        setTooltipPosition({ x: activeAxis.x.x(data.data.date), y: ry })
+        setTooltipPosition({ x: activeAxis.x.x(data.data.date), y: ry, date: data.data.date })
     }
 
     function MouseOver() {
