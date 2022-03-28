@@ -7,26 +7,35 @@ function YAxis(props) {
 
     const [ticks, setTicks]         = useState([])
     const [tickValue, setTickValue] = useState(0)
+
+    function Reset() {
+        setTicks([])
+        setTickValue(0)
+    }
     
     useEffect(() => {
-        if(activeAxis.y == null)
+        if(activeAxis.y == null) {
+            Reset()
             return
+        }
 
         let yAxis  = activeAxis.y
         let uTicks = []
         for(let i = yAxis.tickRange.length - 1; i >= 0; i--)
-            uTicks.push({ tick: Math.round(yAxis.tickRange[i]), margin: yAxis.y(yAxis.tickRange[i])})
+            uTicks.push({ tick: parseFloat(yAxis.tickRange[i].toFixed(2)), margin: yAxis.y(yAxis.tickRange[i])})
         setTicks(uTicks)
     }, [activeAxis])
 
     useEffect(() => {
-        if(activeAxis.y == null)
+        if(activeAxis.y == null) {
+            Reset()
             return
+        }
 
         let yAxis  = activeAxis.y
         let yPos   = tooltipPosition.y
         let yValue = yAxis.y.invert(yPos)
-        setTickValue(Math.round(yValue))
+        setTickValue(parseFloat(yValue.toFixed(2)))
     }, [tooltipPosition])
 
     return (

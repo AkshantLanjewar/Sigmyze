@@ -4,8 +4,10 @@ import DatasetView from './adder-views/dataset-view'
 import IndicatorView from './adder-views/indicator-view'
 
 function ComponentModal(props) {
-    const viewState    = props.viewState
-    const setViewState = props.setViewState 
+    const viewState           = props.viewState
+    const setViewState        = props.setViewState 
+    const activeIndicators    = props.activeIndicators
+    const setActiveIndicators = props.setActiveIndicators
 
     const [activeBtn, setActiveBtn] = useState(false)
     const [submitBtn, setSubmitBtn] = useState(false)
@@ -22,7 +24,25 @@ function ComponentModal(props) {
 
     function SubmitIndicator(e) {
         e.preventDefault()
-        console.log(indicator)
+        setViewState(false)
+
+        let pack = {}
+        pack['iso3']     = indicator.iso3
+        pack['ind3']     = indicator.indicator
+        pack['fullname'] = indicator.name
+        pack['category'] = indicator.category
+        pack['dataset']  = dataset.name
+        pack['type']     = "line"
+
+        let t_indicators = activeIndicators
+        t_indicators.push(pack)
+
+        setActiveIndicators([...t_indicators])
+        setIndicator(null)
+        setDataset({ name: '', type: '' })
+        setActiveView("dataset")
+        setSubmitBtn(false)
+        setActiveBtn(false)
     }
 
     return (

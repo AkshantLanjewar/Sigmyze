@@ -3,17 +3,15 @@ import React, { useState, useEffect } from "react"
 import ChartBuilder from "./components/chart-builder"
 
 function ChartBuilderPage(props) {
-    const OnChartBuilder = props.OnChartBuilder
-    const tChartList = [
-        { iso3: "HRV", dataset: "WEO", ind3: "NGDP", type: "line" }
-    ]
+    const OnChartBuilder   = props.OnChartBuilder
+    const activeIndicators = props.activeIndicators
 
     useEffect(() => {
         OnChartBuilder()
     }, [])
 
     return (
-        <ChartBuilder charts={tChartList} />
+        <ChartBuilder charts={activeIndicators} />
     )
 }
 

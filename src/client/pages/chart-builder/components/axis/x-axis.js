@@ -13,9 +13,17 @@ function XAxis(props) {
     const [valPosition, setValPosition] = useState(0)
     const formattingOptions = { month: 'long', day: 'numeric', year: 'numeric' }
 
+    function Reset() {
+        setTicks([])
+        setTickValue(new Date())
+        setValPosition(0)
+    }
+
     useEffect(() => {
-        if(activeAxis.x == null)
+        if(activeAxis.x == null) {
+            Reset()
             return
+        }
         
         let axis   = activeAxis.x
         let uTicks = []
@@ -25,8 +33,10 @@ function XAxis(props) {
     }, [activeAxis])
 
     useEffect(() => {
-        if(activeAxis.x == null)
+        if(activeAxis.x == null) {
+            Reset()
             return
+        }
         
         let date = new Date(tooltipPosition.date, 0, 1)
         setTickValue(date)

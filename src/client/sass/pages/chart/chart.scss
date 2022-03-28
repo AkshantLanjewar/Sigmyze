@@ -1,0 +1,21 @@
+@import '../../vars.scss';
+
+@import './chart-builder.scss';
+@import './component-sidebar.scss';
+@import './sidenav.scss';
+
+.add-component {
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    
+    cursor: pointer;
+    &:hover { color: $alt-text-color; }
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+

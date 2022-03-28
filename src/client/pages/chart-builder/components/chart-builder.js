@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react"
 import * as d3 from 'd3'
 
 import GenerateLinePath from './types/line'
+
 import YAxis from "./axis/y-axis"
 import XAxis from './axis/x-axis'
+import ChartLegend from './legend'
+
 import { GetIndicatorV } from '../../../data/indicator'
 
 //scales
@@ -20,6 +23,8 @@ function ChartBuilder(props) {
     const [svgPoint, setSvgPoint]               = useState(null)
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
     const [chartBuilt, setChartBuilt]           = useState(false)
+    const [datasets, setDatasets]               = useState([])
+    const [activeValues, setActiveValues]       = useState([])
 
     let margin = {
         top: 0,
@@ -115,12 +120,12 @@ function ChartBuilder(props) {
             }
 
             //generate the steps for y
-            let yStepValue = Math.round((max_value - min_value) / 20)
+            let yStepValue = parseFloat(((max_value - min_value) / 20).toFixed(2))
             let yTickRange = []
             yTickRange.push(min_value)
 
             for(let i = 0; i < 20; i++) {
-                let val = yTickRange[i] + yStepValue
+                let val = parseFloat((yTickRange[i] + yStepValue).toFixed(2))
 
                 if(val >= max_value) {
                     yTickRange.push(max_value)
@@ -158,16 +163,30 @@ function ChartBuilder(props) {
                 tmpLinePaths.push({ path: path, data: data['data'] })
             }
 
-            setActiveAxis({ x: xPackage, 
-                            y: yPackage, 
-                            data: longest_set })
-            setLinePaths(tmpLinePaths)
+            let tActiveAxis = {
+                x: xPackage, 
+                y: yPackage, 
+                data: longest_set
+            }
+            setActiveAxis({...tActiveAxis})
+            setDatasets([...data_points])
+            setLinePaths([...tmpLinePaths])
             setChartBuilt(true)
         }
 
-        setTimeout(() => {
+        if(chartBuilt == false) {
+            setTimeout(() => {
+                main()
+            }, 400)
+        } else {
+            setActiveAxis({ x: null, y: null, data: [] })
+            setDatasets([])
+            setLinePaths([])
+            setChartBuilt(false)
+
             main()
-        }, 400)
+        }
+        
     }, [chartList])
 
     function HandleMouseMove(event) {
@@ -191,6 +210,30 @@ function ChartBuilder(props) {
 
         const data = Bisect(d3.pointer(event)[0])
         let ry = CursorPoint(event).y
+
+        //get the active values
+        let date = data.data.date
+        let active_values = []
+        for(let i = 0; i < datasets.length; i++) {
+            let dataset      = datasets[i]
+            let dataset_data = dataset.data
+            let value        = 0
+
+            for(let x = 0; x < dataset_data.length; x++) {
+                let data_pt   = dataset_data[x]
+                let data_date = data_pt.date
+                if(data_date == date)
+                    value = data_pt.value
+            }
+
+            let pack = {}
+            pack['value'] = value
+            pack['iso3']  = dataset['iso3']
+            pack['ind3']  = dataset['ind3']
+            active_values.push(pack)
+        }
+
+        setActiveValues([...active_values])
         setTooltipPosition({ x: activeAxis.x.x(data.data.date), y: ry, date: data.data.date })
     }
 
@@ -209,6 +252,8 @@ function ChartBuilder(props) {
     return (
         <div className="chart-builder">
             <div className="chart-container">
+                <ChartLegend chartList={datasets} activeValues={activeValues} />
+
                 <svg 
                     ref={svgRef}
                     onTouchMove={HandleMouseMove}

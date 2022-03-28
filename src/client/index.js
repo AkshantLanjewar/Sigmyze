@@ -98,9 +98,32 @@ function App() {
     }, [])
 
 
-    const [chartModal, setChartModal] = useState(false)
+    const [chartModal, setChartModal]             = useState(false)
+    const [activeIndicators, setActiveIndicators] = useState([])
+    const [chartView, setChartView]               = useState(false)
+
+    function DeleteIndicators(iso3, ind3, dataset) {
+        //find the indicator
+        let t_indicator = activeIndicators
+        let index       = 0
+
+        for(let i = 0; i < t_indicator.length; i++) {
+            let indicator = t_indicator[i]
+            let iso3_t      = indicator.iso3
+            let ind3_t      = indicator.ind3
+            let dataset_t   = indicator.dataset
+
+            if(dataset_t == dataset && ind3_t == ind3 && iso3_t == iso3)
+                index = i
+        }
+
+        t_indicator.splice(index, 1)
+        setActiveIndicators([...t_indicator])
+    }
+
     function OnChartBuilder() {
         togglerRef.current.click()
+        setChartView(true)
     }
 
     return (
@@ -115,7 +138,11 @@ function App() {
                 <UserVerify setMessages={setMessages} />
             </Modal>
 
-            <ComponentModal viewState={chartModal} setViewState={setChartModal} />
+            <ComponentModal 
+                viewState={chartModal} 
+                setViewState={setChartModal} 
+                activeIndicators={activeIndicators} 
+                setActiveIndicators={setActiveIndicators}  />
 
             <aside className='sidenav' ref={sidenavRef}>
                 <div className='nav'>
@@ -140,7 +167,10 @@ function App() {
                             })}
                         </ul>
                         
-                        <ChartComponents />
+                        { chartView 
+                            ? <ChartComponents activeIndicators={activeIndicators} deleteIndicators={DeleteIndicators} />
+                            : null
+                        }
                     </div>
                 </div>
             </aside>
@@ -155,9 +185,14 @@ function App() {
 
                     <div className='right'>
                         <ul>
-                            <li className='add-component tooltip-bottom' data-tooltip="Add Component" onClick={() => { setChartModal(true) }}>
-                                <HiOutlinePlusCircle />
-                            </li>
+                            {chartView
+                                ? (
+                                    <li className='add-component tooltip-bottom' data-tooltip="Add Component" onClick={() => { setChartModal(true) }}>
+                                        <HiOutlinePlusCircle />
+                                    </li>
+                                )
+                                : null
+                            }
                             
                             {loggedIn.logged
                                 ? (
@@ -184,7 +219,7 @@ function App() {
                         </Route>
 
                         <Route exact path="/chart">
-                            <ChartBuilderPage OnChartBuilder={OnChartBuilder} />
+                            <ChartBuilderPage OnChartBuilder={OnChartBuilder} activeIndicators={activeIndicators} />
                         </Route>
                         <Route exact path="/about" component={AboutUsPage} />
 
