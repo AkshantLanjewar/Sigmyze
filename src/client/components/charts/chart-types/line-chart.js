@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
-import { ScaleUTC, ScalePoint, LinearAxisFormatter } from './scales'
-import { ProcessSigmyzeData } from './data'
+import { ScaleUTC, ScalePoint, LinearAxisFormatter } from '../addons/scales'
+import { ProcessSigmyzeData } from '../addons/data'
 
 function LineChart(opts, margin, svg) {
     function LinePath(x, y) {

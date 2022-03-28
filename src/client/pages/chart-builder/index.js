@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react"
 
+import ChartBuilder from "./components/chart-builder"
+
 function ChartBuilderPage(props) {
-    const OnChartBuilder = props.OnChartBuilder
+    const OnChartBuilder   = props.OnChartBuilder
+    const activeIndicators = props.activeIndicators
 
     useEffect(() => {
         OnChartBuilder()
     }, [])
 
     return (
-        <div className="chart-builder">
-
-        </div>
+        <ChartBuilder charts={activeIndicators} />
     )
 }
 
