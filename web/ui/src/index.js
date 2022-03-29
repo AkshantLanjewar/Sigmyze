@@ -2,15 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
-import { MantineProvider } from '@mantine/core'
-import './sass/index.scss'
+import './index.scss'
 
 ReactDOM.render(
 	<React.StrictMode>
-		<MantineProvider theme={{ colorScheme: 'dark' }} withGlobalStyles sx={{ background: "#141517" }}>
-			<App />
-		</MantineProvider>
+		<App />
 	</React.StrictMode>,
 	document.getElementById('root')
 );

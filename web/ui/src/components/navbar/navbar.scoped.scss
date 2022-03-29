@@ -1,0 +1,28 @@
+@import '../vars.scss';
+
+.navbar {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    height: 3.75rem;
+
+    position: sticky;
+    top: 0;
+    background-color: $primary-bg;
+    transition: all .2s ease-in-out;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .toggler {
+        color: $text-color;
+        cursor: pointer;
+        font-size: 1.25rem;
+
+        background-color: transparent;
+        outline: none;
+        border: none;
+
+        &:hover { color: $alt-text-color; }
+    }
+}

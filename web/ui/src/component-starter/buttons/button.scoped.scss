@@ -1,0 +1,56 @@
+@import '../../components/vars.scss';
+
+.button-wrap {
+    position: relative;
+    width: auto;
+
+    button {
+        border: $primary-bg;
+        background-color: $primary-bg;
+        color: $text-color;
+        font-family: 'Readex Pro', sans-serif;
+    
+        height: 36px;
+        padding: 0 18px;
+        border-radius: 4px;
+        font-weight: 600;
+    
+        display: inline-block;
+        width: auto;
+        position: relative;
+        line-height: 1;
+        font-size: 14px;
+    
+        user-select: none;
+        text-decoration: none;
+        cursor: pointer;
+        appearance: none;
+        box-sizing: border-box;
+        flex-grow: 0;
+    
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+    
+        .icon {
+            color: $text-color;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+    }
+
+    .button-drop {
+        position: absolute;
+        pointer-events: none;
+        bottom: -25px;
+
+        transition-property: transform, opacity;
+        transition-duration: 150ms;
+        transition-timing-function: ease;
+        transform-origin: right top 0px;
+        opacity: 1;
+        transform: scale(1);
+    }
+}
