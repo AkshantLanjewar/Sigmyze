@@ -4,14 +4,40 @@
     position: relative;
     width: auto;
 
-    button {
-        border: $primary-bg;
-        background-color: $primary-bg;
+    button.main {
         color: $text-color;
         font-family: 'Readex Pro', sans-serif;
+
+        &.md { padding: 0 18px; }
+        &.sm { padding: 0 11px; }
+        &.lg { padding: 0 27px; }
+
+        &.black {
+            border: $primary-bg;
+            background-color: $primary-bg;
+        }
+
+        &.teal {
+            border: $teal;
+            background-color: $teal;
+        }
+
+        &.purple {
+            border: $purple;
+            background-color: $purple;
+        }
+
+        &.red {
+            border: $red;
+            background-color: $red;
+        }
+
+        &.blue {
+            border: $blue;
+            background-color: $blue;
+        }
     
         height: 36px;
-        padding: 0 18px;
         border-radius: 4px;
         font-weight: 600;
     
@@ -44,7 +70,8 @@
     .button-drop {
         position: absolute;
         pointer-events: none;
-        bottom: -25px;
+        top: 110%;
+        right: 0;
 
         transition-property: transform, opacity;
         transition-duration: 150ms;
@@ -52,5 +79,73 @@
         transform-origin: right top 0px;
         opacity: 1;
         transform: scale(1);
+
+        .inner {
+            display: block;
+            text-decoration: none;
+            color: $text-color;
+            box-sizing: border-box;
+            border-radius: 4px;
+            width: 240px;
+            overflow: hidden;
+            pointer-events: all;
+            border: 1px solid $dark-bg;
+            background-color: $dark-bg;
+            padding: 4px;
+
+            button.item {
+                font-family: 'Readex Pro', sans-serif;
+                font-size: 14px;
+                color: $text-color;
+                
+                border: 0px none;
+                background-color: transparent;
+                outline: currentColor none 0px;
+
+                width: 100%;
+                text-align: left;
+                display: inline-block;
+                text-decoration: none;
+                box-sizing: border-box;
+                padding: 10px 12px;
+                cursor: pointer;
+                border-radius: 4px;
+
+                &:hover { background-color: $primary-hover; }
+
+                .content {
+                    display: flex;
+                    align-items: center;
+                    height: 100%;
+
+                    .icon {
+                        margin-right: 10px;
+                        display: flex;
+                        align-items: center;
+                        font-weight: 800;
+                    }
+
+                    .text {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        flex: 1 1 0%;
+
+                        .title {
+                            line-height: 1;
+                            font-weight: 600;
+                        }
+
+                        .symbol {
+                            font-size: 12px;
+                            line-height: 1.55;
+                            text-decoration: none;
+                            font-weight: 700;
+                            text-transform: uppercase;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

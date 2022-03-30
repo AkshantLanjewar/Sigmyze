@@ -5,7 +5,10 @@ import Button from "./button"
 
 export default {
     component: Button,
-    title: 'Button'
+    title: 'Button',
+    parameters: {
+        layout: 'centered',
+    },
 }
 
 const Template = args => (
@@ -16,7 +19,9 @@ const Template = args => (
 
 export const Default = Template.bind({})
 Default.args = {
-    text: 'Test Button'
+    text: 'Test Button',
+    padding: 'md',
+    pColor: 'teal',
 }
 
 const IconTemplate = args => (
@@ -28,5 +33,41 @@ const IconTemplate = args => (
 
 export const Icon = IconTemplate.bind({})
 Icon.args = {
-    text: 'Test Icon'
+    text: 'Test Icon',
+    padding: 'md',
+    pColor: 'teal'
+}
+
+function TestOnclick() {
+    console.log("testclicked")
+}
+
+const DropDownTemplate = args => (
+    <Button {...args}>
+        <Button.Icon><FaAirbnb /></Button.Icon>
+        <Button.Text>{args.text}</Button.Text>
+
+        <Button.Dropdown>
+            <Button.Dropdown.Item>
+                <Button.Dropdown.Item.DropdownIcon><FaAirbnb /></Button.Dropdown.Item.DropdownIcon>
+
+                <Button.Dropdown.Item.DropdownTitle>Kai</Button.Dropdown.Item.DropdownTitle>
+                <Button.Dropdown.Item.DropdownSymbol>Monno</Button.Dropdown.Item.DropdownSymbol>
+            </Button.Dropdown.Item>
+
+            <Button.Dropdown.Item sxOnClick={TestOnclick}>
+                <Button.Dropdown.Item.DropdownIcon><FaAirbnb /></Button.Dropdown.Item.DropdownIcon>
+
+                <Button.Dropdown.Item.DropdownTitle>Kai</Button.Dropdown.Item.DropdownTitle>
+                <Button.Dropdown.Item.DropdownSymbol>Monno</Button.Dropdown.Item.DropdownSymbol>
+            </Button.Dropdown.Item>
+        </Button.Dropdown>
+    </Button>
+)
+
+export const Dropdown = DropDownTemplate.bind({})
+Dropdown.args = {
+    text: 'Test Dropdown',
+    padding: 'md',
+    pColor: 'teal'
 }

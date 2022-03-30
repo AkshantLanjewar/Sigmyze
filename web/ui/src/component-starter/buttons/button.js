@@ -1,32 +1,115 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './button.scoped.scss'
 
-const Button = ({ children }) => {
-    let subComponentList = Object.keys(Button)
+const Button = ({ pColor, padding, children }) => {
+    const icon   = React.Children.map(children, child => child.type.displayName == 'Icon' ? child : null)
+    const text   = React.Children.map(children, child => child.type.displayName == 'Text' ? child : null)
+    let dropdown = React.Children.map(children, child => child.type.displayName == 'Dropdown' ? child : null)
 
-    let subComponents = subComponentList.map((key) => {
-        return React.Children.map(children, (child) =>
-            child.type.name === key ? child : null
-        )
-    })
+    const [buttonPadding, setButtonPadding] = useState('md')
+    const [color, setColor]                 = useState('teal')
+    const validColors                       = ['teal', 'black', 'purple', 'red', 'blue']
+    const validPadding                      = ['sm', 'md', 'lg']
+
+    useEffect(() => {
+        if(validColors.includes(pColor))
+            setColor(pColor)
+    }, [pColor])
+
+    useEffect(() => {
+        if(padding == undefined)
+            return
+        if(validPadding.includes(padding))
+            setButtonPadding(padding)
+    }, [padding])
+
+    let displayIcon = true
+    if(icon.length == 0)
+        displayIcon = false
+
+    let displayText = true
+    if(text.length == 0)
+        displayText = false
+
+    const [displayDropdown, setDisplayDropdown] = useState(false)
+
+    function handleOnBlur(e) {
+        setTimeout(() => {
+            setDisplayDropdown(false)
+        }, 50)
+    }
 
     return (
         <div className='button-wrap'>
-            <button>
-                {subComponents.map((component) => component)}
+            <button className={`main ${buttonPadding} ${color}`} onFocus={() => { setDisplayDropdown(true) }} onBlur={handleOnBlur}>
+                { displayIcon ? <div className='icon'>{icon}</div> : null }
+                { displayText ? <div className='text'>{text}</div> : null }
             </button>
 
-            <div className='button-drop'>
-                AA
-            </div>
+            { displayDropdown ? dropdown : null }
         </div>
     )
 }
 
 const Icon = (props) => <div className='icon'>{props.children}</div>
+Icon.displayName= 'Icon'
 Button.Icon = Icon
 
 const Text = (props) => <div className='text'>{props.children}</div>
+Text.displayName = 'Text'
 Button.Text = Text
 
+const Dropdown = (props) => (
+    <div className='button-drop'>
+        <div className='inner'>
+            {props.children}
+        </div>
+    </div>
+)
+Dropdown.displayName = 'Dropdown'
+
+const DropdownItem = ({ sxOnClick, children }) => {
+    const icon   = React.Children.map(children, child => child.type.displayName == 'DropdownIcon' ? child : null)
+    const title  = React.Children.map(children, child => child.type.displayName == 'DropdownTitle' ? child : null)
+    const symbol = React.Children.map(children, child => child.type.displayName == 'DropdownSymbol' ? child : null)
+
+    function handleOnClick() {
+        if(sxOnClick !== undefined)
+            sxOnClick()
+    }
+
+    return (
+        <button className='item' onClick={handleOnClick}>
+            <div className='content'>
+                {icon}
+
+                <div className='text'>
+                    {title}
+
+                    {symbol}
+                </div>
+            </div>
+        </button>
+    )
+}
+
+const DropdownIcon = (props) => <div className='icon'>{props.children}</div>
+DropdownIcon.displayName = 'DropdownIcon'
+DropdownItem.DropdownIcon = DropdownIcon
+
+const DropdownTitle = (props) => <div className='title'>{props.children}</div>
+DropdownTitle.displayName = 'DropdownTitle'
+DropdownItem.DropdownTitle = DropdownTitle
+
+const DropdownSymbol = (props) => <div className='symbol'>{props.children}</div>
+DropdownSymbol.displayName = 'DropdownSymbol'
+DropdownItem.DropdownSymbol = DropdownSymbol
+
+DropdownItem.displayName = 'Item'
+Dropdown.Item = DropdownItem
+
+Dropdown.displayName = 'Dropdown'
+Button.Dropdown = Dropdown
+
+Button.displayName = 'Button'
 export default Button
