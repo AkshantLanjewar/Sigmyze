@@ -5,11 +5,13 @@ const Modal = ({ children }) => {
     const button = React.Children.map(children, child => child.type.displayName === 'Button' ? child : null)
 
     return (
-        <div className='modal-wrapper'>
+        <div>
             {button}
 
-            <div className='modal'>
-                
+            <div className='modal-wrapper'>
+                <div className="modal">
+                    
+                </div>
             </div>
         </div>
     )
