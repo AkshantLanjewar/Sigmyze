@@ -21,7 +21,8 @@ export const Default = Template.bind({})
 Default.args = {
     text: 'Test Button',
     padding: 'md',
-    pColor: 'teal',
+    pColor: 'black',
+    rounding: 'rounding-md',
 }
 
 const IconTemplate = args => (
@@ -35,7 +36,8 @@ export const Icon = IconTemplate.bind({})
 Icon.args = {
     text: 'Test Icon',
     padding: 'md',
-    pColor: 'teal'
+    pColor: 'black',
+    rounding: 'rounding-lg',
 }
 
 function TestOnclick() {
@@ -69,5 +71,6 @@ export const Dropdown = DropDownTemplate.bind({})
 Dropdown.args = {
     text: 'Test Dropdown',
     padding: 'md',
-    pColor: 'teal'
+    pColor: 'black',
+    rounding: 'rounding-md',
 }

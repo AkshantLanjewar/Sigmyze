@@ -1,34 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import './button.scoped.scss'
 
-const Button = ({ pColor, padding, children }) => {
-    const icon   = React.Children.map(children, child => child.type.displayName == 'Icon' ? child : null)
-    const text   = React.Children.map(children, child => child.type.displayName == 'Text' ? child : null)
+const Button = ({ rounding, sxOnClick, pColor, padding, children }) => {
+    const icon = React.Children.map(children, child => child.type.displayName == 'Icon' ? child : null)
+    const text = React.Children.map(children, child => child.type.displayName == 'Text' ? child : null)
     let dropdown = React.Children.map(children, child => child.type.displayName == 'Dropdown' ? child : null)
 
     const [buttonPadding, setButtonPadding] = useState('md')
-    const [color, setColor]                 = useState('teal')
-    const validColors                       = ['teal', 'black', 'purple', 'red', 'blue']
-    const validPadding                      = ['sm', 'md', 'lg']
+    const [color, setColor] = useState('teal')
+    const [roundingC, setRounding] = useState('rounding-md')
+
+    const validColors = ['teal', 'black', 'purple', 'red', 'blue']
+    const validPadding = ['sm', 'md', 'lg']
+    const validRounding = ['rounding-md', 'rounding-lg']
 
     useEffect(() => {
-        if(validColors.includes(pColor))
+        if(validRounding.includes(rounding))
+            setRounding(rounding)
+    }, [rounding])
+
+    useEffect(() => {
+        if (validColors.includes(pColor))
             setColor(pColor)
     }, [pColor])
 
     useEffect(() => {
-        if(padding == undefined)
+        if (padding == undefined)
             return
-        if(validPadding.includes(padding))
+        if (validPadding.includes(padding))
             setButtonPadding(padding)
     }, [padding])
 
     let displayIcon = true
-    if(icon.length == 0)
+    if (icon == undefined || icon.length == 0)
         displayIcon = false
 
     let displayText = true
-    if(text.length == 0)
+    if (text == undefined || text.length == 0)
         displayText = false
 
     const [displayDropdown, setDisplayDropdown] = useState(false)
@@ -39,20 +47,28 @@ const Button = ({ pColor, padding, children }) => {
         }, 50)
     }
 
+    function handleOnClick() {
+        if (sxOnClick !== undefined)
+            sxOnClick()
+    }
+
     return (
         <div className='button-wrap'>
-            <button className={`main ${buttonPadding} ${color}`} onFocus={() => { setDisplayDropdown(true) }} onBlur={handleOnBlur}>
-                { displayIcon ? <div className='icon'>{icon}</div> : null }
-                { displayText ? <div className='text'>{text}</div> : null }
+            <button className={`main ${buttonPadding} ${color} ${roundingC}`}
+                onClick={handleOnClick}
+                onFocus={() => { setDisplayDropdown(true) }}
+                onBlur={handleOnBlur}>
+                {displayIcon ? <div className='icon'>{icon}</div> : null}
+                {displayText ? <div className='text'>{text}</div> : null}
             </button>
 
-            { displayDropdown ? dropdown : null }
+            {displayDropdown ? dropdown : null}
         </div>
     )
 }
 
 const Icon = (props) => <div className='icon'>{props.children}</div>
-Icon.displayName= 'Icon'
+Icon.displayName = 'Icon'
 Button.Icon = Icon
 
 const Text = (props) => <div className='text'>{props.children}</div>
@@ -69,12 +85,12 @@ const Dropdown = (props) => (
 Dropdown.displayName = 'Dropdown'
 
 const DropdownItem = ({ sxOnClick, children }) => {
-    const icon   = React.Children.map(children, child => child.type.displayName == 'DropdownIcon' ? child : null)
-    const title  = React.Children.map(children, child => child.type.displayName == 'DropdownTitle' ? child : null)
+    const icon = React.Children.map(children, child => child.type.displayName == 'DropdownIcon' ? child : null)
+    const title = React.Children.map(children, child => child.type.displayName == 'DropdownTitle' ? child : null)
     const symbol = React.Children.map(children, child => child.type.displayName == 'DropdownSymbol' ? child : null)
 
     function handleOnClick() {
-        if(sxOnClick !== undefined)
+        if (sxOnClick !== undefined)
             sxOnClick()
     }
 

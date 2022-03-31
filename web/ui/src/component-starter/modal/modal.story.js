@@ -13,9 +13,14 @@ export default {
 
 const DefaultTemplate = args => (
     <Modal {...args}>
-        <Button padding="md">
+        <Button padding="md" pColor={"blue"}>
             <Button.Text>Login</Button.Text>
         </Button>
+
+        <Modal.Title>Login Modal</Modal.Title>
+        <Modal.Body>
+            
+        </Modal.Body>
     </Modal>
 )
 
