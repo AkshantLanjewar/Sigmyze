@@ -7,6 +7,19 @@
     align-items: center;
     justify-content: flex-start;
     gap: 16px;
-    margin-top: 16px;
-    margin-bottom: 16px;
+
+    &.margin-md {
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    &.margin-sm {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    &.margin-lg {
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
 }

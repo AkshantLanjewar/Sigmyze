@@ -2,6 +2,7 @@ import React from "react"
 
 import { MdAlternateEmail } from 'react-icons/md'
 import Form from "./form"
+import Group from '../group/group'
 
 export default {
     component: Form,
@@ -15,7 +16,9 @@ const DefaultTemplate = args => (
     <div style={{ width: "400px" }}>
         <Form>
             <Form.Element>
-                <Form.Element.Label>E-Mail</Form.Element.Label>
+                <Group marginType={"sm"}>
+                    <Form.Element.Label>E-Mail</Form.Element.Label>
+                </Group>
 
                 <Form.Element.TextInput {...args}>
                     <Form.Element.TextInput.Icon> <MdAlternateEmail /> </Form.Element.TextInput.Icon>

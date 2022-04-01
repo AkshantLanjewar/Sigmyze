@@ -1,9 +1,16 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import './group.scoped.scss'
 
-const Group = ({ children }) => {
+const Group = ({ marginType, children }) => {
+    const validMargin         = ['md', 'sm', 'lg']
+    const [margin, setMargin] = useState('margin-md')
+    useEffect(() => {
+        if(validMargin.includes(marginType))
+            setMargin(`margin-${marginType}`)
+    }, marginType)
+
     return (
-        <div className="group">
+        <div className={`group ${margin}`}>
             {children}
         </div>
     )
