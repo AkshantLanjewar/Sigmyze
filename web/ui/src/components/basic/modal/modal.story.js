@@ -5,7 +5,7 @@ import Modal from "./modal"
 
 export default {
     component: Modal,
-    title: 'Modal',
+    title: 'Components/Basic/Modal',
     parameters: {
         layout: 'centered',
     },

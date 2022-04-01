@@ -6,7 +6,7 @@ import { AiOutlineGoogle } from 'react-icons/ai'
 
 export default {
     component: Group,
-    title: 'Group',
+    title: 'Components/Basic/Group',
     parameters: {
         layout: 'centered',
     },

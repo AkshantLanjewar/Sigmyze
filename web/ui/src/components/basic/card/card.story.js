@@ -7,7 +7,7 @@ import { AiOutlineGoogle } from 'react-icons/ai'
 
 export default {
     component: Card,
-    title: 'Card',
+    title: 'Components/Basic/Card',
     parameters: {
         layout: 'centered',
     },

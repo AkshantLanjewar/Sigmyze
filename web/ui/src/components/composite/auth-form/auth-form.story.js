@@ -3,7 +3,7 @@ import AuthForm from "./auth-form"
 
 export default {
     component: AuthForm,
-    title: 'Auth Form'
+    title: 'Components/Composite/Auth Form'
 }
 
 const Template = args => <AuthForm {...args} />

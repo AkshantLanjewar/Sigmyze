@@ -1,0 +1,120 @@
+@import '../../vars.scss';
+.form {
+    width: 100%;
+
+    .inner {    
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .element {
+        font-family: $font-family;
+        line-height: 1.55;
+
+        label {
+            display: inline-block;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: $text-color;
+            word-break: break-word;
+            cursor: default;
+        }
+
+        .input-wrapper {
+            position: relative;
+            box-sizing: border-box;
+
+            &.invalid {
+                input { 
+                    border: 1px solid $red; 
+                    color: $red;
+                }
+                .icon { color: $red; }
+            }
+
+            .icon {
+                pointer-events: none;
+                position: absolute;
+                z-index: 1;
+                left: 0px;
+                top: 0px;
+                bottom: 0px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                color: $text-color;
+
+                svg {
+                    height: 18px;
+                    width: 18px;
+                }
+            }
+
+            input {
+                border: 1px solid transparent;
+                background-color: $tertiary-bg;
+                font-family: $font-family;
+                font-weight: 500;
+
+                &.disabled {
+                    background-color: $track;
+                    color: $text-color;
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+                
+                &.size-md {
+                    height: 42px;
+                    line-height: 40px;
+                }
+
+                &.size-sm {
+                    height: 36px;
+                    line-height: 34px;
+                }
+
+                &.size-lg {
+                    height: 50px;
+                    line-height: 48px;
+                }
+
+                appearance: none;
+                resize: none;
+                box-sizing: border-box;
+                font-size: 16px;
+                width: 100%;
+                color: $text-color;
+
+                display: flex;
+                align-items: center;
+
+                &::placeholder {
+                    display: flex;
+                    align-items: center;
+                }
+
+                &:placeholder-shown {
+                    padding-top: 2px;
+                }
+                
+                text-align: left;
+                min-height: 42px;
+                padding-right: 14px;
+                padding-left: 14px;
+
+                &.radius-md { border-radius: 6px; }
+                &.radius-sm { border-radius: 4px; }
+                &.radius-lg { border-radius: 32px; }
+                
+                &.has-icon { padding-left: 42px; }
+            }
+        }
+    }
+}
