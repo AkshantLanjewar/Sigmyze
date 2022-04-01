@@ -1,0 +1,23 @@
+@import '../../components/vars.scss';
+
+.card {
+    font-family: $font-family;
+
+    display: block;
+    text-decoration: none;
+    color: $text-color;
+    background-color: $primary-bg;
+    box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: none;
+    padding: 24px;
+
+    .text-row {
+        font-family: $font-family;
+        color: inherit;
+        font-size: 18px;
+        line-height: 1.55;
+        text-decoration: none;
+        font-weight: 600;
+    }
+}

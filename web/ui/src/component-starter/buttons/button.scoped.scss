@@ -2,7 +2,8 @@
 
 .button-wrap {
     position: relative;
-    width: auto;
+    flex: 1;
+    width: 100%;
 
     button.main {
         color: $text-color;
@@ -49,7 +50,7 @@
         font-weight: 600;
     
         display: inline-block;
-        width: auto;
+        width: 100%;
         position: relative;
         line-height: 1;
         font-size: 14px;
@@ -59,18 +60,19 @@
         cursor: pointer;
         appearance: none;
         box-sizing: border-box;
-        flex-grow: 0;
+        flex: 1 1 0;
     
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         gap: 6px;
     
         .icon {
             color: $text-color;
             font-size: 1.25rem;
             font-weight: 600;
+            display: flex;
         }
     }
 
@@ -137,6 +139,7 @@
                         align-items: center;
                         justify-content: space-between;
                         flex: 1 1 0%;
+                        height: 23px;
 
                         .title {
                             line-height: 1;

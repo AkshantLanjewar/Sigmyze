@@ -16,12 +16,16 @@ const DefaultTemplate = args => (
     <Group {...args}>
         <Button padding={"md"} pColor={"black"} rounding="rounding-lg">
             <Button.Icon><AiOutlineGoogle /></Button.Icon>
-            <Button.Text>Google</Button.Text>
+            <Button.Text>
+                <Button.Text.Title>Google</Button.Text.Title>
+            </Button.Text>
         </Button>
 
         <Button padding={"md"} pColor={"black"} rounding="rounding-lg">
             <Button.Icon><AiOutlineGoogle /></Button.Icon>
-            <Button.Text>Facebook</Button.Text>
+            <Button.Text>
+                <Button.Text.Title>Facebook</Button.Text.Title>
+            </Button.Text>
         </Button>
     </Group>
 )

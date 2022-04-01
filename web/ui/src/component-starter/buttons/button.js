@@ -58,8 +58,8 @@ const Button = ({ rounding, sxOnClick, pColor, padding, children }) => {
                 onClick={handleOnClick}
                 onFocus={() => { setDisplayDropdown(true) }}
                 onBlur={handleOnBlur}>
-                {displayIcon ? <div className='icon'>{icon}</div> : null}
-                {displayText ? <div className='text'>{text}</div> : null}
+                {displayIcon ? icon : null}
+                {displayText ? text : null}
             </button>
 
             {displayDropdown ? dropdown : null}
@@ -73,6 +73,12 @@ Button.Icon = Icon
 
 const Text = (props) => <div className='text'>{props.children}</div>
 Text.displayName = 'Text'
+
+const Title = (props) => <div className='title'>{props.children}</div>
+Text.Title = Title
+const Symbol = (props) => <div className='symbol'>{props.children}</div>
+Text.Symbol = Symbol
+
 Button.Text = Text
 
 const Dropdown = (props) => (
