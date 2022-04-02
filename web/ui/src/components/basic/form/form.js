@@ -37,13 +37,13 @@ const TextInput = ({ radius, size, type, disabled, invalid, placeholder, childre
     const [rad, setRad]            = useState('radius-md')
     const [siz, setSiz]            = useState('size-md')
     const [iType, setType]         = useState('email')
-    const [hasIcon, setHasIcon]    = useState(false)
+    const [hasIcon, setHasIcon]    = useState(true)
     const [iDisabled, setDisabled] = useState(false)
     const [iInvalid, setInvalid]   = useState(false)
 
     useEffect(() => {
-        if(icon.length != 0)
-            setHasIcon(true)
+        if(icon == undefined)
+            setHasIcon(false)
     }, [icon])
 
     useEffect(() => {
@@ -62,7 +62,7 @@ const TextInput = ({ radius, size, type, disabled, invalid, placeholder, childre
 
     return (
         <div className={`input-wrapper ${iInvalid ? 'invalid' : ''}`}>
-            {icon}
+            {hasIcon ? icon : null}
             <input 
                 className={`${rad} ${siz} ${hasIcon ? 'has-icon' : ''} ${iDisabled ? 'disabled' : ''}`} 
                 placeholder={placeholder} type={iType} />
@@ -85,7 +85,7 @@ const RightButton = ({ sxOnClick, children }) => {
 
     return (
         <div className="right">
-            <Button padding={"sm"} pColor={"transparent"} dHover={true} sxOnClick={HandleOnClick}>
+            <Button padding={"sm"} pColor={"transparent"} dHover={true} sxOnClick={HandleOnClick} widthSize={"full"}>
                 <Button.Icon>{children}</Button.Icon>
             </Button>
         </div>
@@ -94,7 +94,7 @@ const RightButton = ({ sxOnClick, children }) => {
 RightButton.displayName = "button"
 TextInput.RightButton = RightButton
 
-const CheckBoxInput = ({ children }) => {
+const CheckBoxInput = ({ labelVal }) => {
     const [checked, setChecked] = useState(false)
     function CheckClicked(e) {
         e.preventDefault()
@@ -114,7 +114,7 @@ const CheckBoxInput = ({ children }) => {
                 </svg>
             </div>
 
-            <label>I agree to sell my soul</label>
+            <label>{labelVal}</label>
         </div>
     )
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './button.scoped.scss'
 
-const Button = ({ rounding, sxOnClick, pColor, padding, children, dHover }) => {
+const Button = ({ grow, widthSize, rounding, sxOnClick, pColor, padding, children, dHover }) => {
     const icon = React.Children.map(children, child => child.type.displayName == 'Icon' ? child : null)
     const text = React.Children.map(children, child => child.type.displayName == 'Text' ? child : null)
     let dropdown = React.Children.map(children, child => child.type.displayName == 'Dropdown' ? child : null)
@@ -10,17 +10,24 @@ const Button = ({ rounding, sxOnClick, pColor, padding, children, dHover }) => {
     const [color, setColor] = useState('teal')
     const [roundingC, setRounding] = useState('rounding-md')
     const [hover, setHover] = useState(false)
+    const [width, setWidth] = useState('auto')
+    const [fGrow, setFGrow] = useState(true)
 
     const validColors = ['teal', 'black', 'purple', 'red', 'blue' ,'transparent']
     const validPadding = ['sm', 'md', 'lg']
     const validRounding = ['rounding-md', 'rounding-lg']
+    const validWidth    = ['auto', 'full']
 
     useEffect(() => {
         if(validRounding.includes(rounding))
             setRounding(rounding)
         if(typeof dHover == 'boolean')
             setHover(dHover)
-    }, [rounding, dHover])
+        if(validWidth.includes(widthSize))
+            setWidth(widthSize)
+        if(typeof grow == 'boolean')
+            setFGrow(grow)
+    }, [rounding, dHover, widthSize, grow])
 
     useEffect(() => {
         if (validColors.includes(pColor))
@@ -57,8 +64,8 @@ const Button = ({ rounding, sxOnClick, pColor, padding, children, dHover }) => {
     }
 
     return (
-        <div className='button-wrap'>
-            <button className={`main ${buttonPadding} ${color} ${roundingC} ${hover ? 'dHover' : ''}`}
+        <div className={`button-wrap ${fGrow ? 'grow' : ''}`}>
+            <button className={`main ${width} ${buttonPadding} ${color} ${roundingC} ${hover ? 'dHover' : ''}`}
                 onClick={handleOnClick}
                 onFocus={() => { setDisplayDropdown(true) }}
                 onBlur={handleOnBlur}>
