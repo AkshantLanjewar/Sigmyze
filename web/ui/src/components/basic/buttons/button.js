@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './button.scoped.scss'
 
-const Button = ({ rounding, sxOnClick, pColor, padding, children }) => {
+const Button = ({ rounding, sxOnClick, pColor, padding, children, dHover }) => {
     const icon = React.Children.map(children, child => child.type.displayName == 'Icon' ? child : null)
     const text = React.Children.map(children, child => child.type.displayName == 'Text' ? child : null)
     let dropdown = React.Children.map(children, child => child.type.displayName == 'Dropdown' ? child : null)
@@ -9,15 +9,18 @@ const Button = ({ rounding, sxOnClick, pColor, padding, children }) => {
     const [buttonPadding, setButtonPadding] = useState('md')
     const [color, setColor] = useState('teal')
     const [roundingC, setRounding] = useState('rounding-md')
+    const [hover, setHover] = useState(false)
 
-    const validColors = ['teal', 'black', 'purple', 'red', 'blue']
+    const validColors = ['teal', 'black', 'purple', 'red', 'blue' ,'transparent']
     const validPadding = ['sm', 'md', 'lg']
     const validRounding = ['rounding-md', 'rounding-lg']
 
     useEffect(() => {
         if(validRounding.includes(rounding))
             setRounding(rounding)
-    }, [rounding])
+        if(typeof dHover == 'boolean')
+            setHover(dHover)
+    }, [rounding, dHover])
 
     useEffect(() => {
         if (validColors.includes(pColor))
@@ -47,14 +50,15 @@ const Button = ({ rounding, sxOnClick, pColor, padding, children }) => {
         }, 50)
     }
 
-    function handleOnClick() {
+    function handleOnClick(e) {
+        e.preventDefault()
         if (sxOnClick !== undefined)
-            sxOnClick()
+            sxOnClick(e)
     }
 
     return (
         <div className='button-wrap'>
-            <button className={`main ${buttonPadding} ${color} ${roundingC}`}
+            <button className={`main ${buttonPadding} ${color} ${roundingC} ${hover ? 'dHover' : ''}`}
                 onClick={handleOnClick}
                 onFocus={() => { setDisplayDropdown(true) }}
                 onBlur={handleOnBlur}>

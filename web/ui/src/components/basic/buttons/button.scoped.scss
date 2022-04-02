@@ -45,6 +45,18 @@
             border: $blue;
             background-color: $blue;
         }
+
+        &.transparent {
+            border: transparent;
+            background-color: transparent;
+        }
+
+        &.dHover {
+            &:hover {
+                border: $dark-bg;
+                background-color: $second-bg;
+            }
+        }
     
         height: 36px;
         font-weight: 600;

@@ -25,6 +25,80 @@
             cursor: default;
         }
 
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+
+            .checkbox {
+                position: relative;
+                width: 20px;
+                height: 20px;
+                line-height: 0;
+
+                input {
+                    box-sizing: border-box;
+                    padding: 0px;
+
+                    font-size: 100%;
+                    line-height: 1.15;
+                    appearance: none;
+                    background-color: $tertiary-bg;
+                    border: 1px solid $tertiary-bg;
+
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 4px;
+
+                    display: block;
+                    margin: 0px;
+                    transition: border-color 100ms ease 0s, background-color 100ms ease 0s;
+
+                    &.visible {
+                        background-color: $blue;
+                        border-color: $blue;
+                    }
+                }
+
+                svg {
+                    overflow: hidden;
+                    color: #fff;
+
+                    &.visible {
+                        opacity: 1;
+                        transform: translateY(0px) scale(1);
+                    }
+                    
+                    transform: translateY(5px) scale(0.5);
+                    opacity: 0;
+
+                    //transition
+                    transition-property: opacity,transform;
+                    transition-timing-function: ease;
+                    transition-duration: 100ms;
+                    pointer-events: none;
+
+                    width: 10px;
+                    position: absolute;
+                    z-index: 1;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    margin: auto;
+                }
+            }
+
+            label {
+                font-family: $font-family;
+                padding-left: 12px;
+                font-size: 14px;
+                line-height: 20px;
+                color: $text-color;
+                margin-bottom: 0;
+            }
+        }
+
         .input-wrapper {
             position: relative;
             box-sizing: border-box;
@@ -36,8 +110,20 @@
                 }
                 .icon { color: $red; }
             }
+            
+            .right {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 5px;
+                
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 34px;
+            }
 
-            .icon {
+            .form-icon {
                 pointer-events: none;
                 position: absolute;
                 z-index: 1;
