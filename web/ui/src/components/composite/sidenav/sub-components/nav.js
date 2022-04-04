@@ -19,7 +19,7 @@ const svgStyle = {
     opacity: "0.7"
 }
 
-const NavElement = ({ active, icon, pName }) => {
+const NavElement = ({ url, active, icon, pName }) => {
     const [hasIcon,setHasIcon]  = useState(false)
     const [hasName, setHasName] = useState(false)
 
@@ -32,7 +32,7 @@ const NavElement = ({ active, icon, pName }) => {
 
     return (
         <li className={`element tooltip-right t-side ${active ? 'active' : ''}`} data-tooltip={hasName ? pName : ''}>
-            <a>
+            <a href={url}>
                 {hasIcon ? React.cloneElement(icon, { style: svgStyle }) : null}
 
                 <span>{pName}</span>

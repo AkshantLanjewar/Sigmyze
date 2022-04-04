@@ -41,7 +41,7 @@ const AppMain = ({ expandAside, children }) => {
 
     return (
         <div className="main">
-            {cloneChildren ? React.cloneElement(children, {...injectedProps}) : null}
+            {cloneChildren ? children.map((step) => React.cloneElement(step, {...injectedProps})) : null}
         </div>
     )
 }
