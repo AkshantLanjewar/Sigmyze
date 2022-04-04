@@ -3,7 +3,10 @@ import UserNavbar from "./user-navbar"
 
 export default {
     component: UserNavbar,
-    title: 'Components/Composite/UserNavbar'
+    title: 'Components/Composite/UserNavbar',
+    parameters: {
+        layout: 'centered',
+    },
 }
 
 const Template = args => <UserNavbar {...args} />

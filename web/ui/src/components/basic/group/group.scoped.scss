@@ -15,6 +15,10 @@
         gap: 16px;
     }
     
+    &.gap-lg {
+        gap: 1em;
+    }
+
     &.row {
         flex-flow: row wrap;
     }

@@ -1,0 +1,67 @@
+@import '../../../vars.scss';
+
+.nav {
+    height: auto;
+    width: 100%;
+    margin-top: 1em;
+
+    ul {
+        display: flex;
+        flex-direction: column;
+
+        padding-left: 0;
+        margin-bottom: 10px;
+        margin-top: 0;
+        list-style: none;
+        overflow: visible;
+
+        &.expanded {
+            li.element { 
+                justify-content: flex-start; 
+                &.active {
+                    a { padding-left: calc(1.75rem - 3px); }
+                }
+            }
+
+            li a span { display: inline-block!important; }
+        }
+
+        li.element {
+            &.active { 
+                border-left: 3px solid $blue!important; 
+                a { padding-left: calc(1.75rem - 6px); }
+            }
+
+            border-left: 3px solid none;
+            margin: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            cursor: pointer;
+            height: 40px;
+
+            a {
+                padding: .375rem 1.75rem;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                color: $text-color;
+                text-decoration: none;
+                font-family: $font-family;
+
+                span {
+                    display: none;
+
+                    margin-top: 2.5px;
+                    flex: 1;
+                    margin-left: .5em;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+}

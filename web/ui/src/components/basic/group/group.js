@@ -8,7 +8,7 @@ const Group = ({ gapSize, type, marginType, children }) => {
     const validType        = ['row', 'column']
     const [vType, setType] = useState('row')
 
-    const validGap      = ['sm', 'md']
+    const validGap      = ['sm', 'md', 'lg']
     const [gap, setGap] = useState('gap-md')
 
     useEffect(() => {

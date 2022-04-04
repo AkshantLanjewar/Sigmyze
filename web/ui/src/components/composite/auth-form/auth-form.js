@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import './auth-form.scoped.scss'
 
 import Card from '../../basic/card/card'
 import Group from "../../basic/group/group"
@@ -11,11 +10,13 @@ import { AiFillFacebook, AiOutlineGoogle } from 'react-icons/ai'
 import SignupForm from "./sub-components/signup-form"
 import LoginForm  from "./sub-components/login-form"
 
+import './auth-form.scss' 
+
 const AuthForm = () => {
     const [formState, setFormState] = useState(false)
 
     return (
-        <Card>
+        <Card minWidth={"auto"} maxWidth={"auto"}>
             <Group type={"column"} gapSize={"sm"} marginType={"sm"}>
                 <Group>
                     <Button widthSize={"full"} padding={"md"} pColor={"blue"} rounding={"rounding-lg"}>

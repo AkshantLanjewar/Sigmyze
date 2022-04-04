@@ -18,7 +18,7 @@ const Modal = ({ children }) => {
             setDisplayButton(true)
         if(displayTitle.length != 0)
             setDisplayTitle(true)
-        if(body.length != 0)
+        if(body.length > 0)
             setDisplayBody(true)
     }, [children])
 
@@ -56,7 +56,7 @@ Modal.Title = Title
 
 const Body = ({ children }) => (
     <div className="body">
-
+        {children}
     </div>
 )
 Body.displayName = "ModalBody"

@@ -1,0 +1,43 @@
+@import '../../../vars.scss';
+
+.brand {
+    display: flex;
+    align-items: center;
+    height: 3.75rem;
+    justify-content: center;
+    
+    width: 100%;
+
+    &.expanded {
+        justify-content: flex-start;
+
+        a { padding-left: 1.75rem; }
+        a span { display: inline-block; }
+    }
+
+    a {
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        font-size: 1rem;
+        line-height: inherit;
+        white-space: nowrap;
+        text-decoration: none;
+        cursor: pointer;
+
+        img { width: 1.9125rem; }
+
+        span {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: $font-family;
+            color: $text-color;
+            margin-left: .5rem;
+            display: none;
+        }
+    }
+}
