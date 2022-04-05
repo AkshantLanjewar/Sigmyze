@@ -17,3 +17,8 @@ body {
 //tooltip code
 @import './components/tooltip.scss';
 
+.wrap {
+    max-height: calc(100vh - 60px);
+    overflow-y: scroll;
+    margin-top: 60px;
+}
