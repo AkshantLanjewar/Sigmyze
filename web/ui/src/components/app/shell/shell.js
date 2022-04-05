@@ -19,12 +19,12 @@ const AppShell = ({ children }) => {
     return (
         <div className="shell">
             {hasSide ? React.cloneElement(side[0], { expandedState: expandedState }) : null}
-            {hasMain ? React.cloneElement(main[0], { expandAside: setExpandedState }) : null}
+            {hasMain ? React.cloneElement(main[0], { expandedState: expandedState, expandAside: setExpandedState }) : null}
         </div>
     )
 }
 
-const AppMain = ({ expandAside, children }) => {
+const AppMain = ({ expandedState, expandAside, children }) => {
     const [expandUse, setExpandUse]         = useState(false)
     const [cloneChildren, setCloneChildren] = useState(false)
 
@@ -36,7 +36,8 @@ const AppMain = ({ expandAside, children }) => {
     }, [expandAside, children])
 
     let injectedProps = expandUse ? {
-        expandAside: expandAside
+        expandAside: expandAside,
+        expandedState: expandedState
     } : {}
 
     return (

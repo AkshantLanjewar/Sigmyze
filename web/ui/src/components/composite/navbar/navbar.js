@@ -8,14 +8,14 @@ import UserNavbar from "../user-navbar/user-navbar"
 import { connect } from 'react-redux'
 import { userModalAction } from "../../../data/actions/userActions"
 
-const Navbar = ({ userModal, userModalAction, expandAside }) => {
+const Navbar = ({ userModal, userModalAction, expandAside, expandedState }) => {
     const [togglerState, setTogglerState] = useState(false)
     useEffect(() => {
         expandAside(togglerState)
     }, [togglerState])
 
     return (
-        <div className="navbar">
+        <div className={`navbar ${ expandedState ? 'expand' : '' }`}>
             <div>
                 <button className={`toggler ${togglerState ? 'toggled' : ''}`}
                     onClick={() => { setTogglerState(!togglerState) }}>

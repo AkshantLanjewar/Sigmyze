@@ -5,7 +5,7 @@
     padding-right: 2rem;
     height: 3.75rem;
 
-    position: sticky;
+    position: fixed;
     top: 0;
     background-color: $second-bg;
     transition: all .2s ease-in-out;
@@ -13,6 +13,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    z-index: 20;
+    width: calc(100% - 5.25rem);
+
+    &.expand { width: calc(100% - 16.25rem); }
 
     .toggler {
         color: $text-color;

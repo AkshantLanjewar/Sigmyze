@@ -2,6 +2,7 @@ import React from "react"
 import './homepage.scoped.scss'
 
 import Button from "../../components/basic/buttons/button"
+import Map from "../../components/app/map/map"
 
 import { connect } from 'react-redux'
 import { userModalAction } from "../../data/actions/userActions"
@@ -24,6 +25,8 @@ const Homepage = ({ userModalAction }) => {
                             <Button.Text>Get Started</Button.Text>
                         </Button>
                     </div>
+
+                    <Map />
                 </div>
             </div>
 

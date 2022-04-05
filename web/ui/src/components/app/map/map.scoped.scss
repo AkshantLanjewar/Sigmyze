@@ -1,1 +1,11 @@
 @import '../../vars.scss';
+
+.map {
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 780px;
+    max-width: 1440px;
+    width: 90%;
+    position: relative;
+    z-index: 2;
+}
