@@ -1,7 +1,7 @@
 import React from "react"
 import './homepage.scoped.scss'
 
-import Button from "../../components/basic/buttons/button"
+import { Button } from "@mantine/core"
 import Map from "../../components/app/map/map"
 
 import { connect } from 'react-redux'
@@ -21,8 +21,8 @@ const Homepage = ({ userModalAction }) => {
                     </div>
 
                     <div className="actions">
-                        <Button padding={"md"} pColor={"blue"} grow={false} sxOnClick={() => { userModalAction(true) }}>
-                            <Button.Text>Get Started</Button.Text>
+                        <Button radius={"sm"} size={"sm"} onClick={() => { userModalAction(true) }}>
+                            Get Started
                         </Button>
                     </div>
 
@@ -30,8 +30,10 @@ const Homepage = ({ userModalAction }) => {
                 </div>
             </div>
 
-            <div className="features">
-
+            <div className="section fade-back">
+                <div className="content">
+                    <h2 className="header">Charts</h2>
+                </div>
             </div>
         </div>
     )

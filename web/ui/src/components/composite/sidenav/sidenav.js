@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import './sidenav.scoped.scss'
 
-import Group from '../../basic/group/group'
+import { Group } from "@mantine/core"
 
 import Nav   from "./sub-components/nav"
 import Brand from "./sub-components/brand"
@@ -22,7 +22,7 @@ const Sidenav = ({ expanded, children }) => {
 
     return (
         <div className="sidenav">
-            <Group type={"column"} marginType={"sm"} gapSize={"lg"}>
+            <Group direction={"column"} spacing={"xs"}>
                 {hasBrand ? React.cloneElement(brand[0], { expanded: expanded }) : null}
                 {hasNav ? React.cloneElement(nav[0], { expanded: expanded }) : null}
             </Group>

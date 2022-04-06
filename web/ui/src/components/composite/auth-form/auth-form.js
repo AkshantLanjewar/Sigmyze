@@ -1,9 +1,11 @@
 import React, { useState } from "react"
 
-import Card from '../../basic/card/card'
-import Group from "../../basic/group/group"
-import Button from "../../basic/buttons/button"
-import Divider from '../../basic/divider/divider'
+import {
+    Paper,
+    Group,
+    Button,
+    Divider,
+} from '@mantine/core';
 
 import { AiFillFacebook, AiOutlineGoogle } from 'react-icons/ai'
 
@@ -16,29 +18,23 @@ const AuthForm = () => {
     const [formState, setFormState] = useState(false)
 
     return (
-        <Card minWidth={"auto"} maxWidth={"auto"}>
-            <Group type={"column"} gapSize={"sm"} marginType={"sm"}>
-                <Group>
-                    <Button widthSize={"full"} padding={"md"} pColor={"blue"} rounding={"rounding-lg"}>
-                        <Button.Icon><AiFillFacebook /></Button.Icon>
-                        <Button.Text>
-                            <Button.Text.Title>Facebook</Button.Text.Title>
-                        </Button.Text>
-                    </Button>
-
-                    <Button widthSize={"full"} padding={"md"} pColor={"red"} rounding={"rounding-lg"}>
-                        <Button.Icon><AiOutlineGoogle /></Button.Icon>
-                        <Button.Text>
-                            <Button.Text.Title>Google</Button.Text.Title>
-                        </Button.Text>
-                    </Button>
-                </Group>
-
-                <Divider label={"Or continue with"} />
-
-                { formState ? <SignupForm changeState={setFormState} /> : <LoginForm changeState={setFormState} /> }
+        <Paper radius={'md'} p={'xl'}>
+            <Group grow mb="md" mt="md">
+                <Button radius={"xl"} color={"indigo"} sx={{ fontSize: "1.25rem" }}> 
+                    <AiFillFacebook /> 
+                </Button>
+                <Button radius={"xl"} color={"red"} sx={{ fontSize: "1.25rem" }}> 
+                    <AiOutlineGoogle /> 
+                </Button>
             </Group>
-        </Card>
+
+            <Divider label="Or continue with email" labelPosition="center" my={"lg"} />
+
+            { formState
+                ? <SignupForm changeState={setFormState} />
+                : <LoginForm  changeState={setFormState} />
+            }
+        </Paper>
     )
 }
 

@@ -1,71 +1,68 @@
 import React, { useState } from "react"
-import Form    from '../../../basic/form/form'
-import Group   from "../../../basic/group/group"
-import Button  from "../../../basic/buttons/button"
 
-import { MdAlternateEmail } from "react-icons/md"
-import { RiLockPasswordFill } from 'react-icons/ri'
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
-import { BsPersonFill } from 'react-icons/bs'
+import { useForm } from "@mantine/hooks";
+
+import {
+    TextInput,
+    PasswordInput,
+    Group,
+    Button,
+    Anchor,
+} from '@mantine/core';
 
 const LoginForm = ({ changeState }) => {
     const [iconState, setIconState] = useState(false)
+    const form = useForm({
+        initialValues: {
+            email: '',
+            password: '',
+        },
 
-    function HandleIconClick() {
-        setIconState(!iconState)
-    }
+        validationRules: {
+            email: (val) => /^\S+@\S+$/.test(val),
+            password: (val) => val.length >= 6,
+        }
+    })
 
     function HandleChangeClick(e) {
         e.preventDefault()
         changeState(true)
     }
 
+    function onSubmit(e) {
+        e.preventDefault()
+    }
+
     return (
-        <Form>
-            <Group type={"column"} marginType={"sm"}>
-                <Form.Element>
-                    <Group marginType={"sm"}>
-                        <Form.Element.Label>E-Mail <span style={{ color: 'red' }}>*</span> </Form.Element.Label>
-                    </Group>
+        <form onSubmit={onSubmit}>
+            <Group direction={"column"} grow>
+                <TextInput
+                    required
+                    label="Email"
+                    placeholder="example@gmail.com"
+                    value={form.values.email}
+                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                    error={form.errors.email && 'Invalid email'}
+                />
 
-                    <Form.Element.TextInput type={"email"} radius={"sm"}>
-                        <Form.Element.TextInput.Icon>
-                            <MdAlternateEmail />
-                        </Form.Element.TextInput.Icon>
-                    </Form.Element.TextInput>
-                </Form.Element>
-
-                <Form.Element>
-                    <Group marginType={"sm"}>
-                        <Form.Element.Label>Password <span style={{ color: 'red' }}>*</span> </Form.Element.Label>
-                    </Group>
-
-                    <Form.Element.TextInput type={iconState ? "text" : "password"} radius={"sm"}>
-                        <Form.Element.TextInput.Icon>
-                            <RiLockPasswordFill />
-                        </Form.Element.TextInput.Icon>
-
-                        <Form.Element.TextInput.RightButton sxOnClick={HandleIconClick}>
-                            {iconState ? <AiFillEye /> : <AiFillEyeInvisible />}
-                        </Form.Element.TextInput.RightButton>
-                    </Form.Element.TextInput>
-                </Form.Element>
-
-                <Group marginType={"md"}>
-                    <button
-                        onClick={HandleChangeClick}
-                        className="auth-flavor">
-                        Dont have an account? Register
-                    </button>
-
-                    <Button grow={false} pColor={"blue"}>
-                        <Button.Text>
-                            <Button.Text.Title>Login</Button.Text.Title>
-                        </Button.Text>
-                    </Button>
-                </Group>
+                <PasswordInput
+                    required
+                    label="Password"
+                    placeholder="Your Password"
+                    value={form.values.password}
+                    onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                    error={form.errors.password && 'Password should include at least 6 characters'}
+                />
             </Group>
-        </Form>
+
+            <Group position={"apart"} mt="xl">
+                <Anchor component="button" type="button" color={"gray"} onClick={HandleChangeClick} size={"xs"}>
+                    Dont have an account? Register
+                </Anchor>
+
+                <Button type={"submit"}>Login</Button>
+            </Group>
+        </form>
     )
 }
 

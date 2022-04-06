@@ -12,8 +12,8 @@
     min-height: 100vh;
 
     font-family: $font-family;
-    background-color: $primary-bg;
-    color: $text-color;
+    background-color: $dark-7;
+    color: $dark-0;
     overflow-x: hidden;
     position: relative;
 
@@ -26,7 +26,7 @@
         justify-content: flex-start;
         align-items: center;
 
-        background-color: $dark-bg;
+        background-color: $dark-8;
         transition: all .2s ease-in-out;
         min-height: 100vh;
 

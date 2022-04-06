@@ -1,100 +1,84 @@
 import React, { useState } from "react"
-import Form    from '../../../basic/form/form'
-import Group   from "../../../basic/group/group"
-import Button  from "../../../basic/buttons/button"
 
-import { MdAlternateEmail } from "react-icons/md"
-import { RiLockPasswordFill } from 'react-icons/ri'
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
-import { BsPersonFill } from 'react-icons/bs'
+import { useForm } from "@mantine/hooks";
+
+import {
+    TextInput,
+    PasswordInput,
+    Group,
+    Button,
+    Checkbox,
+    Anchor,
+} from '@mantine/core';
 
 const SignupForm = ({ changeState }) => {
+    const form = useForm({
+        initialValues: {
+            email: '',
+            password: '',
+            name: '',
+            terms: false
+        },
+
+        validationRules: {
+            email: (val) => /^\S+@\S+$/.test(val),
+            password: (val) => val.length >= 6,
+        }
+    })
+
     function HandleChangeClick(e) {
         e.preventDefault()
         changeState(false)
     }
 
-    const [iconPWD, setIconPWD]         = useState(false)
-    const [iconPWDConf, setIconPWDConf] = useState(false)
+    function OnSubmit(e) {
+        e.preventDefault()
+    }
 
     return (
-        <Form>
-            <Group type={"column"} marginType={"sm"}>
-                <Form.Element>
-                    <Group marginType={"sm"}>
-                        <Form.Element.Label>Name <span style={{ color: 'red' }}>*</span> </Form.Element.Label>
-                    </Group>
+        <form onSubmit={OnSubmit}>
+            <Group direction="column" grow>
+                <TextInput
+                    required
+                    label="Name"
+                    placeholder="Your Name"
+                    value={form.values.name}
+                    onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                />
 
-                    <Form.Element.TextInput type={"text"} radius={"sm"}>
-                        <Form.Element.TextInput.Icon>
-                            <BsPersonFill />
-                        </Form.Element.TextInput.Icon>
-                    </Form.Element.TextInput>
-                </Form.Element>
+                <TextInput
+                    required
+                    label="Email"
+                    placeholder="example@gmail.com"
+                    value={form.values.email}
+                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                    error={form.errors.email && 'Invalid email'}
+                />
 
-                <Form.Element>
-                    <Group marginType={"sm"}>
-                        <Form.Element.Label>E-Mail <span style={{ color: 'red' }}>*</span> </Form.Element.Label>
-                    </Group>
+                <PasswordInput
+                    required
+                    label="Password"
+                    placeholder="Your Password"
+                    value={form.values.password}
+                    onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                    error={form.errors.password && 'Password should include at least 6 characters'}
+                />
 
-                    <Form.Element.TextInput type={"email"} radius={"sm"}>
-                        <Form.Element.TextInput.Icon>
-                            <MdAlternateEmail />
-                        </Form.Element.TextInput.Icon>
-                    </Form.Element.TextInput>
-                </Form.Element>
-
-                <Form.Element>
-                    <Group marginType={"sm"}>
-                        <Form.Element.Label>Password <span style={{ color: 'red' }}>*</span> </Form.Element.Label>
-                    </Group>
-
-                    <Form.Element.TextInput type={iconPWD ? "text" : "password"} radius={"sm"}>
-                        <Form.Element.TextInput.Icon>
-                            <RiLockPasswordFill />
-                        </Form.Element.TextInput.Icon>
-
-                        <Form.Element.TextInput.RightButton sxOnClick={() => { setIconPWD(!iconPWD) }}>
-                            {iconPWD ? <AiFillEye /> : <AiFillEyeInvisible />}
-                        </Form.Element.TextInput.RightButton>
-                    </Form.Element.TextInput>
-                </Form.Element>
-
-                <Form.Element>
-                    <Group marginType={"sm"}>
-                        <Form.Element.Label>Password Conf <span style={{ color: 'red' }}>*</span> </Form.Element.Label>
-                    </Group>
-
-                    <Form.Element.TextInput type={iconPWDConf ? "text" : "password"} radius={"sm"}>
-                        <Form.Element.TextInput.Icon>
-                            <RiLockPasswordFill />
-                        </Form.Element.TextInput.Icon>
-
-                        <Form.Element.TextInput.RightButton sxOnClick={() => { setIconPWDConf(!iconPWDConf) }}>
-                            {iconPWDConf ? <AiFillEye /> : <AiFillEyeInvisible />}
-                        </Form.Element.TextInput.RightButton>
-                    </Form.Element.TextInput>
-                </Form.Element>
-
-                <Form.Element>
-                    <Form.Element.CheckBoxInput labelVal={"I agree to Terms and Conditions"}></Form.Element.CheckBoxInput>
-                </Form.Element>
-
-                <Group marginType={"md"}>
-                    <button
-                        onClick={HandleChangeClick}
-                        className="auth-flavor">
-                        Have an account already? Login
-                    </button>
-
-                    <Button grow={false} pColor={"blue"}>
-                        <Button.Text>
-                            <Button.Text.Title>Signup</Button.Text.Title>
-                        </Button.Text>
-                    </Button>
-                </Group>
+                <Checkbox
+                    label={"I accept the terms and conditions"}
+                    checked={form.values.terms}
+                    onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+                />
             </Group>
-        </Form>
+
+            <Group position={"apart"} mt="xl">
+                <Anchor component="button" type="button" color={"gray"} onClick={HandleChangeClick} size={"xs"}>
+                    Already have an account? Login
+                </Anchor>
+
+                <Button type={"submit"}>Register</Button>
+            </Group>
+        </form>
     )
 }
 

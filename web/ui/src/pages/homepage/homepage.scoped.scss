@@ -53,6 +53,59 @@
     }
 }
 
-.features {
+.section {
+    background-color: $dark-9;
 
+    &.fade-back {
+        padding-top: 140px;
+        margin-top: -140px;
+    }
+
+    .content {
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 16px;
+        padding-right: 16px;
+
+        h2.header {
+            display: inline-block;
+            position: relative;
+
+            font-family: $font-family;
+            font-weight: 900;
+            font-size: 42px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: $text-color;
+            line-height: 1.1;
+
+            margin: 0px 0px 48px 22px;
+            padding: 0px;
+            text-align: left;
+
+            &::before, &::after {
+                content: "";
+                width: 10px;
+                height: 10px;
+                position: absolute;
+            }
+
+            &::before {
+                border-color: inherit;
+                top: -14px;
+                left: -22px;
+                border-left: 5px solid $text-color;
+                border-top: 5px solid $text-color;
+            }
+
+            &::after {
+                border-color: inherit;
+                bottom: -14px;
+                right: -22px;
+                border-right: 5px solid $text-color;
+                border-bottom: 5px solid $text-color;
+            }
+        }
+    }
 }

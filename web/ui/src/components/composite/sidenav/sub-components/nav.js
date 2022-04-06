@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import './nav.scoped.scss'
 
+import { Tooltip } from "@mantine/core"
+
 const Nav = ({ expanded, children }) => {
     const elements = React.Children.map(children, child => child.type.displayName === 'element' ? child : null)
 
@@ -31,13 +33,15 @@ const NavElement = ({ url, active, icon, pName }) => {
     }, [pName, icon])
 
     return (
-        <li className={`element tooltip-right t-side ${active ? 'active' : ''}`} data-tooltip={hasName ? pName : ''}>
-            <a href={url}>
-                {hasIcon ? React.cloneElement(icon, { style: svgStyle }) : null}
+        <Tooltip withArrow label={pName} position="right" placement={"center"}>
+            <li className={`element ${active ? 'active' : ''}`}>
+                <a href={url}>
+                    {hasIcon ? React.cloneElement(icon, { style: svgStyle }) : null}
 
-                <span>{pName}</span>
-            </a>
-        </li>
+                    <span>{pName}</span>
+                </a>
+            </li>
+        </Tooltip>
     )
 }
 
