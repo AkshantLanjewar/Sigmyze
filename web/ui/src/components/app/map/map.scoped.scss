@@ -3,9 +3,19 @@
 .map {
     background-size: cover;
     background-repeat: no-repeat;
-    height: 780px;
-    max-width: 1440px;
-    width: 90%;
-    position: relative;
+    width: 100%;
     z-index: 2;
+    margin-top: 2rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .inner {
+        position: relative;
+        height: 780px;
+        max-width: 1440px;
+        width: 90%;
+    }
 }

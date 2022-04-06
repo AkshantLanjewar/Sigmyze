@@ -58,11 +58,13 @@ const Map = ({  }) => {
 
     return (
         <div className="map">
-            <DeckGL initialViewState={InitialViewState}
-                controller={true}
-                layers={layers}>
-                    <StaticMap mapStyle={BASEMAP.POSITRON_NOLABELS} />
-            </DeckGL>
+            <div className="inner">
+                <DeckGL initialViewState={InitialViewState}
+                    controller={true}
+                    layers={layers}>
+                        <StaticMap mapStyle={BASEMAP.POSITRON_NOLABELS} />
+                </DeckGL>
+            </div>
         </div>
     )
 }
