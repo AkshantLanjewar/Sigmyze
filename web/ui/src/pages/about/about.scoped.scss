@@ -1,1 +1,32 @@
 @import '../../components/vars.scss';
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $dark-9;
+
+    padding-top: 2rem;
+    padding-bottom: 5rem;
+
+    h1 { 
+        font-size: 3rem; 
+        margin-bottom: 0.2em;
+    }
+
+    p { 
+        color: $dark-1; 
+        padding-bottom: 4rem;
+    }
+}
+
+.section {
+    &.fade-back {
+        margin-top: -70px;
+    }
+
+    &.transparent {
+        background-color: transparent;
+    }
+}

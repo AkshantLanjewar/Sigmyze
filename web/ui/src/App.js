@@ -1,5 +1,7 @@
 import { MantineProvider } from '@mantine/core'
 
+import { useState, useEffect } from 'react';
+
 //importing the prebuilt-components from our library
 import AppShell from "./components/app/shell/shell";
 import Navbar   from "./components/composite/navbar/navbar";
@@ -26,22 +28,39 @@ const pages = [
 ]
 
 function App() {
+	const [navState, setNavState] = useState([])
+	useEffect(() => {
+		let path 	  = window.location.pathname
+		let pNavState = []
+
+		for(let i = 0; i < pages.length; i++) {
+			let page = pages[i]
+			page['active'] = false
+
+			if(page.url == path)
+				page['active'] = true
+			pNavState.push(page)
+		}
+
+		setNavState([...pNavState])
+	}, [])
+
 	return (
 		<div>
 			<MantineProvider theme={{ 
 				colorScheme: 'dark',
 				colors: {
 					dark: [
-						"#F7FAFC",
-						"#EDF2F7",
-						"#E2E8F0",
-						"#CBD5E0",
-						"#A0AEC0",
-						"#718096",
-						"#4A5568",
-						"#2D3748",
-						"#1A202C",
-						"#171923"
+						"#C1C2C5",
+						"#A6A7AB",
+						"#909296",
+						"#5c5f66",
+						"#373A40",
+						"#2C2E33",
+						"#25262b",
+						"#1A1B1E",
+						"#141517",
+						"#101113"
 					]
 				},
 				fontFamily: 'Poppins'
@@ -52,7 +71,7 @@ function App() {
 							<Sidenav.Brand image={Logo} text={"Sigmyze"} />
 
 							<Sidenav.Nav>
-								{pages.map((step) => (
+								{navState.map((step) => (
 									<Sidenav.Nav.Element url={step.url} active={step.active} icon={step.icon} pName={step.name} key={`navbar-${step.name}`} />
 								))}
 							</Sidenav.Nav>
