@@ -6,11 +6,13 @@ import {
     createStyles
 } from '@mantine/core'
 
-import { BsCheckLg } from 'react-icons/bs'
+import { BsCheck } from 'react-icons/bs'
 
 const useStyles = createStyles((themes) => ({
     card: {
-        //backgroundColor: themes.colors.dark[6]
+        backgroundColor: themes.colors.dark[6],
+        height: "350px",
+        width: "300px"
     },
 
     theme: {
@@ -33,7 +35,7 @@ const useStyles = createStyles((themes) => ({
     }
 }))
 
-const DescriptionCard = ({ icon, title }) => {
+const DescriptionCard = ({ icon, title, description, features }) => {
     const { classes } = useStyles()
 
     return (
@@ -45,8 +47,8 @@ const DescriptionCard = ({ icon, title }) => {
             </Card.Section>
 
             <Card.Section className={classes.centerSection} pb={"xl"}>
-                <h2>Charting</h2>
-                <h5>Visualize and Display Data</h5>
+                <h2>{title}</h2>
+                <h5>{description}</h5>
             </Card.Section>
 
             <Card.Section pl="xl" pr="xl" pb={"lg"}>
@@ -56,13 +58,13 @@ const DescriptionCard = ({ icon, title }) => {
                     center
                     icon={
                         <ThemeIcon color="teal" size={24} radius={"xl"}>
-                            <BsCheckLg size={10} />
+                            <BsCheck size={16} />
                         </ThemeIcon>
                     }
                 >
-                    <List.Item className={classes.boldFont}>Multi Axis Charts</List.Item>
-                    <List.Item className={classes.boldFont}>Multiple Chart Types</List.Item>
-                    <List.Item className={classes.boldFont}>Exportable to PNG and SVG formats</List.Item>
+                    {features.map((feature) => (
+                        <List.Item className={classes.boldFont}>{feature}</List.Item>
+                    ))}
                 </List>
             </Card.Section>
         </Card>

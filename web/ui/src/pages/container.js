@@ -7,15 +7,19 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Homepage from "./homepage/homepage"
 import About    from "./about/about"
 
+import { ScrollArea } from "@mantine/core"
+
 const Container = ({ expandAside }) => {
     return (
         <div className="wrap">
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/"      element={ <Homepage /> } />
-                    <Route path="/about" element={ <About /> } />
-                </Routes>
-            </BrowserRouter>
+            <ScrollArea style={{ height: "calc(100vh - 60px)" }}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/"      element={ <Homepage /> } />
+                        <Route path="/about" element={ <About /> } />
+                    </Routes>
+                </BrowserRouter>
+            </ScrollArea>
         </div>
     )
 }

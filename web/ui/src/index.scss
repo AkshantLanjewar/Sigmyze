@@ -18,8 +18,5 @@ body {
 @import './components/tooltip.scss';
 
 .wrap {
-    max-height: calc(100vh - 60px);
-    overflow-y: auto;
     margin-top: 60px;
-    height: calc(100vh - 60px);
 }

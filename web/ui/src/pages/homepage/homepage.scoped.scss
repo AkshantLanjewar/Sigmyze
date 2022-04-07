@@ -53,8 +53,12 @@
     }
 }
 
-.section {
+.homepage-wrapper {
     background-color: $dark-9;
+}
+
+.section {
+    background-color: $dark-7;
 
     &.fade-back {
         padding-top: 140px;

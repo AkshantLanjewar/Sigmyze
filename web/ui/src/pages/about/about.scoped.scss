@@ -17,13 +17,65 @@
 
     p { 
         color: $dark-1; 
-        padding-bottom: 4rem;
+        padding-bottom: 6rem;
     }
 }
 
 .section {
+    background-color: $dark-7;
+    margin-top: 7rem;
+    margin-bottom: 3rem;
+
+    .header-container {
+        text-align: center;
+
+        h2.header {
+            display: inline-block;
+            position: relative;
+    
+            font-family: $font-family;
+            font-weight: 900;
+            font-size: 42px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: $text-color;
+            line-height: 1.1;
+    
+            margin-bottom: 48px;
+            margin-left: auto;
+            margin-right: auto;
+    
+            padding: 0px;
+            text-align: left;
+            background-color: transparent;
+    
+            &::before, &::after {
+                content: "";
+                width: 10px;
+                height: 10px;
+                position: absolute;
+            }
+    
+            &::before {
+                border-color: inherit;
+                top: -14px;
+                left: -22px;
+                border-left: 5px solid $text-color;
+                border-top: 5px solid $text-color;
+            }
+    
+            &::after {
+                border-color: inherit;
+                bottom: -14px;
+                right: -22px;
+                border-right: 5px solid $text-color;
+                border-bottom: 5px solid $text-color;
+            }
+        }
+    }
+    
     &.fade-back {
-        margin-top: -70px;
+        margin-top: -6rem;
     }
 
     &.transparent {
