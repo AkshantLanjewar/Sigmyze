@@ -1,5 +1,6 @@
 using SigmyzeServer.Services;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SigmyzeServer
 {
@@ -14,6 +15,11 @@ namespace SigmyzeServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddApiVersioning(config => {
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
+            });
 
             services.AddCronJob<WEODataService>(c => {
                 c.TimeZoneInfo   = TimeZoneInfo.Utc;

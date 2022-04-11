@@ -96,7 +96,7 @@ namespace SigmyzeServer.Services
                 List<IndicatorData> data             = new List<IndicatorData>();
 
                 for(int z = 0; z < _dataKeys.Count; z++)
-                    {
+                {
                     string key = _dataKeys[z];
                     string val = _dataDict[key];
 
@@ -129,6 +129,9 @@ namespace SigmyzeServer.Services
             string countries_url    = URL_ROOT + @"/api/econdata/countries/";
             string countries_rep    = HTTP_Request(countries_url);
             List<Country> countries = JsonConvert.DeserializeObject<List<Country>>(countries_rep);
+
+            string json = JsonConvert.SerializeObject(countries, Formatting.Indented);
+            OutputFile("./metadata/weo/countries.json", json);
 
             Parallel.For(0 ,countries.Count, count => {
                 Country country = countries[count];
