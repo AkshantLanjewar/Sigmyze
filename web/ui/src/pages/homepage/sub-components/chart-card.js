@@ -24,7 +24,7 @@ const ChartCard = ({  }) => {
             </Card.Section>
 
             <Card.Section>
-
+                <ChartBuilder />
             </Card.Section>
         </Card>
     )

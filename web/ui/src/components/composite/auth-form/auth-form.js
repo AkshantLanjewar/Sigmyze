@@ -19,6 +19,7 @@ const AuthForm = () => {
 
     return (
         <Paper radius={'md'} p={'xl'}>
+            {/** 
             <Group grow mb="md" mt="md">
                 <Button radius={"xl"} color={"indigo"} sx={{ fontSize: "1.25rem" }}> 
                     <AiFillFacebook /> 
@@ -29,6 +30,7 @@ const AuthForm = () => {
             </Group>
 
             <Divider label="Or continue with email" labelPosition="center" my={"lg"} />
+            */}
 
             { formState
                 ? <SignupForm changeState={setFormState} />

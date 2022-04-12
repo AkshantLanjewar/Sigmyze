@@ -1,8 +1,10 @@
-const BuildCharts = (
+import { GetDatasets } from "../data/datasets"
+
+async function BuildCharts (
     svgRef, 
     margin,
     setFUNCS
-) => {
+) {
     const setSvgDims  = setFUNCS['setSvgDims']
     const setSvgPoint = setFUNCS['setSvgPoint']
 

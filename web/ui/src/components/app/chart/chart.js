@@ -18,7 +18,7 @@ const useStyles = createStyles((theme) => ({
     },
 
     chartContainer: {
-        width: "calc(100% - 55px)",
+        width: "calc(100% - 0px)",
         height: "100%",
 
         display: "flex",
@@ -71,7 +71,7 @@ const ChartBuilder = ({ chartList }) => {
     }, [])
 
     return (
-        <div className={classes.ChartBuilder}>
+        <div className={classes.chartBuilder}>
             <div className={classes.chartContainer}>
 
                 <svg

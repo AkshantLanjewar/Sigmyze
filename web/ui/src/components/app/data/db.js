@@ -1,4 +1,4 @@
-import { openDB } from 'idb/with-async-ittr.js'
+import { openDB } from 'idb/with-async-ittr'
 
 async function CreateDB() {
     const db = await openDB('sigmyze', 1, {
