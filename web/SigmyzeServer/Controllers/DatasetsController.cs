@@ -39,7 +39,7 @@ namespace SigmyzeServer.Controllers
             if(check == null) 
             {
                 status.Error = true;
-                status.MSG   = $"INVALID datasset {dataset}";
+                status.MSG   = "INVALID dataset";
             }
 
             return status;
@@ -54,7 +54,7 @@ namespace SigmyzeServer.Controllers
             if(check == null)
             {
                 status.Error = true;
-                status.MSG   = $"INVALID country {iso3}";
+                status.MSG   = "INVALID country";
             }
 
             return status;
@@ -78,7 +78,7 @@ namespace SigmyzeServer.Controllers
             if(check)
             {
                 status.Error = true;
-                status.MSG   = $"INVALID indicator {indicator} not found in country context";
+                status.MSG   = $"INVALID indicator";
             }
 
             return status;

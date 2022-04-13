@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core'
+import { NotificationsProvider } from '@mantine/notifications'
 
 import { useState, useEffect } from 'react';
 
@@ -65,24 +66,31 @@ function App() {
 				},
 				fontFamily: 'Poppins'
 			}}>
-				<AppShell>
-					<AppShell.Side>
-						<Sidenav>
-							<Sidenav.Brand image={Logo} text={"Sigmyze"} />
+				<NotificationsProvider>
+					<AppShell>
+						<AppShell.Side>
+							<Sidenav>
+								<Sidenav.Brand image={Logo} text={"Sigmyze"} />
 
-							<Sidenav.Nav>
-								{navState.map((step) => (
-									<Sidenav.Nav.Element url={step.url} active={step.active} icon={step.icon} pName={step.name} key={`navbar-${step.name}`} />
-								))}
-							</Sidenav.Nav>
-						</Sidenav>
-					</AppShell.Side>
+								<Sidenav.Nav>
+									{navState.map((step) => (
+										<Sidenav.Nav.Element 
+											url={step.url} 
+											active={step.active} 
+											icon={step.icon} 
+											pName={step.name} 
+											key={`navbar-${step.name}`} />
+									))}
+								</Sidenav.Nav>
+							</Sidenav>
+						</AppShell.Side>
 
-					<AppShell.Main>
-						<Navbar />
-						<Container />
-					</AppShell.Main>
-				</AppShell>
+						<AppShell.Main>
+							<Navbar />
+							<Container />
+						</AppShell.Main>
+					</AppShell>
+				</NotificationsProvider>
 			</MantineProvider>
 		</div>
 	);

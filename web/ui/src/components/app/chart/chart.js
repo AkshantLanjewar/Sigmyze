@@ -67,8 +67,8 @@ const ChartBuilder = ({ chartList }) => {
     }
 
     useEffect(() => {
-        BuildCharts(svgRef, margin, setFUNCS)
-    }, [])
+        BuildCharts(chartList, svgRef, margin, setFUNCS)
+    }, [chartList])
 
     return (
         <div className={classes.chartBuilder}>
