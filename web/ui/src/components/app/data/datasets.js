@@ -149,7 +149,7 @@ async function GetIndicator(dataset, iso3, ind3) {
     let res = await db.get('ds_indicator', key)
 
     if(res == undefined) {
-        let url = `/api/v1/datasets/${dataset}/countries/${iso3}/indicator/${ind3}`
+        let url = `/api/v1/datasets/${dataset}/countries/${iso3}/indicators/${ind3}`
         let rep = await (await fetch(url)).json()
 
         let status = rep['status']

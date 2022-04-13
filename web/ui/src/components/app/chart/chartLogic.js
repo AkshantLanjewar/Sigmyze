@@ -5,14 +5,20 @@ import {
     LinearAxisFormatter
 } from './scales'
 
+import { GenerateLinePath } from './paths'
+
 async function BuildCharts (
     chartList,
     svgRef, 
     margin,
     setFUNCS
 ) {
-    const setSvgDims  = setFUNCS['setSvgDims']
-    const setSvgPoint = setFUNCS['setSvgPoint']
+    const setSvgDims    = setFUNCS['setSvgDims']
+    const setSvgPoint   = setFUNCS['setSvgPoint']
+    const setActiveAxis = setFUNCS['setActiveAxis']
+    const setDatasets   = setFUNCS['setDatasets']
+    const setLinePaths  = setFUNCS['setLinePaths']
+    const setChartBuilt = setFUNCS['setChartBuilt']
 
     if(svgRef.current == null)
         return
@@ -44,7 +50,7 @@ async function BuildCharts (
 
     for(let i = 0; i < data_points.length; i++) {
         let data = data_points[i]
-        let arr  = data_points['data']
+        let arr  = data['data']
         
         if(arr.length > longest_set_len || i == 0) {
             longest_set_len = arr.length
@@ -83,10 +89,72 @@ async function BuildCharts (
     let xTickRange = []
     xTickRange.push(min_dat)
     for(let i = 0; i < 7; i++) {
+        let val = xTickRange[i] + xStepValue
 
+        if(val >= max_dat) {
+            xTickRange.push(max_dat)
+            break
+        } else {
+            xTickRange.push(val)
+        }
     }
 
-    
+    let yStepValue = parseFloat(((max_val - min_val) / 20).toFixed(2))
+    let yTickRange = []
+    yTickRange.push(min_val)
+    for(let i = 0; i < 20; i++) {
+        let val = parseFloat((yTickRange[i] + yStepValue).toFixed(2))
+
+        if(val >= max_val) {
+            yTickRange.push(max_val)
+            break
+        } else {
+            yTickRange.push(val)
+        }
+    }
+
+    let linePaths = []
+
+    let chartOptions = {
+        width: rawWidth,
+        height: rawHeight,
+        margin: margin
+    }
+
+    const xPackage = {
+        x: x,
+        tickRange: xTickRange,
+        stepValue: xStepValue
+    }
+
+    const yPackage = {
+        y: y,
+        tickRange: yTickRange,
+        stepValue: yStepValue
+    }
+
+    for(let i = 0; i < data_points.length; i++) {
+        let data = data_points[i]
+
+        let options     = chartOptions
+        options['x']    = xPackage
+        options['y']    = yPackage
+        options['data'] = data
+
+        let path = GenerateLinePath(options)
+        linePaths.push({ path: path, data: data['data'] })
+    }
+
+    let activeAxis = {
+        x: xPackage,
+        y: yPackage,
+        data: longest_set
+    }
+
+    setActiveAxis({...activeAxis})
+    setDatasets([...data_points])
+    setLinePaths([...linePaths])
+    setChartBuilt(true)
 }
 
 export default BuildCharts

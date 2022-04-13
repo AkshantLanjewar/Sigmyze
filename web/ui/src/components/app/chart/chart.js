@@ -7,6 +7,10 @@ import {
 } from "@mantine/core"
 
 const useStyles = createStyles((theme) => ({
+    svg: {
+        height: "100%"
+    },
+
     chartBuilder: {
         width: "100%",
         height: "100%",
@@ -49,9 +53,9 @@ const ChartBuilder = ({ chartList }) => {
 
     let margin = {
         top: 10, 
-        right: 5,
+        right: 20,
         bottom: 10,
-        left: 5
+        left: 20
     }
 
     const setFUNCS = {
@@ -67,7 +71,19 @@ const ChartBuilder = ({ chartList }) => {
     }
 
     useEffect(() => {
-        BuildCharts(chartList, svgRef, margin, setFUNCS)
+        if(chartBuilt == false)
+            setTimeout(() => {
+                BuildCharts(chartList, svgRef, margin, setFUNCS)
+            }, 400)
+        
+        if(chartBuilt == false) {
+            setActiveAxis({ x: null, y: null, data: [] })
+            setDatasets([])
+            setLinePaths([])
+            setChartBuilt(false)
+
+            BuildCharts(chartList, svgRef, margin, setFUNCS)
+        }
     }, [chartList])
 
     return (
@@ -75,12 +91,27 @@ const ChartBuilder = ({ chartList }) => {
             <div className={classes.chartContainer}>
 
                 <svg
+                    className={classes.svg}
                     ref={svgRef}
                 >
                     <line
+                        
                         className={classes.hoverLine} />
                     <line
                         className={classes.hoverLine} />
+
+                    {linePaths.map((step) => (
+                        <path
+                            key={`line-path-${step}`}
+                            fill="none"
+                            stroke="#456ef7"
+                            strokeWidth={"2px"}
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                            transform={`translate(0, ${margin.top})`}
+                            d={step.path}
+                        />
+                    ))}
                 </svg>
             </div>
         </div>

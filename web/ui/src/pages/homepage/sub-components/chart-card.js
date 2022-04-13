@@ -11,6 +11,10 @@ import ChartBuilder from "../../../components/app/chart/chart";
 const useStyles = createStyles((theme) => ({
     card: {
         width: "32%"
+    },
+
+    chartSection: {
+        height: "200px"
     }
 }))
 
@@ -23,8 +27,8 @@ const ChartCard = ({  }) => {
                 <Title order={3}>Card Chart</Title>
             </Card.Section>
 
-            <Card.Section>
-                <ChartBuilder />
+            <Card.Section className={classes.chartSection}>
+                <ChartBuilder chartList={[{ dataset: "weo", iso3: "USA", ind3: "NGDP" }]}  />
             </Card.Section>
         </Card>
     )
