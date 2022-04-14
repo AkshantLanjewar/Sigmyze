@@ -11,7 +11,7 @@ namespace SigmyzeServer
         {
             //create the base scrapers
             WEODataScraper weoScraper = new WEODataScraper();
-            //weoScraper.Run();
+            weoScraper.Run();
 
             CreateHostBuilder(args).Build().Run();
         }

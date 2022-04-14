@@ -1,11 +1,16 @@
 import React from "react"
+
+import { TimeSeriesTimeScale, TimeSeriesLinearScale } from '../utils/chart-axis'
 import { ChartOptions } from '../chart-options'
 
 interface LineProps {
-    options: ChartOptions
+    options: ChartOptions,
+    
+    timeScale: TimeSeriesTimeScale | null,
+    linearScale: TimeSeriesLinearScale | null
 }
 
-function LineChart({ options }: LineProps) {
+function LineChart({ options, timeScale, linearScale }: LineProps) {
     return (
         <path />
     )

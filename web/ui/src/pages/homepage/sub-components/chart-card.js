@@ -6,7 +6,8 @@ import {
     createStyles
 } from "@mantine/core"
 
-import ChartBuilder from "../../../components/app/chart/chart";
+import { dummyLinearData } from "../../../data/dummy-data";
+import { TimeSeries } from 'sigmyze-charting'
 
 const useStyles = createStyles((theme) => ({
     card: {
@@ -21,6 +22,8 @@ const useStyles = createStyles((theme) => ({
 const ChartCard = ({  }) => {
     const { classes } = useStyles()
 
+    let tChartOptions = { id: "test-chart", type: "line", data: dummyLinearData, color: "#031158" }
+
     return (
         <Card p={"xl"} radius={"sm"} shadow={"md"} className={classes.card}>
             <Card.Section pl={"lg"} pr={"lg"} pt={"md"} pb={"md"}>
@@ -28,7 +31,8 @@ const ChartCard = ({  }) => {
             </Card.Section>
 
             <Card.Section className={classes.chartSection}>
-                <ChartBuilder chartList={[{ dataset: "weo", iso3: "USA", ind3: "NGDP" }]}  />
+                <TimeSeries
+                    charts={[tChartOptions]} />
             </Card.Section>
         </Card>
     )

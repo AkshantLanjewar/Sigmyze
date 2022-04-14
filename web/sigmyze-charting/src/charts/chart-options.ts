@@ -12,7 +12,7 @@ interface ChartMargin {
 
 interface ChartOptions {
     id: string,
-    type: "line",
+    type: string | "line",
     data: Array<ChartData>,
     color?: string
 }

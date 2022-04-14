@@ -9,7 +9,7 @@ interface SortDatasetsOutput {
     longest_dataset: Array<ChartData>
 }
 
-function SortDatasets(datasets: Array<ChartOptions>) {
+function SortDatasets(datasets: Array<ChartOptions>): SortDatasetsOutput {
     let output = {} as SortDatasetsOutput
     
     //init_values
@@ -22,6 +22,9 @@ function SortDatasets(datasets: Array<ChartOptions>) {
     for(let i = 0; i < datasets.length; i++) {
         let dataset = datasets[i]
         let data    = dataset.data
+
+        if(data.length > output.longest_dataset.length || i == 0)
+            output.longest_dataset = data
 
         for(let x = 0; x < data.length; x++) {
             let data_point = data[x]
@@ -37,8 +40,17 @@ function SortDatasets(datasets: Array<ChartOptions>) {
 
             if(value > output.max_value)
                 output.max_value = value
+            if(value < output.min_value)
+                output.min_value = value
+            if(date > output.max_date)
+                output.max_date = date
+            if(date < output.min_date)
+                output.min_date = date
         }
     }
+
+    return output
 }
 
+export { SortDatasetsOutput }
 export default SortDatasets

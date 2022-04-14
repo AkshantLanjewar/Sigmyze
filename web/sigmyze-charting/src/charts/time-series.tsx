@@ -4,6 +4,12 @@ import { createStyles } from "@mantine/core"
 //import chart types
 import LineChart from "./chart-types/line"
 
+import { ChartMargin } from "./chart-options"
+
+//util funcs
+import SortDatasets, { SortDatasetsOutput } from "./utils/datasets"
+import { TimeScale, TimeSeriesTimeScale, TimeSeriesLinearScale, LinearScale } from "./utils/chart-axis"
+
 //chart styles
 const useStyles = createStyles((theme: any) => ({
     svg: {
@@ -38,19 +44,32 @@ const useStyles = createStyles((theme: any) => ({
 
 import Props, { ChartOptions } from './chart-options'
 
+interface ScalesState {
+    time: TimeSeriesTimeScale | null,
+    linear: TimeSeriesLinearScale | null
+}
+
+let defaultMargin: ChartMargin = {
+    top: 10,
+    bottom: 10,
+    left: 20,
+    right: 20
+}
+
 function TimeSeriesChart({
-    margin,
+    margin = defaultMargin,
     axisIndex = -1,
     charts
 }: Props) {
     const { classes } = useStyles()
     const ref = React.createRef<SVGSVGElement>()
-    const [lineCharts, setLineCharts] = useState([])
+    const [lineCharts, setLineCharts] = useState<Array<ChartOptions>>([])
 
     //internal state
     const [activeAxis, setActiveAxis] = useState({ x: null, y: null })
     const [svgDims, setSvgDims] = useState({ width: 0, height: 0, paddedHeight: 0 })
     const [svgPoint, setSvgPoint] = useState<DOMPoint | null>(null)
+    const [scales, setScales] = useState<ScalesState>({ time: null, linear: null })
     
     //on svg render
     useEffect(() => {
@@ -66,10 +85,33 @@ function TimeSeriesChart({
         setSvgPoint(svgPoint)
     }, [])
 
+    //on charts
+    useEffect(() => {
+        let sortedDatasets: SortDatasetsOutput = SortDatasets(charts)
+
+        let timeScale   = TimeScale({ sortedDatasets, width: svgDims.width, margin })
+        let linearScale = LinearScale({ sortedDatasets, height: svgDims.paddedHeight, margin })
+        setScales({ time: timeScale, linear: linearScale })
+
+        let line_charts = [] as Array<ChartOptions>
+        for(let i = 0; i < charts.length; i++) {
+            let chart = charts[i]
+
+            if(chart.type == "line")
+                line_charts.push(chart)
+        }
+
+        setLineCharts([...line_charts])
+    }, [charts])
+
     let chart_output = []
     //consume line charts
     for(let i = 0; i < lineCharts.length; i++)
-        chart_output.push(<LineChart options={{ id: "", type: "line", data: [] }} key={`line-${i}`} />)
+        chart_output.push(<LineChart 
+            timeScale={scales.time} 
+            linearScale={scales.linear}  
+            options={lineCharts[i]} 
+            key={`line-${i}`} />)
 
     return (
         <div className={classes.chartBuilder}>
