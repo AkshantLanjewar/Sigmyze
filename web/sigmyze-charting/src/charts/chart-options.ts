@@ -14,14 +14,17 @@ interface ChartOptions {
     id: string,
     type: string | "line",
     data: Array<ChartData>,
-    color?: string
+    color?: string,
+    margin?: ChartMargin
 }
 
 interface Props {
     charts: Array<ChartOptions>,
 
     axisIndex?: number,
-    margin: ChartMargin
+    margin: ChartMargin,
+    verticalTooltip?: boolean,
+    horizontalTooltip?: boolean
 }
 
 export  { ChartOptions, ChartData, ChartMargin }

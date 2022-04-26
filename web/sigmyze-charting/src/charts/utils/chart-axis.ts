@@ -56,7 +56,7 @@ function LinearScale({ sortedDatasets, height, margin }: LinearScaleProps) {
     let output = {} as TimeSeriesLinearScale
     output.y   = d3.scaleLinear()
         .domain([sortedDatasets.min_value, sortedDatasets.max_value]).nice()
-        .range([height, margin.top])
+        .range([height, 0])
 
     output.step  = parseFloat(((sortedDatasets.max_value - sortedDatasets.min_value) / 20).toFixed(2))
     output.ticks = []

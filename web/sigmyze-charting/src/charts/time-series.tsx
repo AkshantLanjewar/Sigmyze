@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, SyntheticEvent } from "react"
 import { createStyles } from "@mantine/core"
 
 //import chart types
 import LineChart from "./chart-types/line"
 
-import { ChartMargin } from "./chart-options"
+import { ChartMargin, ChartData } from "./chart-options"
 
 //util funcs
 import SortDatasets, { SortDatasetsOutput } from "./utils/datasets"
 import { TimeScale, TimeSeriesTimeScale, TimeSeriesLinearScale, LinearScale } from "./utils/chart-axis"
+
+import * as d3 from 'd3'
 
 //chart styles
 const useStyles = createStyles((theme: any) => ({
@@ -59,17 +61,19 @@ let defaultMargin: ChartMargin = {
 function TimeSeriesChart({
     margin = defaultMargin,
     axisIndex = -1,
-    charts
+    charts,
+    verticalTooltip = true,
+    horizontalTooltip = false
 }: Props) {
     const { classes } = useStyles()
     const ref = React.createRef<SVGSVGElement>()
     const [lineCharts, setLineCharts] = useState<Array<ChartOptions>>([])
 
     //internal state
-    const [activeAxis, setActiveAxis] = useState({ x: null, y: null })
     const [svgDims, setSvgDims] = useState({ width: 0, height: 0, paddedHeight: 0 })
     const [svgPoint, setSvgPoint] = useState<DOMPoint | null>(null)
     const [scales, setScales] = useState<ScalesState>({ time: null, linear: null })
+    const [sortedDatasets, setSortedDatasets] = useState<SortDatasetsOutput>()
     
     //on svg render
     useEffect(() => {
@@ -79,7 +83,7 @@ function TimeSeriesChart({
         //get width and height
         const rawHeight = boundingBox.height
         const rawWidth  = boundingBox.width 
-        const height    = rawWidth - margin.top - margin.bottom
+        const height    = rawHeight - margin.top - margin.bottom
 
         setSvgDims({ width: rawWidth, height: rawHeight, paddedHeight: height })
         setSvgPoint(svgPoint)
@@ -91,32 +95,104 @@ function TimeSeriesChart({
 
         let timeScale   = TimeScale({ sortedDatasets, width: svgDims.width, margin })
         let linearScale = LinearScale({ sortedDatasets, height: svgDims.paddedHeight, margin })
-        setScales({ time: timeScale, linear: linearScale })
 
         let line_charts = [] as Array<ChartOptions>
         for(let i = 0; i < charts.length; i++) {
-            let chart = charts[i]
+            let chart    = charts[i]
+            chart.margin = margin
 
             if(chart.type == "line")
                 line_charts.push(chart)
         }
 
+        setScales({ time: timeScale, linear: linearScale })
         setLineCharts([...line_charts])
-    }, [charts])
+        setSortedDatasets(sortedDatasets)
+    }, [svgDims, charts])
 
     let chart_output = []
     //consume line charts
-    for(let i = 0; i < lineCharts.length; i++)
+    for(let i = 0; i < lineCharts.length && scales.time != null; i++)
         chart_output.push(<LineChart 
-            timeScale={scales.time} 
-            linearScale={scales.linear}  
+            timeScale={scales.time!} 
+            linearScale={scales.linear!}  
             options={lineCharts[i]} 
             key={`line-${i}`} />)
+
+    //tooltip state
+    const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
+    const [activeVert, setActiveVert] = useState(false)
+    const [activeHorz, setActiveHorz] = useState(false)
+
+    function MouseOver() {
+        if(verticalTooltip)
+            setActiveVert(true)
+        if(horizontalTooltip)
+            setActiveHorz(true)
+    }
+
+    function MouseOut() {
+        setActiveVert(false)
+        setActiveHorz(false)
+    }
+
+    function MouseMove(event: any) {
+        function sx(d: ChartData) { return d.date }
+        const X  = d3.map(sortedDatasets!.longest_dataset, sx)
+
+        function CursorPoint() {
+            svgPoint!.x = event.clientX
+            svgPoint!.y = event.clientY
+            return svgPoint!.matrixTransform(ref.current!.getScreenCTM()!.inverse())
+        }
+
+        function Bisect(mx: number) {
+            const date  = scales.time!.x.invert(mx)
+            const index = d3.bisectCenter(X, date)
+            
+            return index
+        }
+
+        const index = Bisect(d3.pointer(event)[0])
+        const yPos  = CursorPoint().y
+    }
 
     return (
         <div className={classes.chartBuilder}>
             <div className={classes.chartContainer}>
-                <svg className={classes.svg} ref={ref}>
+                <svg 
+                    className={classes.svg} 
+                    ref={ref}
+                    onMouseOver={MouseOver}
+                    onMouseOut={MouseOut}
+                    onMouseMove={MouseMove}
+                >
+                    {verticalTooltip
+                        ?   (
+                                <line
+                                    className={classes.hoverLine}
+                                    style={{ display: `${activeVert ? '' : 'none'}` }}
+                                    transform={`translate(0, ${tooltipPos.y})`}
+                                    y1={0}
+                                    y2={svgDims.height} />
+                            )
+
+                        : null
+                    }
+
+                    {horizontalTooltip
+                        ?   (
+                                <line
+                                    className={classes.hoverLine}
+                                    style={{ display: `${activeHorz ? '' : 'none'}` }}
+                                    transform={`translate(${tooltipPos.x}, 0)`}
+                                    x1={0}
+                                    x2={svgDims.width} />
+                            )
+
+                        : null
+                    }
+                    
                     {chart_output}
                 </svg>
             </div>
