@@ -10,6 +10,12 @@ import { ChartMargin, ChartData } from "./chart-options"
 import SortDatasets, { SortDatasetsOutput } from "./utils/datasets"
 import { TimeScale, TimeSeriesTimeScale, TimeSeriesLinearScale, LinearScale } from "./utils/chart-axis"
 
+//axis
+import TimeAxis from './axis/time-axis'
+import NumericalAxis from "./axis/numerical-axis"
+//legend
+import Legend, { LegendData } from "./utils/legend"
+
 import * as d3 from 'd3'
 
 //chart styles
@@ -29,7 +35,6 @@ const useStyles = createStyles((theme: any) => ({
     },
 
     chartContainer: {
-        width: "calc(100% - 0px)",
         height: "100%",
 
         display: "flex",
@@ -63,7 +68,9 @@ function TimeSeriesChart({
     axisIndex = -1,
     charts,
     verticalTooltip = true,
-    horizontalTooltip = false
+    horizontalTooltip = false,
+    xAxis = true,
+    yAxis = false
 }: Props) {
     const { classes } = useStyles()
     const ref = React.createRef<SVGSVGElement>()
@@ -120,9 +127,10 @@ function TimeSeriesChart({
             key={`line-${i}`} />)
 
     //tooltip state
-    const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 })
+    const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0, date: new Date() })
     const [activeVert, setActiveVert] = useState(false)
     const [activeHorz, setActiveHorz] = useState(false)
+    const [legendData, setLegendData] = useState<Array<LegendData>>([])
 
     function MouseOver() {
         if(verticalTooltip)
@@ -155,11 +163,16 @@ function TimeSeriesChart({
 
         const index = Bisect(d3.pointer(event)[0])
         const yPos  = CursorPoint().y
+
+        //set positions
+        const date = sortedDatasets!.longest_dataset[index].date
+        const xPos = scales.time!.x(date)
+        setTooltipPos({ x: xPos, y: yPos, date: date })
     }
 
     return (
         <div className={classes.chartBuilder}>
-            <div className={classes.chartContainer}>
+            <div className={classes.chartContainer} style={{ width: `${yAxis ? 'calc(100% - 55px)' : '100%'}` }}>
                 <svg 
                     className={classes.svg} 
                     ref={ref}
@@ -172,7 +185,7 @@ function TimeSeriesChart({
                                 <line
                                     className={classes.hoverLine}
                                     style={{ display: `${activeVert ? '' : 'none'}` }}
-                                    transform={`translate(0, ${tooltipPos.y})`}
+                                    transform={`translate(${tooltipPos.x}, 0)`}
                                     y1={0}
                                     y2={svgDims.height} />
                             )
@@ -185,7 +198,7 @@ function TimeSeriesChart({
                                 <line
                                     className={classes.hoverLine}
                                     style={{ display: `${activeHorz ? '' : 'none'}` }}
-                                    transform={`translate(${tooltipPos.x}, 0)`}
+                                    transform={`translate(0, ${tooltipPos.y})`}
                                     x1={0}
                                     x2={svgDims.width} />
                             )
@@ -195,7 +208,17 @@ function TimeSeriesChart({
                     
                     {chart_output}
                 </svg>
+
+                {xAxis
+                    ? <TimeAxis scale={scales.time!} tooltipPos={tooltipPos.x} tooltipDate={tooltipPos.date} activeTooltip={activeVert}  />
+                    : null
+                }
             </div>
+
+            {yAxis
+                ? <NumericalAxis scale={scales.linear!} tooltipPos={tooltipPos.y} activeTooltip={activeHorz} />
+                : null
+            }
         </div>
     )
 }

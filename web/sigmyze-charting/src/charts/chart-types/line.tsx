@@ -27,7 +27,6 @@ function LineChart({ options, timeScale, linearScale }: LineProps) {
     useEffect(() => {
         let Path = LinePath(timeScale.x, linearScale.y)
         let pth  = Path(options.data)!
-        console.log(linearScale.y(options.data[0].value))
 
         setPath(pth)
     }, [timeScale, linearScale])

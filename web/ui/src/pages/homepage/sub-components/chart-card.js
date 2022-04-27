@@ -32,6 +32,8 @@ const ChartCard = ({  }) => {
 
             <Card.Section className={classes.chartSection}>
                 <TimeSeries
+                    horizontalTooltip={false}
+                    xAxis={false}
                     charts={[tChartOptions]} />
             </Card.Section>
         </Card>
