@@ -22,7 +22,7 @@ const useStyles = createStyles((theme) => ({
 const ChartCard = ({  }) => {
     const { classes } = useStyles()
 
-    let tChartOptions = { id: "test-chart", type: "line", data: dummyLinearData, color: "#031158" }
+    let tChartOptions = { id: "USD-GBP", type: "line", data: dummyLinearData, color: "#031158" }
 
     return (
         <Card p={"xl"} radius={"sm"} shadow={"md"} className={classes.card}>

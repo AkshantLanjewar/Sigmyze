@@ -70,7 +70,8 @@ function TimeSeriesChart({
     verticalTooltip = true,
     horizontalTooltip = false,
     xAxis = true,
-    yAxis = false
+    yAxis = false,
+    legend = false
 }: Props) {
     const { classes } = useStyles()
     const ref = React.createRef<SVGSVGElement>()
@@ -92,6 +93,19 @@ function TimeSeriesChart({
         const rawWidth  = boundingBox.width 
         const height    = rawHeight - margin.top - margin.bottom
 
+        //initalize default list
+        let legend_data: Array<LegendData> = []
+        for(let i = 0; i < charts.length; i++) {
+            let chart = charts[i]
+            let pack  = {} as LegendData
+
+            pack.id    = chart.id
+            pack.label = chart.id
+            pack.value = "NaN"
+            legend_data.push(pack)
+        }
+
+        setLegendData(legend_data)
         setSvgDims({ width: rawWidth, height: rawHeight, paddedHeight: height })
         setSvgPoint(svgPoint)
     }, [])
@@ -164,15 +178,35 @@ function TimeSeriesChart({
         const index = Bisect(d3.pointer(event)[0])
         const yPos  = CursorPoint().y
 
+        let legend_data: Array<LegendData> = []
+        for(let i = 0; i < charts.length; i++) {
+            let chart = charts[i]
+            let pack  = {} as LegendData
+
+            pack.id    = chart.id
+            pack.label = chart.id
+            if(index > chart.data.length - 1)
+                pack.value = "NaN"
+            else
+                pack.value = chart.data[index].value
+            legend_data.push(pack)
+        }
+
         //set positions
         const date = sortedDatasets!.longest_dataset[index].date
         const xPos = scales.time!.x(date)
         setTooltipPos({ x: xPos, y: yPos, date: date })
+        setLegendData(legend_data)
     }
 
     return (
         <div className={classes.chartBuilder}>
             <div className={classes.chartContainer} style={{ width: `${yAxis ? 'calc(100% - 55px)' : '100%'}` }}>
+                {legend
+                    ? <Legend data={legendData} />
+                    : null
+                }
+
                 <svg 
                     className={classes.svg} 
                     ref={ref}

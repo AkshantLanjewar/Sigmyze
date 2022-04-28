@@ -5,6 +5,7 @@
     margin-left: auto;
     margin-right: auto;
     padding: 120px 16px 80px;
+    background-color: $dark-9;
 
     .hero-content {
         z-index: 1;
@@ -53,12 +54,13 @@
     }
 }
 
-.homepage-wrapper {
-    background-color: $dark-9;
-}
-
 .section {
     background-color: $dark-7;
+    padding-top: 5em;
+
+    &.dark {
+        background-color: $dark-9;
+    }
 
     &.fade-back {
         padding-top: 140px;

@@ -27,7 +27,8 @@ interface Props {
     verticalTooltip?: boolean,
     horizontalTooltip?: boolean,
     xAxis?: boolean,
-    yAxis?: boolean
+    yAxis?: boolean,
+    legend?: boolean
 }
 
 export  { ChartOptions, ChartData, ChartMargin }
