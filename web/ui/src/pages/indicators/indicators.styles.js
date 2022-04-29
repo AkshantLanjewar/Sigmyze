@@ -6,7 +6,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
     return {
         header: {
             position: "relative",
-            minHeight: "700px",
+            minHeight: 500,
             background: theme.colors.dark[9]
         },
 

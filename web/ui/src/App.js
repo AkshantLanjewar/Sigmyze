@@ -1,4 +1,4 @@
-import { MantineProvider } from '@mantine/core'
+import { MantineProvider, ScrollArea, Modal } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
 
 import { useState, useEffect } from 'react';
@@ -11,9 +11,6 @@ import Sidenav  from "./components/composite/sidenav/sidenav";
 //redux
 import { connect } from 'react-redux'
 
-//import wrapper
-import Container from './pages/container'
-
 //import the Logo
 import Logo from './assets/logo.svg'
 
@@ -25,13 +22,79 @@ import {
 
 import { BsStack } from 'react-icons/bs'
 
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import Homepage    from './pages/homepage/homepage'
+import About       from './pages/about/about'
+import Resources   from './pages/indicators/indicators'
+import Dataset     from './pages/dataset/dataset'
+import LunarCharts from './pages/lunar-charts/lunar-charts';
+
+import AuthForm from './components/composite/auth-form/auth-form'
+import { userModalAction } from './data/actions/userActions';
+
 const pages = [
 	{ url: '/',           name: 'Homepage',  icon: <AiFillHome />, 		        active: true },
 	{ url: '/indicators', name: 'Indicators', icon: <BsStack />, 		        active: false },
 	{ url: '/about',      name: 'About',     icon: <AiOutlineQuestionCircle />, active: false }
 ]
 
-function App() {
+
+function BaseShell(props) {
+	const [navState, setNavState] = useState([])
+	useEffect(() => {
+		let path 	  = window.location.pathname
+		let pNavState = []
+
+		for(let i = 0; i < pages.length; i++) {
+			let page = pages[i]
+			page['active'] = false
+
+			if(page.url == path)
+				page['active'] = true
+			pNavState.push(page)
+		}
+
+		setNavState([...pNavState])
+	}, [])
+
+
+	const slot = props.slot
+
+	return (
+		<AppShell>
+			<AppShell.Side>
+				<Sidenav>
+					<Sidenav.Brand image={Logo} text={"Sigmyze"} />
+
+					<Sidenav.Nav>
+						{navState.map((step) => (
+							<Sidenav.Nav.Element 
+								url={step.url} 
+								active={step.active} 
+								icon={step.icon} 
+								pName={step.name} 
+								key={`navbar-${step.name}`} />
+						))}
+					</Sidenav.Nav>
+				</Sidenav>
+			</AppShell.Side>
+
+			<AppShell.Main>
+				<Navbar />
+
+				<div className='wrap'>
+					<ScrollArea style={{ height: "calc(100vh - 60px)" }}>
+						{slot}
+					</ScrollArea>
+				</div>
+			</AppShell.Main>
+		</AppShell>
+	)
+}
+
+function App(props) {
 	const [navState, setNavState] = useState([])
 	useEffect(() => {
 		let path 	  = window.location.pathname
@@ -69,34 +132,36 @@ function App() {
 				},
 				fontFamily: 'Poppins'
 			}}>
+				<Modal
+					centered
+					opened={props.userModal}
+					onClose={() => { props.userModalAction(false) }}
+					title="Welcome to Sigmyze, Login with">
+					<AuthForm />
+				</Modal>
+
 				<NotificationsProvider>
-					<AppShell>
-						<AppShell.Side>
-							<Sidenav>
-								<Sidenav.Brand image={Logo} text={"Sigmyze"} />
-
-								<Sidenav.Nav>
-									{navState.map((step) => (
-										<Sidenav.Nav.Element 
-											url={step.url} 
-											active={step.active} 
-											icon={step.icon} 
-											pName={step.name} 
-											key={`navbar-${step.name}`} />
-									))}
-								</Sidenav.Nav>
-							</Sidenav>
-						</AppShell.Side>
-
-						<AppShell.Main>
-							<Navbar />
-							<Container />
-						</AppShell.Main>
-					</AppShell>
+						<BrowserRouter>
+							<Routes>
+								<Route path="/"           element={ <BaseShell slot={<Homepage />} /> } />
+								<Route path="/about"      element={ <BaseShell slot={<About />} /> } />
+								<Route path="/indicators" element={ <BaseShell slot={<Resources />} /> } />
+								<Route path="/datasets"   element={ <BaseShell slot={<Dataset />} /> } />
+								<Route path="/lunar"	  element={ <LunarCharts /> } />
+							</Routes>
+						</BrowserRouter>
 				</NotificationsProvider>
 			</MantineProvider>
 		</div>
 	);
 }
 
-export default connect()(App);
+const mapStateToProps = state => ({
+    userModal: state.userModal
+})
+
+const mapDispatchToProps = dispatch => ({
+    userModalAction: (payload) => dispatch(userModalAction(payload))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

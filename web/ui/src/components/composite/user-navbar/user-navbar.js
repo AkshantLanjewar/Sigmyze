@@ -8,14 +8,6 @@ import { Modal, Button, Group } from '@mantine/core'
 const UserNavbar = ({ userModal, userModalAction }) => {
     return (
         <div>
-            <Modal
-                centered
-                opened={userModal}
-                onClose={() => { userModalAction(false) }}
-                title="Welcome to Sigmyze, Login with">
-                <AuthForm />
-            </Modal>
-
             <Group position="center">
                 <Button onClick={() => { userModalAction(true) }}>Login</Button>
             </Group>

@@ -4,10 +4,11 @@ import './homepage.scoped.scss'
 import { 
     Button,
     Container,
-    Group
+    Group,
+    SimpleGrid
 } from "@mantine/core"
 
-import ChartCard   from "./sub-components/chart-card"
+import ChartCard from "../../components/app/chart-card/chart-card"
 import FeatureCard from "./sub-components/feature-card"
 import Map from "../../components/app/map/map"
 
@@ -21,22 +22,24 @@ const Homepage = ({ userModalAction }) => {
     
     return (
         <div className="homepage-wrapper">
-            <div className="hero-header">
-                <div className="hero-content">
-                    <h1>Democratizing <span className="highlight">Data and Analysis</span> for everybody</h1>
+            <div className="hero-wrap">
+                <div className="hero-header">
+                    <div className="hero-content">
+                        <h1>Democratizing <span className="highlight">Data and Analysis</span> for everybody</h1>
 
-                    <div className="description">
-                        Visualize, Analyze, and Act faster. Leverage our powerful suite of tools aimed to 
-                        increase your productivity and insights. 
+                        <div className="description">
+                            Visualize, Analyze, and Act faster. Leverage our powerful suite of tools aimed to 
+                            increase your productivity and insights. 
+                        </div>
+
+                        <div className="actions">
+                            <Button radius={"sm"} size={"sm"} onClick={() => { userModalAction(true) }}>
+                                Get Started
+                            </Button>
+                        </div>
+
+                        <Map />
                     </div>
-
-                    <div className="actions">
-                        <Button radius={"sm"} size={"sm"} onClick={() => { userModalAction(true) }}>
-                            Get Started
-                        </Button>
-                    </div>
-
-                    <Map />
                 </div>
             </div>
 
@@ -46,9 +49,13 @@ const Homepage = ({ userModalAction }) => {
 
                     <Container mb={"xl"}>
                         <Group position={"center"}>
-                            <ChartCard />
-                            <ChartCard />
-                            <ChartCard />
+                            <SimpleGrid
+                                cols={3}
+                            >
+                                <ChartCard />
+                                <ChartCard />
+                                <ChartCard />
+                            </SimpleGrid>
                         </Group>
                     </Container>
                 </div>

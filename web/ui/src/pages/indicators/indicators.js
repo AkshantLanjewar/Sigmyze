@@ -1,7 +1,6 @@
 import React from "react"
 
 import {
-    createStyles,
     Container,
     Text,
     Title,
@@ -39,38 +38,40 @@ const Resources = ({  }) => {
                             and up to date data each time you start a new project. 
                         </Text>
 
-                        <SimpleGrid
-                            cols={3}
-                            spacing={"xl"}
-                            breakpoints={[{ maxWidth: 755, cols: 1, spacing: 'lg' }]}
-                            className={classes.headerFeatures}
-                        >
-                            <div>
-                                <ThemeIcon size={44}>
-                                    <FaTape size={20} />
-                                </ThemeIcon>
+                        {/** 
+                            <SimpleGrid
+                                cols={3}
+                                spacing={"xl"}
+                                breakpoints={[{ maxWidth: 755, cols: 1, spacing: 'lg' }]}
+                                className={classes.headerFeatures}
+                            >
+                                <div>
+                                    <ThemeIcon size={44}>
+                                        <FaTape size={20} />
+                                    </ThemeIcon>
 
-                                <div className={classes.featureBody}>
-                                    <Text className={classes.featureTitle}>Accuracy</Text>
-                                    <Text className={classes.featureDescription}>
-                                        All our data is sourced from the latest edtitions of the datasets from which they originate
-                                    </Text>
+                                    <div className={classes.featureBody}>
+                                        <Text className={classes.featureTitle}>Accuracy</Text>
+                                        <Text className={classes.featureDescription}>
+                                            All our data is sourced from the latest edtitions of the datasets from which they originate
+                                        </Text>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <ThemeIcon size={44}>
-                                    <BsBox size={20} />
-                                </ThemeIcon>
+                                <div>
+                                    <ThemeIcon size={44}>
+                                        <BsBox size={20} />
+                                    </ThemeIcon>
 
-                                <div className={classes.featureBody}>
-                                    <Text className={classes.featureTitle}>Accessibility</Text>
-                                    <Text className={classes.featureDescription}>
-                                        Our data is always accesible whenever you use our platform
-                                    </Text>
+                                    <div className={classes.featureBody}>
+                                        <Text className={classes.featureTitle}>Accessibility</Text>
+                                        <Text className={classes.featureDescription}>
+                                            Our data is always accesible whenever you use our platform
+                                        </Text>
+                                    </div>
                                 </div>
-                            </div>
-                        </SimpleGrid>
+                            </SimpleGrid> 
+                        */}
                     </div>
                 </Container>
             </header>
@@ -94,7 +95,7 @@ const Resources = ({  }) => {
                                 { maxWidth: 500, cols: 1 },
                             ]}
                         >
-                            <Card className={classes.card} radius={"md"}>
+                            <Card className={classes.card} radius={"md"} onClick={() => { window.location.replace("/datasets") }}>
                                 <CardSection className={classes.imageWrapper}>
                                     <Image
                                         className={classes.image}
