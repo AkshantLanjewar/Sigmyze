@@ -57,17 +57,6 @@ const Navbar = ({ userModal, userModalAction }) => {
                 </Group>
 
                 <Group position={"right"}>
-                    <Tooltip 
-                        label={"Add Component"}
-                        radius={"xl"}
-                        withArrow
-                        position={"bottom"}
-                    >
-                        <Button variant={"subtle"} radius={"xl"} size={"sm"} style={{ padding: "0 9px" }}>
-                            <BiPlus size={16} />
-                        </Button>
-                    </Tooltip>
-
                     <Button onClick={() => { userModalAction(true) }}>Login</Button>
                 </Group>
             </Group>
