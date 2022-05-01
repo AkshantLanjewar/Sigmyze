@@ -3,8 +3,17 @@ import { createStyles } from "@mantine/core"
 const useStyles = createStyles((theme) => ({
     wrapper: {
         backgroundColor: theme.colors.dark[7],
-        minHeight: "100vh",
-        minWidth: "100vw"
+        height: "100vh",
+
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+    },
+
+    body: {
+        flexGrow: 1,
+        display: "flex",
+        gap: 10
     }
 }))
 
