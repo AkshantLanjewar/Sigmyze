@@ -143,11 +143,11 @@ function App(props) {
 				<NotificationsProvider>
 						<BrowserRouter>
 							<Routes>
-								<Route path="/"           element={ <BaseShell slot={<Homepage />} /> } />
-								<Route path="/about"      element={ <BaseShell slot={<About />} /> } />
-								<Route path="/indicators" element={ <BaseShell slot={<Resources />} /> } />
-								<Route path="/datasets"   element={ <BaseShell slot={<Dataset />} /> } />
-								<Route path="/lunar"	  element={ <LunarCharts /> } />
+								<Route path="/"           		 element={ <BaseShell slot={<Homepage />} /> } />
+								<Route path="/about"      		 element={ <BaseShell slot={<About />} /> } />
+								<Route path="/indicators" 		 element={ <BaseShell slot={<Resources />} /> } />
+								<Route path="/datasets/:dataset" element={ <BaseShell slot={<Dataset />} /> } />
+								<Route path="/lunar"	  		 element={ <LunarCharts /> } />
 							</Routes>
 						</BrowserRouter>
 				</NotificationsProvider>

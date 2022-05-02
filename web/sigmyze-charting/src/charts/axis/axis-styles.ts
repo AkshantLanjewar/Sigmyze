@@ -3,7 +3,7 @@ const xAxisStyles = createStyles((theme: any) => ({
     xAxis: {
         height: "28px",
         borderTop: "1px solid #444444",
-        backgroundColor: theme.colors.dark[8],
+        backgroundColor: theme.colors.dark[9],
         overflow: "hidden",
 
         display: "flex",
@@ -15,7 +15,9 @@ const xAxisStyles = createStyles((theme: any) => ({
     tickValue: {
         position: "absolute",
         width: "110px",
-        backgroundColor: theme.colors.dark[9],
+        backgroundColor: "black",
+        color: theme.colors.dark[0],
+
         height: "80%",
         zIndex: "10",
 
@@ -34,14 +36,15 @@ const xAxisStyles = createStyles((theme: any) => ({
 
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        color: theme.colors.dark[1],
     }
 }))
 
 const yAxisStyles = createStyles((theme: any) => ({
     yAxis: {
         width: "55px",
-        background: theme.colors.dark[8],
+        background: theme.colors.dark[9],
         overflow: "hidden",
         position: "relative",
         borderLeft: "1px solid #444444"
@@ -56,7 +59,9 @@ const yAxisStyles = createStyles((theme: any) => ({
     },
 
     tickValue: {
-        backgroundColor: theme.colors.dark[9],
+        backgroundColor: "black",
+        color: theme.colors.dark[0],
+
         width: "100%",
         height: "25px",
         zIndex: "10",
@@ -71,7 +76,8 @@ const yAxisStyles = createStyles((theme: any) => ({
 
     tick: {
         position: "absolute",
-        paddingLeft: "10px"
+        paddingLeft: "10px",
+        color: theme.colors.dark[1]
     }
 }))
 

@@ -14,7 +14,7 @@ import { dummyLinearData } from "../../../data/dummy-data"
 
 import { GiPlanetCore } from 'react-icons/gi'
 
-const ChartCard = ({ verticalTooltip }) => {
+const ChartCard = ({ data = dummyLinearData, title = "Chart Fullname", description = "Small", verticalTooltip = true, height = "auto" }) => {
     const { classes } = useStyles()
 
     let margin = {
@@ -23,10 +23,10 @@ const ChartCard = ({ verticalTooltip }) => {
         left: 10,
         right: 10
     }
-    let tChartOptions = { id: "USD-GBP", type: "line", data: dummyLinearData, color: "#031158" }
+    let tChartOptions = { id: "USD-GBP", type: "line", data: data, color: "#031158" }
 
     return (
-        <Card radius={"md"} className={classes.card}>
+        <Card radius={"md"} className={classes.card} sx={{ height: height }}>
             <Card.Section className={classes.chart}>
                 <TimeSeries
                     margin={margin}
@@ -37,9 +37,9 @@ const ChartCard = ({ verticalTooltip }) => {
             </Card.Section>
 
             <div className={classes.body}>
-                <Text className={classes.title}>Chart Fullname</Text>
+                <Text className={classes.title}>{title}</Text>
                 <Group position="apart">
-                    <Text className={classes.description}>SMALL</Text>
+                    <Text className={classes.description}>{description}</Text>
                     <Menu
                         position={"right"}
                         placement={"end"}

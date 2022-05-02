@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 
 import {
     Container,
@@ -18,8 +18,25 @@ import useStyles from "./indicators.styles"
 
 import IMFSeal from '../../assets/imf.png'
 
+import { GetDatasets } from "../../data/backend/datasets"
+import { 
+    Logo_Table,
+    Datasets_Table 
+} from "../../data/backend/weo-data"
+
 const Resources = ({  }) => {
     const { classes, cx } = useStyles()
+    const [datasets, setDatasets] = useState([])
+
+    async function main() {
+        let data = await GetDatasets()
+        data     = data['datasets']
+        setDatasets([...data])
+    }
+    
+    useEffect(() => {
+        main()
+    }, [])
 
     return (
         <div>
@@ -95,20 +112,22 @@ const Resources = ({  }) => {
                                 { maxWidth: 500, cols: 1 },
                             ]}
                         >
-                            <Card className={classes.card} radius={"md"} onClick={() => { window.location.replace("/datasets") }}>
-                                <CardSection className={classes.imageWrapper}>
-                                    <Image
-                                        className={classes.image}
-                                        src={IMFSeal}
-                                        alt={"IMF Seal"}
-                                        height={150}
-                                        width={150}
-                                    />
-                                </CardSection>
+                            {datasets.map((step) => (
+                                <Card className={classes.card} radius={"md"} onClick={() => { window.location.replace(`/datasets/${step}`) }}>
+                                    <CardSection className={classes.imageWrapper}>
+                                        <Image
+                                            className={classes.image}
+                                            src={Logo_Table[step]}
+                                            alt={"IMF Seal"}
+                                            height={150}
+                                            width={150}
+                                        />
+                                    </CardSection>
 
-                                <Text className={classes.cardTitle}>World Economic Outlook</Text>
-                                <Text className={classes.cardDescription} size={"xs"}>WEO</Text>
-                            </Card>
+                                    <Text className={classes.cardTitle}>{Datasets_Table[step]}</Text>
+                                    <Text className={classes.cardDescription} size={"xs"}>{step.toUpperCase()}</Text>
+                                </Card>
+                            ))}
                         </SimpleGrid>
                     </div>
                 </Container>

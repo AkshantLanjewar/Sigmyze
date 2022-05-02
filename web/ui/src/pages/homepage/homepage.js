@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import './homepage.scoped.scss'
 
 import { 
@@ -15,9 +15,58 @@ import Map from "../../components/app/map/map"
 import { connect } from 'react-redux'
 import { userModalAction } from "../../data/actions/userActions"
 
+//data funcs
+import { 
+    GetDatasets,
+    GetIndicators,
+    GetCountries,
+    GetIndicator
+} from "../../data/backend/datasets"
+import ParseWEOData from "../../data/backend/weo-data"
+
+function RandomElement(list) {
+    let index = Math.floor(list.length * Math.random() | 0)
+    return list[index]
+}
+
+async function GrabChartData() {
+    let datasets = await GetDatasets()
+    datasets     = datasets['datasets']
+    let dataset  = RandomElement(datasets)
+    
+    let countries = await GetCountries(dataset)
+    countries     = countries['countries']
+    let country   = RandomElement(countries)
+
+    let indicators = await GetIndicators(dataset, country['iso3'])
+    indicators     = indicators['indicators']
+    if(indicators.length == 0)
+        return GrabChartData()
+
+    let indicator  = RandomElement(indicators)
+    let data = await GetIndicator(dataset, country['iso3'], indicator['ind3'])
+
+    return {
+        data: ParseWEOData(data['data']),
+        indicator: indicator,
+        country: country
+    }
+}
+
 const Homepage = ({ userModalAction }) => {
+    const [chartData, setChartData] = useState([])
+
+    async function main() {
+        let chart_data = []
+        for(let i = 0; i < 3; i++)
+            chart_data.push(await GrabChartData())
+        
+        console.log(chart_data)
+        setChartData([...chart_data])
+    }
 
     useEffect(() => {
+        main()
     }, [])
     
     return (
@@ -43,18 +92,22 @@ const Homepage = ({ userModalAction }) => {
                 </div>
             </div>
 
-            <div className="section fade-back" style={{ marginBottom: "10rem" }}>
+            <div className="section fade-back" style={{ marginBottom: "7.5rem" }}>
                 <div className="content">
                     <h2 className="header">Charts</h2>
 
-                    <Container mb={"xl"}>
+                    <Container>
                         <Group position={"center"}>
                             <SimpleGrid
                                 cols={3}
                             >
-                                <ChartCard />
-                                <ChartCard />
-                                <ChartCard />
+                                {chartData.map((step) => (
+                                    <ChartCard 
+                                        title={`${step.country.name} ${step.indicator.fullname}`}
+                                        description={`${step.country.iso3}: ${step.indicator.ind3}`}
+                                        data={step.data}
+                                    />
+                                ))}
                             </SimpleGrid>
                         </Group>
                     </Container>

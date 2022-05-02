@@ -1,12 +1,56 @@
 import { createStyles } from "@mantine/core"
 
-const useStyles = createStyles((theme) => ({
-    input: {
-        width: 400,
+let borderCoeff = 5
 
-        'input': {
+const useStyles = createStyles((theme) => ({
+    search: {
+        fontSize: 16,
+        height: 45,
+        borderRadius: theme.radius.sm,
+        color: theme.colors.dark[2],
+        backgroundColor: theme.colors.dark[8],
+        paddingLeft: theme.spacing.xl,
+        paddingRight: theme.spacing.xl,
+
+        ['&:hover']: {
             backgroundColor: theme.colors.dark[9]
         }
+    },
+
+    input: {
+        'input': {
+            height: 50,
+            lineHeight: 48,
+            paddingRight: 16.6,
+            paddingLeft: 50,
+            fontSize: 18,
+            backgroundColor: theme.colors.dark[7],
+
+            borderRadius: "4px 4px 0px 0px",
+            outline: "none!important",
+            border: "none!important",
+            
+        },
+
+        '.mantine-TextInput-icon': {
+            width: 50
+        }
+    },
+
+    countries: {
+        backgroundColor: theme.colors.dark[8]
+    },
+
+    country: {
+        paddingLeft: 15,
+        paddingRight: 15,
+        paddingTop: 5,
+        paddingBlock: 5,
+        borderTop: `2px solid ${theme.colors.dark[borderCoeff]}`,
+
+        ['&:hover']: { backgroundColor: theme.colors.dark[borderCoeff] },
+        ['&.active']: { backgroundColor: theme.colors.dark[borderCoeff] },
+        ['&:last-child']: { borderBottom: `2px solid ${theme.colors.dark[borderCoeff]}` }
     }
 }))
 
