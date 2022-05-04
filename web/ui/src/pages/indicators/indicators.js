@@ -54,41 +54,6 @@ const Resources = ({  }) => {
                             Get to insights faster by leveraging hosted datasets provided by Sigmyze. Access pre cleaned,
                             and up to date data each time you start a new project. 
                         </Text>
-
-                        {/** 
-                            <SimpleGrid
-                                cols={3}
-                                spacing={"xl"}
-                                breakpoints={[{ maxWidth: 755, cols: 1, spacing: 'lg' }]}
-                                className={classes.headerFeatures}
-                            >
-                                <div>
-                                    <ThemeIcon size={44}>
-                                        <FaTape size={20} />
-                                    </ThemeIcon>
-
-                                    <div className={classes.featureBody}>
-                                        <Text className={classes.featureTitle}>Accuracy</Text>
-                                        <Text className={classes.featureDescription}>
-                                            All our data is sourced from the latest edtitions of the datasets from which they originate
-                                        </Text>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <ThemeIcon size={44}>
-                                        <BsBox size={20} />
-                                    </ThemeIcon>
-
-                                    <div className={classes.featureBody}>
-                                        <Text className={classes.featureTitle}>Accessibility</Text>
-                                        <Text className={classes.featureDescription}>
-                                            Our data is always accesible whenever you use our platform
-                                        </Text>
-                                    </div>
-                                </div>
-                            </SimpleGrid> 
-                        */}
                     </div>
                 </Container>
             </header>

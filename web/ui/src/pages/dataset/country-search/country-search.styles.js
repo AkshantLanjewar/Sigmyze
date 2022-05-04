@@ -11,6 +11,9 @@ const useStyles = createStyles((theme) => ({
         backgroundColor: theme.colors.dark[8],
         paddingLeft: theme.spacing.xl,
         paddingRight: theme.spacing.xl,
+        width: 300,
+        display: "flex",
+        justifyContent: "center",
 
         ['&:hover']: {
             backgroundColor: theme.colors.dark[9]
@@ -46,11 +49,9 @@ const useStyles = createStyles((theme) => ({
         paddingRight: 15,
         paddingTop: 5,
         paddingBlock: 5,
-        borderTop: `2px solid ${theme.colors.dark[borderCoeff]}`,
 
         ['&:hover']: { backgroundColor: theme.colors.dark[borderCoeff] },
-        ['&.active']: { backgroundColor: theme.colors.dark[borderCoeff] },
-        ['&:last-child']: { borderBottom: `2px solid ${theme.colors.dark[borderCoeff]}` }
+        ['&.active']: { backgroundColor: theme.colors.dark[borderCoeff] }
     }
 }))
 

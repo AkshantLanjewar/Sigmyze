@@ -6360,6 +6360,11 @@ cosmiconfig@^7, cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+country-iso-3-to-2@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/country-iso-3-to-2/-/country-iso-3-to-2-1.1.0.tgz#509bc7a4d2de9abfc57ad2d18fd8a40b85940a75"
+  integrity sha512-1+N29RRXHIsNrdxFYz/xqB6eacm592SQBExLBjHpr+nrLsKiikXvrFYM0RgW6uJBJgnvcqQH64ukydPF8ShBEA==
+
 cp-file@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/cp-file/-/cp-file-7.0.0.tgz#b9454cfd07fe3b974ab9ea0e5f29655791a9b8cd"
