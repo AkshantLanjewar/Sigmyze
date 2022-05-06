@@ -1,12 +1,10 @@
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
 import userReducer     from './reducers/userReducer'
+import lunarReducer    from './reducers/lunarReducer'
 
-const defaultState = {
-    userModal: false
-}
-
-function configureStore(state = defaultState) {
-    return createStore(userReducer, state)
+function configureStore(state) {
+    let reduers = combineReducers({ user: userReducer, lunar: lunarReducer })
+    return createStore(reduers)
 }
 
 export default configureStore

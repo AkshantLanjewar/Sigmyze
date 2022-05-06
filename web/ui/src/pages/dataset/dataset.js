@@ -18,7 +18,7 @@ import "swiper/css"
 import "swiper/css/pagination"
 
 import ChartCard     from "../../components/app/chart-card/chart-card"
-import CountrySearch from "./country-search/country-search"
+import CountrySearch from "../../components/country-search/country-search"
 
 import { MdAllInclusive, MdAreaChart } from 'react-icons/md'
 import ICON_DICT from "../../assets/category-icons"

@@ -157,7 +157,7 @@ function App(props) {
 }
 
 const mapStateToProps = state => ({
-    userModal: state.userModal
+    userModal: state.user.userModal
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -8,11 +8,11 @@ import {
     Menu
 } from "@mantine/core"
 
-import Layers       from "./layers"
-import AddIndicator from "./add-indicator"
+import Layers       from "./layers/layers"
+import AddIndicator from "./add-indicator/add-indicator"
 
 import { BsStack } from 'react-icons/bs'
-import { IoMdAdd } from 'react-icons/io'
+import { IoMdAdd } from 'react-icons/io' 
 
 let actionBarItems = [
     { label: "Layers",        icon: <BsStack size={20} />, active: true },
@@ -29,6 +29,7 @@ const Toolbar = ({ }) => {
 
     const [actionBar, setActionBar]       = useState(actionBarItems)
     const [activeAction, setActiveAction] = useState("Layers")
+    const [openAdd, setOpenAdd]           = useState(false)
 
     function StackClick(label) {
         let barItems = actionBar
@@ -36,6 +37,10 @@ const Toolbar = ({ }) => {
         for(let i = 0; i < barItems.length; i++) {
             let item    = barItems[i]
             item.active = false
+            if(label === "Add Indicators") {
+                setOpenAdd(true)
+                return
+            }
 
             if(item.label == label)
                 item.active = true
@@ -69,6 +74,11 @@ const Toolbar = ({ }) => {
                     {labelHash[activeAction]}
                 </div>
             </div>
+
+            <AddIndicator 
+                opened={openAdd}
+                setOpened={setOpenAdd}
+            />
         </div>
     )
 }

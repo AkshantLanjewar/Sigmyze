@@ -14,6 +14,8 @@ const Navbar = ({ userModal, userModalAction, expandAside, expandedState }) => {
         expandAside(togglerState)
     }, [togglerState])
 
+    console.log(userModal)
+
     return (
         <div className={`navbar ${ expandedState ? 'expand' : '' }`}>
             <div>
@@ -29,7 +31,7 @@ const Navbar = ({ userModal, userModalAction, expandAside, expandedState }) => {
 }
 
 const mapStateToProps = state => ({
-    userModal: state.userModal
+    userModal: state.user.userModal
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -11,9 +11,10 @@ const useStyles = createStyles((theme) => ({
         backgroundColor: theme.colors.dark[8],
         paddingLeft: theme.spacing.xl,
         paddingRight: theme.spacing.xl,
-        width: 300,
         display: "flex",
         justifyContent: "center",
+        width: "100%",
+        maxWidth: 300,
 
         ['&:hover']: {
             backgroundColor: theme.colors.dark[9]

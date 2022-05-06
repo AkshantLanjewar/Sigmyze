@@ -112,11 +112,12 @@ const useStyles = createStyles((theme) => ({
     optionCard: {
         padding: 5,
         marginBottom: 10,
-        cursor: "pointer"
+        cursor: "pointer",
+        backgroundColor: theme.colors.dark[6]
     },
 
     activeOptionCard: {
-        backgroundColor: theme.colors.dark[6]
+        backgroundColor: theme.colors.dark[7]
     }
 }))
 
