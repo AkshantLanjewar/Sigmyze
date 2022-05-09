@@ -93,7 +93,8 @@ const useStyles = createStyles((theme) => ({
         flexDirection: "row",
         gap: 5,
         height: "100%",
-        alignItems: 'center'
+        alignItems: 'center',
+        textOverflow: "ellipsis"
     },
 
     indicatorInput: {

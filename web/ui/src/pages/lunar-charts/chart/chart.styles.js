@@ -8,6 +8,11 @@ const useStyles = createStyles((theme) => ({
         backgroundColor: theme.colors.dark[8],
         height: "calc(100% - 10px)",
         borderRadius: theme.radius.md
+    },
+
+    chart: {
+        width: "100%",
+        height: "100%"
     }
 }))
 
