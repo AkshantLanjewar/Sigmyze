@@ -1,16 +1,33 @@
-using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SigmyzeServer.Models.User
 {
     public class User
     {
-        [Required]
+        [BsonElement("username")]
         public string Username { get; set; }
-
-        [Required]
+        
+        [BsonElement("password")]
         public string Password { get; set; }
 
-        [Required]
-        public string Id { get; set; }
+        [BsonElement("lunar_ID")]
+        public string Lunar_ID { get; set; }
+
+        [BsonElement("email")]
+        public string EMail { get; set; }
+
+        [BsonElement("verified")]
+        public bool Verified { get; set; }
+
+        [BsonElement("verification_token")]
+        public string VerificationToken { get; set; }
+
+        [BsonElement("role")]
+        public string Role { get; set; }
+
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
     }
 }

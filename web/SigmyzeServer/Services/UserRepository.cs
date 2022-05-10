@@ -1,22 +1,18 @@
 using SigmyzeServer.Models.User;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
-public interface IUserRepository
+public interface IUserAuth
 {
-    UserDTO GetUser(User user);
+    
 }
 
-public class UserRepository : IUserRepository
+public class AuthService : IUserAuth
 {
-    private readonly List<UserDTO> users = new List<UserDTO>();
+    private readonly IMongoCollection<User> _userCollection;
 
-    public UserRepository()
+    public AuthService(IOptions<AuthDatabaseSettings> authDatabaseSettings)
     {
 
-    }
-
-    public UserDTO GetUser(User user)
-    {
-        return users.Where(x => x.Id.ToLower() == user.Id.ToLower()
-            && x.Password == user.Password).FirstOrDefault();
     }
 }

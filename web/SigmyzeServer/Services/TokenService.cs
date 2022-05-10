@@ -7,7 +7,7 @@ using System.Text;
 
 public interface ITokenService
 {
-    string BuildToken(string key, string issuer, UserDTO user);
+    string BuildToken(string key, string issuer, User user);
     bool IsTokenValid(string key, string issuer, string token);
 }
 
@@ -15,7 +15,7 @@ public class TokenService : ITokenService
 {
     private const double EXPIRY_DURATION_MINUTES = 240;
 
-    public string BuildToken(string key, string issuer, UserDTO user)
+    public string BuildToken(string key, string issuer, User user)
     {
         var claims = new[] {
             new Claim(ClaimTypes.Name, user.Username),

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SigmyzeServer.Models.User;
 
 namespace SigmyzeServer
 {
@@ -17,6 +18,8 @@ namespace SigmyzeServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
+
             services.AddControllers();
             services.AddApiVersioning(config => {
                 config.DefaultApiVersion = new ApiVersion(1, 0);
@@ -34,7 +37,7 @@ namespace SigmyzeServer
             });
 
             //add authentication
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserAuth, AuthService>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -56,6 +59,15 @@ namespace SigmyzeServer
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSwagger();
+
+            app.UseSession();
+            app.Use(async (context, next) => 
+            {
+                var token = context.Session.GetString("Token");
+                if(!string.IsNullOrEmpty(token))
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                await next();
+            });
 
             app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api V1");
