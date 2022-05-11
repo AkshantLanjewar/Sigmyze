@@ -13,6 +13,10 @@ public class AuthService : IUserAuth
 
     public AuthService(IOptions<AuthDatabaseSettings> authDatabaseSettings)
     {
-
+        var mongoClient  = new MongoClient(authDatabaseSettings.Value.ConnectionString);
+        var mongoDatabse = mongoClient.GetDatabase(authDatabaseSettings.Value.DatabaseName);
+        _userCollection  = mongoDatabse.GetCollection<User>(authDatabaseSettings.Value.AuthCollectionName); 
     }
+
+    
 }
