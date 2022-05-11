@@ -4,7 +4,12 @@ using MongoDB.Driver;
 
 public interface IUserAuth
 {
-    
+    Task<List<User>> GetAsync();
+    Task<User?> GetAsync(string lunar_id);
+    Task<User?> GetAsyncEmail(string email);
+    Task CreateAsync(User newUser);
+    Task UpdateAsync(string lunar_id, User updatedUser);
+    Task RemoveAsync(string lunar_id);
 }
 
 public class AuthService : IUserAuth
@@ -22,6 +27,8 @@ public class AuthService : IUserAuth
         await _userCollection.Find(_ => true).ToListAsync();
     public async Task<User?> GetAsync(string lunar_id) =>
         await _userCollection.Find(x => x.Lunar_ID == lunar_id).FirstOrDefaultAsync();
+    public async Task<User?> GetAsyncEmail(string email) =>
+        await _userCollection.Find(x => x.EMail == email).FirstOrDefaultAsync();
     public async Task CreateAsync(User newUser) =>
         await _userCollection.InsertOneAsync(newUser);
     public async Task UpdateAsync(string lunar_id, User updatedUser) =>

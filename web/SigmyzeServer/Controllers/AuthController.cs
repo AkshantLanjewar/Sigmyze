@@ -24,10 +24,11 @@ namespace SigmyzeServer.Controllers
             _userAuth       = userAuth;
         }
 
-        private IActionResult SerializeJSON(object data)
+        private async Task<IActionResult> SerializeJSON(object data)
         {
+            string content = await Task.Run(() => JsonConvert.SerializeObject(data));
             return Content(
-                JsonConvert.SerializeObject(data),
+                content,
                 "application/json"
             );
         }
@@ -40,7 +41,18 @@ namespace SigmyzeServer.Controllers
             status.Error = false;
             status.MSG   = "Auth working";
 
-            return SerializeJSON(status);
+            return await SerializeJSON(status);
+        }
+
+        [HttpPost("login")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> AuthLogin([FromBody]LoginPost data)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error = false;
+            status.MSG   = "Login Working";
+
+            return await SerializeJSON(status);
         }
     }
 }

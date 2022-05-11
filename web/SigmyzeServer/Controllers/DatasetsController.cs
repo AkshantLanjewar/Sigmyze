@@ -23,10 +23,11 @@ namespace SigmyzeServer.Controllers
             this.datasets = datasets;
         }
 
-        private IActionResult SerializeJSON(object data)
+        private async Task<IActionResult> SerializeJSON(object data)
         {
+            string content = await Task.Run(() => JsonConvert.SerializeObject(data));
             return Content(
-                JsonConvert.SerializeObject(data),
+                content,
                 "application/json"
             );
         }
@@ -101,20 +102,25 @@ namespace SigmyzeServer.Controllers
             }
         }
 
-        private string HTTP_Request(string url)
+        private async Task<string> HTTP_Request(string url)
         {
-            string content = "";
-            WebRequest request   = WebRequest.Create(url);
-            WebResponse response = request.GetResponse();
-
-            using (Stream dataStream = response.GetResponseStream())
+            string val = await Task.Run<string>(() => 
             {
-                StreamReader reader = new StreamReader(dataStream);
-                content = reader.ReadToEnd();
-            } 
+                string content = "";
+                WebRequest request   = WebRequest.Create(url);
+                WebResponse response = request.GetResponse();
 
-            response.Close();
-            return content;
+                using (Stream dataStream = response.GetResponseStream())
+                {
+                    StreamReader reader = new StreamReader(dataStream);
+                    content = reader.ReadToEnd();
+                } 
+
+                response.Close();
+                return content;
+            });
+            
+            return val;
         }
 
         //endpoints
@@ -130,7 +136,7 @@ namespace SigmyzeServer.Controllers
             resp.Status           = status;
             resp.Datasets         = this.datasets;
             
-            return SerializeJSON(resp);
+            return await SerializeJSON(resp);
         }
 
         [HttpGet("{dataset}/countries")]
@@ -149,7 +155,7 @@ namespace SigmyzeServer.Controllers
             if(datasetStatus.Error)
             {
                 response.Status = datasetStatus;
-                return SerializeJSON(response);
+                return await SerializeJSON(response);
             }    
             
             string country_loc       = $"./metadata/{dataset}/countries.json";
@@ -157,7 +163,7 @@ namespace SigmyzeServer.Controllers
             List<Country> countries  = JsonConvert.DeserializeObject<List<Country>>(country_str);
             response.Countries       = countries;
 
-            return SerializeJSON(response);
+            return await SerializeJSON(response);
         }
 
         [HttpGet("{dataset}/categories")]
@@ -176,7 +182,7 @@ namespace SigmyzeServer.Controllers
             if(datasetStatus.Error)
             {
                 response.Status = datasetStatus;
-                return SerializeJSON(response);
+                return await SerializeJSON(response);
             }
 
             string category_loc = $"./metadata/{dataset}/categories.json";
@@ -187,7 +193,7 @@ namespace SigmyzeServer.Controllers
                 categories[i] = categories[i].Replace(dataset.ToUpper(), "");
             response.Categories = categories;
 
-            return SerializeJSON(response);
+            return await SerializeJSON(response);
         }
 
         [HttpGet("{dataset}/countries/{country}/indicators")]
@@ -207,14 +213,14 @@ namespace SigmyzeServer.Controllers
             if(datasetStatus.Error)
             {
                 response.Status = datasetStatus;
-                return SerializeJSON(response);
+                return await SerializeJSON(response);
             }
 
             APIStatusMsg countryStatus = CheckCountry(dataset, country);
             if(countryStatus.Error)
             {
                 response.Status = countryStatus;
-                return SerializeJSON(response);
+                return await SerializeJSON(response);
             }
 
             string country_loc = $"./metadata/{dataset}/countries/{country}_indicators.json";
@@ -222,7 +228,7 @@ namespace SigmyzeServer.Controllers
             ValidCountryIndicators valid_indicators = JsonConvert.DeserializeObject<ValidCountryIndicators>(country_str);
             response.Indicators = valid_indicators.Indicators; 
 
-            return SerializeJSON(response);
+            return await SerializeJSON(response);
         }
 
         [HttpGet("{dataset}/countries/{country}/indicators/{indicator}")]
@@ -243,25 +249,25 @@ namespace SigmyzeServer.Controllers
             if(datasetStatus.Error)
             {
                 response.Status = datasetStatus;
-                return SerializeJSON(response);
+                return await SerializeJSON(response);
             }
 
             APIStatusMsg countryStatus = CheckCountry(dataset, country);
             if(countryStatus.Error)
             {
                 response.Status = countryStatus;
-                return SerializeJSON(response);
+                return await SerializeJSON(response);
             }
 
             APIStatusMsg indicatorStatus = await CheckIndicator(dataset, country, indicator);
             if(indicatorStatus.Error)
             {
                 response.Status = countryStatus;
-                return SerializeJSON(response);
+                return await SerializeJSON(response);
             }
 
             string indicator_url         = $"{URL_ROOT}/api/econdata/getMetricDataC/{indicator}/{country}/";
-            string indicator_rep         = HTTP_Request(indicator_url);
+            string indicator_rep         = await HTTP_Request(indicator_url);
             CountryIndicator c_indicator = JsonConvert.DeserializeObject<CountryIndicator>(indicator_rep);
 
             //now convert dict to list
@@ -286,7 +292,7 @@ namespace SigmyzeServer.Controllers
             response.SimpleName = c_indicator.SimpleName;
             response.data       = data; 
 
-            return SerializeJSON(response);
+            return await SerializeJSON(response);
         }
     }
 }
