@@ -18,5 +18,14 @@ public class AuthService : IUserAuth
         _userCollection  = mongoDatabse.GetCollection<User>(authDatabaseSettings.Value.AuthCollectionName); 
     }
 
-    
+    public async Task<List<User>> GetAsync() =>
+        await _userCollection.Find(_ => true).ToListAsync();
+    public async Task<User?> GetAsync(string lunar_id) =>
+        await _userCollection.Find(x => x.Lunar_ID == lunar_id).FirstOrDefaultAsync();
+    public async Task CreateAsync(User newUser) =>
+        await _userCollection.InsertOneAsync(newUser);
+    public async Task UpdateAsync(string lunar_id, User updatedUser) =>
+        await _userCollection.ReplaceOneAsync(x => x.Lunar_ID == lunar_id, updatedUser);
+    public async Task RemoveAsync(string lunar_id) =>
+        await _userCollection.DeleteOneAsync(x => x.Lunar_ID == lunar_id);
 }
