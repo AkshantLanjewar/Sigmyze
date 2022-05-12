@@ -21,7 +21,7 @@ public class TokenService : ITokenService
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role),
             new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Sid, user.Id)
+            new Claim(ClaimTypes.Sid, user.Lunar_ID)
         };
 
         var securityKey     = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

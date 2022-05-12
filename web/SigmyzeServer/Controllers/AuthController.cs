@@ -2,8 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Models;
-using System.Text;
-using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SigmyzeServer.Controllers
 {
@@ -44,15 +43,48 @@ namespace SigmyzeServer.Controllers
             return await SerializeJSON(status);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> AuthLogin([FromBody]LoginPost data)
         {
-            APIStatusMsg status = new APIStatusMsg();
-            status.Error = false;
-            status.MSG   = "Login Working";
+            LoginResp resp  = new LoginResp();
+            resp.Authorized = false;
+            resp.Message    = "not_auth";
+            resp.Token      = "";
 
-            return await SerializeJSON(status);
+            //grab potential user
+            User? pUser = await _userAuth.GetAsyncEmail(data.Email);
+            if(pUser == null)
+            {
+                resp.Message = "user_dne";
+                return await SerializeJSON(resp);
+            }
+
+            if(pUser.Password == data.Password)
+            {
+                resp.Authorized = true;
+                resp.Message    = "auth";
+
+                generatedToken = _tokenService.BuildToken(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), pUser);
+                if(generatedToken != null)
+                {
+                    HttpContext.Session.SetString("Token", generatedToken);
+                    resp.Token = generatedToken;
+                    return await SerializeJSON(resp);
+                }
+                else
+                {
+                    resp.Authorized = false;
+                    resp.Message    = "failed_gen";
+                    return await SerializeJSON(resp);
+                }
+            }
+            else
+            {
+                resp.Message = "bad_pwd";
+                return await SerializeJSON(resp);
+            }
         }
     }
 }

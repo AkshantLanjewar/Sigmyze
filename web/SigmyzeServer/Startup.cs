@@ -79,6 +79,10 @@ namespace SigmyzeServer
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
