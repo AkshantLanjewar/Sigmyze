@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Models;
 using Microsoft.AspNetCore.Authorization;
+using SigmyzeServer.Services.Auth;
 
 namespace SigmyzeServer.Controllers
 {
@@ -13,14 +14,16 @@ namespace SigmyzeServer.Controllers
     {
         private readonly IConfiguration _config;
         private readonly ITokenService _tokenService;
+        private readonly IHashService _hashService;
         private readonly IUserAuth _userAuth;
         private string generatedToken = null;
 
-        public AuthController(IConfiguration config, ITokenService tokenService, IUserAuth userAuth)
+        public AuthController(IConfiguration config, ITokenService tokenService, IUserAuth userAuth, IHashService hashService)
         {
             _config         = config;
             _tokenService   = tokenService;
             _userAuth       = userAuth;
+            _hashService    = hashService;
         }
 
         private async Task<IActionResult> SerializeJSON(object data)
@@ -61,7 +64,8 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(resp);
             }
 
-            if(pUser.Password == data.Password)
+            string hashedPWD = _hashService.HashPassword(data.Password, pUser.Salt);
+            if(pUser.Password == hashedPWD)
             {
                 resp.Authorized = true;
                 resp.Message    = "auth";
@@ -85,6 +89,53 @@ namespace SigmyzeServer.Controllers
                 resp.Message = "bad_pwd";
                 return await SerializeJSON(resp);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> AuthRegister([FromBody]RegisterPost data)
+        {
+            RegisterResp resp  = new RegisterResp();
+            resp.Registered    = false;
+            resp.Message       = "";
+
+            User? pUser = await _userAuth.GetAsyncEmail(data.Email);
+            if(pUser != null)
+            {
+                resp.Message = "user_exists";
+                return await SerializeJSON(resp);
+            }
+
+            User user     = new User();
+            user.EMail    = data.Email;
+            user.Username = data.Username;
+
+            //hash the pwd
+            Random rnd  = new Random();
+            string salt = _hashService.GenerateSalt(rnd.Next());
+            string pwd  = _hashService.HashPassword(data.Password, salt);
+
+            user.Password = pwd;
+            user.Salt     = salt;
+
+            //generate the lunar id
+            string lunar_id = Guid.NewGuid().ToString();
+            user.Lunar_ID   = lunar_id;
+
+            Random rndVerification  = new Random();
+            string verificationCode = rndVerification.Next(0, 1000000).ToString("D6");
+
+            user.Verified          = false;
+            user.VerificationToken = verificationCode;
+            user.Role              = "user";
+
+            //push to db
+            await _userAuth.CreateAsync(user);
+            resp.Registered = true;
+            resp.Message    = "email";
+
+            return await SerializeJSON(resp);
         }
     }
 }

@@ -13,4 +13,12 @@ namespace SigmyzeServer.Models.User
         [JsonProperty("message")]
         public string Message { get; set; }
     }
+
+    public class RegisterResp
+    {
+        [JsonProperty("registered")]
+        public bool Registered { get; set; }
+        [JsonProperty("message")]
+        public string Message { get; set; }
+    }
 }

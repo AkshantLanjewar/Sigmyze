@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SigmyzeServer.Models.User;
+using SigmyzeServer.Services.Auth;
 
 namespace SigmyzeServer
 {
@@ -39,6 +40,8 @@ namespace SigmyzeServer
             //add authentication
             services.AddSingleton<IUserAuth, AuthService>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IHashService, HashService>();
+
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             })

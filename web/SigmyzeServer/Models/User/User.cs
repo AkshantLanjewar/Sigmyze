@@ -11,6 +11,9 @@ namespace SigmyzeServer.Models.User
         [BsonElement("password")]
         public string Password { get; set; }
 
+        [BsonElement("salt")]
+        public string Salt { get; set; }
+
         [BsonElement("lunar_ID")]
         public string Lunar_ID { get; set; }
 
