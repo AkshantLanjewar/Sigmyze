@@ -28,6 +28,13 @@ namespace SigmyzeServer
                 config.ReportApiVersions = true;
             });
 
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddCronJob<WEODataService>(c => {
                 c.TimeZoneInfo   = TimeZoneInfo.Utc;
                 c.CronExpression = @"0 0 * * *"; 

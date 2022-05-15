@@ -37,6 +37,7 @@ namespace SigmyzeServer.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> AuthControllerRoot()
         {
@@ -91,7 +92,9 @@ namespace SigmyzeServer.Controllers
             var token  = tokens.token;
 
             await _userAuth.CreateAsync(aUser);
-            resp.Token = token;
+            resp.Token      = token;
+            resp.Registered = true;
+            setTokenCookie(aUser.RefreshToken.Token);
 
             return await SerializeJSON(resp);
         }
