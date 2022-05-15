@@ -9,8 +9,10 @@ namespace SigmyzeServer.Services.Auth
         Task<List<User>> GetAsync();
         Task<User?> GetAsync(string lunar_id);
         Task<User?> GetAsyncEmail(string email);
+        Task<User?> GetAsyncToken(string token);
         Task CreateAsync(User newUser);
         Task UpdateAsync(string lunar_id, User updatedUser);
+        Task UpdateAsyncToken(string token, User updatedUser);
         Task RemoveAsync(string lunar_id);
     }
 
@@ -31,10 +33,14 @@ namespace SigmyzeServer.Services.Auth
             await _userCollection.Find(x => x.Lunar_ID == lunar_id).FirstOrDefaultAsync();
         public async Task<User?> GetAsyncEmail(string email) =>
             await _userCollection.Find(x => x.EMail == email).FirstOrDefaultAsync();
+        public async Task<User?> GetAsyncToken(string token) =>
+            await _userCollection.Find(x => x.RefreshToken.Token == token).FirstOrDefaultAsync();
         public async Task CreateAsync(User newUser) =>
             await _userCollection.InsertOneAsync(newUser);
         public async Task UpdateAsync(string lunar_id, User updatedUser) =>
             await _userCollection.ReplaceOneAsync(x => x.Lunar_ID == lunar_id, updatedUser);
+        public async Task UpdateAsyncToken(string token, User updatedUser) =>
+            await _userCollection.ReplaceOneAsync(x => x.RefreshToken.Token == token, updatedUser);
         public async Task RemoveAsync(string lunar_id) =>
             await _userCollection.DeleteOneAsync(x => x.Lunar_ID == lunar_id);
     }

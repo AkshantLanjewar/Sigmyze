@@ -1,5 +1,5 @@
 using System.Net;
-using SigmyzeServer.Models;
+using SigmyzeServer.Models.API;
 using Newtonsoft.Json;
 
 namespace SigmyzeServer.Services

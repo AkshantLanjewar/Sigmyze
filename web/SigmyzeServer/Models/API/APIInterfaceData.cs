@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace SigmyzeServer.Models
+namespace SigmyzeServer.Models.API
 {
     public class Country
     {

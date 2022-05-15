@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using SigmyzeServer.Models;
+using SigmyzeServer.Models.API;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using System.Net;
 
 namespace SigmyzeServer.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("api/v{version:apiVersion}/datasets")]
     [ApiVersion("1.0")]
     public class DatasetsController : ControllerBase

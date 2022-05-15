@@ -1,28 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SigmyzeServer.Models.User;
-using SigmyzeServer.Models;
+using SigmyzeServer.Models.API;
 using Microsoft.AspNetCore.Authorization;
 using SigmyzeServer.Services.Auth;
 
 namespace SigmyzeServer.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/v{version:apiVersion}/auth")]
     [ApiVersion("1.0")]
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _config;
-        private readonly ITokenService _tokenService;
-        private readonly IHashService _hashService;
+        private readonly IUserService _userService;
         private readonly IUserAuth _userAuth;
+        private readonly IHashService _hashService;
         private string generatedToken = null;
 
-        public AuthController(IConfiguration config, ITokenService tokenService, IUserAuth userAuth, IHashService hashService)
+        public AuthController(IConfiguration config, IUserAuth userAuth, IUserService userService, IHashService hashService)
         {
             _config         = config;
-            _tokenService   = tokenService;
             _userAuth       = userAuth;
+            _userService    = userService;
             _hashService    = hashService;
         }
 
@@ -51,91 +52,113 @@ namespace SigmyzeServer.Controllers
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> AuthLogin([FromBody]LoginPost data)
         {
-            LoginResp resp  = new LoginResp();
-            resp.Authorized = false;
-            resp.Message    = "not_auth";
-            resp.Token      = "";
+            AuthResp resp = await _userService.Authenticate(data, ipAddress());
+            if(resp.Authorized)
+                setTokenCookie(resp.RefreshToken);
 
-            //grab potential user
-            User? pUser = await _userAuth.GetAsyncEmail(data.Email);
-            if(pUser == null)
-            {
-                resp.Message = "user_dne";
-                return await SerializeJSON(resp);
-            }
-
-            string hashedPWD = _hashService.HashPassword(data.Password, pUser.Salt);
-            if(pUser.Password == hashedPWD)
-            {
-                resp.Authorized = true;
-                resp.Message    = "auth";
-
-                generatedToken = _tokenService.BuildToken(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), pUser);
-                if(generatedToken != null)
-                {
-                    HttpContext.Session.SetString("Token", generatedToken);
-                    resp.Token = generatedToken;
-                    return await SerializeJSON(resp);
-                }
-                else
-                {
-                    resp.Authorized = false;
-                    resp.Message    = "failed_gen";
-                    return await SerializeJSON(resp);
-                }
-            }
-            else
-            {
-                resp.Message = "bad_pwd";
-                return await SerializeJSON(resp);
-            }
+            return await SerializeJSON(resp);
+            
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
         [MapToApiVersion("1.0")]
-        public async Task<IActionResult> AuthRegister([FromBody]RegisterPost data)
+        public async Task<IActionResult> Register([FromBody]RegisterPost data)
         {
-            RegisterResp resp  = new RegisterResp();
-            resp.Registered    = false;
-            resp.Message       = "";
-
-            User? pUser = await _userAuth.GetAsyncEmail(data.Email);
+            RegisterResp resp = new RegisterResp();
+            User? pUser       = await _userAuth.GetAsyncEmail(data.Email);
             if(pUser != null)
+                return await SerializeJSON(BadResp("user_exists"));
+
+            User aUser = new User();
+            aUser.EMail             = data.Email;
+            aUser.Username          = data.Username;
+            aUser.Lunar_ID          = Guid.NewGuid().ToString();
+            aUser.VerificationToken = Guid.NewGuid().ToString();
+            aUser.Role              = "User";
+            aUser.Verified          = "yes";
+            
+            //salt and hash password
+            string salt = _hashService.GenerateSalt(128);
+            string pwd  = _hashService.HashPassword(data.Password, salt);
+
+            aUser.Password = pwd;
+            aUser.Salt     = salt;
+
+            //generate the token
+            var tokens = _userService.Register(aUser, ipAddress());
+            aUser      = tokens.user;
+            var token  = tokens.token;
+
+            await _userAuth.CreateAsync(aUser);
+            resp.Token = token;
+
+            return await SerializeJSON(resp);
+        }
+
+        [HttpPost("refresh-token")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            AuthResp resp    = await _userService.RefreshToken(refreshToken, ipAddress());
+            if(resp.Authorized)
+                setTokenCookie(resp.RefreshToken);
+
+            return await SerializeJSON(resp);
+        }
+
+        [HttpPost("revoke-token")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> RevokeToken()
+        {
+            LogoutResp resp = new LogoutResp();
+            var token       = Request.Cookies["refreshToken"];
+            if(String.IsNullOrEmpty(token))
             {
-                resp.Message = "user_exists";
+                resp.LoggedOut = false;
+                resp.Message   = "need_token";
                 return await SerializeJSON(resp);
             }
 
-            User user     = new User();
-            user.EMail    = data.Email;
-            user.Username = data.Username;
+            var response = await _userService.RevokeToken(token, ipAddress());
+            if(!response)
+            {
+                resp.LoggedOut = false;
+                resp.Message   = "bad_token";
+                return await SerializeJSON(resp);
+            }
 
-            //hash the pwd
-            Random rnd  = new Random();
-            string salt = _hashService.GenerateSalt(rnd.Next());
-            string pwd  = _hashService.HashPassword(data.Password, salt);
-
-            user.Password = pwd;
-            user.Salt     = salt;
-
-            //generate the lunar id
-            string lunar_id = Guid.NewGuid().ToString();
-            user.Lunar_ID   = lunar_id;
-
-            Random rndVerification  = new Random();
-            string verificationCode = rndVerification.Next(0, 1000000).ToString("D6");
-
-            user.Verified          = false;
-            user.VerificationToken = verificationCode;
-            user.Role              = "user";
-
-            //push to db
-            await _userAuth.CreateAsync(user);
-            resp.Registered = true;
-            resp.Message    = "email";
-
+            resp.LoggedOut = true;
             return await SerializeJSON(resp);
+        }
+
+        private void setTokenCookie(string token)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires  = DateTime.UtcNow.AddDays(7)
+            };
+
+            Response.Cookies.Append("refreshToken", token, cookieOptions);
+        }
+
+        private string ipAddress()
+        {
+            if(Request.Headers.ContainsKey("X-Forwarded-For"))
+                return Request.Headers["X-Forwarded-For"];
+            else
+                return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+        }
+
+        private RegisterResp BadResp(string msg)
+        {
+            RegisterResp resp = new RegisterResp();
+            resp.Registered   = false;
+            resp.Message      = msg;
+
+            return resp;
         }
     }
 }

@@ -21,13 +21,16 @@ namespace SigmyzeServer.Models.User
         public string EMail { get; set; }
 
         [BsonElement("verified")]
-        public bool Verified { get; set; }
+        public string Verified { get; set; }
 
         [BsonElement("verification_token")]
         public string VerificationToken { get; set; }
 
         [BsonElement("role")]
         public string Role { get; set; }
+
+        [BsonElement("refresh_token")]
+        public RefreshToken RefreshToken { get; set; }
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
