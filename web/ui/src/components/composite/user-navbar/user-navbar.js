@@ -5,6 +5,8 @@ import AuthForm from '../auth-form/auth-form'
 
 import { Modal, Button, Group } from '@mantine/core'
 
+import { connect } from "react-redux"
+
 const UserNavbar = ({ userModal, userModalAction }) => {
     return (
         <div>
