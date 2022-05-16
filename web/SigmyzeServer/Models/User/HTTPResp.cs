@@ -40,4 +40,25 @@ namespace SigmyzeServer.Models.User
         [JsonProperty("message")]
         public string? Message { get; set; }
     }
+
+    public class VerifyResp
+    {
+        [JsonProperty("verified")]
+        public bool Verified { get; set; }
+
+        [JsonProperty("message")]
+        public string? Message { get; set; }
+    }
+
+    public class UserDataResp
+    {
+        [JsonProperty("username")]
+        public string Username { get; set; }
+
+        [JsonProperty("verified")]
+        public string Verified { get; set; }
+
+        [JsonProperty("role")]
+        public string Role { get; set; }
+    }
 }

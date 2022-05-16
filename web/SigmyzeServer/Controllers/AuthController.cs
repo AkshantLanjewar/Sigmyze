@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Models.API;
 using Microsoft.AspNetCore.Authorization;
+using SigmyzeServer.Services;
 using SigmyzeServer.Services.Auth;
 
 namespace SigmyzeServer.Controllers
@@ -17,14 +18,17 @@ namespace SigmyzeServer.Controllers
         private readonly IUserService _userService;
         private readonly IUserAuth _userAuth;
         private readonly IHashService _hashService;
+        private readonly IEmailService _emailService;
         private string generatedToken = null;
 
-        public AuthController(IConfiguration config, IUserAuth userAuth, IUserService userService, IHashService hashService)
+        public AuthController(
+            IConfiguration config, IUserAuth userAuth, IUserService userService, IHashService hashService, IEmailService emailService)
         {
             _config         = config;
             _userAuth       = userAuth;
             _userService    = userService;
             _hashService    = hashService;
+            _emailService   = emailService;
         }
 
         private async Task<IActionResult> SerializeJSON(object data)
@@ -46,6 +50,21 @@ namespace SigmyzeServer.Controllers
             status.MSG   = "Auth working";
 
             return await SerializeJSON(status);
+        }
+
+        [HttpGet("user-data")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetUserData()
+        {
+            UserDataResp resp = new UserDataResp();
+            var token         = Request.Cookies["refreshToken"];
+            User? pUser       = await _userAuth.GetAsyncToken(token);
+
+            resp.Username = pUser.Username;
+            resp.Role     = pUser.Role;
+            resp.Verified = pUser.Verified;
+
+            return await SerializeJSON(resp);
         }
 
         [AllowAnonymous]
@@ -77,7 +96,7 @@ namespace SigmyzeServer.Controllers
             aUser.Lunar_ID          = Guid.NewGuid().ToString();
             aUser.VerificationToken = Guid.NewGuid().ToString();
             aUser.Role              = "User";
-            aUser.Verified          = "yes";
+            aUser.Verified          = "no";
             
             //salt and hash password
             string salt = _hashService.GenerateSalt(128);
@@ -95,6 +114,7 @@ namespace SigmyzeServer.Controllers
             resp.Token      = token;
             resp.Registered = true;
             setTokenCookie(aUser.RefreshToken.Token);
+            await _emailService.SendVerificationEmail(aUser.VerificationToken, aUser.EMail, aUser.Username);            
 
             return await SerializeJSON(resp);
         }
@@ -136,6 +156,27 @@ namespace SigmyzeServer.Controllers
             return await SerializeJSON(resp);
         }
 
+        [HttpPost("verify")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> Verify([FromBody]VerifyPost data)
+        {
+            VerifyResp resp = new VerifyResp();
+            User? pUser     = await _userAuth.GetAsync(data.Lunar_ID);
+            
+            if(pUser == null)
+                return await SerializeJSON(BadVerifyResp("user_dne"));
+            if(pUser.Verified == "yes")
+                return await SerializeJSON(BadVerifyResp("alr_verified"));
+            if(pUser.VerificationToken != data.Code)
+                return await SerializeJSON(BadVerifyResp("no_match"));
+
+            pUser.Verified = "yes";
+            await _userAuth.UpdateAsync(pUser.Lunar_ID, pUser);
+
+            resp.Verified = true;
+            return await SerializeJSON(resp);
+        }
+
         private void setTokenCookie(string token)
         {
             var cookieOptions = new CookieOptions
@@ -160,6 +201,15 @@ namespace SigmyzeServer.Controllers
             RegisterResp resp = new RegisterResp();
             resp.Registered   = false;
             resp.Message      = msg;
+
+            return resp;
+        }
+
+        private VerifyResp BadVerifyResp(string msg)
+        {
+            VerifyResp resp = new VerifyResp();
+            resp.Verified   = false;
+            resp.Message    = msg;
 
             return resp;
         }

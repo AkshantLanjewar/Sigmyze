@@ -12,4 +12,10 @@ namespace SigmyzeServer.Models.User
         public string Username { get; set; }
         public string Password { get; set; }
     }
+
+    public class VerifyPost
+    {
+        public string Lunar_ID { get; set; }
+        public string Code { get; set; }
+    }
 }

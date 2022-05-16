@@ -47,6 +47,7 @@ namespace SigmyzeServer
             //add authentication
             services.AddSingleton<IUserAuth, AuthService>();
             services.AddTransient<IHashService, HashService>();
+            services.AddSingleton<IEmailService, EmailService>();
 
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
