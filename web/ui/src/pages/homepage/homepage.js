@@ -60,8 +60,6 @@ const Homepage = ({ userModalAction }) => {
         let chart_data = []
         for(let i = 0; i < 3; i++)
             chart_data.push(await GrabChartData())
-        
-        console.log(chart_data)
         setChartData([...chart_data])
     }
 

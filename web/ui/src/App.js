@@ -31,7 +31,8 @@ import Resources   from './pages/indicators/indicators'
 import Dataset     from './pages/dataset/dataset'
 import LunarCharts from './pages/lunar-charts/lunar-charts';
 
-import AuthForm from './components/composite/auth-form/auth-form'
+import AuthForm    from './components/composite/auth-form/auth-form'
+import VerifyModal from './components/user-button/verify-modal/verify-modal';
 import { userModalAction } from './data/actions/userActions';
 
 const pages = [
@@ -139,6 +140,8 @@ function App(props) {
 					title="Welcome to Sigmyze, Login with">
 					<AuthForm />
 				</Modal>
+
+				<VerifyModal />
 
 				<NotificationsProvider>
 						<BrowserRouter>

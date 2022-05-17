@@ -1,17 +1,14 @@
 import React from "react"
 import './user-navbar.scoped.scss'
 
-import AuthForm from '../auth-form/auth-form'
+import UserButton from '../../user-button/user-button'
+import { Group } from '@mantine/core'
 
-import { Modal, Button, Group } from '@mantine/core'
-
-import { connect } from "react-redux"
-
-const UserNavbar = ({ userModal, userModalAction }) => {
+const UserNavbar = ({ }) => {
     return (
         <div>
             <Group position="center">
-                <Button onClick={() => { userModalAction(true) }}>Login</Button>
+                <UserButton />
             </Group>
         </div>
     )

@@ -15,6 +15,7 @@ const useStyles = createStyles((theme) => ({
         justifyContent: "center",
         width: "100%",
         maxWidth: 300,
+        alignItems: "center",
 
         ['&:hover']: {
             backgroundColor: theme.colors.dark[9]

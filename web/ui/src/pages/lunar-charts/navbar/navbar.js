@@ -10,10 +10,9 @@ import {
 } from "@mantine/core"
 
 import { MdOutlineInsertDriveFile } from 'react-icons/md'
-import { BiChevronDown, BiPlus } from 'react-icons/bi'
+import { BiChevronDown } from 'react-icons/bi'
 
-import { connect } from 'react-redux'
-import { userModalAction } from '../../../data/actions/userActions'
+import UserButton from '../../../components/user-button/user-button'
 
 function Filename() {
     const { classes } = useStyles()
@@ -46,7 +45,7 @@ function Filename() {
     )
 }
 
-const Navbar = ({ userModal, userModalAction }) => {
+const Navbar = ({ }) => {
     const { classes } = useStyles()
 
     return (
@@ -57,19 +56,11 @@ const Navbar = ({ userModal, userModalAction }) => {
                 </Group>
 
                 <Group position={"right"}>
-                    <Button onClick={() => { userModalAction(true) }}>Login</Button>
+                    <UserButton />
                 </Group>
             </Group>
         </div>
     )
 }
 
-const mapStateToProps = state => ({
-    userModal: state.userModal
-})
-
-const mapDispatchToProps = dispatch => ({
-    userModalAction: (payload) => dispatch(userModalAction(payload))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar)
+export default Navbar
