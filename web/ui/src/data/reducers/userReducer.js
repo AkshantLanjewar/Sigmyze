@@ -1,7 +1,10 @@
 let default_state = {
     userModal: false,
     verifyModal: false,
-    userState: "verify"
+    userState: "signedout",
+
+    jwtToken: "",
+    verified: ""
 }
 
 // three different states

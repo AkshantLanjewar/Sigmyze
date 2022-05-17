@@ -1,4 +1,4 @@
-import { MantineProvider, ScrollArea, Modal } from '@mantine/core'
+import { MantineProvider, ScrollArea } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
 
 import { useState, useEffect } from 'react';
@@ -7,9 +7,6 @@ import { useState, useEffect } from 'react';
 import AppShell from "./components/app/shell/shell";
 import Navbar   from "./components/composite/navbar/navbar";
 import Sidenav  from "./components/composite/sidenav/sidenav";
-
-//redux
-import { connect } from 'react-redux'
 
 //import the Logo
 import Logo from './assets/logo.svg'
@@ -31,9 +28,9 @@ import Resources   from './pages/indicators/indicators'
 import Dataset     from './pages/dataset/dataset'
 import LunarCharts from './pages/lunar-charts/lunar-charts';
 
-import AuthForm    from './components/composite/auth-form/auth-form'
-import VerifyModal from './components/user-button/verify-modal/verify-modal';
-import { userModalAction } from './data/actions/userActions';
+
+import VerifyModal from './components/user-button/verify-modal/verify-modal'
+import AuthModal   from './components/user-button/auth-modal/auth-modal';
 
 const pages = [
 	{ url: '/',           name: 'Homepage',  icon: <AiFillHome />, 		        active: true },
@@ -133,15 +130,9 @@ function App(props) {
 				},
 				fontFamily: 'Poppins'
 			}}>
-				<Modal
-					centered
-					opened={props.userModal}
-					onClose={() => { props.userModalAction(false) }}
-					title="Welcome to Sigmyze, Login with">
-					<AuthForm />
-				</Modal>
-
+				
 				<VerifyModal />
+				<AuthModal />
 
 				<NotificationsProvider>
 						<BrowserRouter>
@@ -159,12 +150,4 @@ function App(props) {
 	);
 }
 
-const mapStateToProps = state => ({
-    userModal: state.user.userModal
-})
-
-const mapDispatchToProps = dispatch => ({
-    userModalAction: (payload) => dispatch(userModalAction(payload))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
