@@ -25,6 +25,12 @@ export default (state = default_state, action) => {
         case "loginAction":
             e_state['userState'] = action.payload
             return { ...e_state }
+        case "authAction":
+                e_state['jwtToken']  = action.payload.jwtToken
+                e_state['verified']  = action.payload.verified
+                e_state['userState'] = action.payload.userState
+
+                return { ...e_state }
         default:
             return state;        
     }

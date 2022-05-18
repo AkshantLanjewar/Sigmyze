@@ -18,3 +18,10 @@ export const loginAction = (payload) => {
         payload: payload
     }
 }
+
+export const authAction = (payload) => {
+    return {
+        type: "authAction",
+        payload: payload
+    }
+}

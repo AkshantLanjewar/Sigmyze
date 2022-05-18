@@ -11,11 +11,16 @@ import {
     Anchor,
 } from '@mantine/core';
 
+import { connect } from "react-redux"
+import { authAction } from "../../../../../data/actions/userActions"
+import { showNotification } from '@mantine/notifications'
+
 const SignupForm = ({ changeState }) => {
     const form = useForm({
         initialValues: {
             email: '',
             password: '',
+            passwordConf: '',
             name: '',
             terms: false
         },
@@ -23,6 +28,7 @@ const SignupForm = ({ changeState }) => {
         validationRules: {
             email: (val) => /^\S+@\S+$/.test(val),
             password: (val) => val.length >= 6,
+            passwordConf: (val) => val.length >= 6,
         }
     })
 
@@ -33,6 +39,27 @@ const SignupForm = ({ changeState }) => {
 
     function OnSubmit(e) {
         e.preventDefault()
+
+        const email   = form.values.email
+        const pwd     = form.values.password
+        const pwdConf = form.values.passwordConf
+        const name    = form.values.name
+        const terms   = form.values.terms
+
+        if(terms == false)
+            showNotification({
+                title: "Register Error",
+                message: "You have to accept our terms and conditions",
+                color: 'red',
+                autoClose: 1000 * 10
+            })
+        if(pwd !== pwdConf)
+            showNotification({
+                title: "Register Error",
+                message: "Your passwords do not match",
+                color: 'red',
+                autoClose: 1000 * 10
+            })
     }
 
     return (
@@ -40,8 +67,8 @@ const SignupForm = ({ changeState }) => {
             <Group direction="column" grow>
                 <TextInput
                     required
-                    label="Name"
-                    placeholder="Your Name"
+                    label="Username"
+                    placeholder="Your Username"
                     value={form.values.name}
                     onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
                 />
@@ -64,6 +91,15 @@ const SignupForm = ({ changeState }) => {
                     error={form.errors.password && 'Password should include at least 6 characters'}
                 />
 
+                <PasswordInput
+                    required
+                    label="Password Confirmation"
+                    placeholder="Your Password Again"
+                    value={form.values.passwordConf}
+                    onChange={(event) => form.setFieldValue('passwordConf', event.currentTarget.value)}
+                    error={form.errors.password && 'Password should include at least 6 characters'}
+                />
+
                 <Checkbox
                     label={"I accept the terms and conditions"}
                     checked={form.values.terms}
@@ -81,5 +117,13 @@ const SignupForm = ({ changeState }) => {
         </form>
     )
 }
+
+const mapStateToProps = state => ({
+    
+})
+
+const mapDispatchToProps = dispatch => ({
+    authAction: (payload) => dispatch(authAction(payload))
+})
 
 export default SignupForm

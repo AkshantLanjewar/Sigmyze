@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 import { connect } from "react-redux"
 import { userModalAction, verifyModalAction } from "../../data/actions/userActions"
@@ -48,7 +48,20 @@ const UserControl = ({ username, email }) => (
     </div>
 )
 
+//manage the refreshing of the token here
+async function ManageAuthState(user) {
+    const jwt_token = user.jwt_token
+    if(jwt_token == "")
+        return
+}
+
 const UserButton = ({ userModalAction, verifyModalAction, user }) => {
+    useEffect(() => {
+        ManageAuthState()
+    }, [])
+
+    setInterval(ManageAuthState, 60000 * 40)
+
     return (
         <div>
             {user.userState == "signedout"

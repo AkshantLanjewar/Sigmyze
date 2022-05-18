@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 
 import { useForm } from "@mantine/hooks";
+import { showNotification } from '@mantine/notifications'
 
 import {
     TextInput,
@@ -10,7 +11,10 @@ import {
     Anchor,
 } from '@mantine/core';
 
-const LoginForm = ({ changeState }) => {
+import { connect } from "react-redux"
+import { authAction } from "../../../../../data/actions/userActions"
+
+const LoginForm = ({ changeState, authAction }) => {
     const [iconState, setIconState] = useState(false)
     const form = useForm({
         initialValues: {
@@ -31,6 +35,55 @@ const LoginForm = ({ changeState }) => {
 
     function onSubmit(e) {
         e.preventDefault()
+
+        const email  = form.values.email
+        const pwd    = form.values.password
+        const p_data = {
+            email: email,
+            password: pwd
+        }
+
+        fetch("/api/v1/auth/login", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(p_data)
+        }).then(res => {
+            let data = res.json()
+            
+            let auth = data.authorized
+            if(!auth) {
+                let message = data.message
+                
+                if(message == "user_dne")
+                    showNotification({
+                        title: "Login Error",
+                        message: "The email you typed has no associated account with us",
+                        color: 'red',
+                        autoClose: 1000 * 10
+                    })
+                if(message == "pwd_bad")
+                    showNotification({
+                        title: "Login Error",
+                        message: "The password you typed in did not match",
+                        color: 'red',
+                        autoClose: 1000 * 10
+                    })
+            }
+
+            let verified   = data.verified
+            let jwt_token  = data.token
+
+            let user_state = "verify"
+            if(verified == "yes")
+                user_state = "logged_in"
+
+            let payload = {
+                jwtToken: jwt_token,
+                verified: verified,
+                userState: user_state
+            }
+            authAction(payload)
+        })
     }
 
     return (
@@ -66,4 +119,12 @@ const LoginForm = ({ changeState }) => {
     )
 }
 
-export default LoginForm
+const mapStateToProps = state => ({
+    
+})
+
+const mapDispatchToProps = dispatch => ({
+    authAction: (payload) => dispatch(authAction(payload))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)
