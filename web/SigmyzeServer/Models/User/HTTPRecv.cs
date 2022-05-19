@@ -15,7 +15,12 @@ namespace SigmyzeServer.Models.User
 
     public class VerifyPost
     {
-        public string Lunar_ID { get; set; }
+        public string Token { get; set; }
         public string Code { get; set; }
+    }
+
+    public class ResendPost
+    {
+        public string Token { get; set; }
     }
 }

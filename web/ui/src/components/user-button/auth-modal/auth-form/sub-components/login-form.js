@@ -68,8 +68,10 @@ const LoginForm = ({ changeState, authAction }) => {
                         color: 'red',
                         autoClose: 1000 * 10
                     })
-            }
 
+                return
+            }
+            
             let verified   = data.verified
             let jwt_token  = data.token
 
@@ -82,6 +84,7 @@ const LoginForm = ({ changeState, authAction }) => {
                 verified: verified,
                 userState: user_state
             }
+            
             authAction(payload)
         })
     }

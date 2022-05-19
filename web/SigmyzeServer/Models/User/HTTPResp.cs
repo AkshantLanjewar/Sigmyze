@@ -50,6 +50,12 @@ namespace SigmyzeServer.Models.User
         public string? Message { get; set; }
     }
 
+    public class ResendResp
+    {
+        [JsonProperty("resent")]
+        public bool Resent { get; set; }
+    }
+
     public class UserDataResp
     {
         [JsonProperty("username")]

@@ -15,7 +15,7 @@ import { connect } from "react-redux"
 import { authAction } from "../../../../../data/actions/userActions"
 import { showNotification } from '@mantine/notifications'
 
-const SignupForm = ({ changeState }) => {
+const SignupForm = ({ changeState, authAction }) => {
     const form = useForm({
         initialValues: {
             email: '',
@@ -46,20 +46,65 @@ const SignupForm = ({ changeState }) => {
         const name    = form.values.name
         const terms   = form.values.terms
 
-        if(terms == false)
+        if(terms == false) {
             showNotification({
                 title: "Register Error",
                 message: "You have to accept our terms and conditions",
                 color: 'red',
                 autoClose: 1000 * 10
             })
-        if(pwd !== pwdConf)
+
+            return
+        }
+        if(pwd !== pwdConf) {
             showNotification({
                 title: "Register Error",
                 message: "Your passwords do not match",
                 color: 'red',
                 autoClose: 1000 * 10
             })
+            
+            return
+        }
+
+        const p_data = {
+            email: email,
+            username: name,
+            password: pwd
+        }
+        
+        fetch("/api/v1/auth/register", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(p_data)
+        }).then(res => {
+            let data = res.json()
+            let registered = data.registered
+
+            if(registered == false) {
+                let msg = data.message
+                if(msg == "user_exists")
+                    showNotification({
+                        title: "Register Error",
+                        message: "User already exists",
+                        color: 'red',
+                        autoClose: 1000 * 10
+                    })
+
+                return
+            }
+
+            let verified   = "no"
+            let jwt_token  = data.token
+            let user_state = "verify"
+
+            let payload = {
+                jwtToken: jwt_token,
+                verified: verified,
+                userState: user_state
+            }
+            authAction(payload)
+        })
     }
 
     return (
@@ -126,4 +171,4 @@ const mapDispatchToProps = dispatch => ({
     authAction: (payload) => dispatch(authAction(payload))
 })
 
-export default SignupForm
+export default connect(mapStateToProps, mapDispatchToProps)(SignupForm)

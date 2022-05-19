@@ -5,6 +5,7 @@ using SigmyzeServer.Models.API;
 using Microsoft.AspNetCore.Authorization;
 using SigmyzeServer.Services;
 using SigmyzeServer.Services.Auth;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SigmyzeServer.Controllers
 {
@@ -161,7 +162,8 @@ namespace SigmyzeServer.Controllers
         public async Task<IActionResult> Verify([FromBody]VerifyPost data)
         {
             VerifyResp resp = new VerifyResp();
-            User? pUser     = await _userAuth.GetAsync(data.Lunar_ID);
+            string lunarID  = GetLunarID(data.Token);
+            User? pUser     = await _userAuth.GetAsync(lunarID);
             
             if(pUser == null)
                 return await SerializeJSON(BadVerifyResp("user_dne"));
@@ -174,6 +176,15 @@ namespace SigmyzeServer.Controllers
             await _userAuth.UpdateAsync(pUser.Lunar_ID, pUser);
 
             resp.Verified = true;
+            return await SerializeJSON(resp);
+        }
+
+        [HttpPost("resend_verification")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> ResendVerification([FromBody]ResendPost data)
+        {
+            ResendResp resp = new ResendResp();
+
             return await SerializeJSON(resp);
         }
 
@@ -212,6 +223,15 @@ namespace SigmyzeServer.Controllers
             resp.Message    = msg;
 
             return resp;
+        }
+
+        private string GetLunarID(string token)
+        {
+            var handler    = new JwtSecurityTokenHandler();
+            var jwt        = handler.ReadJwtToken(token);
+            string lunarID = jwt.Claims.First(claim => claim.Type == "Lunar_Id").Value.ToString();
+
+            return lunarID;
         }
     }
 }
