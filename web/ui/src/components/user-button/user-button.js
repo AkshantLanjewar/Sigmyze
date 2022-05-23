@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 
 import { connect } from "react-redux"
-import { userModalAction, verifyModalAction } from "../../data/actions/userActions"
+import { userModalAction, verifyModalAction, authAction } from "../../data/actions/userActions"
 
 import { 
     Button,
@@ -48,14 +48,30 @@ const UserControl = ({ username, email }) => (
     </div>
 )
 
-//manage the refreshing of the token here
-async function ManageAuthState(user) {
-    const jwt_token = user.jwt_token
-    if(jwt_token == "")
-        return
-}
+const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) => {
+    //manage the refreshing of the token here
+    async function ManageAuthState(user) {
+        const jwt_token = user.jwt_token
+        const u_state   = user.userState
 
-const UserButton = ({ userModalAction, verifyModalAction, user }) => {
+        if(jwt_token == "" || u_state == "signedout")
+            return
+
+        fetch("/api/v1/auth/refresh-token", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+            let data = res.json()
+
+            const n_token = data.token
+            authAction({
+                jwtToken: n_token,
+                verified: user.verified,
+                userState: user.userState
+            })
+        })
+    }
+
     useEffect(() => {
         ManageAuthState()
     }, [])
@@ -85,7 +101,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     userModalAction: (payload) => dispatch(userModalAction(payload)),
-    verifyModalAction: (payload) => dispatch(verifyModalAction(payload))
+    verifyModalAction: (payload) => dispatch(verifyModalAction(payload)),
+    authAction: (payload) => dispatch(authAction(payload))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserButton)

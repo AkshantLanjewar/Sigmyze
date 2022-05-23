@@ -184,6 +184,16 @@ namespace SigmyzeServer.Controllers
         public async Task<IActionResult> ResendVerification([FromBody]ResendPost data)
         {
             ResendResp resp = new ResendResp();
+            string token    = data.Token;
+            string Lunar_id = GetLunarID(token);
+
+            User pUser   = await _userAuth.GetAsync(Lunar_id);
+            string email = pUser.EMail;
+            string code  = pUser.VerificationToken;
+            string name  = pUser.Username;
+
+            await _emailService.SendVerificationEmail(code, email, name);
+            resp.Resent = true;
 
             return await SerializeJSON(resp);
         }
