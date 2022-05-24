@@ -12,9 +12,9 @@ import {
 } from '@mantine/core';
 
 import { connect } from "react-redux"
-import { authAction } from "../../../../../data/actions/userActions"
+import { authAction, userModalAction } from "../../../../../data/actions/userActions"
 
-const LoginForm = ({ changeState, authAction }) => {
+const LoginForm = ({ changeState, authAction, userModalAction, setLoading }) => {
     const [iconState, setIconState] = useState(false)
     const form = useForm({
         initialValues: {
@@ -43,13 +43,12 @@ const LoginForm = ({ changeState, authAction }) => {
             password: pwd
         }
 
+        setLoading(true)
         fetch("/api/v1/auth/login", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(p_data)
-        }).then(res => {
-            let data = res.json()
-            
+        }).then(res => res.json()).then(data => {
             let auth = data.authorized
             if(!auth) {
                 let message = data.message
@@ -68,7 +67,8 @@ const LoginForm = ({ changeState, authAction }) => {
                         color: 'red',
                         autoClose: 1000 * 10
                     })
-
+                
+                setLoading(false)
                 return
             }
             
@@ -86,6 +86,8 @@ const LoginForm = ({ changeState, authAction }) => {
             }
             
             authAction(payload)
+            setLoading(false)
+            userModalAction(false)
         })
     }
 
@@ -127,7 +129,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    authAction: (payload) => dispatch(authAction(payload))
+    authAction: (payload) => dispatch(authAction(payload)),
+    userModalAction: (payload) => dispatch(userModalAction(payload))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)

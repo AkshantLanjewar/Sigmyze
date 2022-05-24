@@ -16,6 +16,7 @@ namespace SigmyzeServer.Services.Auth
         Task<AuthResp> Authenticate(LoginPost data, string ipAddress);
         Task<AuthResp> RefreshToken(string token, string ipAddress);
         Task<bool> RevokeToken(string token, string ipAddress);
+        string generateJwtToken(User user);
         (User user, string token) Register(User data, string ipAddress);
     }
 
@@ -108,7 +109,7 @@ namespace SigmyzeServer.Services.Auth
             return true;
         }
 
-        private string generateJwtToken(User user)
+        public string generateJwtToken(User user)
         {
             var tokenHandler    = new JwtSecurityTokenHandler();
             var key             = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
@@ -118,7 +119,9 @@ namespace SigmyzeServer.Services.Auth
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim("Lunar_Id", user.Lunar_ID),
-                    new Claim("Verified", user.Verified)
+                    new Claim("Verified", user.Verified),
+                    new Claim("Email", user.EMail),
+                    new Claim("Username", user.Username)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(45),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

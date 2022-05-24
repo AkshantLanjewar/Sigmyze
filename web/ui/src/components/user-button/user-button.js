@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 import { connect } from "react-redux"
 import { userModalAction, verifyModalAction, authAction } from "../../data/actions/userActions"
@@ -14,7 +14,7 @@ import {
 
 import { VscSignOut } from 'react-icons/vsc'
 
-const UserControl = ({ username, email }) => (
+const UserControl = ({ username, email, logout }) => (
     <div>
         <Menu 
             control={<Avatar src={null} alt={username} color={"blue"}>AL</Avatar>}
@@ -43,7 +43,7 @@ const UserControl = ({ username, email }) => (
 
             <Divider />
 
-            <Menu.Item icon={<VscSignOut size={14} />}>Logout</Menu.Item>
+            <Menu.Item icon={<VscSignOut size={14} />} onClick={logout}>Logout</Menu.Item>
         </Menu>
     </div>
 )
@@ -72,11 +72,54 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) =>
         })
     }
 
+    const [userData, setUserData] = useState({
+        email: "",
+        username: ""
+    })
+
     useEffect(() => {
         ManageAuthState()
+        GrabUserData()
     }, [])
 
+    useEffect(() => {
+        GrabUserData()
+    }, [user.jwtToken])
+
+    function GrabUserData() {
+        let token = user.jwtToken
+        if(token == "")
+            return
+
+        fetch("/api/v1/auth/user-data", {
+            method: "GET",
+            headers: { 'Authorization': `Bearer ${token}`}
+        }).then(resp => resp.json()).then(data => {
+            setUserData({
+                email: data.email,
+                username: data.username
+            })
+        })  
+    }
+
     setInterval(ManageAuthState, 60000 * 40)
+
+    function Logout() {
+        fetch("/api/v1/auth/revoke-token", {
+            method: "POST",
+            
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.jwtToken}` 
+            }
+        }).then(res => res.json()).then(data => {
+            authAction({
+                jwtToken: "",
+                verified: "no",
+                userState: "signedout"
+            })
+        })
+    }
 
     return (
         <div>
@@ -86,7 +129,11 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) =>
                     <div>
                         {user.userState == "verify"
                             ? <Button onClick={() => { verifyModalAction(true) }}>Verify</Button>
-                            : <UserControl username={"Akshant Lanjewar"} email={"akshant.lanjewar@gmail.com"} />
+                            : <UserControl 
+                                username={userData.username} 
+                                email={userData.email} 
+                                logout={Logout}
+                            />
                         }
                     </div>
                 )

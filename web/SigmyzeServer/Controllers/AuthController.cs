@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Models.API;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using SigmyzeServer.Services;
 using SigmyzeServer.Services.Auth;
 using System.IdentityModel.Tokens.Jwt;
@@ -57,13 +58,19 @@ namespace SigmyzeServer.Controllers
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetUserData()
         {
-            UserDataResp resp = new UserDataResp();
-            var token         = Request.Cookies["refreshToken"];
-            User? pUser       = await _userAuth.GetAsyncToken(token);
+            UserDataResp resp  = new UserDataResp();
+            string accessToken = await HttpContext.GetTokenAsync("access_token");
 
-            resp.Username = pUser.Username;
-            resp.Role     = pUser.Role;
-            resp.Verified = pUser.Verified;
+            var handler     = new JwtSecurityTokenHandler();
+            var jwt         = handler.ReadJwtToken(accessToken);
+            string username = jwt.Claims.First(claim => claim.Type == "Username").Value.ToString();
+            string email    = jwt.Claims.First(claim => claim.Type == "Email").Value.ToString();
+            string verified = jwt.Claims.First(claim => claim.Type == "Verified").Value.ToString();
+            
+            resp.EMail    = email;
+            resp.Role     = "user";
+            resp.Username = username;
+            resp.Verified = verified;
 
             return await SerializeJSON(resp);
         }
@@ -173,13 +180,16 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(BadVerifyResp("no_match"));
 
             pUser.Verified = "yes";
+
+            string nToken = _userService.generateJwtToken(pUser);
             await _userAuth.UpdateAsync(pUser.Lunar_ID, pUser);
 
             resp.Verified = true;
+            resp.Token    = nToken;
             return await SerializeJSON(resp);
         }
 
-        [HttpPost("resend_verification")]
+        [HttpPost("resend-verification")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> ResendVerification([FromBody]ResendPost data)
         {

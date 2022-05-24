@@ -2,9 +2,7 @@ import React, { useState } from "react"
 
 import {
     Paper,
-    Group,
-    Button,
-    Divider,
+    LoadingOverlay
 } from '@mantine/core';
 
 import { AiFillFacebook, AiOutlineGoogle } from 'react-icons/ai'
@@ -16,12 +14,18 @@ import './auth-form.scss'
 
 const AuthForm = () => {
     const [formState, setFormState] = useState(false)
+    const [loading, setLoading]     = useState(false)
 
     return (
-        <Paper radius={'md'} p={'xl'}>
+        <Paper radius={'md'} p={'xl'} sx={{ position: "relative" }}>
+            <LoadingOverlay 
+                visible={loading} 
+                loaderProps={{ variant: 'dots' }}
+            />
+
             { formState
-                ? <SignupForm changeState={setFormState} />
-                : <LoginForm  changeState={setFormState} />
+                ? <SignupForm changeState={setFormState} setLoading={setLoading} />
+                : <LoginForm  changeState={setFormState} setLoading={setLoading} />
             }
         </Paper>
     )

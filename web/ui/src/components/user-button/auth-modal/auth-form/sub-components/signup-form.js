@@ -12,10 +12,10 @@ import {
 } from '@mantine/core';
 
 import { connect } from "react-redux"
-import { authAction } from "../../../../../data/actions/userActions"
+import { authAction, userModalAction } from "../../../../../data/actions/userActions"
 import { showNotification } from '@mantine/notifications'
 
-const SignupForm = ({ changeState, authAction }) => {
+const SignupForm = ({ changeState, authAction, userModalAction, setLoading }) => {
     const form = useForm({
         initialValues: {
             email: '',
@@ -73,12 +73,14 @@ const SignupForm = ({ changeState, authAction }) => {
             password: pwd
         }
         
+        setLoading(true)
         fetch("/api/v1/auth/register", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify(p_data)
-        }).then(res => {
-            let data = res.json()
+        }).then(res => res.json()).then(data => {
             let registered = data.registered
 
             if(registered == false) {
@@ -90,7 +92,8 @@ const SignupForm = ({ changeState, authAction }) => {
                         color: 'red',
                         autoClose: 1000 * 10
                     })
-
+                
+                setLoading(false)
                 return
             }
 
@@ -103,7 +106,10 @@ const SignupForm = ({ changeState, authAction }) => {
                 verified: verified,
                 userState: user_state
             }
+
             authAction(payload)
+            setLoading(false)
+            userModalAction(false)
         })
     }
 
@@ -168,7 +174,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    authAction: (payload) => dispatch(authAction(payload))
+    authAction: (payload) => dispatch(authAction(payload)),
+    userModalAction: (payload) => dispatch(userModalAction(payload))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupForm)

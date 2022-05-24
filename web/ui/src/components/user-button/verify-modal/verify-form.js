@@ -13,7 +13,7 @@ import {
 import { connect }    from "react-redux"
 import { authAction } from "../../../data/actions/userActions"
 
-const VerifyForm = ({ user, authAction }) => {
+const VerifyForm = ({ user, authAction, modalAction, setLoading }) => {
     const form = useForm({
         initialValues: {
             token: ''
@@ -29,12 +29,15 @@ const VerifyForm = ({ user, authAction }) => {
             token: user.jwtToken
         }
 
+        setLoading(true)
         fetch("/api/v1/auth/verify", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.jwtToken}`  
+            },
             body: JSON.stringify(p_data)
-        }).then(res => {
-            let data     = res.json()
+        }).then(res => res.json()).then(data => {
             let verified = data.verified
 
             if(!verified) {
@@ -61,24 +64,52 @@ const VerifyForm = ({ user, authAction }) => {
                         color: 'red',
                         autoClose: 1000 * 10
                     })
-
+                
+                setLoading(false)
                 return
             }
 
             let verified_val = "yes"
             let user_state   = "logged_in"
+            let n_token      = data.token
+
             let payload      = {
-                jwtToken: user.jwtToken,
+                jwtToken: n_token,
                 verified: verified_val,
                 userState: user_state
             }
 
             authAction(payload)
+            setLoading(false)
+            modalAction(false)
         })
     }
 
     function ResendVerificationEmail(e) {
         e.preventDefault()
+
+        const p_data = {
+            token: user.jwtToken
+        }
+
+        fetch("/api/v1/auth/resend-verification", {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.jwtToken}` 
+            },
+            body: JSON.stringify(p_data)
+        }).then(res => res.json()).then(data => {
+            const resent = data['resent']
+
+            if(resent)
+                showNotification({
+                    title: "Verify System",
+                    message: "Verification Code Resent",
+                    color: 'green',
+                    autoClose: 1000 * 10
+                })
+        })
     }
 
     return (
@@ -94,7 +125,7 @@ const VerifyForm = ({ user, authAction }) => {
             </Group>
 
             <Group position={"apart"} mt={"xl"}>
-                <Anchor component={"button"} type={"button"} color={"gray"} size={"xs"}>
+                <Anchor component={"button"} type={"button"} color={"gray"} size={"xs"} onClick={ResendVerificationEmail}>
                     Didnt get the email? Send it again
                 </Anchor>
 

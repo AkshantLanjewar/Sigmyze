@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Modal } from "@mantine/core"
+import { Modal, LoadingOverlay } from "@mantine/core"
 import AuthForm  from './auth-form/auth-form'
 
 import { connect }         from "react-redux"
@@ -13,7 +13,9 @@ const AuthModal = ({ user, userModalAction }) => (
         opened={user.userModal}
         onClose={() => { userModalAction(false) }}
     >
-        <AuthForm />
+        <div style={{ position: "relative" }}>
+            <AuthForm />
+        </div>
     </Modal>
 )
 

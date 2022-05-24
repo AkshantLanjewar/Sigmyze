@@ -30,7 +30,7 @@ namespace SigmyzeServer.Services
 
             htmlContent +=  "<div>";
             htmlContent +=      $"<h1> Hello {name} </h1>";
-            htmlContent +=      $"<h3>Here is your verification token </h3>";
+            htmlContent +=      $"<h3>Here is your verification token {token} </h3>";
             htmlContent +=  "</div>";
 
             var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);

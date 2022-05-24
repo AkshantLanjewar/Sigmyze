@@ -13,7 +13,7 @@ namespace SigmyzeServer.Models.User
         [JsonProperty("message")]
         public string? Message { get; set; }
 
-        [JsonProperty("Verified")]
+        [JsonProperty("verified")]
         public string? Verified { get; set; }
 
         [JsonIgnore]
@@ -48,6 +48,9 @@ namespace SigmyzeServer.Models.User
 
         [JsonProperty("message")]
         public string? Message { get; set; }
+        
+        [JsonProperty("token")]
+        public string Token { get; set; }
     }
 
     public class ResendResp
@@ -60,6 +63,9 @@ namespace SigmyzeServer.Models.User
     {
         [JsonProperty("username")]
         public string Username { get; set; }
+
+        [JsonProperty("email")]
+        public string EMail { get; set; }
 
         [JsonProperty("verified")]
         public string Verified { get; set; }

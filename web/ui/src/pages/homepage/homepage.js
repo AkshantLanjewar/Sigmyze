@@ -53,7 +53,7 @@ async function GrabChartData() {
     }
 }
 
-const Homepage = ({ userModalAction }) => {
+const Homepage = ({ userModalAction, user }) => {
     const [chartData, setChartData] = useState([])
 
     async function main() {
@@ -80,9 +80,14 @@ const Homepage = ({ userModalAction }) => {
                         </div>
 
                         <div className="actions">
-                            <Button radius={"sm"} size={"sm"} onClick={() => { userModalAction(true) }}>
-                                Get Started
-                            </Button>
+                            {user.userState == "signedout"
+                                ? <Button radius={"sm"} size={"sm"} onClick={() => { userModalAction(true) }}>
+                                    Get Started
+                                </Button>
+
+                                : null
+                            }
+                            
                         </div>
 
                         <Map />
@@ -142,7 +147,7 @@ const Homepage = ({ userModalAction }) => {
 }
 
 const mapStateToProps = state => ({
-    
+    user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
