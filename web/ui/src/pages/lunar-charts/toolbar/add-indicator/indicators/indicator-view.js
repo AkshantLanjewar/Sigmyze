@@ -57,6 +57,9 @@ const IndicatorView = ({ dataset, category, country, setIndicator }) => {
     }
 
     async function main() {
+        setIndicators([])
+        setIndicators_d([])
+
         let dataset_    = dataset.toUpperCase()
         let category_   = dataset_ + category
         let indicators_ = await GetIndicators(dataset_, country['iso3'])

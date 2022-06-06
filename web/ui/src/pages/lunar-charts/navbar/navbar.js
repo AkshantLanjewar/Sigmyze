@@ -10,7 +10,7 @@ import {
 } from "@mantine/core"
 
 import { MdOutlineInsertDriveFile } from 'react-icons/md'
-import { BiChevronDown } from 'react-icons/bi'
+import { BiChevronDown, BiExit } from 'react-icons/bi'
 
 import UserButton from '../../../components/user-button/user-button'
 
@@ -52,6 +52,21 @@ const Navbar = ({ }) => {
         <div className={classes.navbar}>
             <Group position="apart" grow sx={{ width: "100%" }}>
                 <Group position={"left"}>
+                    <Tooltip 
+                        position={"bottom"}
+                        withArrow
+                        label={"Exit Home"}
+                    >
+                        <Button 
+                            p={"xs"} 
+                            color={"indigo"}
+                            component={"a"}
+                            href={"/"}
+                        >
+                            <BiExit size={18} />
+                        </Button>
+                    </Tooltip>
+
                     <Filename />
                 </Group>
 

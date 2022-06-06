@@ -17,8 +17,7 @@ import {
 	AiOutlineQuestionCircle
 } from 'react-icons/ai'
 
-import { BsStack } from 'react-icons/bs'
-
+import { BsStack, BsMoonFill } from 'react-icons/bs'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -33,9 +32,10 @@ import VerifyModal from './components/user-button/verify-modal/verify-modal'
 import AuthModal   from './components/user-button/auth-modal/auth-modal';
 
 const pages = [
-	{ url: '/',           name: 'Homepage',  icon: <AiFillHome />, 		        active: true },
-	{ url: '/indicators', name: 'Indicators', icon: <BsStack />, 		        active: false },
-	{ url: '/about',      name: 'About',     icon: <AiOutlineQuestionCircle />, active: false }
+	{ url: '/',           name: 'Homepage',   icon: <AiFillHome />, 		     active: true },
+	{ url: '/indicators', name: 'Indicators', icon: <BsStack />, 		         active: false },
+	{ url: '/lunar',      name: 'Lunar',      icon: <BsMoonFill />, 			 active: false },
+	{ url: '/about',      name: 'About',      icon: <AiOutlineQuestionCircle />, active: false }
 ]
 
 

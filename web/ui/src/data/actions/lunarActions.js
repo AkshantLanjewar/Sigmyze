@@ -14,3 +14,10 @@ export const RemoveLunarIndicator = (ind3, iso3) => {
         }
     }
 }
+
+export const ResetLunarIndicator = () => {
+    return {
+        type: "reset_indicators",
+        payload: {}
+    }
+}

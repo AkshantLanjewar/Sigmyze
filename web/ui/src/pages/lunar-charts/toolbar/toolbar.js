@@ -15,7 +15,7 @@ import { BsStack } from 'react-icons/bs'
 import { IoMdAdd } from 'react-icons/io' 
 
 let actionBarItems = [
-    { label: "Layers",        icon: <BsStack size={20} />, active: true },
+    { label: "Layers",        icon: <BsStack size={20} />,  active: true },
     { label: "Add Indicators", icon: <IoMdAdd size={20} />, active: false }
 ]
 
@@ -36,17 +36,20 @@ const Toolbar = ({ }) => {
 
         for(let i = 0; i < barItems.length; i++) {
             let item    = barItems[i]
-            item.active = false
+            if(label == "Add Indicators" && item.active)
+                item.active = true
+            else
+                item.active = false
+
             if(label === "Add Indicators") {
                 setOpenAdd(true)
                 return
             }
-
-            if(item.label == label)
+            if(item.label == label && label !== "Add Indicators")
                 item.active = true
             barItems[i] = item
         }
-
+        
         setActionBar([...barItems])
         setActiveAction(label)
     }

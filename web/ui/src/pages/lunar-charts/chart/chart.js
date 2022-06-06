@@ -53,7 +53,7 @@ const Chart = ({ indicators }) => {
 
     useEffect(() => {
         main(chartRef)
-    }, [indicators])
+    }, [indicators, chart])
 
     return (
         <div className={classes.container}>

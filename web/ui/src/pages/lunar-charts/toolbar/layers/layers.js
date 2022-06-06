@@ -31,6 +31,10 @@ const Layers = ({ indicators, remove_indicator }) => {
 
     useEffect(() => {
         main()
+    }, [])
+
+    useEffect(() => {
+        main()
     }, [indicators])
 
     return (

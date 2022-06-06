@@ -10,7 +10,7 @@ const Brand = ({ expanded, image, text }) => {
 
     return (
         <div className={`brand ${expanded ? 'expanded' : ''}`}>
-            <a>
+            <a href="/">
                 <img src={useImage ? image : null} alt={"logo"} />
                 <span>{text}</span>
             </a>
