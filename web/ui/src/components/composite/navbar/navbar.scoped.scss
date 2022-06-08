@@ -1,0 +1,33 @@
+@import '../../vars.scss';
+
+.navbar {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    height: 3.75rem;
+
+    position: fixed;
+    top: 0;
+    background-color: $dark-9;
+    transition: all .2s ease-in-out;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+    width: calc(100% - 5.25rem);
+
+    &.expand { width: calc(100% - 16.25rem); }
+
+    .toggler {
+        color: $text-color;
+        cursor: pointer;
+        font-size: 1.25rem;
+
+        background-color: transparent;
+        outline: none;
+        border: none;
+
+        &:hover { color: $alt-text-color; }
+        &.toggled { color: $blue; }
+    }
+}
