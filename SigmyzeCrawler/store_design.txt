@@ -1,0 +1,30 @@
+TOPLEVEL
+    -> Dataset name
+    -> EG: WEO, WB, FUTURE
+MIDLEVEL
+    -> Object name
+    -> EG: USA, CORN
+BOTTOMLEVEL
+    -> Indicator name
+    -> EG: NGDP, CONTINOUS
+DATALEVEL
+    -> Year       (Datetime)
+    -> Value      (Number)
+    -> Projection (Boolean)
+
+
+DB Structure
+
+DB_NAME: Datasets
+COLS: [ WEO, WB, FUTURE ] (TOPLEVEL)
+Object
+    -> object_id: USA (MIDLEVEL)
+    -> object_fullname: United States of America (MIDLEVEL)
+    -> indicators: [] (BOTTOMLEVEL)
+        -> indicator_id: NGDP (BOTTOMLEVEL)
+        -> indicator_name: GDP (BOTTOMLEVEL)
+        -> indicator_units: Dollars (BOTTOMLEVEL)
+        -> indicator_data: [] (DATALEVEL)
+            -> 2018  (Datetime)
+            -> 200   (Number)
+            -> false (Boolean)
