@@ -35,10 +35,10 @@ namespace SigmyzeServer
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddCronJob<WEODataService>(c => {
+            /*services.AddCronJob<WEODataService>(c => {
                 c.TimeZoneInfo   = TimeZoneInfo.Utc;
                 c.CronExpression = @"0 0 * * *"; 
-            });
+            });*/
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sigmyze API", Version = "v1" });
@@ -46,6 +46,7 @@ namespace SigmyzeServer
 
             //add authentication
             services.AddSingleton<IUserAuth, AuthService>();
+            services.AddSingleton<IDatasetMongoORM, DatasetMongoORM>();
             services.AddTransient<IHashService, HashService>();
             services.AddSingleton<IEmailService, EmailService>();
 

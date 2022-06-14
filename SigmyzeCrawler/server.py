@@ -35,5 +35,6 @@ def weo_upload():
     resp.status_code = 201
 
     parser = WEO_Parser.WEO_Parser()
+    parser.parse()
 
     return resp

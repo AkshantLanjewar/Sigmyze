@@ -3,7 +3,8 @@ using Newtonsoft.Json;
 using SigmyzeServer.Models.API;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using System.Net;
+using SigmyzeServer.Services;
+using SigmyzeServer.Models.Data;
 
 namespace SigmyzeServer.Controllers
 {
@@ -13,16 +14,149 @@ namespace SigmyzeServer.Controllers
     [ApiVersion("1.0")]
     public class DatasetsController : ControllerBase
     {
-        private List<string> datasets;
-        private string URL_ROOT = "http://34.66.146.203:8080";
+        private List<string> _datasets;
+        private readonly IDatasetMongoORM _datasetMongoORM;
 
-        public DatasetsController()
+        public DatasetsController(IDatasetMongoORM datasetMongoORM)
         {
-            string metadata_loc = "./metadata";
-            string?[] metadata_dirs = Directory.GetDirectories(metadata_loc).Select(Path.GetFileName).ToArray();
-            List<string> datasets   = new List<string>(metadata_dirs!);
+            _datasetMongoORM = datasetMongoORM;
+            _datasets        = _datasetMongoORM.GetDatasets();
+        }
 
-            this.datasets = datasets;
+        //endpoints
+        [HttpGet]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> DataControllerRoot()
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error = false;
+            status.MSG   = "/datasets endpoint working";
+
+            DatasetsResponse resp = new DatasetsResponse();
+            resp.Status           = status;
+            resp.Datasets         = this._datasets;
+            
+            return await SerializeJSON(resp);
+        }
+
+        [HttpGet("{dataset}/countries")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetDatasetCountries(string dataset)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error    = true;
+            status.MSG      = "API Version Phased Out";
+
+            return await SerializeJSON(status);
+        }
+
+        [HttpGet("{dataset}/objects")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> GetDatasetCountriesV2(string dataset)
+        {
+            dataset                    = dataset.ToUpper();
+            DatasetObjectResponse resp = new DatasetObjectResponse();
+            resp.Status                = await checkDataset(dataset);
+            if(resp.Status.Error)
+                return await SerializeJSON(resp);
+
+            List<DatasetObject> objects = _datasetMongoORM.ProcessedObjects(dataset);
+            resp.Objects                = objects;
+            return await SerializeJSON(resp);
+        }
+
+        [HttpGet("{dataset}/categories")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetDatasetCategories(string dataset)
+        {
+            dataset                = dataset.ToUpper();
+            DatasetCategories resp = new DatasetCategories();
+            resp.Status = await checkDataset(dataset);
+            if(resp.Status.Error)
+                return await SerializeJSON(resp);
+
+            resp.Categories = _datasetMongoORM.Categories(dataset);
+
+            return await SerializeJSON(resp);
+        }
+
+        [HttpGet("{dataset}/countries/{country}/indicators")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetCountryIndicators(string dataset, string country)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error    = true;
+            status.MSG      = "API Version Phased Out";
+
+            return await SerializeJSON(status);
+        }
+
+        [HttpGet("{dataset}/objects/{object_id}/indicators")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> GetObjectIndicators(string dataset, string object_id)
+        {
+            dataset   = dataset.ToUpper();
+            object_id = object_id.ToUpper();
+
+            DatasetObjectIndicators resp = new DatasetObjectIndicators();
+
+            resp.Status = await checkDataset(dataset);
+            if(resp.Status.Error)
+                return await SerializeJSON(resp);
+            resp.Status = await checkObject(dataset, object_id);
+            if(resp.Status.Error)
+                return await SerializeJSON(resp);
+
+            DatasetCollection obj                 = _datasetMongoORM.GetObject(dataset, object_id);
+            List<DatasetIndicator> obj_indicators = obj.Indicators;
+            List<ObjectIndicator>  _objIndicators = new List<ObjectIndicator>();
+
+            for(int i = 0; i < obj_indicators.Count; i++)
+            {
+                DatasetIndicator _indicator = obj_indicators[i];
+                ObjectIndicator indicator   = new ObjectIndicator();
+
+                indicator.Category          = "All";
+                indicator.IndicatorFullname = _indicator.IndicatorName;
+                indicator.IndicatorID       = _indicator.IndicatorID;
+                _objIndicators.Add(indicator);
+            }
+
+            resp.Indicators = _objIndicators;
+            return await SerializeJSON(resp);
+        }
+
+        [HttpGet("{dataset}/countries/{country}/indicators/{indicator}")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetCountryIndicator(string dataset, string country, string indicator)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error    = true;
+            status.MSG      = "API Version Phased Out";
+
+            return await SerializeJSON(status);
+        }
+
+        [HttpGet("{dataset}/objects/{object_id}/indicators/{indicator_id}")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> GetObjectIndicator(string dataset, string object_id, string indicator_id)
+        {
+            dataset      = dataset.ToUpper();
+            object_id    = object_id.ToUpper();
+            indicator_id = indicator_id.ToUpper();
+
+            DatasetObjectIndicator resp = new DatasetObjectIndicator();
+            
+            resp.Status = await checkDataset(dataset);
+            if(resp.Status.Error)
+                return await SerializeJSON(resp);
+            resp.Status = await checkObject(dataset, object_id);
+            if(resp.Status.Error)
+                return await SerializeJSON(resp);
+
+            DatasetIndicator indicator = _datasetMongoORM.GetIndicator(dataset, object_id, indicator_id);
+            resp.Indicator             = indicator;
+            return await SerializeJSON(resp);
         }
 
         private async Task<IActionResult> SerializeJSON(object data)
@@ -32,59 +166,6 @@ namespace SigmyzeServer.Controllers
                 content,
                 "application/json"
             );
-        }
-
-        //checks
-        private APIStatusMsg CheckDataset(string dataset)
-        {
-            APIStatusMsg status = new APIStatusMsg();
-            string check = this.datasets.FirstOrDefault(x => x == dataset);
-            if(check == null) 
-            {
-                status.Error = true;
-                status.MSG   = "INVALID dataset";
-            }
-
-            return status;
-        }
-
-        private APIStatusMsg CheckCountry(string dataset, string iso3)
-        {
-            APIStatusMsg status = new APIStatusMsg();
-            string country_loc  = $"./metadata/{dataset}/countries/";
-            string?[] country_files = Directory.GetFiles(country_loc, "*.json").Select(Path.GetFileName).Select(s => s.Replace("_indicators.json", "")).ToArray();
-            string check = country_files.FirstOrDefault(x => x == iso3);
-            if(check == null)
-            {
-                status.Error = true;
-                status.MSG   = "INVALID country";
-            }
-
-            return status;
-        }
-
-        private async Task<APIStatusMsg> CheckIndicator(string dataset, string iso3, string indicator)
-        {
-            APIStatusMsg status = new APIStatusMsg();
-            string country_loc = $"./metadata/{dataset}/countries/{iso3}_indicators.json";
-            string country_str = await ReadAllTextAsync(country_loc);
-
-            ValidCountryIndicators validIndicators = JsonConvert.DeserializeObject<ValidCountryIndicators>(country_str);
-            bool check = true;
-            for(int i = 0; i < validIndicators.Indicators.Count; i++)
-            {
-                IndicatorName indicator_obj = validIndicators.Indicators[i];
-                if(indicator_obj.IND3 == indicator)
-                    check = false;
-            }
-
-            if(check)
-            {
-                status.Error = true;
-                status.MSG   = $"INVALID indicator";
-            }
-
-            return status;
         }
 
         private static async Task<string> ReadAllTextAsync(string filePath)
@@ -104,197 +185,36 @@ namespace SigmyzeServer.Controllers
             }
         }
 
-        private async Task<string> HTTP_Request(string url)
+        private async Task<APIStatusMsg> checkDataset(string dataset)
         {
-            string val = await Task.Run<string>(() => 
-            {
-                string content = "";
-                WebRequest request   = WebRequest.Create(url);
-                WebResponse response = request.GetResponse();
-
-                using (Stream dataStream = response.GetResponseStream())
-                {
-                    StreamReader reader = new StreamReader(dataStream);
-                    content = reader.ReadToEnd();
-                } 
-
-                response.Close();
-                return content;
-            });
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error        = false;
+            status.MSG          = "Working";
             
-            return val;
+            if(!_datasets.Contains(dataset))
+            {
+                status.Error = true;
+                status.MSG   = "Dataset DNE";
+            }
+
+            return status;
         }
 
-        //endpoints
-        [HttpGet]
-        [MapToApiVersion("1.0")]
-        public async Task<IActionResult> DataControllerRoot()
+        private async Task<APIStatusMsg> checkObject(string dataset, string object_id)
         {
             APIStatusMsg status = new APIStatusMsg();
             status.Error = false;
-            status.MSG   = "/datasets endpoint working";
+            status.MSG   = "Working";
 
-            DatasetsResponse resp = new DatasetsResponse();
-            resp.Status           = status;
-            resp.Datasets         = this.datasets;
-            
-            return await SerializeJSON(resp);
-        }
-
-        [HttpGet("{dataset}/countries")]
-        [MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetDatasetCountries(string dataset)
-        {
-            dataset = dataset.ToLower();
-            DatasetsCountryResponse response = new DatasetsCountryResponse();
-
-            APIStatusMsg status = new APIStatusMsg();
-            status.Error    = false;
-            status.MSG      = "Data Endpoint working";
-            response.Status = status;
-
-            APIStatusMsg datasetStatus = CheckDataset(dataset);
-            if(datasetStatus.Error)
+            List<DatasetObject> objects = _datasetMongoORM.ProcessedObjects(dataset);
+            int object_index            = objects.FindIndex(x => x.ObjectID == object_id);
+            if(object_index < 0)
             {
-                response.Status = datasetStatus;
-                return await SerializeJSON(response);
-            }    
-            
-            string country_loc       = $"./metadata/{dataset}/countries.json";
-            string country_str       = await ReadAllTextAsync(country_loc);
-            List<Country> countries  = JsonConvert.DeserializeObject<List<Country>>(country_str);
-            response.Countries       = countries;
-
-            return await SerializeJSON(response);
-        }
-
-        [HttpGet("{dataset}/categories")]
-        [MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetDatasetCategories(string dataset)
-        {
-            dataset = dataset.ToLower();
-            DatasetsCategoryResponse response = new DatasetsCategoryResponse();
-
-            APIStatusMsg status = new APIStatusMsg();
-            status.Error    = false;
-            status.MSG      = "Dataset Categories endpoint is working";
-            response.Status = status;
-
-            APIStatusMsg datasetStatus = CheckDataset(dataset);
-            if(datasetStatus.Error)
-            {
-                response.Status = datasetStatus;
-                return await SerializeJSON(response);
+                status.Error = false;
+                status.MSG   = "Object DNE";
             }
 
-            string category_loc = $"./metadata/{dataset}/categories.json";
-            string category_str = await ReadAllTextAsync(category_loc);
-
-            List<string> categories = JsonConvert.DeserializeObject<List<string>>(category_str);
-            for(int i = 0; i < categories.Count; i++)
-                categories[i] = categories[i].Replace(dataset.ToUpper(), "");
-            response.Categories = categories;
-
-            return await SerializeJSON(response);
-        }
-
-        [HttpGet("{dataset}/countries/{country}/indicators")]
-        [MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetCountryIndicators(string dataset, string country)
-        {
-            dataset = dataset.ToLower();
-            country = country.ToUpper();
-            DatasetsIndicatorResponse response = new DatasetsIndicatorResponse();
-
-            APIStatusMsg status = new APIStatusMsg();
-            status.Error    = false;
-            status.MSG      = "Country Indicators Endpoint working";
-            response.Status = status;
-
-            APIStatusMsg datasetStatus = CheckDataset(dataset);
-            if(datasetStatus.Error)
-            {
-                response.Status = datasetStatus;
-                return await SerializeJSON(response);
-            }
-
-            APIStatusMsg countryStatus = CheckCountry(dataset, country);
-            if(countryStatus.Error)
-            {
-                response.Status = countryStatus;
-                return await SerializeJSON(response);
-            }
-
-            string country_loc = $"./metadata/{dataset}/countries/{country}_indicators.json";
-            string country_str = await ReadAllTextAsync(country_loc);
-            ValidCountryIndicators valid_indicators = JsonConvert.DeserializeObject<ValidCountryIndicators>(country_str);
-            response.Indicators = valid_indicators.Indicators; 
-
-            return await SerializeJSON(response);
-        }
-
-        [HttpGet("{dataset}/countries/{country}/indicators/{indicator}")]
-        [MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetCountryIndicator(string dataset, string country, string indicator)
-        {
-            dataset   = dataset.ToLower();
-            country   = country.ToUpper();
-            indicator = indicator.ToUpper();
-            DatasetsCountryIndicatorResponse response = new DatasetsCountryIndicatorResponse();
-
-            APIStatusMsg status = new APIStatusMsg();
-            status.Error    = false;
-            status.MSG      = "Country Indicator Endpoint working";
-            response.Status = status;
-            
-            APIStatusMsg datasetStatus = CheckDataset(dataset);
-            if(datasetStatus.Error)
-            {
-                response.Status = datasetStatus;
-                return await SerializeJSON(response);
-            }
-
-            APIStatusMsg countryStatus = CheckCountry(dataset, country);
-            if(countryStatus.Error)
-            {
-                response.Status = countryStatus;
-                return await SerializeJSON(response);
-            }
-
-            APIStatusMsg indicatorStatus = await CheckIndicator(dataset, country, indicator);
-            if(indicatorStatus.Error)
-            {
-                response.Status = countryStatus;
-                return await SerializeJSON(response);
-            }
-
-            string indicator_url         = $"{URL_ROOT}/api/econdata/getMetricDataC/{indicator}/{country}/";
-            string indicator_rep         = await HTTP_Request(indicator_url);
-            CountryIndicator c_indicator = JsonConvert.DeserializeObject<CountryIndicator>(indicator_rep);
-
-            //now convert dict to list
-            Dictionary<string, string> dataDict = c_indicator.DataDict;
-            List<string> keys                   = new List<string>(dataDict.Keys);
-            List<IndicatorData> data     = new List<IndicatorData>();
-            for(int i = 0; i < keys.Count; i++)
-            {
-                string key = keys[i];
-                string val = dataDict[key];
-
-                IndicatorData _data = new IndicatorData();
-                _data.Date  = key;
-                _data.Value = val;
-                if(_data.Value != null)
-                    data.Add(_data);
-            }
-
-            response.ISO3       = country;
-            response.FullName   = c_indicator.FullName;
-            response.IND3       = indicator;
-            response.SimpleName = c_indicator.SimpleName;
-            response.data       = data; 
-
-            return await SerializeJSON(response);
+            return status;
         }
     }
 }

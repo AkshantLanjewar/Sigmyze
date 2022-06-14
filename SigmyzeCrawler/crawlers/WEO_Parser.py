@@ -4,6 +4,8 @@ import json
 from pymongo import MongoClient
 import certifi
 
+from crawlers import WEO_Categories
+
 class WEO_Parser:
     def __init__(self) -> None:
         self.frame = pd.read_csv('./tmp/weo.xls', index_col=0, sep='\t', encoding='utf-16-le')
@@ -22,11 +24,15 @@ class WEO_Parser:
         db     = client.SigmyzeData
         col    = db['WEO']
 
+        categories_obj = WEO_Categories.weo_categories
+        categories     = list(categories_obj.keys())
+
         metadata = col.find_one({ "object_id": "metadata" })
         if metadata == None:
             metadata_obj = {
                 "object_id": "metadata",
-                "added_countries": self.added_countries
+                "added_countries": self.added_countries,
+                "categories": categories
             }
 
             col.insert_one(metadata_obj)
@@ -37,6 +43,19 @@ class WEO_Parser:
                 level_index  = next((i for i, item in enumerate(self.tmp) if item['object_id'] == country), -1)
                 midlevel_obj = self.tmp[level_index]
                 col.update_one({ "object_id": country }, { "$set": midlevel_obj }) 
+
+    def assign_category(self, indicator_id):
+        categories        = WEO_Categories.weo_categories
+        cat_list          = categories.keys()
+        assigned_category = "All"
+
+        for category in cat_list:
+            object_ids = categories[category]
+            if indicator_id in object_ids:
+                assigned_category = category
+
+        return assigned_category
+
     
     def parse(self) -> None:
         append_years = False
@@ -67,12 +86,18 @@ class WEO_Parser:
         iso_codes = col_dict['ISO']
         for i in range(len(iso_codes)):
             iso_code  = iso_codes[i]
-            fullname  = col_dict['Country'][i]
- 
+            if type(iso_code) != str:
+                continue
+
+            fullname      = col_dict['Country'][i]
+            indicator_id  = col_dict['WEO Subject Code'][i]
+            indicator_cat = self.assign_category(indicator_id)
+
             data_obj  = {
-                'indicator_id': col_dict['WEO Subject Code'][i],
+                'indicator_id': indicator_id,
                 'indicator_units': col_dict['Units'][i],
                 'indicator_name': col_dict['Subject Descriptor'][i],
+                'indicator_category': indicator_cat,
                 'indicator_data': []
             }
 

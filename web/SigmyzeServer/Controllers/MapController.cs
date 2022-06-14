@@ -4,8 +4,8 @@ using SigmyzeServer.Models.API;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using SigmyzeServer.Models.Maps;
-using System.Net;
-using System.IO;
+using SigmyzeServer.Services;
+using SigmyzeServer.Models.Data;
 
 namespace SigmyzeServer.Controllers
 {
@@ -17,22 +17,12 @@ namespace SigmyzeServer.Controllers
     {
         private string URL_ROOT = "http://34.66.146.203:8080";
         private List<string> datasets;
+        private readonly IDatasetMongoORM _datasetMongoORM;
 
-        public MapsController()
+        public MapsController(IDatasetMongoORM datasetMongoORM)
         {
-            string metadata_loc = "./metadata";
-            string?[] metadata_dirs = Directory.GetDirectories(metadata_loc).Select(Path.GetFileName).ToArray();
-            List<string> datasets   = new List<string>(metadata_dirs!);
-            this.datasets = datasets;
-        }
-
-        private async Task<IActionResult> SerializeJSON(object data)
-        {
-            string content = await Task.Run(() => JsonConvert.SerializeObject(data));
-            return Content(
-                content,
-                "application/json"
-            );
+            _datasetMongoORM = datasetMongoORM;
+            datasets         = _datasetMongoORM.GetDatasets();
         }
 
         [HttpGet]
@@ -57,74 +47,31 @@ namespace SigmyzeServer.Controllers
             return resp;
         }
 
-        [HttpGet("{dataset}/{ind3}")]
+        [HttpGet("{dataset}/{indicator_id}")]
         [MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetMapIndicator(string dataset, string ind3)
+        public async Task<IActionResult> GetMapIndicator(string dataset, string indicator_id)
         {
-            dataset = dataset.ToLower();
-            ind3    = ind3.ToUpper();
-
-            APIStatusMsg status = new APIStatusMsg();
-            status.Error        = false;
-            status.MSG          = "Map endpoint working";
-
+            dataset                  = dataset.ToUpper();
+            indicator_id             = indicator_id.ToUpper();
             GetMapIndicatorResp resp = new GetMapIndicatorResp();
-            resp.status              = status;
+            resp.status              = checkDataset(dataset);
 
-            //error checking
-            APIStatusMsg datasetStatus = CheckDataset(dataset);
-            if(datasetStatus.Error)
-            {
-                resp.status = datasetStatus;
-                return await SerializeJSON(resp);
-            }
+            List<DatasetObject> objects = _datasetMongoORM.ProcessedObjects(dataset);
+            List<EconomicData> p_out    = new List<EconomicData>();
 
-            APIStatusMsg indicatorStatus = await CheckIndicator(dataset, ind3);
-            if(indicatorStatus.Error)
-            {
-                resp.status = indicatorStatus;
-                return await SerializeJSON(resp);
-            }
-            
-            string country_str       = await ReadAllTextAsync($"./metadata/{dataset}/countries.json");
-            List<Country> countries  = JsonConvert.DeserializeObject<List<Country>>(country_str)!;
-            List<EconomicData> p_out = new List<EconomicData>();
+            Parallel.For(0, objects.Count, count => {
+                DatasetObject obj          = objects[count];
+                DatasetIndicator indicator = _datasetMongoORM.GetIndicator(dataset, obj.ObjectID, indicator_id);
 
-            Parallel.For(0, countries.Count, count => {
-                try
+                if(indicator.IndicatorData.Count > 0)
                 {
-                    Country country = countries[count];
-
-                    string req_url  = $"{URL_ROOT}/api/econdata/getMetricDataC/{ind3}/{country.ISO3}/";
-                    string req_rep  = Task.Run(async () => await HTTP_Request(req_url)).Result;
-                    CountryIndicator c_indicator = JsonConvert.DeserializeObject<CountryIndicator>(req_rep)!;
-                    List<IndicatorData> data     = new List<IndicatorData>();
-                    Dictionary<string, string> dataDict = c_indicator.DataDict;
-                    List<string> keys                   = new List<string>(dataDict.Keys);
-                    for(int i = 0; i < keys.Count; i++)
-                    {
-                        string key = keys[i];
-                        string val = dataDict[key];
-
-                        IndicatorData _data = new IndicatorData();
-                        _data.Date  = key;
-                        _data.Value = val;
-                        if(_data.Value != null)
-                            data.Add(_data);
-                    }   
-                
-
-                    float value          = float.Parse(data[data.Count - 1].Value);
+                    float value          = indicator.IndicatorData[indicator.IndicatorData.Count - 1].Value ?? 0;
                     EconomicData geoData = new EconomicData();
-                    
-                    geoData.IND3 = ind3;
-                    geoData.ISO3 = country.ISO3;
-                    geoData.VAL  = value;
+                    geoData.IndicatorID  = indicator_id;
+                    geoData.ObjectID     = obj.ObjectID;
+                    geoData.VAL          = value;
+
                     p_out.Add(geoData);
-                }
-                catch (System.Exception)
-                {
-                    
                 }
             });
 
@@ -132,79 +79,28 @@ namespace SigmyzeServer.Controllers
             return await SerializeJSON(resp);
         }
 
-        private static async Task<string> ReadAllTextAsync(string filePath)
-        {
-            var stringBuilder = new StringBuilder();
-            using (var fileStream = System.IO.File.OpenRead(filePath))
-            using (var streamReader = new StreamReader(fileStream))
-            {
-                string line = await streamReader.ReadLineAsync();
-                while(line != null)
-                {
-                    stringBuilder.Append(line);
-                    line = await streamReader.ReadLineAsync();
-                }
-
-                return stringBuilder.ToString();
-            }
-        }
-
-        private APIStatusMsg CheckDataset(string dataset)
+        private APIStatusMsg checkDataset(string dataset)
         {
             APIStatusMsg status = new APIStatusMsg();
-            string check = this.datasets.FirstOrDefault(x => x == dataset);
-            if(check == null) 
-            {
-                status.Error = true;
-                status.MSG   = "INVALID dataset";
-            }
-
-            return status;
-        }
-
-        private async Task<APIStatusMsg> CheckIndicator(string dataset, string ind3)
-        {
-            APIStatusMsg status  = new APIStatusMsg();
-            string indicator_loc = $"./metadata/{dataset}/indicators.json";
-            string indicator_str = await ReadAllTextAsync(indicator_loc);
-
-            List<IndicatorName> indicators = JsonConvert.DeserializeObject<List<IndicatorName>>(indicator_str)!;
-            bool check = true;
-            for(int i = 0; i < indicators.Count; i++)
-            {
-                IndicatorName indicator = indicators[i];
-                if(indicator.IND3 == ind3)
-                    check = false;
-            }
-
-            if(check)
-            {
-                status.Error = true;
-                status.MSG   = $"INVALID indicator";
-            }
-
-            return status;
-        }
-
-        private async Task<string> HTTP_Request(string url)
-        {
-            string val = await Task.Run<string>(() => 
-            {
-                string content = "";
-                WebRequest request   = WebRequest.Create(url);
-                WebResponse response = request.GetResponse();
-
-                using (Stream dataStream = response.GetResponseStream())
-                {
-                    StreamReader reader = new StreamReader(dataStream);
-                    content = reader.ReadToEnd();
-                } 
-
-                response.Close();
-                return content;
-            });
+            status.Error        = false;
+            status.MSG          = "Working";
             
-            return val;
+            if(!datasets.Contains(dataset))
+            {
+                status.Error = true;
+                status.MSG   = "Dataset DNE";
+            }
+
+            return status;
+        }
+
+        private async Task<IActionResult> SerializeJSON(object data)
+        {
+            string content = await Task.Run(() => JsonConvert.SerializeObject(data));
+            return Content(
+                content,
+                "application/json"
+            );
         }
     }
 }

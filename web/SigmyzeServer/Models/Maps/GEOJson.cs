@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace SigmyzeServer.Models.Maps
 {
     public class Geometry
@@ -28,8 +30,8 @@ namespace SigmyzeServer.Models.Maps
 
     public class EconomicData
     {
-        public string ISO3 { get; set; }
-        public string IND3 { get; set; }
-        public float VAL   { get; set; }
+        public string ObjectID { get; set; }
+        public string IndicatorID { get; set; }
+        public float VAL { get; set; }
     }
 }
