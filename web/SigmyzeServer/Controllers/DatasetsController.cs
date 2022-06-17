@@ -14,13 +14,18 @@ namespace SigmyzeServer.Controllers
     [ApiVersion("1.0")]
     public class DatasetsController : ControllerBase
     {
-        private List<string> _datasets;
+        private List<Dataset> _datasets;
+        private List<string> _datasetsStr;
         private readonly IDatasetMongoORM _datasetMongoORM;
 
         public DatasetsController(IDatasetMongoORM datasetMongoORM)
         {
             _datasetMongoORM = datasetMongoORM;
             _datasets        = _datasetMongoORM.GetDatasets();
+            _datasetsStr     = new List<string>();
+            
+            for(int i = 0; i < _datasets.Count; i++)
+                _datasetsStr.Add(_datasets[i].Name);
         }
 
         //endpoints
@@ -60,7 +65,7 @@ namespace SigmyzeServer.Controllers
             if(resp.Status.Error)
                 return await SerializeJSON(resp);
 
-            List<DatasetObject> objects = _datasetMongoORM.ProcessedObjects(dataset);
+            List<string> objects = await _datasetMongoORM.ProcessedObjects(dataset);
             resp.Objects                = objects;
             return await SerializeJSON(resp);
         }
@@ -75,7 +80,7 @@ namespace SigmyzeServer.Controllers
             if(resp.Status.Error)
                 return await SerializeJSON(resp);
 
-            resp.Categories = _datasetMongoORM.Categories(dataset);
+            resp.Categories = await _datasetMongoORM.Categories(dataset);
 
             return await SerializeJSON(resp);
         }
@@ -107,7 +112,7 @@ namespace SigmyzeServer.Controllers
             if(resp.Status.Error)
                 return await SerializeJSON(resp);
 
-            DatasetCollection obj                 = _datasetMongoORM.GetObject(dataset, object_id);
+            DatasetCollection obj                 = await _datasetMongoORM.GetObject(dataset, object_id);
             List<DatasetIndicator> obj_indicators = obj.Indicators;
             List<ObjectIndicator>  _objIndicators = new List<ObjectIndicator>();
 
@@ -147,14 +152,15 @@ namespace SigmyzeServer.Controllers
 
             DatasetObjectIndicator resp = new DatasetObjectIndicator();
             
+            
             resp.Status = await checkDataset(dataset);
             if(resp.Status.Error)
                 return await SerializeJSON(resp);
             resp.Status = await checkObject(dataset, object_id);
             if(resp.Status.Error)
                 return await SerializeJSON(resp);
-
-            DatasetIndicator indicator = _datasetMongoORM.GetIndicator(dataset, object_id, indicator_id);
+  
+            DatasetIndicator indicator = await _datasetMongoORM.GetIndicator(dataset, object_id, indicator_id);
             resp.Indicator             = indicator;
             return await SerializeJSON(resp);
         }
@@ -168,30 +174,13 @@ namespace SigmyzeServer.Controllers
             );
         }
 
-        private static async Task<string> ReadAllTextAsync(string filePath)
-        {
-            var stringBuilder = new StringBuilder();
-            using (var fileStream = System.IO.File.OpenRead(filePath))
-            using (var streamReader = new StreamReader(fileStream))
-            {
-                string line = await streamReader.ReadLineAsync();
-                while(line != null)
-                {
-                    stringBuilder.Append(line);
-                    line = await streamReader.ReadLineAsync();
-                }
-
-                return stringBuilder.ToString();
-            }
-        }
-
         private async Task<APIStatusMsg> checkDataset(string dataset)
         {
             APIStatusMsg status = new APIStatusMsg();
             status.Error        = false;
             status.MSG          = "Working";
             
-            if(!_datasets.Contains(dataset))
+            if(!_datasetsStr.Contains(dataset))
             {
                 status.Error = true;
                 status.MSG   = "Dataset DNE";
@@ -206,8 +195,8 @@ namespace SigmyzeServer.Controllers
             status.Error = false;
             status.MSG   = "Working";
 
-            List<DatasetObject> objects = _datasetMongoORM.ProcessedObjects(dataset);
-            int object_index            = objects.FindIndex(x => x.ObjectID == object_id);
+            List<string> objects = await _datasetMongoORM.ProcessedObjects(dataset);
+            int object_index = objects.FindIndex(x => x == dataset);
             if(object_index < 0)
             {
                 status.Error = false;

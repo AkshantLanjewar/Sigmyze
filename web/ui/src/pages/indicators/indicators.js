@@ -16,9 +16,7 @@ import { BsBox } from 'react-icons/bs'
 
 import useStyles from "./indicators.styles"
 
-import IMFSeal from '../../assets/imf.png'
-
-import { GetDatasets } from "../../data/backend/datasets"
+import { GetDatasets } from "../../data/server-interface"
 import { 
     Logo_Table,
     Datasets_Table 

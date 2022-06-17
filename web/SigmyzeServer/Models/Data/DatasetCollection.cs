@@ -16,8 +16,20 @@ namespace SigmyzeServer.Models.Data
         [BsonElement("object_fullname")]
         public string ObjectFullname { get; set; }
 
+        [BsonElement("object_logo")]
+        public string ObjectLogo { get; set; } 
+
         [BsonElement("indicators")]
         public List<DatasetIndicator> Indicators { get; set; }
+
+        [BsonElement("added_countries")]
+        public List<string>? AddedObjects { get; set; }
+
+        [BsonElement("categories")]
+        public List<string>? Categories { get; set; }
+
+        [BsonElement("logo")]
+        public string? Logo { get; set; }
     }
 
     public class DatasetIndicator

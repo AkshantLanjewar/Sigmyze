@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import useStyles from "./chart.styles"
 
 import { useMantineTheme } from "@mantine/core"
-import { GetIndicator } from '../../../data/backend/datasets'
+import { GetIndicator } from '../../../data/server-interface'
 
 import BuildChart, { ProcessData } from "./chart-backend"
 import * as am5 from "@amcharts/amcharts5"

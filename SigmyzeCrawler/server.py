@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 import os
 
-from crawlers import WEO_Parser
+from crawlers.WEO import WEO_Parser
 
 app = Flask(__name__)
 

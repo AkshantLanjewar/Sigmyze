@@ -16,13 +16,18 @@ namespace SigmyzeServer.Controllers
     public class MapsController : ControllerBase
     {
         private string URL_ROOT = "http://34.66.146.203:8080";
-        private List<string> datasets;
+        private List<Dataset> datasets;
+        private List<string> _datasetsStr;
         private readonly IDatasetMongoORM _datasetMongoORM;
 
         public MapsController(IDatasetMongoORM datasetMongoORM)
         {
             _datasetMongoORM = datasetMongoORM;
             datasets         = _datasetMongoORM.GetDatasets();
+            _datasetsStr     = new List<string>();
+
+            for(int i = 0; i < datasets.Count; i++)
+                _datasetsStr.Add(datasets[i].Name);
         }
 
         [HttpGet]
@@ -56,19 +61,19 @@ namespace SigmyzeServer.Controllers
             GetMapIndicatorResp resp = new GetMapIndicatorResp();
             resp.status              = checkDataset(dataset);
 
-            List<DatasetObject> objects = _datasetMongoORM.ProcessedObjects(dataset);
+            List<string> objects = await _datasetMongoORM.ProcessedObjects(dataset);
             List<EconomicData> p_out    = new List<EconomicData>();
 
-            Parallel.For(0, objects.Count, count => {
-                DatasetObject obj          = objects[count];
-                DatasetIndicator indicator = _datasetMongoORM.GetIndicator(dataset, obj.ObjectID, indicator_id);
+            Parallel.For(0, objects.Count, async count => {
+                string obj_id              = objects[count];
+                DatasetIndicator indicator = await _datasetMongoORM.GetIndicator(dataset, obj_id, indicator_id);
 
                 if(indicator.IndicatorData.Count > 0)
                 {
                     float value          = indicator.IndicatorData[indicator.IndicatorData.Count - 1].Value ?? 0;
                     EconomicData geoData = new EconomicData();
                     geoData.IndicatorID  = indicator_id;
-                    geoData.ObjectID     = obj.ObjectID;
+                    geoData.ObjectID     = obj_id;
                     geoData.VAL          = value;
 
                     p_out.Add(geoData);
@@ -85,7 +90,7 @@ namespace SigmyzeServer.Controllers
             status.Error        = false;
             status.MSG          = "Working";
             
-            if(!datasets.Contains(dataset))
+            if(!_datasetsStr.Contains(dataset))
             {
                 status.Error = true;
                 status.MSG   = "Dataset DNE";

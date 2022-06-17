@@ -1,73 +1,81 @@
 using MongoDB.Driver;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+
+using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Data;
 
 namespace SigmyzeServer.Services
 {
     public interface IDatasetMongoORM
     {
-        List<string> GetDatasets();
-        List<DatasetObject> ProcessedObjects(string dataset);
-        DatasetIndicator GetIndicator(string dataset, string object_id, string indicator_id);
-        DatasetCollection GetObject(string dataset, string object_id);
-        List<string> Categories(string dataset);
+        List<Dataset> GetDatasets();
+        Task<List<string>> ProcessedObjects(string dataset);
+        Task<DatasetIndicator> GetIndicator(string dataset, string object_id, string indicator_id);
+        Task<DatasetCollection> GetObject(string dataset, string object_id);
+        Task<List<string>> Categories(string dataset);
     }
     public class DatasetMongoORM : IDatasetMongoORM
     {
-        private List<string> _datasets;
+        private List<Dataset> _datasets;
+        private Dictionary<string, IMongoCollection<BsonDocument>> _collectionMap;
+        private Dictionary<string, IMongoCollection<DatasetCollection>> _collectionObjMap;
         private IMongoDatabase _database;
 
         public DatasetMongoORM()
         {
-            var mongoClient = new MongoClient("mongodb+srv://root:root@cluster0.sbwn1.mongodb.net");
+            var mongoClient   = new MongoClient("mongodb+srv://root:root@cluster0.sbwn1.mongodb.net");
             var mongoDatabase = mongoClient.GetDatabase("SigmyzeData");
+            _collectionMap    = new Dictionary<string, IMongoCollection<BsonDocument>>();
+            _collectionObjMap = new Dictionary<string, IMongoCollection<DatasetCollection>>();
 
-            List<string> datasets = new List<string>();
+            List<Dataset> datasets = new List<Dataset>();
             foreach(BsonDocument collection in mongoDatabase.ListCollectionsAsync().Result.ToListAsync<BsonDocument>().Result)
             {
                 string name = collection["name"].AsString;
-                datasets.Add(name);
+                IMongoCollection<BsonDocument> col            = mongoDatabase.GetCollection<BsonDocument>(name);
+                IMongoCollection<DatasetCollection> mappedCol = mongoDatabase.GetCollection<DatasetCollection>(name);
+
+                var keys  = Builders<BsonDocument>.IndexKeys.Ascending("object_id");
+                var mKeys = Builders<DatasetCollection>.IndexKeys.Ascending(obj => obj.ObjectID); 
+
+                col.Indexes.CreateOne(keys);
+                mappedCol.Indexes.CreateOne(mKeys);
+
+                BsonDocument metadata = col.Find(Builders<BsonDocument>.Filter.Eq("object_id", "metadata")).FirstOrDefault();
+
+                Dataset _dataset = new Dataset();
+                _dataset.Name    = name;
+                _dataset.Logo    = metadata["logo"].AsString;
+
+                _collectionMap.Add(_dataset.Name, col);
+                _collectionObjMap.Add(_dataset.Name, mappedCol);
+                datasets.Add(_dataset);
             }
 
             _datasets = datasets;
             _database = mongoDatabase;
         }
 
-        public List<string> GetDatasets()
+        public List<Dataset> GetDatasets()
         {
             return _datasets;
         }
 
-        public List<DatasetObject> ProcessedObjects(string dataset)
+        public async Task<List<string>> ProcessedObjects(string dataset)
         {
-            List<DatasetObject> objects = new List<DatasetObject>();
-            IMongoCollection<BsonDocument> collection = _database.GetCollection<BsonDocument>(dataset);
-            List<BsonDocument> documents = collection.Find(new BsonDocument()).ToList();
+            List<DatasetObject> objects                    = new List<DatasetObject>();
+            IMongoCollection<DatasetCollection> collection = _collectionObjMap[dataset];
+            DatasetCollection document                     = await collection.Find(x => x.ObjectID == "metadata").FirstOrDefaultAsync();
 
-            for(int i = 0; i < documents.Count; i++)
-            {
-                BsonDocument document  = documents[i];
-
-                string object_id       = document["object_id"].AsString;
-                if(object_id == "metadata")
-                    continue;
-                string object_fullname = document["object_fullname"].AsString;
-
-                DatasetObject obj = new DatasetObject();
-                obj.ObjectID = object_id;
-                obj.ObjectFullname = object_fullname;
-                objects.Add(obj);
-            }
-
-            return objects;
+            return document.AddedObjects;
         }
 
-        public List<string> Categories(string dataset)
+        public async Task<List<string>> Categories(string dataset)
         {
-            List<string> categories = new List<string>();
-            IMongoCollection<BsonDocument> collection = _database.GetCollection<BsonDocument>(dataset);
-            BsonDocument metadataDocument = collection.Find(Builders<BsonDocument>.Filter.Eq("object_id", "metadata")).FirstOrDefault();
+            List<string> categories                   = new List<string>();
+            IMongoCollection<BsonDocument> collection = _collectionMap[dataset];
+            BsonDocument metadataDocument =  await collection.Find(Builders<BsonDocument>.Filter.Eq("object_id", "metadata")).FirstOrDefaultAsync();
 
             List<BsonValue> bsonCategories = metadataDocument["categories"].AsBsonArray.ToList();
             for(int i = 0; i < bsonCategories.Count; i++)
@@ -76,20 +84,20 @@ namespace SigmyzeServer.Services
             return categories;
         }
 
-        public DatasetCollection GetObject(string dataset, string object_id)
+        public async Task<DatasetCollection> GetObject(string dataset, string object_id)
         {
-            IMongoCollection<BsonDocument> collection = _database.GetCollection<BsonDocument>(dataset);
-            BsonDocument document                     = collection.Find(Builders<BsonDocument>.Filter.Eq("object_id", object_id)).FirstOrDefault();
+            IMongoCollection<BsonDocument> collection = _collectionMap[dataset];
+            BsonDocument document                     = await collection.Find(Builders<BsonDocument>.Filter.Eq("object_id", object_id)).FirstOrDefaultAsync();
 
             DatasetCollection obj = BsonSerializer.Deserialize<DatasetCollection>(document);
             return obj;
         }
 
-        public DatasetIndicator GetIndicator(string dataset, string object_id, string indicator_id)
+        public async Task<DatasetIndicator> GetIndicator(string dataset, string object_id, string indicator_id)
         {
             DatasetIndicator indicator_object = new DatasetIndicator();
-            IMongoCollection<DatasetCollection> collection = _database.GetCollection<DatasetCollection>(dataset);
-            DatasetCollection document = collection.Find(x => x.ObjectID == object_id).FirstOrDefault();
+            IMongoCollection<DatasetCollection> collection = _collectionObjMap[dataset];
+            DatasetCollection document = await collection.Find(x => x.ObjectID == object_id).FirstOrDefaultAsync();
 
             for(int i = 0; i < document.Indicators.Count; i++)
             {

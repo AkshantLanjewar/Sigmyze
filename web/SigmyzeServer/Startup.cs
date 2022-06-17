@@ -47,6 +47,7 @@ namespace SigmyzeServer
             //add authentication
             services.AddSingleton<IUserAuth, AuthService>();
             services.AddSingleton<IDatasetMongoORM, DatasetMongoORM>();
+            
             services.AddTransient<IHashService, HashService>();
             services.AddSingleton<IEmailService, EmailService>();
 

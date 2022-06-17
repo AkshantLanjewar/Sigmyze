@@ -27,11 +27,11 @@ import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 
 import { 
-    GetCountries,
+    GetObjects,
     GetIndicators,
     GetIndicator,
     GetCategories
-} from '../../data/backend/datasets'
+} from '../../data/server-interface'
 
 import  ParseWEOData from '../../data/backend/weo-data'
 import * as getCountryISO2 from 'country-iso-3-to-2'
@@ -42,7 +42,7 @@ function RandomElement(list) {
 }
 
 async function SelectRandomIndicator(dataset) {
-    let countries = await GetCountries(dataset)
+    let countries = await GetObjects(dataset)
     countries     = countries['countries']
     let country   = RandomElement(countries)
 
@@ -91,7 +91,7 @@ async function SelectIndicatorsCategory(dataset, country, category) {
 }
 
 async function FetchCountries(dataset) {
-    let countries = await GetCountries(dataset)
+    let countries = await GetObjects(dataset)
     countries     = countries['countries']
     let full_c    = []
 

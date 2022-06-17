@@ -11,7 +11,7 @@ import {
 } from "@mantine/core"
 
 import { connect } from 'react-redux'
-import { GetIndicator } from "../../../../data/backend/datasets"
+import { GetIndicator } from "../../../../data/server-interface"
 import { RemoveLunarIndicator } from "../../../../data/actions/lunarActions"
 
 const Layers = ({ indicators, remove_indicator }) => {

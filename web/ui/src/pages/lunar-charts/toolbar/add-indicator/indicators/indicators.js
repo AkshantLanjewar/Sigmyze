@@ -17,16 +17,16 @@ import AutoComplete from "./country-autocomplete"
 import IndicatorView from "./indicator-view"
 
 import { 
-    GetCountries,
+    GetObjects,
     GetCategories 
-} from "../../../../../data/backend/datasets"
+} from "../../../../../data/server-interface"
 import * as getCountryISO2 from 'country-iso-3-to-2'
 
 import ICON_DICT from '../../../../../assets/category-icons'
 import { MdAllInclusive } from 'react-icons/md'
 
 async function FetchCountries(dataset) {
-    let countries = await GetCountries(dataset)
+    let countries = await GetObjects(dataset)
     countries     = countries['countries']
     let full_c    = []
 

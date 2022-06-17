@@ -3,13 +3,30 @@ using SigmyzeServer.Models.Data;
 
 namespace SigmyzeServer.Models.API
 {
+    public class Dataset
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("logo")]
+        public string Logo { get; set; } 
+    }
+    public class DatasetsResponse
+    {
+        [JsonProperty("status")]
+        public APIStatusMsg Status { get; set; }
+
+        [JsonProperty("datasets")]
+        public List<Dataset> Datasets { get; set; }
+    }
+
     public class DatasetObjectResponse
     {
         [JsonProperty("status")]
         public APIStatusMsg Status { get; set; }
 
         [JsonProperty("objects")]
-        public List<DatasetObject> Objects { get; set; }
+        public List<string> Objects { get; set; }
     }
 
     public class DatasetObjectIndicators

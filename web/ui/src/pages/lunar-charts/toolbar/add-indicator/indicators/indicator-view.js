@@ -8,7 +8,7 @@ import {
     Autocomplete
 } from "@mantine/core"
 
-import { GetIndicator, GetIndicators } from "../../../../../data/backend/datasets"
+import { GetIndicator, GetIndicators } from "../../../../../data/server-interface"
 import { v4 as uuidv4 } from 'uuid'
 import ChartCard from "../../../../../components/app/chart-card/chart-card"
 import ParseWEOData from "../../../../../data/backend/weo-data"

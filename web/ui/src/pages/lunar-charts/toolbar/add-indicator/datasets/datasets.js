@@ -16,7 +16,7 @@ import {
     Datasets_Table 
 } from "../../../../../data/backend/weo-data"
 
-import { GetDatasets } from "../../../../../data/backend/datasets"
+import { GetDatasets } from "../../../../../data/server-interface"
 
 const DatasetView = ({ setDataset, activeDataset }) => {
     const { classes }               = useStyles()
