@@ -15,7 +15,7 @@ weo_categories = {
 		"PPPPC",
 		"PPPSH"
     ],
-    "GOVT": [
+    "GovtFinance": [
 		"BCA",
 		"BCA_NGDPD",
 		"FLIBOR6",
@@ -35,7 +35,7 @@ weo_categories = {
 		"GGXWDN_NGDP",
 		"FLIBOR3"
     ],
-    "INVEST": [
+    "Investment": [
 		"NGSD_NGDP",
 		"NID_NGDP",
 		"PCPI",
@@ -44,13 +44,13 @@ weo_categories = {
 		"PCPIPCH",
 		"PPPEX"
     ],
-    "TRADE":[
+    "Trade":[
 		"TM_RPCH",
 		"TMG_RPCH",
 		"TX_RPCH",
 		"TXG_RPCH"
     ],
-    "PEOPLE":[
+    "People":[
 		"LE",
 		"LP",
 		"LUR"

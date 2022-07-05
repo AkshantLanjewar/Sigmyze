@@ -64,9 +64,9 @@ namespace SigmyzeServer.Controllers
             List<string> objects = await _datasetMongoORM.ProcessedObjects(dataset);
             List<EconomicData> p_out    = new List<EconomicData>();
 
-            Parallel.For(0, objects.Count, async count => {
+            Parallel.For(0, objects.Count, count => {
                 string obj_id              = objects[count];
-                DatasetIndicator indicator = await _datasetMongoORM.GetIndicator(dataset, obj_id, indicator_id);
+                DatasetIndicator indicator = _datasetMongoORM.GetIndicator(dataset, obj_id, indicator_id).GetAwaiter().GetResult();
 
                 if(indicator.IndicatorData.Count > 0)
                 {

@@ -61,6 +61,7 @@ class WEO_Parser:
             if indicator_id in object_ids:
                 assigned_category = category
 
+        print(assigned_category)
         return assigned_category
 
     

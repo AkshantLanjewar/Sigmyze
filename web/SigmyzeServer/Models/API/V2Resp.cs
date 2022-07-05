@@ -26,7 +26,7 @@ namespace SigmyzeServer.Models.API
         public APIStatusMsg Status { get; set; }
 
         [JsonProperty("objects")]
-        public List<string> Objects { get; set; }
+        public List<DatasetObject> Objects { get; set; }
     }
 
     public class DatasetObjectIndicators

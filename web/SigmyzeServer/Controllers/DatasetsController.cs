@@ -65,8 +65,7 @@ namespace SigmyzeServer.Controllers
             if(resp.Status.Error)
                 return await SerializeJSON(resp);
 
-            List<string> objects = await _datasetMongoORM.ProcessedObjects(dataset);
-            resp.Objects                = objects;
+            resp.Objects = await _datasetMongoORM.ProcessedObjectsDetailed(dataset);
             return await SerializeJSON(resp);
         }
 
@@ -121,7 +120,7 @@ namespace SigmyzeServer.Controllers
                 DatasetIndicator _indicator = obj_indicators[i];
                 ObjectIndicator indicator   = new ObjectIndicator();
 
-                indicator.Category          = "All";
+                indicator.Category          = _indicator.IndicatorCategory;
                 indicator.IndicatorFullname = _indicator.IndicatorName;
                 indicator.IndicatorID       = _indicator.IndicatorID;
                 _objIndicators.Add(indicator);

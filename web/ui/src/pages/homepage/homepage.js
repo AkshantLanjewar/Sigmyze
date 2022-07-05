@@ -110,8 +110,8 @@ const Homepage = ({ userModalAction, user }) => {
                             >
                                 {chartData.map((step) => (
                                     <ChartCard 
-                                        title={`${step.object.object_fullname} ${step.indicator.fullname}`}
-                                        description={`${step.object.object_id}: ${step.indicator.ind3}`}
+                                        title={`${step.object.object_fullname} ${step.indicator.indicator_fullname}`}
+                                        description={`${step.object.object_id}: ${step.indicator.indicator_id}`}
                                         data={step.data}
                                     />
                                 ))}

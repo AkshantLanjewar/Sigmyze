@@ -20,28 +20,30 @@ import {
     GetObjects,
     GetCategories 
 } from "../../../../../data/server-interface"
-import * as getCountryISO2 from 'country-iso-3-to-2'
 
 import ICON_DICT from '../../../../../assets/category-icons'
 import { MdAllInclusive } from 'react-icons/md'
 
 async function FetchCountries(dataset) {
-    let countries = await GetObjects(dataset)
-    countries     = countries['countries']
-    let full_c    = []
+    let objects = await GetObjects(dataset)
+    objects     = objects['objects']
+    let full_o  = []
 
 
-    for(let i = 0; i < countries.length; i++) {
-        let country       = countries[i]
-        country['iso2']   = getCountryISO2(country.iso3)
-        country['image']  = process.env.PUBLIC_URL + `/country/${country['iso2']}.svg`
-        country['active'] = false
-        country['value']  = country['name']
+    for(let i = 0; i < objects.length; i++) {
+        let obj = objects[i]
 
-        full_c.push(country)
+        obj['obj']    = obj['object_id']
+        obj['logo']   = obj['object_logo']
+        obj['name']   = obj['object_fullname']
+        obj['active'] = false
+        obj['value']  = obj['name']
+        obj['image']  = obj['object_logo']
+
+        full_o.push(obj)
     }
 
-    return full_c
+    return full_o
 }
 
 async function FetchCategories(dataset) {
@@ -65,7 +67,7 @@ const Indicators = ({ dataset, setIndicator }) => {
     const { classes } = useStyles()
     const [countries, setCountries] = useState([])
     const [categories, setCategories] = useState([])
-    const [activeCountry, setActiveCountry] = useState({ iso3: 'USA', name: "United States" })
+    const [activeCountry, setActiveCountry] = useState({ object_id: 'USA', object_fullname: "United States" })
 
     async function main() {
         let country = await FetchCountries(dataset)

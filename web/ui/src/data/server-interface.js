@@ -29,7 +29,29 @@ async function GetDatasets() {
 }
 
 async function GetCategories(dataset) {
+    let db  = await CreateDB()
+    let key = dataset
+    let res = await db.get('ds_categories', key)
 
+    if(res == undefined) {
+        let url = `/api/v1/datasets/${dataset}/categories`
+        let rep = await (await fetch(url)).json()
+
+        let status = rep['status']
+        let data   = rep['categories']
+        if(status.error == false) {
+            const obj = {
+                categories: data
+            }
+
+            await db.put('ds_categories', obj, key)
+            return obj
+        } else {
+            HandleError(status)
+            return null
+        }
+    } else
+        return res
 }
 
 async function GetObjects(dataset) {

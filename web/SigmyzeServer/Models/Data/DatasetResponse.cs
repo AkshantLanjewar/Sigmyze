@@ -9,6 +9,9 @@ namespace SigmyzeServer.Models.Data
 
         [JsonProperty("object_fullname")]
         public string ObjectFullname { get; set; }
+
+        [JsonProperty("object_logo")]
+        public string ObjectLogo { get; set; }
     }
 
     public class ObjectIndicator 

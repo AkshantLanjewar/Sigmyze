@@ -14,6 +14,7 @@ namespace SigmyzeServer.Services
         Task<DatasetIndicator> GetIndicator(string dataset, string object_id, string indicator_id);
         Task<DatasetCollection> GetObject(string dataset, string object_id);
         Task<List<string>> Categories(string dataset);
+        Task<List<DatasetObject>> ProcessedObjectsDetailed(string dataset);
     }
     public class DatasetMongoORM : IDatasetMongoORM
     {
@@ -69,6 +70,28 @@ namespace SigmyzeServer.Services
             DatasetCollection document                     = await collection.Find(x => x.ObjectID == "metadata").FirstOrDefaultAsync();
 
             return document.AddedObjects;
+        }
+
+        public async Task<List<DatasetObject>> ProcessedObjectsDetailed(string dataset)
+        {
+            List<DatasetObject> objects                    = new List<DatasetObject>();
+            IMongoCollection<DatasetCollection> collection = _collectionObjMap[dataset];
+            List<DatasetCollection> documents              = await collection.Find(x => true).ToListAsync();
+
+            for(int i = 0; i < documents.Count; i++)
+            {
+                DatasetCollection document = documents[i];
+                if(document.ObjectID == "metadata")
+                    continue;
+
+                DatasetObject detailedObject  = new DatasetObject();
+                detailedObject.ObjectID       = document.ObjectID;
+                detailedObject.ObjectFullname = document.ObjectFullname;
+                detailedObject.ObjectLogo     = document.ObjectLogo;
+                objects.Add(detailedObject);
+            }
+
+            return objects;
         }
 
         public async Task<List<string>> Categories(string dataset)
