@@ -7,7 +7,7 @@ async function CreateDB() {
             let storeNames = db.objectStoreNames
             let keys       = []
             for(const x in storeNames)
-                keys.push(storeNames[x])
+                keys.push(storeNames[x]) 
 
             let datasetsStore, categoriesStore, countriesStore, indicatorStore, indicatorsStore, tileStore, mapStore
             if(!keys.includes('ds_datasets'))
