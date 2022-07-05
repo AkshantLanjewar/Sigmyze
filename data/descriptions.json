@@ -1,0 +1,10 @@
+{
+    "WEO": {
+        "desc": "Dataset includes 45+ economic indicators for 190+ countries and regions under 5 primary categories - GDP, Govt Finance, People, Trade and Investment. Savings and inflation are under Investment. Data for most countries is from 1980 through 2026.",
+        "fulltitle": "World Economic Outlook"
+    },
+    "COVID": {
+        "desc": "4 important Covid indicators at the national level for 190+ countries - Confirmed Cases (cumulative), Confirmed Deaths (Cumulative), New Cases (Daily), New Deaths (Daily). Data for most countries is from 1980 through 2026.",
+        "fulltitle": "COVID"
+    }
+}

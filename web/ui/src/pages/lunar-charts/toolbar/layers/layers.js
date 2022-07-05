@@ -11,41 +11,18 @@ import {
 } from "@mantine/core"
 
 import { connect } from 'react-redux'
-import { GetIndicator } from "../../../../data/server-interface"
+import { GetIndicator } from "../../../../data/backend/datasets"
 import { RemoveLunarIndicator } from "../../../../data/actions/lunarActions"
-
-/*
-    [COMPONENT] -> Layers
-
-    [param] indicators: list of indicators with barebones info
-        1. indicator_id
-        2. object_id
-        3. dataset
-    [param] remove_indicator: function that removes indicator based on 
-        1. indicator_id
-        2. object_id
-*/
 
 const Layers = ({ indicators, remove_indicator }) => {
     const { classes } = useStyles()
     const [items, setItems] = useState([])
 
-    /*
-        MAIN FUNCTION IN COMPONENT
-        [description] -> Grabs all the fine details of the indicators
-
-        [fetch] GetIndicator -> data: grabs all the fine details
-            1. indicator_id
-            2. object_id
-            3. indicator_name
-    */
-
     async function main() {
         let indicators_ = []
         for(let i = 0; i < indicators.length; i++) {
             let indicator = indicators[i]
-            let data      = await GetIndicator(indicator.dataset, indicator.object_id, indicator.indicator_id)
-            data['object_id'] = indicator.object_id
+            let data      = await GetIndicator(indicator.dataset, indicator.iso3, indicator.ind3)
             indicators_.push(data)
         }
 
@@ -56,7 +33,6 @@ const Layers = ({ indicators, remove_indicator }) => {
         main()
     }, [])
 
-    // update the main function every time the indicator list changes
     useEffect(() => {
         main()
     }, [indicators])
@@ -67,7 +43,7 @@ const Layers = ({ indicators, remove_indicator }) => {
                 <Tooltip 
                     position={"bottom"} 
                     withArrow 
-                    label={`${step.object_id}: ${step.indicator_name}`} 
+                    label={step.simpleName} 
                     sx={(theme) => ({  width: "100%", body: { backgroundColor: theme.colors.dark[9] } })}
                 >
                     <div className={classes.staticItem}>
@@ -76,13 +52,13 @@ const Layers = ({ indicators, remove_indicator }) => {
                                 <span className={classes.leftLine} />
                                 <AiOutlineAreaChart size={22} style={{ marginLeft: 5 }} />
                                 <Text weight={700} style={{ paddingTop: 2, maxHeight: "100%", overflow: "hidden", maxWidth: "80%" }}>
-                                    {step.indicator_id.toUpperCase()} : {step.object_id.toUpperCase()}
+                                    {step.iso3.toUpperCase()} {step.ind3.toUpperCase()}
                                 </Text>
                             </div>
                             <Menu>
                                 <Menu.Item 
                                     icon={<MdDelete />}
-                                    onClick={() => { remove_indicator(step.object_id.toUpperCase(), step.indicator_id.toUpperCase()) }}
+                                    onClick={() => { remove_indicator(step.iso3.toUpperCase(), step.ind3.toUpperCase()) }}
                                 >
                                     Delete
                                 </Menu.Item>

@@ -38,19 +38,17 @@ function SortDatasets(datasets: Array<ChartOptions>): SortDatasetsOutput {
                 output.max_date  = date
             }
 
-            if(value > output.max_value && !isNaN(value))
+            if(value > output.max_value)
                 output.max_value = value
-            if(value < output.min_value && !isNaN(value))
+            if(value < output.min_value)
                 output.min_value = value
-            if(date > output.max_date && !isNaN(value))
+            if(date > output.max_date)
                 output.max_date = date
-            if(date < output.min_date && !isNaN(value))
+            if(date < output.min_date)
                 output.min_date = date
         }
     }
 
-    output.min_date = new Date(output.min_date)
-    output.max_date = new Date(output.max_date)
     return output
 }
 
