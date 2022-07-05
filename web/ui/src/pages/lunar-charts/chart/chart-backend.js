@@ -3,11 +3,6 @@ import * as am5xy from "@amcharts/amcharts5/xy"
 
 import LunarTheme from "./theme"
 
-/*
-    BUILD CHART COMPONENT
-    [description] -> creates a am5 chart scaffold
-*/
-
 function BuildChart(theme) {
     let root = am5.Root.new("main-chart")
     root.setThemes([ LunarTheme.new(root) ])
@@ -87,15 +82,9 @@ function BuildChart(theme) {
 
 function ProcessData(uni) {
     let datas = []
-
     for(let i = 0; i < uni.length; i++) {
         let data = uni[i]
-        
-
-        let date = new Date(data['year'])
-        date.setDate(date.getDate() + 1)
-        data['date'] = date.getTime()
-
+        data['date'] = new Date(data['date'], 1).getTime()
         datas.push(data)
     }
 

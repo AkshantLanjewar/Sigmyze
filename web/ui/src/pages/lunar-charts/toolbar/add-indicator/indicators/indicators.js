@@ -17,33 +17,31 @@ import AutoComplete from "./country-autocomplete"
 import IndicatorView from "./indicator-view"
 
 import { 
-    GetObjects,
+    GetCountries,
     GetCategories 
-} from "../../../../../data/server-interface"
+} from "../../../../../data/backend/datasets"
+import * as getCountryISO2 from 'country-iso-3-to-2'
 
 import ICON_DICT from '../../../../../assets/category-icons'
 import { MdAllInclusive } from 'react-icons/md'
 
 async function FetchCountries(dataset) {
-    let objects = await GetObjects(dataset)
-    objects     = objects['objects']
-    let full_o  = []
+    let countries = await GetCountries(dataset)
+    countries     = countries['countries']
+    let full_c    = []
 
 
-    for(let i = 0; i < objects.length; i++) {
-        let obj = objects[i]
+    for(let i = 0; i < countries.length; i++) {
+        let country       = countries[i]
+        country['iso2']   = getCountryISO2(country.iso3)
+        country['image']  = process.env.PUBLIC_URL + `/country/${country['iso2']}.svg`
+        country['active'] = false
+        country['value']  = country['name']
 
-        obj['obj']    = obj['object_id']
-        obj['logo']   = obj['object_logo']
-        obj['name']   = obj['object_fullname']
-        obj['active'] = false
-        obj['value']  = obj['name']
-        obj['image']  = obj['object_logo']
-
-        full_o.push(obj)
+        full_c.push(country)
     }
 
-    return full_o
+    return full_c
 }
 
 async function FetchCategories(dataset) {
@@ -67,7 +65,7 @@ const Indicators = ({ dataset, setIndicator }) => {
     const { classes } = useStyles()
     const [countries, setCountries] = useState([])
     const [categories, setCategories] = useState([])
-    const [activeCountry, setActiveCountry] = useState({ object_id: 'USA', object_fullname: "United States" })
+    const [activeCountry, setActiveCountry] = useState({ iso3: 'USA', name: "United States" })
 
     async function main() {
         let country = await FetchCountries(dataset)
