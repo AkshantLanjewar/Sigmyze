@@ -17,84 +17,82 @@ import useStyles from './country-search.styles'
 
 // code FEHK51ECLSNAVTZSWHKS5YHE
 
-const CountrySearch = ({ dataset = "weo", countries = [], setActiveC }) => {
+const CountrySearch = ({ dataset = "weo", objects = [], setActiveC }) => {
     const { classes, cx } = useStyles()
     const inputRef    = React.createRef()
 
-    const [opened, setOpened]             = useState(false)
-    const [countries_v, setCountries]     = useState(countries)
-    const [countries_d, setCountries_D]   = useState(countries)
-    const [selected, setSelected]         = useState({ value: false, country: {  } })
+    const [opened, setOpened]      = useState(false)
+    const [objects_v, setObjects]  = useState(objects)
+    const [objects_d, setObjectsD] = useState(objects)
+    const [selected, setSelected]  = useState({ value: false, object: { logo: '', name: '' } })
 
-    function Reset() {
-        setCountries([...countries])
-        setCountries_D([...countries])
+    function reset() {
+        setObjects([...objects])
+        setObjectsD([...objects])
     }
 
     useEffect(() => {
-        //find the united states
-        let country = {}
-        for(let i = 0; i < countries.length; i++) {
-            let c = countries[i]
-            if(c.iso3 == "USA")
-                country = c
-        }
+        let defaultObject = objects[0]
+        if(objects.length == 0)
+            return
 
-        Reset()
-        setSelected({ value: false, country: country })
-        if(countries.length != 0)
-            setActiveC(country)
-    }, [countries])
+        reset()
+        setSelected({ value: false, object: defaultObject })
+
+        if(objects.length != 0)
+            setActiveC(defaultObject)
+    }, [objects])
 
     useEffect(() => {
-        Reset()
+        reset()
     }, [opened])
 
     function onKeyUp(e) {
         if(e !== undefined)
             e.preventDefault()
-        let currentInput  = inputRef.current.value.toLowerCase()
-        
+        let currentInput = inputRef.current.value.toLowerCase()
+
         let steps = []
-        for(let i = 0; i < countries_d.length; i++) {
+        for(let i = 0; i < objects_d.length; i++) {
             let word = currentInput.split(" ")[currentInput.split(" ").length - 1]
             if(word == undefined)
                 continue
 
-            let step = countries_d[i]
+            let step = objects_d[i]
             let sub  = step.name.substring(0, word.length).toLowerCase()
-
             if(word == sub)
                 steps.push(step)
         }
 
-        setCountries([...steps])
+        setObjects([...steps])
     }
 
-    function onCountryClick(iso2) {
+    function onCountryClick(object_id) {
         let steps = []
         let c     = {}
 
-        for(let i = 0; i < countries_d.length; i++) {
-            let country = countries[i]
-            country['active'] = false
-            if(country['iso2'] == iso2) {
-                country['active'] = true
-                c = country
+        for(let i = 0; i < objects_d.length; i++) {
+            let object = objects[i]
+            object['active'] = false
+
+            if(object['object_id'] == object_id) {
+                object['active'] = true
+                c = object
             }
 
-            steps.push(country)
+            steps.push(object)
         }
 
-        setCountries_D([...steps])
-        setSelected({ value: true, country: c })
+        setObjectsD([...steps])
+        setSelected({ value: true, object: c })
         onKeyUp()
     }
 
-    function Submit() {
-        let country = selected.country
+    function Submit() { 
+        let object = selected.object
+        
         if(setActiveC !== undefined)
-            setActiveC(country)
+            setActiveC(object)
         setOpened(false)
     }
 
@@ -102,8 +100,8 @@ const CountrySearch = ({ dataset = "weo", countries = [], setActiveC }) => {
         <div>
             <UnstyledButton className={classes.search} onClick={() => { setOpened(true) }}>
                 <Group>
-                    <img width={24} height={16} src={selected.country.logo} />
-                    <Text size={"md"}>{selected.country.name}</Text>
+                    <img width={24} height={16} src={`data:image/svg+xml;base64,${selected.object.logo}`} />
+                    <Text size={"md"}>{selected.object.name}</Text>
                 </Group>
             </UnstyledButton>
 
@@ -121,7 +119,7 @@ const CountrySearch = ({ dataset = "weo", countries = [], setActiveC }) => {
                 })}
             >
                 <TextInput
-                    placeholder='Search Countries'
+                    placeholder='Search Objects in Dataset'
                     icon={<AiOutlineSearch size={18} />}
                     autoFocus
                     className={classes.input}
@@ -133,15 +131,15 @@ const CountrySearch = ({ dataset = "weo", countries = [], setActiveC }) => {
                     <div className={classes.countries}>
                         <ScrollArea style={{ height: "55vh" }}>
                             <Stack style={{ gap: 0 }}>
-                                {countries_v.map((step) => (
+                                {objects_v.map((step) => (
                                     <UnstyledButton 
                                         className={cx(classes.country, { "active": step.active })} 
-                                        key={`${step.iso2}`} 
-                                        onClick={() => { onCountryClick(step.iso2) }}
+                                        key={`${step.object_id}`} 
+                                        onClick={() => { onCountryClick(step.object_id) }}
                                     >
                                         <Group align={"center"}>
-                                            <img width={24} height={16} src={step.logo} />
-                                            <Text size={"md"}>{step.name}</Text>
+                                            <img width={24} height={16} src={`data:image/svg+xml;base64,${step.logo}`} />
+                                            <Text size={"md"}>{step.object_fullname}</Text>
                                         </Group>
                                     </UnstyledButton>
                                 ))}

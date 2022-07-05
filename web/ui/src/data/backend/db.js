@@ -1,7 +1,7 @@
 import { openDB } from 'idb/with-async-ittr'
 
 async function CreateDB() {
-    const db = await openDB('sigmyze', 3, {
+    const db = await openDB('sigmyze', 4, {
         upgrade(db) {
             //create stores
             let storeNames = db.objectStoreNames
@@ -24,6 +24,8 @@ async function CreateDB() {
                 tileStore = db.createObjectStore("map_tiles")
             if(!keys.includes('map_data'))
                 mapStore = db.createObjectStore('map_data')
+            if(!keys.includes('ds_objects'))
+                db.createObjectStore('ds_objects')
         }
     })
 

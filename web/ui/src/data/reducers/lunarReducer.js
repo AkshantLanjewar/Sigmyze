@@ -14,7 +14,9 @@ export default (state = default_state, action) => {
             let i_indicators = []
             for(let i = 0; i < indicators.length; i++) {
                 let indicator = indicators[i]
-                if(indicator.iso3 == payload.iso3 && indicator.ind3 == payload.ind3)
+                console.log(payload)
+
+                if(indicator.object_id == payload.object_id && indicator.indicator_id == payload.indicator_id)
                     continue
                 i_indicators.push(indicator)
             }

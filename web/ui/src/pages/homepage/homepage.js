@@ -19,9 +19,9 @@ import { userModalAction } from "../../data/actions/userActions"
 import { 
     GetDatasets,
     GetIndicators,
-    GetCountries,
+    GetObjects,
     GetIndicator
-} from "../../data/backend/datasets"
+} from "../../data/server-interface"
 import ParseWEOData from "../../data/backend/weo-data"
 
 function RandomElement(list) {
@@ -34,22 +34,25 @@ async function GrabChartData() {
     datasets     = datasets['datasets']
     let dataset  = RandomElement(datasets)
     
-    let countries = await GetCountries(dataset)
-    countries     = countries['countries']
-    let country   = RandomElement(countries)
+    let objects = await GetObjects(dataset['name'])
+    objects     = objects['objects']
+    let object  = RandomElement(objects)
 
-    let indicators = await GetIndicators(dataset, country['iso3'])
+    let indicators = await GetIndicators(dataset['name'], object['object_id'])
     indicators     = indicators['indicators']
     if(indicators.length == 0)
         return GrabChartData()
 
     let indicator  = RandomElement(indicators)
-    let data = await GetIndicator(dataset, country['iso3'], indicator['ind3'])
+    let data = await GetIndicator(dataset['name'], object['object_id'], indicator['indicator_id'])
+    data = ParseWEOData(data['indicator_data'])
+    if(data.length == 0)
+        return GrabChartData()
 
     return {
-        data: ParseWEOData(data['data']),
+        data: data,
         indicator: indicator,
-        country: country
+        object: object
     }
 }
 
@@ -60,6 +63,7 @@ const Homepage = ({ userModalAction, user }) => {
         let chart_data = []
         for(let i = 0; i < 3; i++)
             chart_data.push(await GrabChartData())
+
         setChartData([...chart_data])
     }
 
@@ -82,8 +86,8 @@ const Homepage = ({ userModalAction, user }) => {
                         <div className="actions">
                             {user.userState == "signedout"
                                 ? <Button radius={"sm"} size={"sm"} onClick={() => { userModalAction(true) }}>
-                                    Get Started
-                                </Button>
+                                      Get Started
+                                  </Button>
 
                                 : null
                             }
@@ -106,8 +110,8 @@ const Homepage = ({ userModalAction, user }) => {
                             >
                                 {chartData.map((step) => (
                                     <ChartCard 
-                                        title={`${step.country.name} ${step.indicator.fullname}`}
-                                        description={`${step.country.iso3}: ${step.indicator.ind3}`}
+                                        title={`${step.object.object_fullname} ${step.indicator.indicator_fullname}`}
+                                        description={`${step.object.object_id}: ${step.indicator.indicator_id}`}
                                         data={step.data}
                                     />
                                 ))}

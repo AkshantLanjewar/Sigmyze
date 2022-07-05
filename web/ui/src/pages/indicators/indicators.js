@@ -16,11 +16,8 @@ import { BsBox } from 'react-icons/bs'
 
 import useStyles from "./indicators.styles"
 
-import IMFSeal from '../../assets/imf.png'
-
-import { GetDatasets } from "../../data/backend/datasets"
+import { GetDatasets } from "../../data/server-interface"
 import { 
-    Logo_Table,
     Datasets_Table 
 } from "../../data/backend/weo-data"
 
@@ -78,19 +75,19 @@ const Resources = ({  }) => {
                             ]}
                         >
                             {datasets.map((step) => (
-                                <Card className={classes.card} radius={"md"} onClick={() => { window.location.replace(`/datasets/${step}`) }}>
+                                <Card className={classes.card} radius={"md"} onClick={() => { window.location.replace(`/datasets/${step.name}`) }}>
                                     <CardSection className={classes.imageWrapper}>
                                         <Image
                                             className={classes.image}
-                                            src={Logo_Table[step]}
+                                            src={`data:image/png;base64,${step.logo}`}
                                             alt={"IMF Seal"}
                                             height={150}
                                             width={150}
                                         />
                                     </CardSection>
 
-                                    <Text className={classes.cardTitle}>{Datasets_Table[step]}</Text>
-                                    <Text className={classes.cardDescription} size={"xs"}>{step.toUpperCase()}</Text>
+                                    <Text className={classes.cardTitle}>{Datasets_Table[step.name]}</Text>
+                                    <Text className={classes.cardDescription} size={"xs"}>{step.name.toUpperCase()}</Text>
                                 </Card>
                             ))}
                         </SimpleGrid>

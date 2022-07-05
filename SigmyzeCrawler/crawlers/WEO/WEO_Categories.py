@@ -1,0 +1,58 @@
+weo_categories = {
+    "GDP": [
+		"NGAP_NPGDP",
+		"NGDP",
+		"NGDP_D",
+		"NGDP_FY",
+		"NGDP_R",
+		"NGDP_RPCH",
+		"NGDPD",
+		"NGDPDPC",
+		"NGDPPC",
+		"NGDPRPC",
+		"NGDPRPPPPC",
+		"PPPGDP",
+		"PPPPC",
+		"PPPSH"
+    ],
+    "GovtFinance": [
+		"BCA",
+		"BCA_NGDPD",
+		"FLIBOR6",
+		"GGR",
+		"GGR_NGDP",
+		"GGSB",
+		"GGSB_NPGDP",
+		"GGX",
+		"GGX_NGDP",
+		"GGXCNL",
+		"GGXCNL_NGDP",
+		"GGXONLB",
+		"GGXONLB_NGDP",
+		"GGXWDG",
+		"GGXWDG_NGDP",
+		"GGXWDN",
+		"GGXWDN_NGDP",
+		"FLIBOR3"
+    ],
+    "Investment": [
+		"NGSD_NGDP",
+		"NID_NGDP",
+		"PCPI",
+		"PCPIE",
+		"PCPIEPCH",
+		"PCPIPCH",
+		"PPPEX"
+    ],
+    "Trade":[
+		"TM_RPCH",
+		"TMG_RPCH",
+		"TX_RPCH",
+		"TXG_RPCH"
+    ],
+    "People":[
+		"LE",
+		"LP",
+		"LUR"
+	]
+}

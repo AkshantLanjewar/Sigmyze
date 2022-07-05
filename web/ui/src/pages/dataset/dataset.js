@@ -27,11 +27,11 @@ import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 
 import { 
-    GetCountries,
+    GetObjects,
     GetIndicators,
     GetIndicator,
     GetCategories
-} from '../../data/backend/datasets'
+} from '../../data/server-interface'
 
 import  ParseWEOData from '../../data/backend/weo-data'
 import * as getCountryISO2 from 'country-iso-3-to-2'
@@ -42,30 +42,33 @@ function RandomElement(list) {
 }
 
 async function SelectRandomIndicator(dataset) {
-    let countries = await GetCountries(dataset)
-    countries     = countries['countries']
-    let country   = RandomElement(countries)
+    let objects = await GetObjects(dataset)
+    objects     = objects['objects']
+    let obj     = RandomElement(objects)
 
-    let indicators = await GetIndicators(dataset, country['iso3'])
+    let indicators = await GetIndicators(dataset, obj['object_id']) 
     indicators     = indicators['indicators']
     let indicator  = RandomElement(indicators)
     if(indicators.length == 0)
         return SelectRandomIndicator(dataset)
 
-    let data = await GetIndicator(dataset, country['iso3'], indicator['ind3'])
+    let data = await GetIndicator(dataset, obj['object_id'], indicator['indicator_id'])
+    data = ParseWEOData(data['indicator_data'])
+    if(data.length == 0)
+        return SelectRandomIndicator(dataset)
 
     return {
-        data: ParseWEOData(data['data']),
+        data: data,
         indicator: indicator,
-        country: country
+        object: obj
     }
 }
 
-async function SelectIndicatorsCategory(dataset, country, category) {
+async function SelectIndicatorsCategory(dataset, object, category) {
     dataset  = dataset.toUpperCase()
-    category = dataset + category
+    category = category
 
-    let indicators = await GetIndicators(dataset, country['iso3'])
+    let indicators = await GetIndicators(dataset, object['object_id'])
     if(indicators['error'] == true)
         return
     indicators     = indicators['indicators']
@@ -75,12 +78,16 @@ async function SelectIndicatorsCategory(dataset, country, category) {
         let indicator   = indicators[i]
         let indicator_c = indicator.category
 
-        if(indicator_c == category || category.includes("All")) {
-            let data = await GetIndicator(dataset, country['iso3'], indicator.ind3)
+        if(indicator_c == category || category == "All") {
+            let data = await GetIndicator(dataset, object['object_id'], indicator['indicator_id'])
+            data = ParseWEOData(data['indicator_data'])
+            if(data.length == 0)
+                continue
+
             let pack = {
-                data: ParseWEOData(data['data']),
+                data: data,
                 indicator: indicator,
-                country: country
+                object: object
             }
 
             cards.push(pack)
@@ -91,20 +98,22 @@ async function SelectIndicatorsCategory(dataset, country, category) {
 }
 
 async function FetchCountries(dataset) {
-    let countries = await GetCountries(dataset)
-    countries     = countries['countries']
-    let full_c    = []
+    let objects = await GetObjects(dataset)
+    objects     = objects['objects']
+    let full_o  = []
 
 
-    for(let i = 0; i < countries.length; i++) {
-        let country       = countries[i]
-        country['iso2']   = getCountryISO2(country.iso3)
-        country['logo']   = process.env.PUBLIC_URL + `/country/${country['iso2']}.svg`
-        country['active'] = false
-        full_c.push(country)
+    for(let i = 0; i < objects.length; i++) {
+        let obj = objects[i]
+
+        obj['obj']    = obj['object_id']
+        obj['logo']   = obj['object_logo']
+        obj['name']   = obj['object_fullname']
+        obj['active'] = false
+        full_o.push(obj)
     }
 
-    return full_c
+    return full_o
 }
 
 async function FetchCategories(dataset) {
@@ -124,19 +133,21 @@ async function FetchCategories(dataset) {
     return cats
 }
 
-const CategoryIndicators = ({ category = "All", dataset, iso3 }) => {
+const CategoryIndicators = ({ category = "All", dataset, object }) => {
     const [cards, setCards] = useState([])
     const [loading, setLoading] = useState(false)
     async function main() {
         setLoading(true)
-        let c = await SelectIndicatorsCategory(dataset, iso3, category)
+
+        let c = await SelectIndicatorsCategory(dataset, object, category)
         setCards([...c])
+
         setLoading(false)
     }
 
     useEffect(() => {
         main()        
-    }, [iso3])
+    }, [object])
 
     return (
         <div>
@@ -147,8 +158,8 @@ const CategoryIndicators = ({ category = "All", dataset, iso3 }) => {
                         {cards.map((step) => (
                             <ChartCard 
                                 key={uuidv4()}
-                                title={`${step.country.name} ${step.indicator.fullname}`}
-                                description={`${step.country.iso3}: ${step.indicator.ind3}`}
+                                title={`${step.object.object_fullname} ${step.indicator.indicator_fullname}`}
+                                description={`${step.object.object_id}: ${step.indicator.indicator_id}`}
                                 data={step.data}
                                 verticalTooltip={true}
                                 height={"300px"}
@@ -166,16 +177,16 @@ const Dataset = ({ }) => {
 
     const [sampleIndicators, setSampleIndicators] = useState([])
     const [countries, setCountries]               = useState([])
-    const [activeCountry, setActiveCountry]       = useState({ iso3: "USA", name: "United States" })
+    const [activeObject, setActiveObject]         = useState({object_id: "USA", object_fullname: "United States"})
     const [categories, setCategories]             = useState([])
 
     async function main() {
         let sample_indicators = []
         for(let i = 0; i < 9; i++)
             sample_indicators.push(await SelectRandomIndicator(dataset))
+
         let countries  = await FetchCountries(dataset)
-        let categories = await FetchCategories(dataset)
-        
+        let categories = await FetchCategories(dataset)        
         setCountries([...countries])
         setSampleIndicators([...sample_indicators])
         setCategories([...categories])
@@ -204,8 +215,8 @@ const Dataset = ({ }) => {
                         <SwiperSlide>
                             <ChartCard 
                                 key={uuidv4()}
-                                title={`${step.country.name} ${step.indicator.fullname}`}
-                                description={`${step.country.iso3}: ${step.indicator.ind3}`}
+                                title={`${step.object.object_fullname} ${step.indicator.indicator_fullname}`}
+                                description={`${step.object.object_id}: ${step.indicator.indicator_id}`}
                                 data={step.data}
                                 verticalTooltip={false}
                                 height={"300px"}
@@ -226,8 +237,10 @@ const Dataset = ({ }) => {
                     mb="lg"
                 >
                     <CountrySearch 
-                        countries={countries}
-                        setActiveC={setActiveCountry}
+                        dataset={dataset} 
+                        objects={countries}
+                        defaultObject={activeObject}
+                        setActiveC={setActiveObject}
                     />
 
                     {categories.length == 0
@@ -236,7 +249,7 @@ const Dataset = ({ }) => {
                             <Tabs mt={"sm"} variant={"pills"} position="center">
                                 {categories.map((step) => (
                                     <Tabs.Tab label={step.category} icon={step.icon}>
-                                        <CategoryIndicators dataset={dataset} iso3={activeCountry} category={step.category} />
+                                        <CategoryIndicators dataset={dataset} object={activeObject} category={step.category} />
                                     </Tabs.Tab>
                                 ))}
                             </Tabs>       

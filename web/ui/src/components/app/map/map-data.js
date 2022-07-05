@@ -37,10 +37,12 @@ function SpliceMapData(data, tiles) {
     let data_hash = {}
     for(let i = 0; i < data.length; i++) {
         let point = data[i]
-        let iso3  = point['ISO3']
-        let val   = point['VAL']
 
-        data_hash[iso3] = val
+        let object_id = point['ObjectID']
+        let val       = point['VAL']
+
+        if(typeof val == 'number')
+            data_hash[object_id] = val
     }
 
     let features = tiles['features']

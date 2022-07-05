@@ -1,10 +1,15 @@
-import WEOLogo from '../../assets/imf.png'
 
 function ParseWEOData(data) {
     let t_data = []
+
     for(let i = 0; i < data.length; i++) {
         let dp = data[i]
-        dp['date'] = new Date(dp['date'], 1)
+        if(dp['value'] == 'NaN' || dp['value'] == null)
+            continue
+            
+        let date = new Date(dp['year'])
+        date.setDate(date.getDate() + 1)
+        dp['date'] = date.getTime()
         t_data.push(dp)
     }
 
@@ -12,11 +17,11 @@ function ParseWEOData(data) {
 }
 
 const Datasets_Table = {
-    'weo': "World Economic Outlook"
+    'WEO': "World Economic Outlook"
 }
 
 const Logo_Table = {
-    'weo': WEOLogo
+    'WEO': null
 }
 
 export default ParseWEOData

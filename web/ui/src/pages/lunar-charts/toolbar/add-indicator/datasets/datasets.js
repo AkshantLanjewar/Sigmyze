@@ -16,7 +16,7 @@ import {
     Datasets_Table 
 } from "../../../../../data/backend/weo-data"
 
-import { GetDatasets } from "../../../../../data/backend/datasets"
+import { GetDatasets } from "../../../../../data/server-interface"
 
 const DatasetView = ({ setDataset, activeDataset }) => {
     const { classes }               = useStyles()
@@ -46,7 +46,7 @@ const DatasetView = ({ setDataset, activeDataset }) => {
         for(let i = 0; i < datasets.length; i++) {
             let dataset       = datasets[i]
             dataset['active'] = false
-            if(dataset.dataset == short)
+            if(dataset.dataset.name == short)
                 dataset['active'] = true
 
             ds.push(dataset)
@@ -75,7 +75,7 @@ const DatasetView = ({ setDataset, activeDataset }) => {
                         <Card 
                             className={classes.card} 
                             radius={"md"} 
-                            onClick={() => { SetActive(step.dataset) }}
+                            onClick={() => { SetActive(step.dataset.name) }}
                             sx={(theme) => ({
                                 border: step.active ? `2px solid ${theme.colors.blue[4]}` : ''
                             })}
@@ -83,15 +83,15 @@ const DatasetView = ({ setDataset, activeDataset }) => {
                             <CardSection className={classes.imageWrapper}>
                                 <Image
                                     className={classes.image}
-                                    src={Logo_Table[step.dataset]}
+                                    src={`data:image/png;base64,${step.dataset.logo}`}
                                     alt={"IMF Seal"}
                                     height={150}
                                     width={150}
                                 />
                             </CardSection>
 
-                            <Text className={classes.cardTitle}>{Datasets_Table[step.dataset]}</Text>
-                            <Text className={classes.cardDescription} size={"xs"}>{step.dataset.toUpperCase()}</Text>
+                            <Text className={classes.cardTitle}>{Datasets_Table[step.dataset.name]}</Text>
+                            <Text className={classes.cardDescription} size={"xs"}>{step.dataset.name.toUpperCase()}</Text>
                         </Card>
                     ))}
                 </SimpleGrid>
