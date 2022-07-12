@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
+import './styles.css'
 
 import { LunarChart } from 'sigmyze-charting'
 
@@ -11,7 +12,7 @@ const dummyLinearData = [
     },
     {
         date: new Date(1523711218 * 1000), 
-        value: 15
+        value: 10
     },
     {
         date: new Date(1555247218 * 1000),

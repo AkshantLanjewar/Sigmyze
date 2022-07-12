@@ -4,6 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"@amcharts/amcharts5": "^5.2.2",
+		"@antv/g2": "^4.2.5",
 		"@craco/craco": "^6.4.3",
 		"@mantine/core": "^4.1.2",
 		"@mantine/hooks": "^4.1.2",
