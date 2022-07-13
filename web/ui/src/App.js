@@ -17,7 +17,7 @@ import {
 	AiOutlineQuestionCircle
 } from 'react-icons/ai'
 
-import { BsStack, BsMoonFill } from 'react-icons/bs'
+import { BsStack, BsMoonFill, BsNewspaper } from 'react-icons/bs'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -25,7 +25,8 @@ import Homepage    from './pages/homepage/homepage'
 import About       from './pages/about/about'
 import Resources   from './pages/indicators/indicators'
 import Dataset     from './pages/dataset/dataset'
-import LunarCharts from './pages/lunar-charts/lunar-charts';
+import LunarCharts from './pages/lunar-charts/lunar-charts'
+import Blog 	   from './pages/blog/blog';
 
 
 import VerifyModal from './components/user-button/verify-modal/verify-modal'
@@ -35,7 +36,8 @@ const pages = [
 	{ url: '/',           name: 'Homepage',   icon: <AiFillHome />, 		     active: true },
 	{ url: '/indicators', name: 'Indicators', icon: <BsStack />, 		         active: false },
 	{ url: '/lunar',      name: 'Lunar',      icon: <BsMoonFill />, 			 active: false },
-	{ url: '/about',      name: 'About',      icon: <AiOutlineQuestionCircle />, active: false }
+	{ url: '/about',      name: 'About',      icon: <AiOutlineQuestionCircle />, active: false },
+	{ url: '/blog',       name: 'Blog',       icon: <BsNewspaper />, 			 active: false }
 ]
 
 
@@ -142,6 +144,7 @@ function App(props) {
 								<Route path="/indicators" 		 element={ <BaseShell slot={<Resources />} /> } />
 								<Route path="/datasets/:dataset" element={ <BaseShell slot={<Dataset />} /> } />
 								<Route path="/lunar"	  		 element={ <LunarCharts /> } />
+								<Route path="/blog"				 element={ <BaseShell slot={<Blog />} /> } />
 							</Routes>
 						</BrowserRouter>
 				</NotificationsProvider>
