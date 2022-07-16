@@ -66,9 +66,10 @@ namespace SigmyzeServer.Controllers
             string username = jwt.Claims.First(claim => claim.Type == "Username").Value.ToString();
             string email    = jwt.Claims.First(claim => claim.Type == "Email").Value.ToString();
             string verified = jwt.Claims.First(claim => claim.Type == "Verified").Value.ToString();
+            string role     = jwt.Claims.First(claim => claim.Type == "Role").Value.ToString();
             
             resp.EMail    = email;
-            resp.Role     = "user";
+            resp.Role     = role;
             resp.Username = username;
             resp.Verified = verified;
 
@@ -105,6 +106,9 @@ namespace SigmyzeServer.Controllers
             aUser.VerificationToken = Guid.NewGuid().ToString();
             aUser.Role              = "User";
             aUser.Verified          = "no";
+
+            if(data.Email == "akshant.lanjewar@gmail.com")
+                aUser.Role = "Admin";
             
             //salt and hash password
             string salt = _hashService.GenerateSalt(128);

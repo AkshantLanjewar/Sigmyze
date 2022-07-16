@@ -4,7 +4,11 @@ let default_state = {
     userState: "signedout",
 
     jwtToken: "",
-    verified: ""
+    verified: "",
+
+    email: "",
+    username: "",
+    role: ""
 }
 
 // three different states
@@ -29,6 +33,12 @@ export default (state = default_state, action) => {
                 e_state['jwtToken']  = action.payload.jwtToken
                 e_state['verified']  = action.payload.verified
                 e_state['userState'] = action.payload.userState
+
+                return { ...e_state }
+        case "userData":
+                e_state['email']    = action.payload.email
+                e_state['username'] = action.payload.username
+                e_state['role']     = action.payload.role
 
                 return { ...e_state }
         default:

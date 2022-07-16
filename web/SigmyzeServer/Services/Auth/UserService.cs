@@ -62,6 +62,7 @@ namespace SigmyzeServer.Services.Auth
             resp.Token        = token;
             resp.RefreshToken = refreshToken.Token;
             resp.Verified     = pUser.Verified;
+            resp.Role         = pUser.Role;
 
             return resp;
         }
@@ -121,7 +122,8 @@ namespace SigmyzeServer.Services.Auth
                     new Claim("Lunar_Id", user.Lunar_ID),
                     new Claim("Verified", user.Verified),
                     new Claim("Email", user.EMail),
-                    new Claim("Username", user.Username)
+                    new Claim("Username", user.Username),
+                    new Claim("Role", user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(45),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

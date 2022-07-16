@@ -1,54 +1,20 @@
 import React, { useEffect, useState } from "react"
 
 import { connect } from "react-redux"
-import { userModalAction, verifyModalAction, authAction } from "../../data/actions/userActions"
+import { 
+    userModalAction, 
+    verifyModalAction, 
+    authAction,
+    userDataAction 
+} from "../../data/actions/userActions"
 
 import { 
-    Button,
-    Avatar,
-    Menu,
-    Divider,
-    Group,
-    Text 
+    Button
 } from "@mantine/core"
 
-import { VscSignOut } from 'react-icons/vsc'
+import UserControl    from "./user-control"
 
-const UserControl = ({ username, email, logout }) => (
-    <div>
-        <Menu 
-            control={<Avatar src={null} alt={username} color={"blue"}>AL</Avatar>}
-            size={300}
-            withArrow
-        >
-            <Menu.Item>
-                <Group>
-                    <Avatar 
-                        radius={"xl"}
-                        src={null}
-                        alt={username}
-                        color={"blue"}
-                    >
-                        AL
-                    </Avatar>
-
-                    <div>
-                        <Text weight={500}>{username}</Text>
-                        <Text size={"xs"} color={"dimmed"}>
-                            {email}
-                        </Text>
-                    </div>
-                </Group>
-            </Menu.Item>
-
-            <Divider />
-
-            <Menu.Item icon={<VscSignOut size={14} />} onClick={logout}>Logout</Menu.Item>
-        </Menu>
-    </div>
-)
-
-const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) => {
+const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAction, user }) => {
     //manage the refreshing of the token here
     async function ManageAuthState(user) {
         const jwt_token = user.jwt_token
@@ -74,7 +40,8 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) =>
 
     const [userData, setUserData] = useState({
         email: "",
-        username: ""
+        username: "",
+        role: ""
     })
 
     useEffect(() => {
@@ -97,7 +64,14 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) =>
         }).then(resp => resp.json()).then(data => {
             setUserData({
                 email: data.email,
-                username: data.username
+                username: data.username,
+                role: data.role
+            })
+
+            userDataAction({
+                email: data.email,
+                username: data.username,
+                role: data.role
             })
         })  
     }
@@ -118,6 +92,12 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) =>
                 verified: "no",
                 userState: "signedout"
             })
+        })
+
+        authAction({
+            jwtToken: "",
+            verified: "no",
+            userState: "signedout"
         })
     }
 
@@ -149,7 +129,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     userModalAction: (payload) => dispatch(userModalAction(payload)),
     verifyModalAction: (payload) => dispatch(verifyModalAction(payload)),
-    authAction: (payload) => dispatch(authAction(payload))
+    authAction: (payload) => dispatch(authAction(payload)),
+    userDataAction: (payload) => dispatch(userDataAction(payload))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserButton)

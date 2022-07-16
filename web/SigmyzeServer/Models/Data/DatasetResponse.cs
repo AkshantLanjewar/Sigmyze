@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace SigmyzeServer.Models.Data
 {
@@ -17,12 +18,15 @@ namespace SigmyzeServer.Models.Data
     public class ObjectIndicator 
     {
         [JsonProperty("indicator_id")]
+        [BsonElement("indicator_id")]
         public string IndicatorID { get; set; }
 
         [JsonProperty("indicator_fullname")]
+        [BsonElement("indicator_fullname")]
         public string IndicatorFullname { get; set; }
 
         [JsonProperty("category")]
+        [BsonElement("category")]
         public string Category { get; set; }
     }
 }
