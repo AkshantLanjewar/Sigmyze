@@ -76,7 +76,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
         })  
     }
 
-    setInterval(ManageAuthState, 60000 * 40)
+    setInterval(ManageAuthState, 60000 * 15)
 
     function Logout() {
         fetch("/api/v1/auth/revoke-token", {
