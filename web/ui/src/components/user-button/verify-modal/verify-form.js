@@ -1,13 +1,14 @@
 import React from "react"
 
 import { showNotification } from '@mantine/notifications'
-import { useForm } from "@mantine/hooks"
+import { useForm } from "@mantine/form"
 
 import { 
     Group,
     TextInput,
     Anchor,
-    Button
+    Button,
+    Stack
 } from "@mantine/core"
 
 import { connect }    from "react-redux"
@@ -114,23 +115,25 @@ const VerifyForm = ({ user, authAction, modalAction, setLoading }) => {
 
     return (
         <form onSubmit={OnSubmit}>
-            <Group direction={"column"} grow>
-                <TextInput
-                    required
-                    label="Code"
-                    placeholder="Your Code"
-                    value={form.values.token}
-                    onChange={(event) => form.setFieldValue('token', event.currentTarget.value)}
-                />
-            </Group>
+            <Stack>
+                <Stack direction={"column"} grow>
+                    <TextInput
+                        required
+                        label="Code"
+                        placeholder="Your Code"
+                        value={form.values.token}
+                        onChange={(event) => form.setFieldValue('token', event.currentTarget.value)}
+                    />
+                </Stack>
 
-            <Group position={"apart"} mt={"xl"}>
-                <Anchor component={"button"} type={"button"} color={"gray"} size={"xs"} onClick={ResendVerificationEmail}>
-                    Didnt get the email? Send it again
-                </Anchor>
+                <Group position={"apart"} mt={"xl"}>
+                    <Anchor component={"button"} type={"button"} color={"gray"} size={"xs"} onClick={ResendVerificationEmail}>
+                        Didnt get the email? Send it again
+                    </Anchor>
 
-                <Button type={"submit"}>Verify</Button>
-            </Group>
+                    <Button type={"submit"}>Verify</Button>
+                </Group>
+            </Stack>
         </form>
     )
 }

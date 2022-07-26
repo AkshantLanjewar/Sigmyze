@@ -162,7 +162,7 @@ const CategoryIndicators = ({ category = "All", dataset, object }) => {
                                 description={`${step.object.object_id}: ${step.indicator.indicator_id}`}
                                 data={step.data}
                                 verticalTooltip={true}
-                                height={"300px"}
+                                height={"320px"}
                             />
                         ))}
                     </SimpleGrid>
@@ -179,6 +179,7 @@ const Dataset = ({ }) => {
     const [countries, setCountries]               = useState([])
     const [activeObject, setActiveObject]         = useState({object_id: "USA", object_fullname: "United States"})
     const [categories, setCategories]             = useState([])
+    const [tabValue, setTabValue]                 = useState(null)
 
     async function main() {
         let sample_indicators = []
@@ -190,6 +191,7 @@ const Dataset = ({ }) => {
         setCountries([...countries])
         setSampleIndicators([...sample_indicators])
         setCategories([...categories])
+        setTabValue(categories[0].category)
     }
 
     useEffect(() => {
@@ -219,7 +221,7 @@ const Dataset = ({ }) => {
                                 description={`${step.object.object_id}: ${step.indicator.indicator_id}`}
                                 data={step.data}
                                 verticalTooltip={false}
-                                height={"300px"}
+                                height={"320px"}
                             />
                         </SwiperSlide>
                     ))}
@@ -246,13 +248,33 @@ const Dataset = ({ }) => {
                     {categories.length == 0
                         ? <Group mt={"xl"} pt={"xl"} position={"center"}><Loader variant="bars" color="indigo" /></Group>
                         : (
-                            <Tabs mt={"sm"} variant={"pills"} position="center">
+                            <Tabs
+                                variant={'pills'}
+                                mt={'sm'}
+                                value={tabValue}
+                                onTabChange={setTabValue}
+                            >
+                                <Tabs.List sx={{ justifyContent: 'center' }}>
+                                    {categories.map((step) => (
+                                        <Tabs.Tab value={step.category} icon={step.icon}>
+                                            {step.category}
+                                        </Tabs.Tab>
+                                    ))}
+                                </Tabs.List>
+
                                 {categories.map((step) => (
-                                    <Tabs.Tab label={step.category} icon={step.icon}>
-                                        <CategoryIndicators dataset={dataset} object={activeObject} category={step.category} />
-                                    </Tabs.Tab>
+                                    <Tabs.Panel 
+                                        value={step.category} 
+                                        pt={'xs'}
+                                    >
+                                        <CategoryIndicators 
+                                            dataset={dataset} 
+                                            object={activeObject} 
+                                            category={step.category} 
+                                        />
+                                    </Tabs.Panel>
                                 ))}
-                            </Tabs>       
+                            </Tabs>
                         )
                     }
                 </Stack>

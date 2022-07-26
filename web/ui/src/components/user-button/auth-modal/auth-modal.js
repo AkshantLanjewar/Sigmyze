@@ -11,7 +11,7 @@ const AuthModal = ({ user, userModalAction }) => (
         centered
         title={"Welcome to Sigmyze"}
         opened={user.userModal}
-        onClose={() => { userModalAction(false) }}
+        onClose={() => { userModalAction(false) }}        
     >
         <div style={{ position: "relative" }}>
             <AuthForm />

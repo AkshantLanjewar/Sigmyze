@@ -99,6 +99,8 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
             verified: "no",
             userState: "signedout"
         })
+
+        window.location.replace('/')
     }
 
     return (

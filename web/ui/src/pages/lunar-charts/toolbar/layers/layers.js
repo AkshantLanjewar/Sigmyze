@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react"
-import useStyles from "../toolbar.styles"
 
-import { AiOutlineAreaChart } from 'react-icons/ai'
-import { MdDelete } from 'react-icons/md'
-
-import {
-    Text,
-    Menu,
-    Tooltip
-} from "@mantine/core"
+import Layer          from "./layer"
+import LayerAccordion from "./accordion"
 
 import { connect } from 'react-redux'
 import { GetIndicator } from "../../../../data/server-interface"
-import { RemoveLunarIndicator } from "../../../../data/actions/lunarActions"
+import { RemoveIndicator } from "../../../../data/actions/projectActions"
 
 /*
     [COMPONENT] -> Layers
@@ -26,9 +19,10 @@ import { RemoveLunarIndicator } from "../../../../data/actions/lunarActions"
         2. object_id
 */
 
-const Layers = ({ indicators, remove_indicator }) => {
-    const { classes } = useStyles()
+const Layers = ({ remove_indicator, project }) => {
     const [items, setItems] = useState([])
+    let project_data = project.project_data
+    let indicators   = project_data.indicators
 
     /*
         MAIN FUNCTION IN COMPONENT
@@ -46,6 +40,7 @@ const Layers = ({ indicators, remove_indicator }) => {
             let indicator = indicators[i]
             let data      = await GetIndicator(indicator.dataset, indicator.object_id, indicator.indicator_id)
             data['object_id'] = indicator.object_id
+
             indicators_.push(data)
         }
 
@@ -59,48 +54,29 @@ const Layers = ({ indicators, remove_indicator }) => {
     // update the main function every time the indicator list changes
     useEffect(() => {
         main()
-    }, [indicators])
+    }, [project])
+
+    let accordionLayers = [
+        {
+            id: 'chart-elements',
+            title: 'Chart Indicators',
+            slot: (<div>{items.map((step) => ( <Layer layer={step} remove_indicator={remove_indicator} /> ))}</div>)
+        }
+    ]
 
     return (
         <div>
-            {items.map((step) => (
-                <Tooltip 
-                    position={"bottom"} 
-                    withArrow 
-                    label={`${step.object_id}: ${step.indicator_name}`} 
-                    sx={(theme) => ({  width: "100%", body: { backgroundColor: theme.colors.dark[9] } })}
-                >
-                    <div className={classes.staticItem}>
-                        <div className={classes.staticInner}>
-                            <div className={classes.staticText}>
-                                <span className={classes.leftLine} />
-                                <AiOutlineAreaChart size={22} style={{ marginLeft: 5 }} />
-                                <Text weight={700} style={{ paddingTop: 2, maxHeight: "100%", overflow: "hidden", maxWidth: "80%" }}>
-                                    {step.indicator_id.toUpperCase()} : {step.object_id.toUpperCase()}
-                                </Text>
-                            </div>
-                            <Menu>
-                                <Menu.Item 
-                                    icon={<MdDelete />}
-                                    onClick={() => { remove_indicator(step.object_id.toUpperCase(), step.indicator_id.toUpperCase()) }}
-                                >
-                                    Delete
-                                </Menu.Item>
-                            </Menu>
-                        </div>
-                    </div>
-                </Tooltip>
-            ))}
+            <LayerAccordion items={accordionLayers} />
         </div>
     )
 }
 
 const mapStateToProps = state => ({
-    indicators: state.lunar.indicators
+    project: state.project
 })
 
 const mapDispatchToProps = dispatch => ({
-    remove_indicator: (iso3, ind3) => dispatch(RemoveLunarIndicator(ind3, iso3))
+    remove_indicator: (iso3, ind3) => dispatch(RemoveIndicator(ind3, iso3)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layers)

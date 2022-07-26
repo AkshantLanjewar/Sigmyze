@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 
 function LunarChart({
     data,
-    height,
+    scale_change,
     names
 }) {
     const ref = React.createRef()
@@ -66,7 +66,7 @@ function LunarChart({
 
     useEffect(() => {
         BuildChart()
-    }, [data])
+    }, [data, scale_change])
 
     return (
         <div ref={ref} 

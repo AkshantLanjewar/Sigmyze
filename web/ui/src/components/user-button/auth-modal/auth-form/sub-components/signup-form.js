@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { useForm } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
 
 import {
     TextInput,
@@ -9,6 +9,7 @@ import {
     Button,
     Checkbox,
     Anchor,
+    Stack
 } from '@mantine/core';
 
 import { connect } from "react-redux"
@@ -115,56 +116,58 @@ const SignupForm = ({ changeState, authAction, userModalAction, setLoading }) =>
 
     return (
         <form onSubmit={OnSubmit}>
-            <Group direction="column" grow>
-                <TextInput
-                    required
-                    label="Username"
-                    placeholder="Your Username"
-                    value={form.values.name}
-                    onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-                />
+            <Stack>
+                <Stack direction="column" grow>
+                    <TextInput
+                        required
+                        label="Username"
+                        placeholder="Your Username"
+                        value={form.values.name}
+                        onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
+                    />
 
-                <TextInput
-                    required
-                    label="Email"
-                    placeholder="example@gmail.com"
-                    value={form.values.email}
-                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                    error={form.errors.email && 'Invalid email'}
-                />
+                    <TextInput
+                        required
+                        label="Email"
+                        placeholder="example@gmail.com"
+                        value={form.values.email}
+                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                        error={form.errors.email && 'Invalid email'}
+                    />
 
-                <PasswordInput
-                    required
-                    label="Password"
-                    placeholder="Your Password"
-                    value={form.values.password}
-                    onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                    error={form.errors.password && 'Password should include at least 6 characters'}
-                />
+                    <PasswordInput
+                        required
+                        label="Password"
+                        placeholder="Your Password"
+                        value={form.values.password}
+                        onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                        error={form.errors.password && 'Password should include at least 6 characters'}
+                    />
 
-                <PasswordInput
-                    required
-                    label="Password Confirmation"
-                    placeholder="Your Password Again"
-                    value={form.values.passwordConf}
-                    onChange={(event) => form.setFieldValue('passwordConf', event.currentTarget.value)}
-                    error={form.errors.password && 'Password should include at least 6 characters'}
-                />
+                    <PasswordInput
+                        required
+                        label="Password Confirmation"
+                        placeholder="Your Password Again"
+                        value={form.values.passwordConf}
+                        onChange={(event) => form.setFieldValue('passwordConf', event.currentTarget.value)}
+                        error={form.errors.password && 'Password should include at least 6 characters'}
+                    />
 
-                <Checkbox
-                    label={"I accept the terms and conditions"}
-                    checked={form.values.terms}
-                    onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-                />
-            </Group>
+                    <Checkbox
+                        label={"I accept the terms and conditions"}
+                        checked={form.values.terms}
+                        onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+                    />
+                </Stack>
 
-            <Group position={"apart"} mt="xl">
-                <Anchor component="button" type="button" color={"gray"} onClick={HandleChangeClick} size={"xs"}>
-                    Already have an account? Login
-                </Anchor>
+                <Group position={"apart"} mt="xl">
+                    <Anchor component="button" type="button" color={"gray"} onClick={HandleChangeClick} size={"xs"}>
+                        Already have an account? Login
+                    </Anchor>
 
-                <Button type={"submit"}>Register</Button>
-            </Group>
+                    <Button type={"submit"}>Register</Button>
+                </Group>
+            </Stack>
         </form>
     )
 }

@@ -4,7 +4,8 @@ import {
     Card, 
     Group,
     Text,
-    Menu 
+    Menu,
+    ActionIcon 
 } from "@mantine/core"
 
 import useStyles from "./chart-card.styles"
@@ -13,12 +14,20 @@ import { TimeSeries } from 'sigmyze-charting'
 import { dummyLinearData } from "../../../data/dummy-data"
 
 import { GiPlanetCore } from 'react-icons/gi'
+import { BsThreeDots } from 'react-icons/bs'
 
 import { connect } from "react-redux"
 import { 
     ResetLunarIndicator,
     AddLunarIndicator 
 } from "../../../data/actions/lunarActions"
+
+import { 
+    SetProjectName, 
+    SetProjectID,
+    AddProjectIndicator,
+    RemoveAllIndicators 
+} from "../../../data/actions/projectActions"
 
 /*
     CHART CARD COMPONENT
@@ -51,7 +60,11 @@ const ChartCard = ({
     active = false,
     dataset = 'weo',
     resetLunarIndicator,
-    addLunarIndicator
+    addLunarIndicator,
+    setProjectName,
+    setProjectID,
+    addIndicator,
+    removeAllIndicators
 }) => {
     const { classes } = useStyles()
 
@@ -82,7 +95,13 @@ const ChartCard = ({
         let indicator_id  = desc_parts[1]
 
         let payload = { indicator_id: indicator_id, object_id: object_id, dataset: dataset }
-        addLunarIndicator(payload)
+
+        //project state
+        setProjectName("demo")
+        setProjectID("demo")
+        removeAllIndicators()
+        addIndicator(payload)
+
         window.location.replace("/lunar")
     }
 
@@ -98,16 +117,24 @@ const ChartCard = ({
             </Card.Section>
 
             <div className={classes.body}>
-                <Text className={classes.title}>{title}</Text>
+                <Text sx={{ height: 64 }} className={classes.title}>{title}</Text>
                 <Group position="apart">
                     <Text className={classes.description}>{description}</Text>
-                    <Menu
-                        position={"right"}
-                        placement={"end"}
-                        withArrow
-                    >
-                        <Menu.Label>Charts</Menu.Label>
-                        <Menu.Item onClick={OpenChart} icon={<GiPlanetCore size={14} />}>Open Chart</Menu.Item>
+                    <Menu shadow={'lg'} withArrow position={'bottom-start'} width={185}>
+                        <Menu.Target>
+                            <ActionIcon 
+                                variant={'transparent'}
+                                color={'pink'}
+                                size="sm"
+                            >
+                                <BsThreeDots />
+                            </ActionIcon>
+                        </Menu.Target>
+
+                        <Menu.Dropdown>
+                            <Menu.Label>Lunar</Menu.Label>
+                            <Menu.Item onClick={OpenChart} icon={<GiPlanetCore size={14} />}>Open Chart</Menu.Item>
+                        </Menu.Dropdown>
                     </Menu>
                 </Group>
             </div>
@@ -122,6 +149,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     resetLunarIndicator: (payload) => dispatch(ResetLunarIndicator(payload)),
     addLunarIndicator: (payload) => dispatch(AddLunarIndicator(payload)),
+    setProjectName: (project_name) => dispatch(SetProjectName(project_name)),
+    setProjectID: (project_id) => dispatch(SetProjectID(project_id)),
+    addIndicator: (indicator) => dispatch(AddProjectIndicator(indicator)),
+    removeAllIndicators: (indicator) => dispatch(RemoveAllIndicators(indicator))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChartCard)

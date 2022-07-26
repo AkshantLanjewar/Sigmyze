@@ -49,10 +49,6 @@ const useStyles = createStyles((theme) => ({
 
     contentBar: {
         flexGrow: 1,
-
-        paddingTop: 45 / 2,
-        paddingLeft: 15,
-        paddingRight: 15,
         height: "100%"
     },
 

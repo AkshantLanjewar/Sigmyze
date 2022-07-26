@@ -72,8 +72,6 @@ const Toolbar = ({ }) => {
 
             <div className={classes.contentBar}>
                 <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                    <Text className={classes.contentTitle}>{activeAction}</Text>
-
                     {labelHash[activeAction]}
                 </div>
             </div>

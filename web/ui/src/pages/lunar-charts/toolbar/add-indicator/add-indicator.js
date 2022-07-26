@@ -16,8 +16,9 @@ import Indicators  from './indicators/indicators'
 
 import { connect } from "react-redux"
 import { AddLunarIndicator } from "../../../../data/actions/lunarActions"
+import { AddProjectIndicator }      from "../../../../data/actions/projectActions"
 
-const AddIndicator = ({ opened, setOpened, AddLunarIndicator }) => {
+const AddIndicator = ({ opened, setOpened, addProjectIndicator }) => {
     const [step, setStep]           = useState(0)
     const [active_d, setActive_d]   = useState("")
     const [indicator, setActiveInd] = useState("")
@@ -27,7 +28,7 @@ const AddIndicator = ({ opened, setOpened, AddLunarIndicator }) => {
             setStep(1)
         if(step == 1 && indicator !== "") {
             setOpened(false)
-            AddLunarIndicator(indicator)
+            addProjectIndicator(indicator)
         }
     }
 
@@ -86,7 +87,8 @@ const AddIndicator = ({ opened, setOpened, AddLunarIndicator }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    AddLunarIndicator: (payload) => dispatch(AddLunarIndicator(payload))
+    AddLunarIndicator: (payload) => dispatch(AddLunarIndicator(payload)),
+    addProjectIndicator: (payload) => dispatch(AddProjectIndicator(payload))
 })
 
 const mapStateToProps = state => ({

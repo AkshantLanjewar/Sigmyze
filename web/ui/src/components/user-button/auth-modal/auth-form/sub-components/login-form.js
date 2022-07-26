@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { useForm } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
 import { showNotification } from '@mantine/notifications'
 
 import {
@@ -9,6 +9,7 @@ import {
     Group,
     Button,
     Anchor,
+    Stack
 } from '@mantine/core';
 
 import { connect } from "react-redux"
@@ -93,33 +94,35 @@ const LoginForm = ({ changeState, authAction, userModalAction, setLoading }) => 
 
     return (
         <form onSubmit={onSubmit}>
-            <Group direction={"column"} grow>
-                <TextInput
-                    required
-                    label="Email"
-                    placeholder="example@gmail.com"
-                    value={form.values.email}
-                    onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                    error={form.errors.email && 'Invalid email'}
-                />
+            <Stack>
+                <Stack direction={"column"} grow>
+                    <TextInput
+                        required
+                        label="Email"
+                        placeholder="example@gmail.com"
+                        value={form.values.email}
+                        onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
+                        error={form.errors.email && 'Invalid email'}
+                    />
 
-                <PasswordInput
-                    required
-                    label="Password"
-                    placeholder="Your Password"
-                    value={form.values.password}
-                    onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                    error={form.errors.password && 'Password should include at least 6 characters'}
-                />
-            </Group>
+                    <PasswordInput
+                        required
+                        label="Password"
+                        placeholder="Your Password"
+                        value={form.values.password}
+                        onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
+                        error={form.errors.password && 'Password should include at least 6 characters'}
+                    />
+                </Stack>
 
-            <Group position={"apart"} mt="xl">
-                <Anchor component="button" type="button" color={"gray"} onClick={HandleChangeClick} size={"xs"}>
-                    Dont have an account? Register
-                </Anchor>
+                <Group position={"apart"} mt="xl">
+                    <Anchor component="button" type="button" color={"gray"} onClick={HandleChangeClick} size={"xs"}>
+                        Dont have an account? Register
+                    </Anchor>
 
-                <Button type={"submit"}>Login</Button>
-            </Group>
+                    <Button type={"submit"}>Login</Button>
+                </Group>
+            </Stack>
         </form>
     )
 }

@@ -7,7 +7,10 @@ const useStyles = createStyles((theme) => ({
 
         backgroundColor: theme.colors.dark[8],
         height: "calc(100% - 10px)",
-        borderRadius: theme.radius.md
+        borderRadius: theme.radius.md,
+
+        display: 'flex',
+        flexDirection: 'column'
     },
 
     chart: {
