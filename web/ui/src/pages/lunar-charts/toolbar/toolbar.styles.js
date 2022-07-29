@@ -65,7 +65,7 @@ const useStyles = createStyles((theme) => ({
         color: theme.colors.dark[1],
         paddingTop: 5,
         paddingBottom: 5,
-        paddingLeft: 1,
+        paddingLeft: 0,
         cursor: "pointer",
     },
 

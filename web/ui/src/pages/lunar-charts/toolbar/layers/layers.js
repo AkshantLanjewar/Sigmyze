@@ -19,7 +19,7 @@ import { RemoveIndicator } from "../../../../data/actions/projectActions"
         2. object_id
 */
 
-const Layers = ({ remove_indicator, project }) => {
+const Layers = ({ openTab, setOpenAdd, remove_indicator, project }) => {
     const [items, setItems] = useState([])
     let project_data = project.project_data
     let indicators   = project_data.indicators
@@ -58,15 +58,15 @@ const Layers = ({ remove_indicator, project }) => {
 
     let accordionLayers = [
         {
-            id: 'chart-elements',
+            id: 'chart-indicators',
             title: 'Chart Indicators',
-            slot: (<div>{items.map((step) => ( <Layer layer={step} remove_indicator={remove_indicator} /> ))}</div>)
+            slot: (<div>{items.map((step) => ( <Layer layer={step} openTab={openTab} remove_indicator={remove_indicator} /> ))}</div>)
         }
     ]
 
     return (
         <div>
-            <LayerAccordion items={accordionLayers} />
+            <LayerAccordion items={accordionLayers} setOpenAdd={setOpenAdd} />
         </div>
     )
 }

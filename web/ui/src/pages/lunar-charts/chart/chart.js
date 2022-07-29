@@ -30,7 +30,7 @@ let default_tab = [
     }
 ]
 
-const Chart = ({ project, tabs, setTabs, openedTabs, setOpenedTabs }) => {
+const Chart = ({ project, tabs, setTabs, openedTabs, setOpenedTabs, setHiddenTabs }) => {
     const { classes }       = useStyles()
     /*
         MAIN FUNCTION IN COMPONENT
@@ -48,6 +48,7 @@ const Chart = ({ project, tabs, setTabs, openedTabs, setOpenedTabs }) => {
 
         //create tabs
         let n_tabs   = []
+        let h_tabs   = []
         let o_tabs   = openedTabs
         let root_tab = tabs[0]
 
@@ -59,28 +60,29 @@ const Chart = ({ project, tabs, setTabs, openedTabs, setOpenedTabs }) => {
             let indicator = indicators[i]
             let ind_id    = indicator.indicator_id
             let obj_id    = indicator.object_id
+            let chart_key = `${ind_id}: ${obj_id}`
 
             let payload = { indicator_id: ind_id, object_id: obj_id }
             if(!o_tabs.includes(payload)) {
                 o_tabs.push(payload)
 
-                let names = [ind_id]
+                let names = [`${ind_id}: ${obj_id}`]
                 let data  = []
 
                 for(let x = 0; x < sorted_data.length; x++) {
                     let point = sorted_data[x]
                     let date  = point['date']
                     let value = null
-                    if(ind_id in point)
-                        value = point[ind_id]
+                    if(chart_key in point)
+                        value = point[chart_key]
 
-                    let pack     = { date: date }
-                    pack[ind_id] = value
+                    let pack        = { date: date }
+                    pack[chart_key] = value
                     data.push(pack)
                 }
 
                 let n_tab = {
-                    name: ind_id,
+                    name: `${ind_id}: ${obj_id}`,
                     icon: <AiFillDatabase size={14} />,
                     editable: true,
                     type: 'chart',
@@ -91,10 +93,12 @@ const Chart = ({ project, tabs, setTabs, openedTabs, setOpenedTabs }) => {
                 }
 
                 n_tabs.push(n_tab)
+                h_tabs.push(n_tab)
             }
         }
         
         setTabs([...n_tabs])
+        setHiddenTabs([...h_tabs])
         setOpenedTabs([...o_tabs])
     }
 

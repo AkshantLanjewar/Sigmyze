@@ -105,6 +105,8 @@ const Indicators = ({ dataset, setIndicator }) => {
                     limit={10}
                     defaultValue={"United States"}
                     onItemSubmit={(item) => { setActiveCountry(item) }}
+                    width={300}
+                    sx={{ width: 300 }}
                 />
 
                 {categories.length == 0

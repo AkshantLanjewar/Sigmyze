@@ -10,8 +10,9 @@ import useStyles from "../toolbar.styles"
 
 import { BsThreeDots } from 'react-icons/bs'
 import { AiOutlineDatabase, AiFillDelete } from 'react-icons/ai'
+import { MdOutlineOpenInNew } from 'react-icons/md'
 
-const Layer = ({ layer, remove_indicator }) => {
+const Layer = ({ openTab, layer, remove_indicator }) => {
     const { classes } = useStyles()
 
     return (
@@ -46,9 +47,9 @@ const Layer = ({ layer, remove_indicator }) => {
                     <Menu shadow={"md"} withArrow position={'bottom-start'} width={175}>
                         <Menu.Target>
                             <ActionIcon 
-                                variant={'transparent'}
-                                color={'pink'}
-                                size="sm"
+                                color={'gray'}
+                                size="md"
+                                sx={{ marginRight: -4 }}
                             >
                                 <BsThreeDots />
                             </ActionIcon>
@@ -56,11 +57,19 @@ const Layer = ({ layer, remove_indicator }) => {
 
                         <Menu.Dropdown>
                             <Menu.Label>Charting</Menu.Label>
+                            
                             <Menu.Item
                                 icon={<AiFillDelete size={14} />}
                                 onClick={() => { remove_indicator(layer.object_id.toUpperCase(), layer.indicator_id.toUpperCase()) }}
                             >
                                 Delete
+                            </Menu.Item>
+
+                            <Menu.Item
+                                icon={<MdOutlineOpenInNew size={14} />}
+                                onClick={() => { openTab(layer.indicator_id.toUpperCase(), layer.object_id.toUpperCase()) }}
+                            >
+                                Open Tab
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>

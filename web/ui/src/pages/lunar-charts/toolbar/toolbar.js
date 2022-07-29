@@ -16,37 +16,29 @@ import { IoMdAdd } from 'react-icons/io'
 
 let actionBarItems = [
     { label: "Layers",        icon: <BsStack size={20} />,  active: true },
-    { label: "Add Indicators", icon: <IoMdAdd size={20} />, active: false }
 ]
 
-const labelHash = {
-    "Layers": <Layers />,
-    "Add Indicators": <AddIndicator />
-}
-
-const Toolbar = ({ }) => {
+const Toolbar = ({ openTab }) => {
     const { classes, cx } = useStyles()
 
     const [actionBar, setActionBar]       = useState(actionBarItems)
     const [activeAction, setActiveAction] = useState("Layers")
     const [openAdd, setOpenAdd]           = useState(false)
 
+    const labelHash = {
+        "Layers": <Layers openTab={openTab} setOpenAdd={setOpenAdd} />,
+        "Add Indicators": <AddIndicator />
+    }
+
     function StackClick(label) {
         let barItems = actionBar
 
         for(let i = 0; i < barItems.length; i++) {
             let item    = barItems[i]
-            if(label == "Add Indicators" && item.active)
+            item.active = false
+            if(item.label == label)
                 item.active = true
-            else
-                item.active = false
 
-            if(label === "Add Indicators") {
-                setOpenAdd(true)
-                return
-            }
-            if(item.label == label && label !== "Add Indicators")
-                item.active = true
             barItems[i] = item
         }
         

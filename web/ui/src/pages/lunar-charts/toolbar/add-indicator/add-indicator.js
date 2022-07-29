@@ -54,9 +54,9 @@ const AddIndicator = ({ opened, setOpened, addProjectIndicator }) => {
             opened={opened} 
             onClose={() => { setOpened(false) }}
             centered
-            size={"75%"}
+            size={"85%"}
             withCloseButton={false}
-            overflow={"inside"}
+            overflow={"outside"}
         >
             <Stack>
                 <div>

@@ -120,7 +120,7 @@ const ChartCard = ({
                 <Text sx={{ height: 64 }} className={classes.title}>{title}</Text>
                 <Group position="apart">
                     <Text className={classes.description}>{description}</Text>
-                    <Menu shadow={'lg'} withArrow position={'bottom-start'} width={185}>
+                    <Menu shadow={'lg'} withArrow position={'bottom-end'} width={185}>
                         <Menu.Target>
                             <ActionIcon 
                                 variant={'transparent'}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { 
     Tabs, 
@@ -31,8 +31,21 @@ const TabHeader = ({ name, id, editable, deleteTab, icon }) => {
     )
 }
 
+let tabs_length = 0
+
 const EditorTabs = ({ tabs, deleteTab }) => {
     const [activeTab, setActiveTab] = useState(tabs[0].id)
+
+    useEffect(() => {
+        if(tabs.length > tabs_length) {
+            setActiveTab(tabs[tabs.length - 1].id)
+            tabs_length = tabs.length
+            return
+        }
+
+        tabs_length = tabs.length
+        setActiveTab(tabs[0].id)
+    }, [tabs])
 
     return (
         <Tabs

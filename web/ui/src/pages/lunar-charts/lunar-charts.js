@@ -34,6 +34,7 @@ const LunarCharts = ({ project, user, removeIndicator }) => {
 
     //chart glob states
     const [tabs, setTabs]             = useState(default_tab)
+    const [hiddenTabs, setHiddenTabs] = useState([])
     const [openedTabs, setOpenedTabs] = useState([])
 
     useEffect(() => {
@@ -61,19 +62,37 @@ const LunarCharts = ({ project, user, removeIndicator }) => {
         removeIndicator(ind_id, obj_id)
     }
 
+    function OpenTab(indicator_id, object_id) {
+        let name = `${indicator_id}: ${object_id}`
+        let tab  = null
+
+        if(openedTabs.filter(e => e.name == name).length > 0)
+            return
+        for(let i = 0; i < hiddenTabs.length; i++) {
+            let hiddenTab = hiddenTabs[i]
+            if(hiddenTab.name == name)
+                tab = hiddenTab
+        }
+
+        let o_tabs = tabs
+        o_tabs.push(tab)
+        setTabs([...o_tabs])
+    }
+
     return (
         <div className={classes.wrapper}>
             <Navbar />
             <DemoModal active={displayLoginModal} close={CloseDemoModal} />
 
             <div className={classes.body}>
-                <Toolbar />
+                <Toolbar openTab={OpenTab} />
                 
                 <Chart 
                     tabs={tabs} 
                     setTabs={setTabs} 
                     openedTabs={openedTabs} 
-                    setOpenedTabs={setOpenedTabs} 
+                    setOpenedTabs={setOpenedTabs}
+                    setHiddenTabs={setHiddenTabs} 
                 />
             </div>
         </div>

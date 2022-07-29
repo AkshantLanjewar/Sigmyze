@@ -12,34 +12,46 @@ import { VscSignOut } from 'react-icons/vsc'
 
 const UserControl = ({ username, email, logout }) => (
     <div>
-        <Menu 
-            control={<Avatar src={null} alt={username} color={"blue"}>AL</Avatar>}
-            size={300}
+        <Menu
+            shadow={'lg'}
             withArrow
+            position={'top-end'}
         >
-            <Menu.Item>
-                <Group>
-                    <Avatar 
-                        radius={"xl"}
-                        src={null}
-                        alt={username}
-                        color={"blue"}
-                    >
-                        AL
-                    </Avatar>
+            <Menu.Target>
+                <Avatar 
+                    src={null} 
+                    alt={username} 
+                    color={"blue"}
+                >
+                    AL
+                </Avatar>
+            </Menu.Target>
 
-                    <div>
-                        <Text weight={500}>{username}</Text>
-                        <Text size={"xs"} color={"dimmed"}>
-                            {email}
-                        </Text>
-                    </div>
-                </Group>
-            </Menu.Item>
+            <Menu.Dropdown>
+                <Menu.Item>
+                    <Group>
+                        <Avatar 
+                            radius={"xl"}
+                            src={null}
+                            alt={username}
+                            color={"blue"}
+                        >
+                            AL
+                        </Avatar>
 
-            <Divider />
+                        <div>
+                            <Text weight={500}>{username}</Text>
+                            <Text size={"xs"} color={"dimmed"}>
+                                {email}
+                            </Text>
+                        </div>
+                    </Group>
+                </Menu.Item>
 
-            <Menu.Item icon={<VscSignOut size={14} />} onClick={logout}>Logout</Menu.Item>
+                <Divider />
+
+                <Menu.Item icon={<VscSignOut size={14} />} onClick={logout}>Logout</Menu.Item>
+            </Menu.Dropdown>
         </Menu>
     </div>
 )
