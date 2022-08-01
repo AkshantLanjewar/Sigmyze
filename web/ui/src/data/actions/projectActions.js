@@ -39,3 +39,32 @@ export const RemoveAllIndicators = () => {
         payload: {}
     }
 }
+
+export const AddDocument = (document_id, document_name, document_content) => {
+    return {
+        type: "add_document",
+        payload: {
+            document_id: document_id,
+            document_name: document_name,
+            document_content: document_content
+        }
+    }
+}
+
+export const RemoveDocument = (document_id) => {
+    return {
+        type: "remove_document",
+        payload: {
+            document_id: document_id
+        }
+    }
+}
+
+export const HideTab = (tab_id) => {
+    return {
+        type: "hide_tab",
+        payload: {
+            tab_id: tab_id
+        }
+    }
+}

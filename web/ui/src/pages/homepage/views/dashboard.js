@@ -45,28 +45,46 @@ const Dashboard = ({ user }) => {
                             Create Project
                         </Button>
                     </Group>
-                    
-                    <Tabs color={'gray'} mt={"lg"} pl={"lg"} pr={"lg"}>
-                        <Tabs.Tab 
-                            label="Recently Edited Projects" 
-                            icon={<BsClockFill size={14} />}
-                        >
-                            <ProjectsTable />
-                        </Tabs.Tab>
 
-                        <Tabs.Tab
-                            label="All Projects"
-                            icon={<AiFillAppstore size={14} />}
-                        >
-                            <ProjectsTable />
-                        </Tabs.Tab>
+                    <Tabs 
+                        defaultValue={"recent"}
+                        color={'pink'}
+                        mt={'lg'}
+                        pl={'lg'}
+                        pr={'lg'}
+                    >
+                        <Tabs.List>
+                            <Tabs.Tab 
+                                value={"recent"}
+                                icon={<BsClockFill size={14} />}
+                            >
+                                Recently Edited Projects
+                            </Tabs.Tab>
 
-                        <Tabs.Tab
-                            label="Archived Projects"
-                            icon={<FaArchive size={14} />}
-                        >
+                            <Tabs.Tab 
+                                value={"all"}
+                                icon={<AiFillAppstore size={14} />}
+                            >
+                                All Projects
+                            </Tabs.Tab>
+
+                            <Tabs.Tab 
+                                value={"archive"}
+                                icon={<FaArchive size={14} />}
+                            >
+                                Archived Projects
+                            </Tabs.Tab>
+                        </Tabs.List>
+
+                        <Tabs.Panel value={'recent'} pt={'xs'}>
                             <ProjectsTable />
-                        </Tabs.Tab>
+                        </Tabs.Panel>
+                        <Tabs.Panel value={'all'} pt={'xs'}>
+                            <ProjectsTable />
+                        </Tabs.Panel>
+                        <Tabs.Panel value={'archive'} pt={'xs'}>
+                            <ProjectsTable />
+                        </Tabs.Panel>
                     </Tabs>
                 </Grid.Col>
 

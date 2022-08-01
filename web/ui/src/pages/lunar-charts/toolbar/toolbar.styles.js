@@ -14,7 +14,7 @@ const useStyles = createStyles((theme) => ({
 
     actionBar: {
         height: "100%",
-        borderRight: `2px solid ${theme.colors.dark[4]}`,
+        borderRight: `2px solid ${theme.colors.dark[6]}`,
         width: 60,
         minWidth: 60,
 

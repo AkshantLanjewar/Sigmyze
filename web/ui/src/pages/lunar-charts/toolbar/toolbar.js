@@ -2,17 +2,13 @@ import React, { useState } from "react"
 
 import useStyles from "./toolbar.styles"
 import { 
-    Tooltip ,
-    Text,
-    Title,
-    Menu
+    Tooltip
 } from "@mantine/core"
 
-import Layers       from "./layers/layers"
+import Layers       from "./layers"
 import AddIndicator from "./add-indicator/add-indicator"
 
 import { BsStack } from 'react-icons/bs'
-import { IoMdAdd } from 'react-icons/io' 
 
 let actionBarItems = [
     { label: "Layers",        icon: <BsStack size={20} />,  active: true },

@@ -8,12 +8,6 @@ function LunarChart({
 }) {
     const ref = React.createRef()
 
-    registerInteraction('drag-move', {
-        start: [{ trigger: 'plot:mousedown', action: 'scale-translate: start' }],
-        processing: [{ trigger: 'plot:mousemove', action: 'scale-translate:translate', throttle: {wait: 100, leading: true, trailing: false} }],
-        end: [{ trigger: 'plot:mouseup', action: 'scale-translate:end' }]
-    })
-
     function BuildChart() {
         let current       = ref.current
         current.innerHTML = ""

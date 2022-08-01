@@ -102,7 +102,9 @@ const ChartCard = ({
         removeAllIndicators()
         addIndicator(payload)
 
-        window.location.replace("/lunar")
+        setTimeout(() => {
+            window.location.replace("/lunar")
+        }, 500)
     }
 
     return (

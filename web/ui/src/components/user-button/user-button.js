@@ -25,7 +25,10 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
 
         fetch("/api/v1/auth/refresh-token", {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwt_token}` 
+            }
         }).then(res => {
             let data = res.json()
 
@@ -45,7 +48,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
     })
 
     useEffect(() => {
-        ManageAuthState()
+        ManageAuthState(user)
         GrabUserData()
     }, [])
 
@@ -76,7 +79,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
         })  
     }
 
-    setInterval(ManageAuthState, 60000 * 15)
+    setInterval(() => { ManageAuthState(user) }, 60000 * 15)
 
     function Logout() {
         fetch("/api/v1/auth/revoke-token", {

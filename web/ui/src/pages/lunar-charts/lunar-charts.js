@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 
-import Navbar  from "./navbar/navbar"
-import Toolbar from "./toolbar/toolbar"
-import Chart   from "./chart/chart"
+import Navbar     from "./navbar/navbar"
+import Toolbar    from "./toolbar/toolbar"
+import TabManager from "./tab-manager/tab-manager"
 
 import { RemoveIndicator } from "../../data/actions/projectActions"
 
@@ -15,25 +15,23 @@ import { connect } from "react-redux"
 import { v4 as uuidv4 } from 'uuid'
 import { FaMix } from 'react-icons/fa'
 
-let default_tab = [
-    {
-        name: 'Combined Chart',
-        icon: <FaMix size={14} />,
-        editable: false,
-        type: 'chart',
+let default_tab = {
+    name: 'Combined Chart',
+    icon: <FaMix size={14} />,
+    editable: false,
+    type: 'chart',
 
-        names: [],
-        data: [],
-        id: uuidv4()
-    }
-]
+    names: [],
+    data: [],
+    id: uuidv4()
+}
 
 const LunarCharts = ({ project, user, removeIndicator }) => {
     const { classes }                               = useStyles()
     const [displayLoginModal, setDisplayLoginModal] = useState(false)
 
     //chart glob states
-    const [tabs, setTabs]             = useState(default_tab)
+    const [tabs, setTabs]             = useState([default_tab])
     const [hiddenTabs, setHiddenTabs] = useState([])
     const [openedTabs, setOpenedTabs] = useState([])
 
@@ -87,13 +85,7 @@ const LunarCharts = ({ project, user, removeIndicator }) => {
             <div className={classes.body}>
                 <Toolbar openTab={OpenTab} />
                 
-                <Chart 
-                    tabs={tabs} 
-                    setTabs={setTabs} 
-                    openedTabs={openedTabs} 
-                    setOpenedTabs={setOpenedTabs}
-                    setHiddenTabs={setHiddenTabs} 
-                />
+                <TabManager />
             </div>
         </div>
     )
