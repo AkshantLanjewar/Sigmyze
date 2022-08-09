@@ -14,31 +14,46 @@ import {
 
 import UserControl    from "./user-control"
 
+let time_diff = 1000 * 60 * 5
+
 const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAction, user }) => {
     //manage the refreshing of the token here
     async function ManageAuthState(user) {
-        const jwt_token = user.jwt_token
+        const jwt_token = user.jwtToken
         const u_state   = user.userState
 
-        if(jwt_token == "" || u_state == "signedout")
+        if(jwt_token == "" || u_state == "signedout" || jwt_token == undefined)
             return
 
-        fetch("/api/v1/auth/refresh-token", {
-            method: "POST",
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}` 
-            }
-        }).then(res => {
-            let data = res.json()
+        let timestamp = localStorage.getItem("jwt_stamp")
+        if(timestamp == null) {
+            let n_timestamp = new Date().getTime()
+            localStorage.setItem("jwt_stamp", n_timestamp)
+            timestamp = n_timestamp
+        }
 
-            const n_token = data.token
-            authAction({
-                jwtToken: n_token,
-                verified: user.verified,
-                userState: user.userState
+        timestamp = parseInt(timestamp)
+        if(new Date().getTime() - timestamp > 1000 * 60 * 5) {
+            localStorage.setItem("jwt_stamp", new Date().getTime())
+            console.log("[Lunar DEBUG] : Refreshing Token")
+
+            fetch("/api/v1/auth/refresh-token", {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwt_token}` 
+                }
+            }).then(res => {
+                let data = res.json()
+
+                const n_token = data.token
+                authAction({
+                    jwtToken: n_token,
+                    verified: user.verified,
+                    userState: user.userState
+                })
             })
-        })
+        }
     }
 
     const [userData, setUserData] = useState({
@@ -58,7 +73,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
 
     function GrabUserData() {
         let token = user.jwtToken
-        if(token == "")
+        if(token == "" || token == undefined)
             return
 
         fetch("/api/v1/auth/user-data", {
@@ -79,7 +94,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
         })  
     }
 
-    setInterval(() => { ManageAuthState(user) }, 60000 * 15)
+    setInterval(() => { ManageAuthState(user) }, 30000)
 
     function Logout() {
         fetch("/api/v1/auth/revoke-token", {

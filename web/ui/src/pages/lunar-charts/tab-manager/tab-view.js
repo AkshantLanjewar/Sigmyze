@@ -1,6 +1,8 @@
 import React from 'react'
 
-import ChartView from './views/chart-view'
+import ChartView    from './views/chart-view'
+import DocumentView from './views/document-view'
+
 import { Box } from '@mantine/core'
 
 const TabView = ({ tab, scale_change }) => {
@@ -13,6 +15,13 @@ const TabView = ({ tab, scale_change }) => {
                         scale_change={scale_change} 
                         tab={tab}
                     /> 
+                )
+                : null
+            }
+
+            {tab.type == 'document'
+                ? (
+                    <DocumentView />
                 )
                 : null
             }

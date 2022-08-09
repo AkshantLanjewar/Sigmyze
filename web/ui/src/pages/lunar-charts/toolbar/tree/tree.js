@@ -31,7 +31,7 @@ const ProjectTree = ({ root }) => {
                     weight={600}
                     transform={'uppercase'}
                 >
-                    Explore
+                    Explorer
                 </Text>
             </Box>
 
@@ -41,8 +41,11 @@ const ProjectTree = ({ root }) => {
                     node_title={step.node_title}
                     node_icon={step.node_icon}
                     children={step.children}
+                    hoverActions={step.hoverActions}
                     actions={step.actions}
                     default_open={step.default_open}
+                    useTooltip={step.useTooltip}
+                    tooltipText={step.tooltipText}
                     key={step.node_id}
                 />
             ))}

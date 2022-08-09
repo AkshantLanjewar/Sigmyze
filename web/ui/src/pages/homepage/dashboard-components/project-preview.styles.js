@@ -4,8 +4,7 @@ const useStyles = createStyles((theme) => ({
     card: {
         cursor: 'pointer',
         backgroundColor: theme.colors.dark[5],
-        border: `1px solid ${theme.colors.dark[7]}`,
-        width: 303.31
+        border: `1px solid ${theme.colors.dark[7]}`
     },
 
     chart: {

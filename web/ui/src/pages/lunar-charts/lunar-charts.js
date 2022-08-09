@@ -12,28 +12,9 @@ import useStyles from "./lunar-charts.styles"
 
 import { connect } from "react-redux"
 
-import { v4 as uuidv4 } from 'uuid'
-import { FaMix } from 'react-icons/fa'
-
-let default_tab = {
-    name: 'Combined Chart',
-    icon: <FaMix size={14} />,
-    editable: false,
-    type: 'chart',
-
-    names: [],
-    data: [],
-    id: uuidv4()
-}
-
 const LunarCharts = ({ project, user, removeIndicator }) => {
     const { classes }                               = useStyles()
     const [displayLoginModal, setDisplayLoginModal] = useState(false)
-
-    //chart glob states
-    const [tabs, setTabs]             = useState([default_tab])
-    const [hiddenTabs, setHiddenTabs] = useState([])
-    const [openedTabs, setOpenedTabs] = useState([])
 
     useEffect(() => {
         let project_id         = project.project_id
@@ -60,30 +41,13 @@ const LunarCharts = ({ project, user, removeIndicator }) => {
         removeIndicator(ind_id, obj_id)
     }
 
-    function OpenTab(indicator_id, object_id) {
-        let name = `${indicator_id}: ${object_id}`
-        let tab  = null
-
-        if(openedTabs.filter(e => e.name == name).length > 0)
-            return
-        for(let i = 0; i < hiddenTabs.length; i++) {
-            let hiddenTab = hiddenTabs[i]
-            if(hiddenTab.name == name)
-                tab = hiddenTab
-        }
-
-        let o_tabs = tabs
-        o_tabs.push(tab)
-        setTabs([...o_tabs])
-    }
-
     return (
         <div className={classes.wrapper}>
             <Navbar />
             <DemoModal active={displayLoginModal} close={CloseDemoModal} />
 
             <div className={classes.body}>
-                <Toolbar openTab={OpenTab} />
+                <Toolbar />
                 
                 <TabManager />
             </div>

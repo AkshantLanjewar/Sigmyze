@@ -6,7 +6,8 @@ import {
     Menu,
     TextInput,
     Grid, 
-    Text
+    Text,
+    ActionIcon
 } from '@mantine/core'
 
 import useStyles from './project-table.styles'
@@ -17,7 +18,8 @@ import {
 } from 'react-icons/ai'
 import { 
     BsFillGearFill,
-    BsArchiveFill 
+    BsArchiveFill,
+    BsThreeDots 
 } from 'react-icons/bs'
 
 import { FaSearch } from 'react-icons/fa'
@@ -53,15 +55,28 @@ const ProjectsTable = ({ }) => {
         <Group position={'right'}>
             <Menu
                 position={'right'}
-                placement={'end'}
+                placement={'bottom-end'}
+                shadow={'lg'}
                 withArrow
             >
-                <Menu.Label>Projects</Menu.Label>
+                <Menu.Target>
+                    <ActionIcon
+                        variant={'transparent'}
+                        color={'gray'}
+                        size={'sm'}
+                    >
+                        <BsThreeDots />
+                    </ActionIcon>
+                </Menu.Target>
 
-                <Menu.Item icon={<AiFillFolderOpen size={14} />}>Open Project</Menu.Item>
-                <Menu.Item icon={<BsFillGearFill size={14} />}>Project Settings</Menu.Item>
-                <Menu.Item icon={<BsArchiveFill size={14} />}>Archive Project</Menu.Item>
-                <Menu.Item icon={<AiFillDelete size={14} />}>Delete Project</Menu.Item>
+                <Menu.Dropdown>
+                    <Menu.Label>Projects</Menu.Label>
+
+                    <Menu.Item icon={<AiFillFolderOpen size={14} />}>Open Project</Menu.Item>
+                    <Menu.Item icon={<BsFillGearFill size={14} />}>Project Settings</Menu.Item>
+                    <Menu.Item icon={<BsArchiveFill size={14} />}>Archive Project</Menu.Item>
+                    <Menu.Item icon={<AiFillDelete size={14} />}>Delete Project</Menu.Item>
+                </Menu.Dropdown>
             </Menu>
         </Group>
     )

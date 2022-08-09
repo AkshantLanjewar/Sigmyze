@@ -33,6 +33,7 @@ let default_state = {
         1. document_id
         2. document_name
         3. document_content
+        4. data_location
 */
 
 export default ( state = default_state, action ) => {
@@ -119,7 +120,7 @@ export default ( state = default_state, action ) => {
 
             e_state['tabs'] = n_tabs
             return { ...e_state }
-        case "open_tab":
+        case "open_chart_tab":
             let o_tab = {
                 name: `${payload.object_id}: ${payload.indicator_id}`,
                 icon: "bar",
@@ -133,26 +134,66 @@ export default ( state = default_state, action ) => {
             tabs.push(o_tab)
             e_state['tabs'] = [...new Set(tabs)]
             return { ...e_state }
+        case "open_document_tab":
+            let do_tab = {
+                name: payload.document_name,
+                icon: "doc",
+                editable: true,
+                type: 'document',
+                data_loc: payload.data_location,
+
+                id: uuidv4()
+            }
+
+            tabs.push(do_tab)
+            e_state['tabs'] = [...new Set(tabs)]
+            return { ...e_state }
         case "remove_all_indicator":
             e_state['project_data']['indicators'] = indicators
+            e_state['project_data']['documents']  = documents
             e_state['tabs']                       = [default_tab]
 
             return { ...e_state }
         case "add_document":
             project_data['documents'].push(payload)
+            let d_tab = {
+                name: payload.document_name,
+                icon: "doc",
+                editable: true,
+                type: 'document',
+                data_loc: payload.data_location,
+
+                id: uuidv4()
+            }
+            
+            e_state['tabs'].push(d_tab)
+            e_state['tabs']         = [...new Set(e_state['tabs'])]
             e_state['project_data'] = project_data
 
             return { ...e_state }
         case "remove_document":
             for(let i = 0; i < project_data.documents.length; i++) {
-                let document = project_data.documents.length
+                let document = project_data.documents[i]
 
                 if(document.document_id == payload.document_id)
                     continue
                 documents.push(document)
             }
 
+            n_tabs.push(tabs[0])
+
+            for(let i = 0; i < tabs.length; i++) {
+                if(i == 0)
+                    continue
+
+                let tab   = tabs[i]
+                if(tab.data_loc == payload.data_loc)
+                    continue
+                n_tabs.push(tab)
+            }
+
             project_data['documents'] = documents
+            e_state['tabs']           = n_tabs
             e_state['project_data']   = project_data
             return { ...e_state }
         default: 

@@ -137,6 +137,8 @@ namespace SigmyzeServer.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
             AuthResp resp    = await _userService.RefreshToken(refreshToken, ipAddress());
+
+            Console.WriteLine(resp.RefreshToken);
             if(resp.Authorized)
                 setTokenCookie(resp.RefreshToken);
 

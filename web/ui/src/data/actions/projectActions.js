@@ -40,31 +40,54 @@ export const RemoveAllIndicators = () => {
     }
 }
 
-export const AddDocument = (document_id, document_name, document_content) => {
-    return {
-        type: "add_document",
-        payload: {
-            document_id: document_id,
-            document_name: document_name,
-            document_content: document_content
-        }
-    }
-}
-
-export const RemoveDocument = (document_id) => {
-    return {
-        type: "remove_document",
-        payload: {
-            document_id: document_id
-        }
-    }
-}
-
 export const HideTab = (tab_id) => {
     return {
         type: "hide_tab",
         payload: {
             tab_id: tab_id
+        }
+    }
+}
+
+export const OpenChartTab = (dataset, object_id, indicator_id) => {
+    return {
+        type: "open_chart_tab",
+        payload: {
+            dataset: dataset,
+            object_id: object_id,
+            indicator_id: indicator_id
+        }
+    }
+}
+
+export const OpenDocumentTab = (document_name, data_location) => {
+    return {
+        type: "open_document_tab",
+        payload: {
+            document_name: document_name,
+            data_location: data_location
+        }
+    }
+}
+
+export const CreateDocument = (document_id, document_name, document_content, data_location) => {
+    return {
+        type: "add_document",
+        payload: {
+            document_id: document_id,
+            document_name: document_name,
+            document_content: document_content,
+            data_location: data_location
+        }
+    }
+}
+
+export const RemoveDocument = (document_id, data_loc) => {
+    return {
+        type: "remove_document",
+        payload: {
+            document_id: document_id,
+            data_loc: data_loc
         }
     }
 }

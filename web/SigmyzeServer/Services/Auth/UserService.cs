@@ -89,10 +89,11 @@ namespace SigmyzeServer.Services.Auth
             pUser.RefreshToken  = newRefreshToken;
             await _authService.UpdateAsyncToken(token, pUser);
 
-            var jwtToken    = generateJwtToken(pUser);
-            resp.Authorized = true;
-            resp.Token      = jwtToken;
-            resp.Verified   = pUser.Verified;
+            var jwtToken      = generateJwtToken(pUser);
+            resp.Authorized   = true;
+            resp.Token        = jwtToken;
+            resp.Verified     = pUser.Verified;
+            resp.RefreshToken = newRefreshToken.Token;
 
             return resp;
         }

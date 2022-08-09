@@ -28,11 +28,16 @@ const Dashboard = ({ user }) => {
                 <Grid.Col span={16} pl={"xl"}>
                     <Title order={2}>Welcome Back User</Title>
 
-                    <Group position={"left"} spacing={"md"} mt={"lg"}>
+                    <SimpleGrid 
+                        position={"left"} 
+                        spacing={"md"} 
+                        mt={"lg"}
+                        cols={3}
+                    >
                         <ProjectPreview />
                         <ProjectPreview />
                         <ProjectPreview />
-                    </Group>
+                    </SimpleGrid>
 
                     <Group position={'apart'} pt={"xl"} mt={'xl'}>
                         <Text size={"lg"} weight={"bold"}>Manage Projects</Text>

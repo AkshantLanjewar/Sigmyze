@@ -7,23 +7,25 @@ import {
 
 import Layers       from "./layers"
 import AddIndicator from "./add-indicator/add-indicator"
+import AddDocument  from "./add-document/add-document"
 
 import { BsStack } from 'react-icons/bs'
 
 let actionBarItems = [
-    { label: "Layers",        icon: <BsStack size={20} />,  active: true },
+    { label: "Explorer", icon: <BsStack size={20} />,  active: true },
 ]
 
-const Toolbar = ({ openTab }) => {
+const Toolbar = ({ }) => {
     const { classes, cx } = useStyles()
 
     const [actionBar, setActionBar]       = useState(actionBarItems)
-    const [activeAction, setActiveAction] = useState("Layers")
-    const [openAdd, setOpenAdd]           = useState(false)
+    const [activeAction, setActiveAction] = useState("Explorer")
+
+    const [documentModal, setDocumentModal] = useState(false)
+    const [openAdd, setOpenAdd]             = useState(false)
 
     const labelHash = {
-        "Layers": <Layers openTab={openTab} setOpenAdd={setOpenAdd} />,
-        "Add Indicators": <AddIndicator />
+        "Explorer": <Layers setOpenAdd={setOpenAdd} setDocumentModal={setDocumentModal} />,
     }
 
     function StackClick(label) {
@@ -67,6 +69,11 @@ const Toolbar = ({ openTab }) => {
             <AddIndicator 
                 opened={openAdd}
                 setOpened={setOpenAdd}
+            />
+
+            <AddDocument
+                opened={documentModal}
+                setOpened={setDocumentModal}
             />
         </div>
     )

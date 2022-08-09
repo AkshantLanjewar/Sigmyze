@@ -12,12 +12,15 @@ import { connect } from 'react-redux'
 
 import { HideTab } from '../../../data/actions/projectActions'
 
-import { FaMix }        from 'react-icons/fa'
-import { MdBarChart }   from 'react-icons/md'
+import { FaMix }          from 'react-icons/fa'
+import { MdBarChart }     from 'react-icons/md'
+import { GrDocumentText } from 'react-icons/gr'
+import { HiDocumentText } from 'react-icons/hi'
 
 let icon_dict = {
     "mix": <FaMix size={14} />,
-    "bar": <MdBarChart size={14} />
+    "bar": <MdBarChart size={14} />,
+    "doc": <HiDocumentText size={14} />
 }
 
 const TabManager = ({ project, hide_tab }) => {
@@ -25,7 +28,7 @@ const TabManager = ({ project, hide_tab }) => {
     const [tabs, setTabs]             = useState([])
 
     useEffect(() => {
-        setActive(project.tabs[0].id)
+        setActive(project.tabs[project.tabs.length - 1].id)
 
         let n_tabs = []
         for(let i = 0; i < project.tabs.length; i++) {
@@ -47,7 +50,7 @@ const TabManager = ({ project, hide_tab }) => {
                 backgroundColor: theme.colors.dark[8],
                 height: "calc(100% - 10px)",
                 borderRadius: theme.radius.md,
-                marginRight: theme.spacing.md
+                marginRight: theme.spacing.xs
             })}
         >
             <Tabs
