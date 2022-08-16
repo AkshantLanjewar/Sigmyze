@@ -1,0 +1,20 @@
+@import '../../vars.scss';
+
+.text-node {
+    cursor: text;
+    outline: none;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+
+    &:focus {
+        background-color: $dark-7;
+    }
+
+    &:hover {
+        background-color: $dark-7;
+    }
+}
