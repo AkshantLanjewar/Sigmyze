@@ -3,7 +3,7 @@ import React from 'react'
 import ChartView    from './views/chart-view'
 import DocumentView from './views/document-view'
 
-import { Box } from '@mantine/core'
+import { Box, ScrollArea } from '@mantine/core'
 
 const TabView = ({ tab, scale_change }) => {
     return (
@@ -20,9 +20,7 @@ const TabView = ({ tab, scale_change }) => {
             }
 
             {tab.type == 'document'
-                ? (
-                    <DocumentView />
-                )
+                ? <DocumentView />
                 : null
             }
         </Box>

@@ -1,4 +1,32 @@
 import { MdTitle } from 'react-icons/md'
+import { BiImageAlt } from 'react-icons/bi'
+
+function ExtractTags(list) {
+    let nList = []
+    for(let i = 0; i < list.length; i++) {
+        let elem = list[i]
+        if('tag' in elem)
+            nList.push(elem['tag'])
+    }
+
+    return nList
+}
+
+let image_blocks = [
+    {
+        type: "Title",
+        category: "Image",
+        title: "Image Node"
+    },
+    {
+        category: "Image",
+        id_name: "image",
+        fullname: "Image",
+        tag: "img",
+
+        icon: <BiImageAlt size={14} />
+    }
+]
 
 let text_blocks = [
     {
@@ -64,4 +92,6 @@ let text_blocks = [
     }
 ]
 
-export default [...text_blocks]
+export { ExtractTags }
+export { text_blocks, image_blocks }
+export default [...text_blocks, ...image_blocks]

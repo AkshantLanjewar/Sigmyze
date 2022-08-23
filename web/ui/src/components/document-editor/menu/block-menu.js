@@ -54,7 +54,8 @@ class BlockMenu extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const command = this.state.command
+        const command   = this.state.command
+        let title_nodes = 0
 
         if(prevState.command !== command) {
             let items = []
@@ -139,6 +140,7 @@ class BlockMenu extends React.Component {
                     borderRadius: theme.radius.sm,
                     width: 250,
                     minHeight: 200,
+                    zIndex: 99,
 
                     paddingLeft: theme.spacing.xs,
                     paddingRight: theme.spacing.xs,

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 
 import { 
     Tabs,
-    Box 
+    Box,
+    ScrollArea 
 } from '@mantine/core'
 
 import TabHeader from './tab-header'
@@ -14,7 +15,6 @@ import { HideTab } from '../../../data/actions/projectActions'
 
 import { FaMix }          from 'react-icons/fa'
 import { MdBarChart }     from 'react-icons/md'
-import { GrDocumentText } from 'react-icons/gr'
 import { HiDocumentText } from 'react-icons/hi'
 
 let icon_dict = {
@@ -89,8 +89,13 @@ const TabManager = ({ project, hide_tab }) => {
                     <Tabs.Panel
                         value={step.id}
                         pt={'xs'}
-                        sx={{ flexGrow: 1, height: "100%" }}
                         key={`${step.id}-PANEL`}
+
+                        sx={{ 
+                            flexGrow: 1, 
+                            flexBasis: 0,
+                            height: "100%" 
+                        }}
                     >
                         <TabView 
                             tab={step} 

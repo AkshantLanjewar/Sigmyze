@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect }   from 'react'
+import React from 'react'
 
 import BlockMenu       from '../menu/block-menu'
 import { Box }         from '@mantine/core'
-import { useHover }    from '@mantine/hooks'
 import ContentEditable from "react-contenteditable"
 
 import './text-style.scss'
 
-function getCaretCoordinates() {
+function getCaretCoordinates(el) {
     let x, y
     const isSupported = typeof window.getSelection !== 'undefined'
 
@@ -18,10 +17,10 @@ function getCaretCoordinates() {
             const range = selection.getRangeAt(0).cloneRange()
             range.collapse(false)
             const rect = range.getClientRects()[0]
-
+            
             if (rect) {
                 x = rect.left
-                y = rect.top
+                y = rect.top - window.scrollY
             }
         }
     }
@@ -29,19 +28,22 @@ function getCaretCoordinates() {
     return { x: x, y: y }
 }
 
-const setCaretToEnd = (element, pos) => {
-    const setPos = document.createRange()
-    const set    = window.getSelection()
+const setCaretToEnd = (el, pos) => {
+    el.focus()
 
-    setPos.setStart(element.childNodes[0], pos)
-    setPos.collapse(true)
-    set.removeAllRanges()
-    set.addRange(setPos)
-
-    element.focus()
+    const node  = el.firstChild
+    const range = document.createRange()
+    
+    range.setStart(node, pos)
+    range.setEnd(node, pos)
+    
+    const sel = window.getSelection()
+    sel.removeAllRanges()
+    sel.addRange(range)
 }
 
-const CMD_KEY = '/'
+const CMD_KEY     = '/'
+const DEFAULT_VAL = 'Type / for more options'
 
 class TextBlock extends React.Component {
     constructor(props) {
@@ -54,11 +56,14 @@ class TextBlock extends React.Component {
         this.closeMenuHandler      = this.closeMenuHandler.bind(this)
         this.openSelectMenuHandler = this.openSelectMenuHandler.bind(this)
         this.updateBlockHandler    = this.updateBlockHandler.bind(this)
+        this.onFocus               = this.onFocus.bind(this)
+        this.onBlur                = this.onBlur.bind(this)
 
         this.contentEditable = React.createRef()
         this.state = {
-            html: "",
+            html: DEFAULT_VAL,
             tag: "p",
+            empty: true,
 
             backup: "",
             prevKey: "",
@@ -71,18 +76,31 @@ class TextBlock extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ html: this.props.html, tag: this.props.tag })
+        if(this.props.created)
+            this.contentEditable.current.focus()
+        if(this.props.html.replace('\n', '').length == 0 && !this.props.created)
+            this.setState({ html: DEFAULT_VAL, empty: true, tag: this.props.tag })
+        else
+            this.setState({ html: this.props.html, empty: false, tag: this.props.tag })
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let tag = this.props.tag
+        let tag     = this.props.tag
+        let created = this.props.created
+
         if(prevProps.tag !== tag) {
             this.setState({ html: this.props.html, tag: this.props.tag }, () => {
-                let length = this.contentEditable.current.innerText.length
+                let length = this.contentEditable.current.innerText.replace('\n', '').length
 
                 this.closeMenuHandler()
-                setCaretToEnd(this.contentEditable.current, length - 1)
+                setCaretToEnd(this.contentEditable.current, length)
+                this.contentEditable.current.focus()
             })
+        }
+
+        if(created !== prevProps.created) {
+            if(created)
+                this.contentEditable.current.focus()
         }
     }
 
@@ -90,11 +108,18 @@ class TextBlock extends React.Component {
         this.setState({ html: e.target.value })
     }
 
-    onKeyDownHandler(e) {        
+    onKeyDownHandler(e) {  
+        let id = this.props.id      
+
         if(e.key == CMD_KEY)
             this.setState({ backup: this.state.html })
         if(e.key === "Enter" && this.state.prevKey !== "Shift" && !this.state.menuOpen) {
             e.preventDefault()
+            this.props.CreateBlock(id)
+        }
+        if(e.key == "Backspace" && ( !this.state.html || this.state.html === "<br>" )) {
+            e.preventDefault()
+            this.props.DeleteBlock(id)
         }
 
         this.setState({ prevKey: e.key })
@@ -102,7 +127,7 @@ class TextBlock extends React.Component {
 
     onKeyUpHandler(e) {
         if(this.state.menuOpen) {
-            let caretPos = getCaretCoordinates()
+            let caretPos = getCaretCoordinates(this.contentEditable.current)
             this.setState({ x: caretPos.x, y: caretPos.y })
         }
 
@@ -111,7 +136,7 @@ class TextBlock extends React.Component {
     }
 
     openSelectMenuHandler() {
-        let caretPos = getCaretCoordinates()
+        let caretPos = getCaretCoordinates(this.contentEditable.current)
         this.setState({ menuOpen: true, x: caretPos.x, y: caretPos.y })
         document.addEventListener("click", this.closeMenuHandler)
     }
@@ -121,10 +146,29 @@ class TextBlock extends React.Component {
         document.removeEventListener("click", this.closeMenuHandler)
     }
 
+    onFocus() {
+        let length = this.contentEditable.current.innerText.replace('\n', '').length
+        setCaretToEnd(this.contentEditable.current, length)
+
+        this.props.setFocus(true)
+        if(this.state.empty && this.state.html == DEFAULT_VAL)
+            this.setState({ empty: false, html: "" })
+    }
+
+    onBlur() {
+        this.updateBlockHandler(this.props.tag) 
+        this.props.setFocus(false)
+
+        let length = this.contentEditable.current.innerText.replace('\n', '').length
+        if(length == 0)
+            this.setState({ empty: true, html: DEFAULT_VAL })
+    }
+
     updateBlockHandler(tag) {
         let id   = this.props.id
         let html = this.state.menuOpen ? this.state.backup : this.state.html 
 
+        this.contentEditable.current.blur()
         this.props.UpdateNode(id, tag, { text: html })
     }
 
@@ -134,8 +178,7 @@ class TextBlock extends React.Component {
                 sx={{ 
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'center' ,
-
+                    justifyContent: 'start' ,
                     flexGrow: 1
                 }}
             >
@@ -156,6 +199,14 @@ class TextBlock extends React.Component {
                     onChange={this.onChangeHandler}
                     onKeyDown={this.onKeyDownHandler}
                     onKeyUp={this.onKeyUpHandler}
+
+                    style={{
+                        fontStyle: this.state.empty ? 'italic' : 'normal',
+                        color: this.state.empty ? '#A6A7AB' : 'inherit',
+                    }}
+
+                    onFocus={this.onFocus}
+                    onBlur={this.onBlur}                    
                     className={"text-node"}
                 />
             </Box>

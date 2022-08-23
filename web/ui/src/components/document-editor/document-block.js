@@ -7,22 +7,25 @@ import {
 } from '@mantine/core'
 
 import { BiGridHorizontal } from 'react-icons/bi'
-import GenerateTextStyles   from './text-generator'
 
-import TextBlock from './block-types/text-block'
+import TextBlock  from './block-types/text-block'
+import ImageBlock from './block-types/image/image-block'
 
-const DocumentBlock = ({ block, UpdateNode }) => {
+import { image_blocks, text_blocks, ExtractTags } from './menu/menu-components'
+
+const DocumentBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
     const [info, setInfo]     = useState({ blockType: "text", blockStyles: {} })
+    const [focus, setFocus]   = useState(false)
     const theme               = useMantineTheme()
-    let contentRef            = React.createRef()
 
     function ProcessBlock() {
-        let block_type = block.tag
-        let block_text = GenerateTextStyles(theme, block_type)[0]
+        let text_tags  = ExtractTags(text_blocks)
+        let image_tags = ExtractTags(image_blocks)
 
-        if(block_text.text) {
-            setInfo({ blockType: "text", blockStyles: block_text.styles })
-        }
+        if(text_tags.includes(block.tag))
+            setInfo({ blockType: "text" })
+        if(image_tags.includes(block.tag))
+            setInfo({ blockType: "image" })
     }
 
     useEffect(() => {
@@ -39,13 +42,16 @@ const DocumentBlock = ({ block, UpdateNode }) => {
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-
-                width: '100%'
+                width: '100%',
             }}
+
+            onFocus={() => { setFocus(true) }}
+            onBlur={() => { setFocus(false) }}
         >
             <ActionIcon 
                 sx={{ 
-                    cursor: 'grab'
+                    cursor: 'grab',
+                    opacity: focus ? 1 : 0
                 }}
                 mr={'xs'}
             >
@@ -58,12 +64,27 @@ const DocumentBlock = ({ block, UpdateNode }) => {
                         html={block.html} 
                         tag={block.tag} 
                         id={block.id}
+                        created={block.created}
                         theme={theme}
+                        focus={focus}
+                        setFocus={setFocus}
                         UpdateNode={UpdateNode} 
+                        CreateBlock={CreateBlock}
+                        DeleteBlock={DeleteBlock}
                     />
                 )
                 : null
             }
+
+            {info.blockType == "image" && (
+                <ImageBlock 
+                    block={block}
+                    data={block.data}
+                    UpdateNode={UpdateNode} 
+                    CreateBlock={CreateBlock}
+                    DeleteBlock={DeleteBlock}
+                />
+            )}
         </Box>
     )
 }
