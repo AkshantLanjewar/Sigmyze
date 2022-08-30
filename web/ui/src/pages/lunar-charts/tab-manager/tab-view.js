@@ -19,8 +19,8 @@ const TabView = ({ tab, scale_change }) => {
                 : null
             }
 
-            {tab.type == 'document'
-                ? <DocumentView />
+            {tab.type == 'document' 
+                ? <DocumentView scale_change={scale_change} />
                 : null
             }
         </Box>

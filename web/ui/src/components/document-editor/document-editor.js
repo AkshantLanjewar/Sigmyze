@@ -3,9 +3,9 @@ import { Box, ScrollArea }   from '@mantine/core'
 import { v4 as uuidv4 }      from 'uuid'
 import DocumentBlock         from './document-block'
 
-import { image_blocks, text_blocks, ExtractTags } from './menu/menu-components'
+import { multimedia_blocks, text_blocks, ExtractTags } from './menu/menu-components'
 
-const DocumentEditor = ({ }) => {
+const DocumentEditor = ({ scale_change }) => {
     const [blocks, setBlocks] = useState([])
     const [height, setHeight] = useState(0)
     const [width, setWidth]   = useState(0)
@@ -16,7 +16,7 @@ const DocumentEditor = ({ }) => {
     function UpdateNode(id, tag, data) {
         let n_blocks   = []
         let text_tags  = ExtractTags(text_blocks)
-        let image_tags = ExtractTags(image_blocks)
+        let image_tags = ExtractTags(multimedia_blocks)
 
         for(let i = 0; i < blocks.length; i++) {
             let block = blocks[i]
@@ -63,8 +63,20 @@ const DocumentEditor = ({ }) => {
 
     function DeleteBlock(id) {
         let nBlocks = []
-        if(blocks.length == 1)
+
+        if(blocks.length == 1) {
+            let block = blocks[0]
+            if(block.tag == "img" || block.tag == "chart") {
+                block.created = false
+                block.data    = {}
+                block.html    = ""
+                block.tag     = "h1"
+
+                setBlocks([block])
+            }
+            
             return
+        }
 
         for(let i = 0; i < blocks.length; i++) {
             let block = blocks[i]
@@ -82,13 +94,22 @@ const DocumentEditor = ({ }) => {
         setBlocks([...nBlocks])
     }
 
-    useEffect(() => {
-        let rect = ref.current.getBoundingClientRect()
-        setWidth(rect.width - 48)
-        setHeight(rect.height - 16)
+    function Scale() {
+        let rect  = ref.current.getBoundingClientRect()
+        let width = 8.5 * 96
 
+        setWidth(width)
+        setHeight(rect.height - 16)
+    }
+
+    useEffect(() => {
+        Scale()
         setBlocks([inital_block])
     }, [])
+
+    useEffect(() => {
+        Scale()
+    }, [scale_change])
     
     return (
         <Box
@@ -98,24 +119,29 @@ const DocumentEditor = ({ }) => {
                 paddingLeft: theme.spacing.xl,
                 paddingRight: theme.spacing.xl,
                 paddingBottom: theme.spacing.md,
-                height: "100%"
+                height: "100%",
+
+                display: 'flex',
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: 'center',
             })}
         >
             <ScrollArea 
                 style={{ 
                     height: height, 
                     width: width ,
-                    position: 'static'
+                    position: 'static',
                 }}
 
                 styles={{ viewport: {
                     display: 'flex',
                     flexDirection: "column",
-                    gap: 5
+                    gap: 5,
                 }}}
 
                 offsetScrollbars
-                type={"always"}
+                type={'hover'}
             >
                 {blocks.map((step, key) => (
                     <DocumentBlock 

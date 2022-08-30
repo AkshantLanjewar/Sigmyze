@@ -1,5 +1,6 @@
-import { MdTitle } from 'react-icons/md'
-import { BiImageAlt } from 'react-icons/bi'
+import { MdTitle }         from 'react-icons/md'
+import { BiImageAlt }      from 'react-icons/bi'
+import { BsClipboardData } from 'react-icons/bs'
 
 function ExtractTags(list) {
     let nList = []
@@ -12,11 +13,11 @@ function ExtractTags(list) {
     return nList
 }
 
-let image_blocks = [
+let multimedia_blocks = [
     {
         type: "Title",
         category: "Image",
-        title: "Image Node"
+        title: "Multimedia Nodes"
     },
     {
         category: "Image",
@@ -25,6 +26,14 @@ let image_blocks = [
         tag: "img",
 
         icon: <BiImageAlt size={14} />
+    },
+    {
+        category: "Image",
+        id_name: "chart",
+        fullname: "Chart",
+        tag: "chart",
+
+        icon: <BsClipboardData size={14} />
     }
 ]
 
@@ -93,5 +102,5 @@ let text_blocks = [
 ]
 
 export { ExtractTags }
-export { text_blocks, image_blocks }
-export default [...text_blocks, ...image_blocks]
+export { text_blocks, multimedia_blocks }
+export default [...text_blocks, ...multimedia_blocks]

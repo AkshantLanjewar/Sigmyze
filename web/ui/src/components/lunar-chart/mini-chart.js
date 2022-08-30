@@ -1,18 +1,21 @@
 import { Chart } from "@antv/g2"
 import React, { useEffect } from 'react'
 
-const MiniLunarChart = ({ data, names }) => {
+const MiniLunarChart = ({ data, names, useTooltip, usePadding, paddingAmount }) => {
     const ref = React.createRef()
 
     function BuildChart() {
         let current       = ref.current
         current.innerHTML = ""
 
-        const chart = new Chart({
-            container: current,
-            autoFit: true,
-            limitInPlot: true
-        })
+        let cfg            = {}
+        cfg['container']   = current
+        cfg['autoFit']     = true
+        cfg['limitInPlot'] = true
+        if(usePadding)
+            cfg['padding'] = paddingAmount
+
+        const chart = new Chart(cfg)
 
         chart.data(data)
 
@@ -35,6 +38,10 @@ const MiniLunarChart = ({ data, names }) => {
         }
 
         chart.axis('date', false)
+        chart.tooltip(false)
+        if(useTooltip == true)
+            chart.tooltip(true)
+
         chart.render()
     }
 
@@ -47,7 +54,10 @@ const MiniLunarChart = ({ data, names }) => {
     }, [data])
 
     return (
-        <div ref={ref} style={{ width: "100%", height: "100%", padding: "1em" }}>
+        <div 
+            ref={ref} 
+            style={{ width: "100%", height: "100%", display: 'flex', alignItems: 'center' }}
+        >
 
         </div>
     )

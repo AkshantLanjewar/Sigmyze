@@ -28,8 +28,11 @@ const TabManager = ({ project, hide_tab }) => {
     const [tabs, setTabs]             = useState([])
 
     useEffect(() => {
-        setActive(project.tabs[project.tabs.length - 1].id)
-
+        if(active == null)
+            setActive(project.tabs[0].id)
+        else
+            setActive(project.tabs[project.tabs.length - 1].id)
+                        
         let n_tabs = []
         for(let i = 0; i < project.tabs.length; i++) {
             let tab   = project.tabs[i]

@@ -1,10 +1,12 @@
 import React from 'react'
 
-import BlockMenu       from '../menu/block-menu'
+import BlockMenu       from '../../menu/block-menu'
 import { Box }         from '@mantine/core'
 import ContentEditable from "react-contenteditable"
 
-import './text-style.scss'
+import TextHandle from './text-handle'
+
+import './text-style.scss' 
 
 function getCaretCoordinates(el) {
     let x, y
@@ -59,6 +61,10 @@ class TextBlock extends React.Component {
         this.onFocus               = this.onFocus.bind(this)
         this.onBlur                = this.onBlur.bind(this)
 
+        //helper setting
+        this.updateAlign = this.updateAlign.bind(this)
+        this.focusInput  = this.focusInput.bind(this)
+
         this.contentEditable = React.createRef()
         this.state = {
             html: DEFAULT_VAL,
@@ -71,13 +77,16 @@ class TextBlock extends React.Component {
             x: 0,
             y: 0,
 
-            focused: false
+            focused: false,
+
+            align: "left"
         }
     }
 
     componentDidMount() {
-        if(this.props.created)
-            this.contentEditable.current.focus()
+        if(this.props.created) 
+            this.focusInput()
+
         if(this.props.html.replace('\n', '').length == 0 && !this.props.created)
             this.setState({ html: DEFAULT_VAL, empty: true, tag: this.props.tag })
         else
@@ -94,7 +103,7 @@ class TextBlock extends React.Component {
 
                 this.closeMenuHandler()
                 setCaretToEnd(this.contentEditable.current, length)
-                this.contentEditable.current.focus()
+                this.focusInput()
             })
         }
 
@@ -102,6 +111,11 @@ class TextBlock extends React.Component {
             if(created)
                 this.contentEditable.current.focus()
         }
+    }
+
+    focusInput() {
+        this.contentEditable.current.focus()
+        this.contentEditable.current.click()
     }
 
     onChangeHandler(e) {
@@ -115,6 +129,7 @@ class TextBlock extends React.Component {
             this.setState({ backup: this.state.html })
         if(e.key === "Enter" && this.state.prevKey !== "Shift" && !this.state.menuOpen) {
             e.preventDefault()
+            this.props.setFocus(false)
             this.props.CreateBlock(id)
         }
         if(e.key == "Backspace" && ( !this.state.html || this.state.html === "<br>" )) {
@@ -150,14 +165,13 @@ class TextBlock extends React.Component {
         let length = this.contentEditable.current.innerText.replace('\n', '').length
         setCaretToEnd(this.contentEditable.current, length)
 
-        this.props.setFocus(true)
+        this.focusInput()
         if(this.state.empty && this.state.html == DEFAULT_VAL)
             this.setState({ empty: false, html: "" })
     }
 
     onBlur() {
         this.updateBlockHandler(this.props.tag) 
-        this.props.setFocus(false)
 
         let length = this.contentEditable.current.innerText.replace('\n', '').length
         if(length == 0)
@@ -172,6 +186,10 @@ class TextBlock extends React.Component {
         this.props.UpdateNode(id, tag, { text: html })
     }
 
+    updateAlign(newAlign) {
+        this.setState({ align: newAlign })
+    }
+
     render() {
         return (
             <Box
@@ -179,7 +197,7 @@ class TextBlock extends React.Component {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'start' ,
-                    flexGrow: 1
+                    flexGrow: 1,
                 }}
             >
                 {this.state.menuOpen && (
@@ -192,23 +210,31 @@ class TextBlock extends React.Component {
                     />
                 )}
 
-                <ContentEditable
-                    html={this.state.html}
-                    tagName={this.state.tag}
-                    innerRef={this.contentEditable}
-                    onChange={this.onChangeHandler}
-                    onKeyDown={this.onKeyDownHandler}
-                    onKeyUp={this.onKeyUpHandler}
+                <Box sx={{ position: 'relative' }}>
+                    <ContentEditable
+                        html={this.state.html}
+                        tagName={this.state.tag}
+                        innerRef={this.contentEditable}
+                        onChange={this.onChangeHandler}
+                        onKeyDown={this.onKeyDownHandler}
+                        onKeyUp={this.onKeyUpHandler}
 
-                    style={{
-                        fontStyle: this.state.empty ? 'italic' : 'normal',
-                        color: this.state.empty ? '#A6A7AB' : 'inherit',
-                    }}
+                        style={{
+                            fontStyle: this.state.empty ? 'italic' : 'normal',
+                            color: this.state.empty ? '#A6A7AB' : 'inherit',
+                            textAlign: this.state.align
+                        }}
 
-                    onFocus={this.onFocus}
-                    onBlur={this.onBlur}                    
-                    className={"text-node"}
-                />
+                        onFocus={this.onFocus}
+                        onBlur={this.onBlur}                    
+                        className={"text-node"}
+                    />
+
+                    <TextHandle 
+                        focused={this.props.focus} 
+                        updateAlign={this.updateAlign}
+                    />
+                </Box>
             </Box>
         )
     }

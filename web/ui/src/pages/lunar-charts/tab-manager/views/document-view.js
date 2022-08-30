@@ -3,7 +3,7 @@ import { Box } from '@mantine/core'
 
 import DocumentEditor from '../../../../components/document-editor/document-editor'
 
-const DocumentView = ({ }) => {
+const DocumentView = ({ scale_change }) => {
     return (
         <Box
             sx={{
@@ -11,7 +11,7 @@ const DocumentView = ({ }) => {
                 height: "100%"
             }}
         >
-            <DocumentEditor />
+            <DocumentEditor scale_change={scale_change}  />
         </Box>
     )
 }

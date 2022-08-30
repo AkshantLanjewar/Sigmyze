@@ -14,41 +14,15 @@ import {
 import { useHover } from '@mantine/hooks'
 
 import { BiDotsHorizontalRounded }                 from 'react-icons/bi'
-import { BsAlignStart, BsAlignCenter, BsAlignEnd } from 'react-icons/bs'
 import { IoIosCreate }                             from 'react-icons/io'
 import { AiFillEdit, AiFillDelete }                from 'react-icons/ai'
 
-let positions_template = [
-    {
-        name: "Align Left",
-        position: "bottom-end",
-        justify: "left",
-        icon:  <BsAlignStart size={14} />,
-
-        active: true
-    },
-    {
-        name: "Align Center",
-        position: "bottom",
-        justify: "center",
-        icon:  <BsAlignCenter size={14} />,
-
-        active: false
-    },
-    {
-        name: "Align Right",
-        position: "bottom-start",
-        justify: "right",
-        icon:  <BsAlignEnd size={14} />,
-
-        active: false
-    }
-]
+import align_templates from '../align-template'
 
 const ImageView = ({ block, setJustify, CreateBlock, DeleteBlock, EditImage }) => {
     const { hovered, ref }            = useHover()
     const [menuActive, setMenuActive] = useState(false)
-    const [positions, setPositions]   = useState(positions_template)
+    const [positions, setPositions]   = useState(align_templates)
     const theme                       = useMantineTheme()
 
     function SetPosition(justify) {

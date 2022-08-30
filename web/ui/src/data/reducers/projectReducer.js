@@ -94,6 +94,9 @@ export default ( state = default_state, action ) => {
                     continue
                 
                 let tab   = tabs[i]
+                if(tab.type !== "chart")
+                    continue
+
                 let tab_i = tab.indicators[0]
 
                 if(tab_i.object_id == payload.object_id && tab_i.indicator_id == payload.indicator_id)
