@@ -15,7 +15,7 @@ import ChartBlock from './block-types/chart-block/chart-block'
 import { multimedia_blocks, text_blocks, ExtractTags } from './menu/menu-components'
 import { useClickOutside } from '@mantine/hooks'
 
-const DocumentBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
+const DocumentBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlock, SetStyles }) => {
     const [info, setInfo]     = useState({ blockType: "text", blockStyles: {} })
     const [focus, setFocus]   = useState(false)
     const theme               = useMantineTheme()
@@ -65,9 +65,11 @@ const DocumentBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
             {info.blockType == "text"
                 ? (
                     <TextBlock 
+                        collect_flag={collect_flag}
                         html={block.html} 
                         tag={block.tag} 
                         id={block.id}
+                        styles={block.styles}
                         created={block.created}
                         theme={theme}
                         focus={focus}
@@ -75,6 +77,7 @@ const DocumentBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
                         UpdateNode={UpdateNode} 
                         CreateBlock={CreateBlock}
                         DeleteBlock={DeleteBlock}
+                        SetStyles={SetStyles}
                     />
                 )
                 : null
@@ -83,6 +86,7 @@ const DocumentBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
             {info.blockType == "image" && block.tag == "img" && (
                 <ImageBlock 
                     block={block}
+                    collect_flag={collect_flag}
                     data={block.data}
                     UpdateNode={UpdateNode} 
                     CreateBlock={CreateBlock}
@@ -93,6 +97,7 @@ const DocumentBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
             {info.blockType == "image" && block.tag == "chart" && (
                 <ChartBlock
                     block={block}
+                    collect_flag={collect_flag}
                     UpdateNode={UpdateNode} 
                     CreateBlock={CreateBlock}
                     DeleteBlock={DeleteBlock}

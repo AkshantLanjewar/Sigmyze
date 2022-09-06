@@ -7,7 +7,7 @@ import ImageView from './image-view'
 
 import { usePrevious } from '../../../lib'
 
-const ImageBlock = ({ block, data, UpdateNode, CreateBlock, DeleteBlock }) => {
+const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, DeleteBlock }) => {
     const [opened, setOpened] = useState(false)
     const prevOpened          = usePrevious(opened)
 

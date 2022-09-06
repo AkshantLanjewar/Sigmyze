@@ -10,7 +10,7 @@ import {
 import PreviewView from './views/preview_view'
 import TextView    from './views/text_view'
 
-const ModalView = ({ opened, setOpened }) => {
+const ModalView = ({ opened, setOpened, block, UpdateNode }) => {
     const theme                   = useMantineTheme()
     const [selected, setSelected] = useState([])
     const [state, setState]       = useState(true)
@@ -44,6 +44,14 @@ const ModalView = ({ opened, setOpened }) => {
             setTitle(text)
         if(setter == "description")
             setDescription(text)
+    }
+
+    function AddChart() {
+        let id         = block.id
+        let indicators = selected
+        let data       = { indicators: indicators, title: title, description: description }
+
+        UpdateNode(id, "chart", data)
     }
 
     useEffect(() => {
@@ -95,6 +103,8 @@ const ModalView = ({ opened, setOpened }) => {
                     onClick={() => { 
                         if(state == true)
                             setState(false) 
+                        if(state == false)
+                            AddChart()
                     }}
                 >
                     {state

@@ -11,7 +11,7 @@ const DocumentEditor = ({ scale_change }) => {
     const [width, setWidth]   = useState(0)
 
     const ref          = React.createRef()
-    const inital_block = { id: uuidv4(), html: "", tag: "h1", data: {} }
+    const inital_block = { id: uuidv4(), html: "", tag: "h1", data: {}, collect_flag: false }
 
     function UpdateNode(id, tag, data) {
         let n_blocks   = []
@@ -34,7 +34,7 @@ const DocumentEditor = ({ scale_change }) => {
                     block['data']['size'] = data['size']
 
                 block['tag']     = tag
-                block['data']    = { image_data: data['image_data'] }
+                block['data']    = data
             }
 
             n_blocks.push(block)
@@ -61,35 +61,55 @@ const DocumentEditor = ({ scale_change }) => {
         setBlocks([...oBlocks])
     }
 
+    function SetStyles(id, styles) {
+        let f_block = {}
+        let f_index = 0
+
+        for(let i = 0; i < blocks.length; i++) {
+            let block = blocks[i]
+            if(block.id == id)
+                f_index = i
+        }
+
+        f_block           = blocks[f_index]
+        f_block['styles'] = styles
+
+        let n_blocks      = blocks
+        n_blocks[f_index] = f_block
+        setBlocks([...n_blocks])
+    }
+
     function DeleteBlock(id) {
-        let nBlocks = []
+        let f_block = {}
+        let f_index = 0
 
-        if(blocks.length == 1) {
-            let block = blocks[0]
-            if(block.tag == "img" || block.tag == "chart") {
-                block.created = false
-                block.data    = {}
-                block.html    = ""
-                block.tag     = "h1"
-
-                setBlocks([block])
+        function GenericBlock() {
+            return {
+                id: f_block.id,
+                created: false,
+                data: {},
+                html: "",
+                tag: "h1"
             }
-            
-            return
         }
 
         for(let i = 0; i < blocks.length; i++) {
             let block = blocks[i]
-
-            if(block.created)
-                block['created'] = false
-            if(block.id !== id)
-                nBlocks.push(block)
             if(block.id == id) {
-                let prev_index                 = i - 1 == -1 ? 0 : i - 1
-                nBlocks[prev_index]['created'] = true
+                f_block = block
+                f_index = i
             }
         }
+
+        let tag_flag = f_block.tag == "img" || f_block.tag == "chart"
+        if(f_index == 0 && blocks.length == 1 && tag_flag) {
+            setBlocks([GenericBlock()])
+            return
+        }
+
+        let nBlocks = blocks.splice(f_index, 1)
+        if(nBlocks.length == 0)
+            nBlocks = [GenericBlock()]
 
         setBlocks([...nBlocks])
     }
@@ -147,9 +167,11 @@ const DocumentEditor = ({ scale_change }) => {
                     <DocumentBlock 
                         key={`${key}-${step.id}`}
                         block={step} 
+                        collect_flag={step.collect_flag}
                         UpdateNode={UpdateNode}
                         CreateBlock={CreateBlock}
                         DeleteBlock={DeleteBlock}
+                        SetStyles={SetStyles}
                     />
                 ))}
             </ScrollArea>

@@ -6,6 +6,8 @@ import ContentEditable from "react-contenteditable"
 
 import TextHandle from './text-handle'
 
+import { GenerateBaseStyles } from '../../document-styles'
+
 import './text-style.scss' 
 
 function getCaretCoordinates(el) {
@@ -62,8 +64,10 @@ class TextBlock extends React.Component {
         this.onBlur                = this.onBlur.bind(this)
 
         //helper setting
-        this.updateAlign = this.updateAlign.bind(this)
-        this.focusInput  = this.focusInput.bind(this)
+        this.updateAlign   = this.updateAlign.bind(this)
+        this.focusInput    = this.focusInput.bind(this)
+        this.collectStyles = this.collectStyles.bind(this)
+        this.setStyles     = this.setStyles.bind(this)
 
         this.contentEditable = React.createRef()
         this.state = {
@@ -87,6 +91,9 @@ class TextBlock extends React.Component {
         if(this.props.created) 
             this.focusInput()
 
+        let styles = this.props.styles
+        if(styles !== undefined)
+            this.setStyles()
         if(this.props.html.replace('\n', '').length == 0 && !this.props.created)
             this.setState({ html: DEFAULT_VAL, empty: true, tag: this.props.tag })
         else
@@ -94,8 +101,9 @@ class TextBlock extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let tag     = this.props.tag
-        let created = this.props.created
+        let tag          = this.props.tag
+        let created      = this.props.created
+        let collect_flag = this.props.collect_flag
 
         if(prevProps.tag !== tag) {
             this.setState({ html: this.props.html, tag: this.props.tag }, () => {
@@ -111,6 +119,24 @@ class TextBlock extends React.Component {
             if(created)
                 this.contentEditable.current.focus()
         }
+
+        if(collect_flag !== prevProps.collect_flag)
+            this.collectStyles()
+    }
+
+    collectStyles() {
+        let styles        = GenerateBaseStyles()
+        styles['justify'] = this.state.align
+
+        let id = this.props.id
+        this.props.SetStyles(id, styles)
+    }
+
+    setStyles() {
+        let styles = this.props.styles
+        let align  = styles['justify']
+
+        this.setState({ align: align })
     }
 
     focusInput() {

@@ -4,8 +4,9 @@ import { Box }         from '@mantine/core'
 import { usePrevious } from '../../../lib'
 
 import ModalView from './chart-modal'
+import ChartView from './chart-view'
 
-const ChartBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
+const ChartBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlock }) => {
     const [opened, setOpened] = useState(false)
     const prevOpened          = usePrevious(opened)
 
@@ -28,11 +29,39 @@ const ChartBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
             setCreated(true)
     }, [block['data']])
 
+    function EditChart() {
+        setCreated(false)
+        setOpened(true)
+
+        let id   = block.id
+        let data = {
+            indicators: [],
+            title: "Chart Preview",
+            description: "Indicators: "
+        }
+
+        UpdateNode(id, "chart", data)
+    }
+
     return (
-        <Box>
+        <Box sx={{ width: "100%" }}>
             {created
-                ? null
-                : <ModalView opened={opened} setOpened={setOpened} />
+                ? (
+                    <ChartView 
+                        block={block}
+                        CreateBlock={CreateBlock}
+                        DeleteBlock={DeleteBlock}
+                        EditChart={EditChart}
+                    />
+                )
+                : (
+                    <ModalView 
+                        opened={opened} 
+                        setOpened={setOpened} 
+                        block={block}
+                        UpdateNode={UpdateNode}
+                    />
+                )
             }
         </Box>
     )

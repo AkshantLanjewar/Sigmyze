@@ -3,14 +3,20 @@ import React, { useEffect, useState } from 'react'
 import { 
     Card,
     Title,
-    Text 
+    Text
 } from '@mantine/core'
 
-import MiniLunarChart   from '../../../../lunar-chart/mini-chart'
+import { BsThreeDots }              from 'react-icons/bs'
 
-const ChartPreview = ({ selected }) => {
+import MiniLunarChart   from '../../../../lunar-chart/mini-chart'
+import MultimediaMenu   from '../../multimedia-menu'
+
+const ChartPreview = ({ selected, title, description, useMenu, noMargin, block, DeleteBlock, CreateBlock, EditChart }) => {
+    const [menuOpen, setMenuOpen] = useState(false)
+
     const [data, setData]   = useState([])
     const [names, setNames] = useState([])
+    const [justify, setJustify] = useState("left")
 
     async function main() {
         let data_dict = {}
@@ -50,7 +56,6 @@ const ChartPreview = ({ selected }) => {
         }
 
         let sorted_data = datasets.slice().sort((a, b) => a.date.getTime() - b.date.getTime())
-        console.log(sorted_data)
         setNames([...names])
         setData([...sorted_data])
     }
@@ -60,37 +65,77 @@ const ChartPreview = ({ selected }) => {
     }, [selected])
 
     return (
-        <Card
-            shadow={"sm"}
-            p={"lg"}
-            radius={"md"}
-            sx={{ width: "70%", margin: "0 auto" }}
+        <div 
+            style={{ 
+                position: 'relative', 
+                width: "100%", 
+                display: 'flex', 
+                justifyContent: justify 
+            }}
         >
-            <Card.Section 
-                sx={(theme) => ({ 
-                    backgroundColor: theme.colors.dark[9],
-                    height: 200
-                })}
+            <Card
+                shadow={"sm"}
+                p={"lg"}
+                radius={"md"}
+                sx={{ 
+                    width: "80%", 
+                    margin: noMargin ? "" : "0 auto", 
+                    position: 'relative', 
+                    overflow: 'visible' 
+                }}
             >
-                <MiniLunarChart
-                    data={data}
-                    names={names}
-                    useTooltip={true}
-                    usePadding={true}
-                    paddingAmount={10}
-                />
-            </Card.Section>
+                <Card.Section 
+                    sx={(theme) => ({ 
+                        backgroundColor: theme.colors.dark[9],
+                        height: 200,
+                        position: 'relative'
+                    })}
+                >
+                    <MiniLunarChart
+                        data={data}
+                        names={names}
+                        useTooltip={true}
+                        usePadding={true}
+                        paddingAmount={10}
+                    />
+                </Card.Section>
 
-            <Card.Section 
-                pl={"md"} 
-                pr={"md"} 
-                pt={"sm"}
-                pb={"sm"}
-            >
-                <Title order={3}>Chart Preview</Title>
-                <Text size={"sm"} color={"dimmed"} sx={{ paddingLeft: 1 }}>Indicators: IND_GDP, USA_GDP</Text>
-            </Card.Section>
-        </Card>
+                {useMenu && (
+                    <MultimediaMenu
+                        block={block}
+                        opened={menuOpen}
+                        setMenuOpened={setMenuOpen}
+                        icon={<BsThreeDots size={14} />}
+                        sx={{ position: 'absolute', right: 10, top: 10, zIndex: 10 }}
+                        name={`${block.id}-chart-block`}
+                        setJustify={setJustify}
+                        CreateBlock={CreateBlock}
+                        DeleteBlock={DeleteBlock}
+                        EditBlock={EditChart}
+                    />
+                )}
+
+                <Card.Section 
+                    pl={"md"} 
+                    pr={"md"} 
+                    pt={"sm"}
+                    pb={"sm"}
+                >
+                    <Title order={3}>
+                        {title == undefined
+                            ? "Chart Preview"
+                            : title
+                        }
+                    </Title>
+                    <Text size={"sm"} color={"dimmed"} sx={{ paddingLeft: 1 }}>
+                        {description == undefined
+                            ? "Indicators: IND_GDP"
+                            : description
+                        }
+                    </Text>
+                </Card.Section>
+            </Card>
+        </div>
     )
 }
 
