@@ -15,7 +15,9 @@ import ChartBlock from './block-types/chart-block/chart-block'
 import { multimedia_blocks, text_blocks, ExtractTags } from './menu/menu-components'
 import { useClickOutside } from '@mantine/hooks'
 
-const DocumentBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlock, SetStyles }) => {
+import { connect } from 'react-redux'
+
+const DocumentBlock = ({ block, collect_flag, data_location, UpdateNode, CreateBlock, DeleteBlock, SetStyles }) => {
     const [info, setInfo]     = useState({ blockType: "text", blockStyles: {} })
     const [focus, setFocus]   = useState(false)
     const theme               = useMantineTheme()
@@ -78,6 +80,7 @@ const DocumentBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlo
                         CreateBlock={CreateBlock}
                         DeleteBlock={DeleteBlock}
                         SetStyles={SetStyles}
+                        data_location={data_location}
                     />
                 )
                 : null

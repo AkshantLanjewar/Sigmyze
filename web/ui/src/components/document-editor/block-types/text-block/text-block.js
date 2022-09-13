@@ -94,6 +94,7 @@ class TextBlock extends React.Component {
         let styles = this.props.styles
         if(styles !== undefined)
             this.setStyles()
+
         if(this.props.html.replace('\n', '').length == 0 && !this.props.created)
             this.setState({ html: DEFAULT_VAL, empty: true, tag: this.props.tag })
         else
@@ -103,7 +104,12 @@ class TextBlock extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         let tag          = this.props.tag
         let created      = this.props.created
-        let collect_flag = this.props.collect_flag
+        let collect_flag = this.props.collect_flag    
+        
+        let styles     = this.props.styles
+        let prevStyles = prevProps.styles
+        if(styles !== prevStyles)
+            this.setStyles()
 
         if(prevProps.tag !== tag) {
             this.setState({ html: this.props.html, tag: this.props.tag }, () => {
@@ -119,17 +125,13 @@ class TextBlock extends React.Component {
             if(created)
                 this.contentEditable.current.focus()
         }
-
-        if(collect_flag !== prevProps.collect_flag)
-            this.collectStyles()
     }
 
     collectStyles() {
         let styles        = GenerateBaseStyles()
         styles['justify'] = this.state.align
 
-        let id = this.props.id
-        this.props.SetStyles(id, styles)
+        return styles
     }
 
     setStyles() {
@@ -149,7 +151,7 @@ class TextBlock extends React.Component {
     }
 
     onKeyDownHandler(e) {  
-        let id = this.props.id      
+        let id = this.props.id    
 
         if(e.key == CMD_KEY)
             this.setState({ backup: this.state.html })
@@ -208,12 +210,16 @@ class TextBlock extends React.Component {
         let id   = this.props.id
         let html = this.state.menuOpen ? this.state.backup : this.state.html 
 
+        let styles = this.collectStyles()
+
         this.contentEditable.current.blur()
-        this.props.UpdateNode(id, tag, { text: html })
+        this.props.UpdateNode(id, tag, { text: html }, styles)
     }
 
     updateAlign(newAlign) {
-        this.setState({ align: newAlign })
+        this.setState({ align: newAlign }, () => {
+            this.updateBlockHandler(this.state.tag)
+        })
     }
 
     render() {

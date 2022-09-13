@@ -199,6 +199,20 @@ export default ( state = default_state, action ) => {
             e_state['tabs']           = n_tabs
             e_state['project_data']   = project_data
             return { ...e_state }
+        case "set_document_content":
+            let content      = payload.blocks
+            let document_loc = payload.document_location
+
+            for(let i = 0; i < project_data.documents.length; i++) {
+                let document = project_data.documents[i]
+
+                if(document.data_location == document_loc)
+                    document['document_content'] = content
+                project_data.documents[i] = document
+            }
+
+            e_state['project_data'] = project_data
+            return { ...e_state }
         default: 
             return e_state
     }

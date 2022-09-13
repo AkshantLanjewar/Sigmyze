@@ -51,7 +51,9 @@ const ModalView = ({ opened, setOpened, block, UpdateNode }) => {
         let indicators = selected
         let data       = { indicators: indicators, title: title, description: description }
 
-        UpdateNode(id, "chart", data)
+        let styles_obj = { justify: 'left' }
+
+        UpdateNode(id, "chart", data, styles_obj)
     }
 
     useEffect(() => {

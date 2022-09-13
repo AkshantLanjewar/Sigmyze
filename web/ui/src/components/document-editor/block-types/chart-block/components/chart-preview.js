@@ -11,12 +11,11 @@ import { BsThreeDots }              from 'react-icons/bs'
 import MiniLunarChart   from '../../../../lunar-chart/mini-chart'
 import MultimediaMenu   from '../../multimedia-menu'
 
-const ChartPreview = ({ selected, title, description, useMenu, noMargin, block, DeleteBlock, CreateBlock, EditChart }) => {
+const ChartPreview = ({ justify, setJustify, selected, title, description, useMenu, noMargin, block, DeleteBlock, CreateBlock, EditChart }) => {
     const [menuOpen, setMenuOpen] = useState(false)
 
     const [data, setData]   = useState([])
     const [names, setNames] = useState([])
-    const [justify, setJustify] = useState("left")
 
     async function main() {
         let data_dict = {}

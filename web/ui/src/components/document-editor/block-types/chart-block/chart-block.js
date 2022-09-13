@@ -6,13 +6,24 @@ import { usePrevious } from '../../../lib'
 import ModalView from './chart-modal'
 import ChartView from './chart-view'
 
-const ChartBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlock }) => {
+const ChartBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
     const [opened, setOpened] = useState(false)
     const prevOpened          = usePrevious(opened)
 
     const [created, setCreated] = useState(false)
 
+    //styles
+    const [justify, setJustify] = useState('left')
+
     useEffect(() => {
+        let b_styles  = block['styles']
+        console.log(block)
+
+        if(b_styles !== undefined) {
+            let nJustify = b_styles['justify']
+            setJustify(nJustify)
+        }
+        
         if(block.created)
             setOpened(true)
     }, [])
@@ -29,9 +40,22 @@ const ChartBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlock 
             setCreated(true)
     }, [block['data']])
 
+    useEffect(() => {
+        let styles_obj        = {}
+        styles_obj['justify'] = justify
+
+        let id   = block.id
+        let data = block.data
+
+        UpdateNode(id, "chart", data, styles_obj)
+    }, [justify])
+
     function EditChart() {
         setCreated(false)
         setOpened(true)
+
+        let styles_obj        = {}
+        styles_obj['justify'] = justify
 
         let id   = block.id
         let data = {
@@ -40,7 +64,7 @@ const ChartBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlock 
             description: "Indicators: "
         }
 
-        UpdateNode(id, "chart", data)
+        UpdateNode(id, "chart", data, styles_obj)
     }
 
     return (
@@ -49,6 +73,8 @@ const ChartBlock = ({ block, collect_flag, UpdateNode, CreateBlock, DeleteBlock 
                 ? (
                     <ChartView 
                         block={block}
+                        justify={justify}
+                        setJustify={setJustify}
                         CreateBlock={CreateBlock}
                         DeleteBlock={DeleteBlock}
                         EditChart={EditChart}

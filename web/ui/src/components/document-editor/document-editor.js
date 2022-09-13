@@ -5,7 +5,10 @@ import DocumentBlock         from './document-block'
 
 import { multimedia_blocks, text_blocks, ExtractTags } from './menu/menu-components'
 
-const DocumentEditor = ({ scale_change }) => {
+import { connect }            from 'react-redux'
+import { SetDocumentContent } from '../../data/actions/projectActions'
+
+const DocumentEditor = ({ data_location, scale_change, set_document_content, project }) => {
     const [blocks, setBlocks] = useState([])
     const [height, setHeight] = useState(0)
     const [width, setWidth]   = useState(0)
@@ -13,13 +16,16 @@ const DocumentEditor = ({ scale_change }) => {
     const ref          = React.createRef()
     const inital_block = { id: uuidv4(), html: "", tag: "h1", data: {}, collect_flag: false }
 
-    function UpdateNode(id, tag, data) {
+    function UpdateNode(id, tag, data, styles) {
         let n_blocks   = []
         let text_tags  = ExtractTags(text_blocks)
         let image_tags = ExtractTags(multimedia_blocks)
 
         for(let i = 0; i < blocks.length; i++) {
             let block = blocks[i]
+            
+            if(id == block.id)
+                block['styles'] = styles
 
             if(text_tags.includes(tag) && id == block.id) {
                 block['html']   = data['text'].trim()
@@ -40,12 +46,13 @@ const DocumentEditor = ({ scale_change }) => {
             n_blocks.push(block)
         }
 
+        set_document_content(n_blocks, data_location)
         setBlocks([...n_blocks])
     }
 
     function CreateBlock(id) {
         let oBlocks  = blocks
-        let newBlock = { id: uuidv4(), html: "", tag: "p", data: {}, created: true }
+        let newBlock = { id: uuidv4(), html: "", tag: "p", data: {}, created: true, styles: { justify: 'left' } }
         let index_p  = 0
 
         for(let i = 0; i < blocks.length; i++) {
@@ -58,59 +65,52 @@ const DocumentEditor = ({ scale_change }) => {
         }
 
         oBlocks.splice(index_p + 1, 0, newBlock)
+
+        set_document_content(oBlocks, data_location)
         setBlocks([...oBlocks])
     }
 
-    function SetStyles(id, styles) {
-        let f_block = {}
-        let f_index = 0
+    //DEPRECATED FUNCTION
+    function SetStyles(id, styles) {}
+
+    function DeleteBlock(id) {
+        let f_block = null
 
         for(let i = 0; i < blocks.length; i++) {
             let block = blocks[i]
             if(block.id == id)
-                f_index = i
+                f_block = blocks[i]
         }
 
-        f_block           = blocks[f_index]
-        f_block['styles'] = styles
-
-        let n_blocks      = blocks
-        n_blocks[f_index] = f_block
-        setBlocks([...n_blocks])
-    }
-
-    function DeleteBlock(id) {
-        let f_block = {}
-        let f_index = 0
-
-        function GenericBlock() {
-            return {
-                id: f_block.id,
-                created: false,
-                data: {},
-                html: "",
-                tag: "h1"
-            }
-        }
-
-        for(let i = 0; i < blocks.length; i++) {
-            let block = blocks[i]
-            if(block.id == id) {
-                f_block = block
-                f_index = i
-            }
+        let generic_block = {
+            id: f_block.id,
+            created: false,
+            data: {},
+            html: "",
+            tag: "h1"
         }
 
         let tag_flag = f_block.tag == "img" || f_block.tag == "chart"
-        if(f_index == 0 && blocks.length == 1 && tag_flag) {
-            setBlocks([GenericBlock()])
+        if(blocks.length == 1 && tag_flag) {
+            setBlocks([generic_block])
             return
         }
 
-        let nBlocks = blocks.splice(f_index, 1)
-        if(nBlocks.length == 0)
-            nBlocks = [GenericBlock()]
+        let nBlocks = []
+        for(let i = 0; i < blocks.length; i++) {
+            let block = blocks[i]
 
+            if(block.id == id && i > 0)
+                nBlocks[i - 1]['created'] = true
+
+            if(block.id != id)
+                nBlocks.push(block)
+        }
+
+        if(nBlocks.length == 0)
+            nBlocks = [generic_block]
+
+        set_document_content(nBlocks, data_location)
         setBlocks([...nBlocks])
     }
 
@@ -123,14 +123,27 @@ const DocumentEditor = ({ scale_change }) => {
     }
 
     useEffect(() => {
+        let n_blocks  = [inital_block]
+        let documents = project.project_data.documents
+
+        for(let i = 0; i < documents.length; i++) {
+            let document = documents[i]
+
+            if(document.data_location == data_location) {
+                let content = document.document_content
+                if(Array.isArray(content))
+                    n_blocks = content
+            }
+        }
+
         Scale()
-        setBlocks([inital_block])
+        setBlocks([...n_blocks])
     }, [])
 
     useEffect(() => {
         Scale()
     }, [scale_change])
-    
+
     return (
         <Box
             ref={ref}
@@ -179,4 +192,12 @@ const DocumentEditor = ({ scale_change }) => {
     )
 }
 
-export default DocumentEditor
+const mapStateToProps = state => ({
+    project: state.project
+})
+
+const mapDispatchToProps = dispatch => ({
+    set_document_content: (blocks, document_location) => dispatch(SetDocumentContent(blocks, document_location))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentEditor)

@@ -18,11 +18,17 @@ const ImageHandle = ({ hovered }) => (
     </ActionIcon>
 )
 
-const ResizeableImage = ({ src, hovered }) => {
-    const [dims, setDims] = useState({ width: 0, height: 0 })
-
+const ResizeableImage = ({ src, hovered, maxWidth, size, setSize }) => {
     function onResizeStop(e, direction, ref, d) {
-        setDims({ width: dims.width + d.width, height: dims.height + d.height })
+        setSize({ width: size.width + d.width, height: size.height + d.height })
+    }
+
+    function SetAspectWidth(width, height) {
+        let aspect  = width / height
+        let nWidth  = maxWidth
+        let nheight = nWidth / aspect
+
+        return { width: nWidth, height: nheight }
     }
 
     useEffect(() => {
@@ -33,15 +39,26 @@ const ResizeableImage = ({ src, hovered }) => {
             let width  = this.width
             let height = this.height
 
-            setDims({ width: width, height: height })
+            if(width > maxWidth)
+                height = SetAspectWidth(width, height)
+
+            if(size.width == 0)
+                setSize({ width: width, height: height })
         }
     }, [])
+
+    useEffect(() => {
+        let aspect_obj = SetAspectWidth(size.width, size.height)
+
+        if(size.width > maxWidth)
+            setSize({ width: aspect_obj.width, height: aspect_obj.height })
+    }, [size])
 
     return (
         <Resizable
             size={{ 
-                width: dims.width, 
-                height: dims.height 
+                width: size.width, 
+                height: size.height 
             }}
 
             style={{ 

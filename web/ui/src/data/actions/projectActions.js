@@ -91,3 +91,13 @@ export const RemoveDocument = (document_id, data_loc) => {
         }
     }
 }
+
+export const SetDocumentContent = (blocks, document_location) => {
+    return {
+        type: "set_document_content",
+        payload: {
+            document_location: document_location,
+            blocks: blocks
+        }
+    }
+}
