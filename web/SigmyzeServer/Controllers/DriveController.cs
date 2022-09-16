@@ -85,6 +85,11 @@ namespace SigmyzeServer.Controllers
             _nProject.ProjectData.Documents  = new List<Document>();
             _nProject.ProjectData.Indicators = new List<Models.Data.DatasetIndicator>();
 
+            if(req.directory == "root")
+                drive.Projects!.Append(_nProject);
+            else
+                drive.Folders = _InsertProject(drive.Folders!, _nProject, req.directory!);
+
             return await SerializeJSON(status);
         }
 
@@ -100,6 +105,13 @@ namespace SigmyzeServer.Controllers
                     _folder.Folders = _InsertFolder(_folder.Folders, _nFolder, directory_id);
                 _nDirectory[i] = _folder;
             }
+
+            return _nDirectory;
+        }
+
+        private List<Folder> _InsertProject(List<Folder> directory, Project _nProject, string directory_id)
+        {
+            List<Folder> _nDirectory = directory;
 
             return _nDirectory;
         }
