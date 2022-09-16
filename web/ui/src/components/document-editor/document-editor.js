@@ -14,7 +14,7 @@ const DocumentEditor = ({ data_location, scale_change, set_document_content, pro
     const [width, setWidth]   = useState(0)
 
     const ref          = React.createRef()
-    const inital_block = { id: uuidv4(), html: "", tag: "h1", data: {}, collect_flag: false }
+    const inital_block = { id: uuidv4(), html: "", tag: "h1", data: {} }
 
     function UpdateNode(id, tag, data, styles) {
         let n_blocks   = []
@@ -180,7 +180,7 @@ const DocumentEditor = ({ data_location, scale_change, set_document_content, pro
                     <DocumentBlock 
                         key={`${key}-${step.id}`}
                         block={step} 
-                        collect_flag={step.collect_flag}
+                        collect_flag={false}
                         UpdateNode={UpdateNode}
                         CreateBlock={CreateBlock}
                         DeleteBlock={DeleteBlock}

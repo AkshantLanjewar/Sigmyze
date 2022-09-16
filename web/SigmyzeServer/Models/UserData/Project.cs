@@ -11,12 +11,27 @@ namespace SigmyzeServer.Models.UserData
         [JsonProperty("project_id")]
         public string? ProjectID { get; set; }
 
-        [BsonElement("chart_name")]
-        [JsonProperty("chart_name")]
-        public string? ChartName { get; set; }
+        [BsonElement("project_type")]
+        [JsonProperty("project_type")]
+        public string? ProjectType { get; set; }
 
+        [BsonElement("project_name")]
+        [JsonProperty("project_name")]
+        public string? ProjectName { get; set; }
+
+        [BsonElement("project_data")]
+        [JsonProperty("project_data")]
+        public ProjectData? ProjectData { get; set; }
+    }
+
+    public class ProjectData
+    {   
         [BsonElement("indicators")]
         [JsonProperty("indicators")]
-        public List<ObjectIndicator> Indicators { get; set; }
+        public List<DatasetIndicator>? Indicators { get; set; }
+
+        [BsonElement("documents")]
+        [JsonProperty("documents")]
+        public List<Document>? Documents { get; set; }
     }
 }

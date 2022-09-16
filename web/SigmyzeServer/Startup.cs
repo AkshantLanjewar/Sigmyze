@@ -46,11 +46,12 @@ namespace SigmyzeServer
 
             //add authentication
             services.AddSingleton<IUserAuth, AuthService>();
-            services.AddSingleton<IUserDataService, UserDataService>();
             services.AddSingleton<IDatasetMongoORM, DatasetMongoORM>();
-            
+            services.AddSingleton<IDriveService, DriveMongoORM>();
+
             services.AddTransient<IHashService, HashService>();
             services.AddSingleton<IEmailService, EmailService>();
+            services.AddSingleton<ITokenDataService, TokenDataService>();
 
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
