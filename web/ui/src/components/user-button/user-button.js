@@ -17,8 +17,18 @@ import UserControl    from "./user-control"
 let time_diff = 1000 * 60 * 5
 
 const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAction, user }) => {
+    function GrabLogoutAction() {
+        authAction({
+            jwtToken: "",
+            verified: "no",
+            userState: "signedout"
+        })
+
+        return
+    }
+
     //manage the refreshing of the token here
-    async function ManageAuthState(user) {
+    async function ManageAuthState(user, intial_state = false) {
         const jwt_token = user.jwtToken
         const u_state   = user.userState
 
@@ -33,7 +43,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
         }
 
         timestamp = parseInt(timestamp)
-        if(new Date().getTime() - timestamp > 1000 * 60 * 5) {
+        if(new Date().getTime() - timestamp > 1000 * 60 * 5 || intial_state) {
             localStorage.setItem("jwt_stamp", new Date().getTime())
             console.log("[Lunar DEBUG] : Refreshing Token")
 
@@ -43,10 +53,21 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${jwt_token}` 
                 }
-            }).then(res => {
-                let data = res.json()
+            })
+            .then(res => {
+                if(res.status !== 200) {
+                    authAction({
+                        jwtToken: "",
+                        verified: "no",
+                        userState: "signedout"
+                    })
+                }
 
+                return res.json()
+            })
+            .then(data => {
                 const n_token = data.token
+                
                 authAction({
                     jwtToken: n_token,
                     verified: user.verified,
@@ -63,7 +84,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
     })
 
     useEffect(() => {
-        ManageAuthState(user)
+        ManageAuthState(user, true)
         GrabUserData()
     }, [])
 
@@ -72,29 +93,49 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
     }, [user.jwtToken])
 
     function GrabUserData() {
-        let token = user.jwtToken
-        if(token == "" || token == undefined)
+        let token     = user.jwtToken
+        const u_state = user.userState
+
+        if(token == "" || token == undefined || u_state == "signedout")
             return
 
-        fetch("/api/v1/auth/user-data", {
-            method: "GET",
-            headers: { 'Authorization': `Bearer ${token}`}
-        }).then(resp => resp.json()).then(data => {
-            setUserData({
-                email: data.email,
-                username: data.username,
-                role: data.role
+        try {
+            fetch("/api/v1/auth/user-data", {
+                method: "GET",
+                headers: { 'Authorization': `Bearer ${token}`}
             })
+            .then(resp => {
+                if(resp.status !== 200) {
+                    authAction({
+                        jwtToken: "",
+                        verified: "no",
+                        userState: "signedout"
+                    })
 
-            userDataAction({
-                email: data.email,
-                username: data.username,
-                role: data.role
+                    window.location.reload()
+                }
+                
+                return resp.json()
             })
-        })  
+            .then(data => {
+                setUserData({
+                    email: data.email,
+                    username: data.username,
+                    role: data.role
+                })
+    
+                userDataAction({
+                    email: data.email,
+                    username: data.username,
+                    role: data.role
+                })
+            })   
+        } catch (error) {
+            GrabLogoutAction()
+        }
     }
 
-    setInterval(() => { ManageAuthState(user) }, 30000)
+    setInterval(() => { ManageAuthState(user) }, 60000)
 
     function Logout() {
         fetch("/api/v1/auth/revoke-token", {
@@ -117,8 +158,6 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
             verified: "no",
             userState: "signedout"
         })
-
-        window.location.replace('/')
     }
 
     return (

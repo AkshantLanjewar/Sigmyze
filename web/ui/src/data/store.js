@@ -1,7 +1,8 @@
 import { createStore, combineReducers } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage                          from 'redux-persist/lib/storage'
-import autoMergeLevel2                  from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
+
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1'
 
 import userReducer     from './reducers/userReducer'
 import lunarReducer    from './reducers/lunarReducer'
@@ -10,7 +11,7 @@ import projectReducer  from './reducers/projectReducer'
 const persistConfig = {
     key: 'persistRoot',
     storage: storage,
-    stateReconciler: autoMergeLevel2
+    stateReconciler: autoMergeLevel1
 }
 
 function configureStore(state) {

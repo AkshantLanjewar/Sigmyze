@@ -64,6 +64,8 @@ namespace SigmyzeServer.Controllers
             resp.Status    = status;
             resp.Drive     = drive;
 
+            await SaveDrive(drive);
+
             return await SerializeJSON(resp);
         }
 
@@ -88,19 +90,95 @@ namespace SigmyzeServer.Controllers
             if(req.directory == "root")
                 drive.Projects!.Append(_nProject);
             else
-                drive.Folders = _InsertProject(drive.Folders!, _nProject, req.directory!);
+                drive.Folders = _EditProject(drive.Folders!, _nProject, req.directory!);
+            
+            await SaveDrive(drive);
 
             return await SerializeJSON(status);
         }
 
-        private List<Folder> _InsertFolder(List<Folder> directory, Folder _nFolder, string directory_id)
+        [HttpPost("update-project")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> UpdateProject([FromBody]UpdateProject req)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error        = false;
+            status.MSG          = "project saved";
+
+            Drive drive = await GetDrive();
+
+            if(req.directory == "root")
+            {
+                int project_index = 0;
+                for(int i = 0; i < drive.Projects!.Count; i++)
+                    if(drive.Projects![i].ProjectID == req.project_id)
+                        project_index = i;
+                drive.Projects![project_index] = req.project!;
+            }
+            else
+            {
+                drive.Folders = _EditProject(drive.Folders!, req.project!, req.directory!, "update");
+            }
+
+            await SaveDrive(drive);
+
+            return await SerializeJSON(status);
+        }
+
+        [HttpPost("delete-project")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> DeleteProject([FromBody]DeleteProject req)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error        = false;
+            status.MSG          = "project deleted";
+
+            Drive drive         = await GetDrive();
+            Project _sProject   = new Project();
+            _sProject.ProjectID = req.project_id!;
+
+            if(req.directory == "root")
+                drive.Projects = _DeleteProject(drive.Projects!, req.project_id!);
+            else
+                drive.Folders = _EditProject(drive.Folders!, _sProject, req.directory!, "delete");
+
+            return await SerializeJSON(status);
+        }
+
+        [HttpPost("delete-folder")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> DeleteFolder([FromBody]DeleteFolder req)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error        = false;
+            status.MSG          = "folder deleted";
+
+            Drive drive       = await GetDrive();
+            Folder _sFolder   = new Folder();
+            _sFolder.FolderID = req.directory_id;
+
+            if(req.directory == "root")
+                drive.Folders = _DeleteFolder(drive.Folders!, req.directory_id!);
+            else
+                drive.Folders = _InsertFolder(drive.Folders!, _sFolder, req.directory!, "delete");
+
+            return await SerializeJSON(status);
+        }
+
+        private List<Folder> _InsertFolder(List<Folder> directory, Folder _nFolder, string directory_id, string mode = "append")
         {
             List<Folder> _nDirectory = directory;
             for(int i = 0; i < _nDirectory.Count; i++)
             {
                 Folder _folder = _nDirectory[i];
                 if(_folder.FolderID == directory_id)
-                    _folder.Folders!.Append(_nFolder);
+                {
+                    if(mode == "append")
+                        _folder.Folders!.Append(_nFolder);
+                    if(mode == "delete")
+                        _folder.Folders = _DeleteFolder(_folder.Folders!, _nFolder.FolderID!);
+                }    
+                
                 if(_folder.Folders!.Count > 0)
                     _folder.Folders = _InsertFolder(_folder.Folders, _nFolder, directory_id);
                 _nDirectory[i] = _folder;
@@ -109,11 +187,58 @@ namespace SigmyzeServer.Controllers
             return _nDirectory;
         }
 
-        private List<Folder> _InsertProject(List<Folder> directory, Project _nProject, string directory_id)
+        private List<Folder> _EditProject(List<Folder> directory, Project _nProject, string directory_id, string mode = "append")
         {
             List<Folder> _nDirectory = directory;
+            for(int i = 0; i < _nDirectory.Count; i++)
+            {
+                Folder _folder = _nDirectory[i];
+                if(_folder.FolderID == directory_id)
+                {
+                    if(mode == "append")
+                        _folder.Projects!.Append(_nProject);
+                    if(mode == "delete")
+                        _folder.Projects = _DeleteProject(_folder.Projects!, _nProject.ProjectID!);
+                    if(mode == "update")
+                    {
+                        int project_index = 0;
+                        for(int x = 0; x < _folder.Projects!.Count; i++)
+                            if(_folder.Projects[i].ProjectID == _nProject.ProjectID)
+                                project_index = x;
+                        _folder.Projects![project_index] = _nProject;
+                    }
+
+                    break;
+                } 
+                else if (_folder.Folders!.Count > 0)
+                {
+                    _folder.Folders = _EditProject(_folder.Folders, _nProject, directory_id);
+                }             
+
+                _nDirectory[i] = _folder;   
+            }
 
             return _nDirectory;
+        }
+
+        private List<Folder> _DeleteFolder(List<Folder> folders, string directory)
+        {
+            List<Folder> _folders = new List<Folder>();
+            for(int i = 0; i < folders.Count; i++)
+                if(folders[i].FolderID == directory)
+                    _folders.Append(folders[i]);
+
+            return _folders;
+        }
+
+        private List<Project> _DeleteProject(List<Project> projects, string project_id)
+        {
+            List<Project> _projects = new List<Project>();
+            for(int i = 0; i < projects.Count; i++)
+                if(projects[i].ProjectID != project_id)
+                    _projects.Append(projects[i]);
+
+            return _projects;
         }
 
         private async Task<Drive> GetDrive()
@@ -123,6 +248,14 @@ namespace SigmyzeServer.Controllers
             Drive drive          = await _driveService.GetDrive(lunar_id);
 
             return drive;
+        }
+
+        private async Task SaveDrive(Drive drive)
+        {
+            string? access_token = await HttpContext.GetTokenAsync("access_token");
+            string lunar_id      = _tokenDataService.ExtractLunarID(access_token!);
+
+            await _driveService.SaveDrive(lunar_id, drive);
         }
 
         private async Task<IActionResult> SerializeJSON(object data)

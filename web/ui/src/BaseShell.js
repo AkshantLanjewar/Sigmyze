@@ -9,6 +9,8 @@ import AppShell from "./components/app/shell/shell";
 import Navbar   from "./components/composite/navbar/navbar";
 import Sidenav  from "./components/composite/sidenav/sidenav";
 
+import DriveSidebar from './components/app/shell/drive/drive-sidebar'
+
 import Logo from './assets/logo.svg'
 
 //importing icons for the URLS
@@ -21,7 +23,9 @@ import {
 import { BsStack, BsMoonFill, BsNewspaper, BsDisplay } from 'react-icons/bs'
 
 function BaseShell({ slot, user }) {
-	const [navState, setNavState] = useState([])
+	const [navState, setNavState] 		= useState([])
+	const [driveActive, setDriveActive] = useState(false)
+
 	let pages = [
 		{ url: '/',           name: 'Homepage',   icon: <AiFillHome />, 		     active: true },
 		{ url: '/indicators', name: 'Indicators', icon: <BsStack />, 		         active: false },
@@ -29,6 +33,16 @@ function BaseShell({ slot, user }) {
 		{ url: '/about',      name: 'About',      icon: <AiOutlineQuestionCircle />, active: false },
 		{ url: '/blog',       name: 'Blog',       icon: <BsNewspaper />, 			 active: false }
 	]
+
+	function CheckUserState() {
+        let userState = user.userState
+        let urlPath   = window.location.pathname
+
+        if(userState == "logged_in" && urlPath == "/")
+			setDriveActive(true)
+		else
+			setDriveActive(false)
+    }
 
 	useEffect(() => {
         let userState = user.userState
@@ -46,8 +60,14 @@ function BaseShell({ slot, user }) {
 
         if(userState == "logged_in")
             pNavState[0] = { url: '/', name: 'Dashboard', icon: <AiFillDashboard />, active: pNavState[0].active }
+
+		CheckUserState()		
 		setNavState([...pNavState])
 	}, [])
+
+	useEffect(() => {
+		CheckUserState()
+	}, [user])
 
 	return (
 		<AppShell>
@@ -56,6 +76,11 @@ function BaseShell({ slot, user }) {
 					<Sidenav.Brand image={Logo} text={"Sigmyze"} />
 
 					<Sidenav.Nav>
+						{driveActive
+							? <DriveSidebar />
+							: null
+						}
+
 						{navState.map((step) => (
 							<Sidenav.Nav.Element 
 								url={step.url} 

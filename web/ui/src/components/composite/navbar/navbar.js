@@ -8,17 +8,14 @@ import UserNavbar from "../user-navbar/user-navbar"
 import { connect } from 'react-redux'
 import { userModalAction } from "../../../data/actions/userActions"
 
-const Navbar = ({ userModal, userModalAction, expandAside, expandedState }) => {
-    const [togglerState, setTogglerState] = useState(false)
-    useEffect(() => {
-        expandAside(togglerState)
-    }, [togglerState])
+const Navbar = ({ userState, userModal, userModalAction, expandAside, expandedState }) => {
+    const [driveActive, setDriveActive] = useState(false)
 
     return (
         <div className={`navbar ${ expandedState ? 'expand' : '' }`}>
             <div>
-                <button className={`toggler ${togglerState ? 'toggled' : ''}`}
-                    onClick={() => { setTogglerState(!togglerState) }}>
+                <button className={`toggler ${expandedState ? 'toggled' : ''}`}
+                    onClick={() => { expandAside(!expandedState) }}>
                     <RiMenu3Line />
                 </button>
             </div>
@@ -29,6 +26,7 @@ const Navbar = ({ userModal, userModalAction, expandAside, expandedState }) => {
 }
 
 const mapStateToProps = state => ({
+    userState: state.user.userState,
     userModal: state.user.userModal
 })
 

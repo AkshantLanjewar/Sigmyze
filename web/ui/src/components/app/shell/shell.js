@@ -1,13 +1,33 @@
 import React, { useState, useEffect } from "react"
 import './shell.scoped.scss'
 
-const AppShell = ({ children }) => {
+import { connect } from "react-redux"
+
+const AppShell = ({ children, user }) => {
     const [expandedState, setExpandedState] = useState(false)
     const [hasMain, setHasMain]             = useState(false)
     const [hasSide, setHasSide]             = useState(false)
 
     const main = React.Children.map(children, child => child.type.displayName === 'main' ? child : null)
     const side = React.Children.map(children, child => child.type.displayName === 'side' ? child : null)
+
+    function CheckUserState() {
+        let userState = user.userState
+        let urlPath   = window.location.pathname
+
+        if(userState == "logged_in" && urlPath == "/")
+            setExpandedState(true)
+        else
+            setExpandedState(false)
+    }
+
+    useEffect(() => {
+        CheckUserState()
+    }, [])
+
+    useEffect(() => {
+        CheckUserState()
+    }, [user.userState])
 
     useEffect(() => {
         if(main != undefined && main.length > 0)
@@ -73,4 +93,12 @@ const AppSide = ({ expandedState, children }) => {
 AppSide.displayName = "side"
 AppShell.Side = AppSide
 
-export default AppShell
+const mapStateToProps = state => ({
+	user: state.user
+})
+
+const mapDispatchToProps = dispatch => ({
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppShell)

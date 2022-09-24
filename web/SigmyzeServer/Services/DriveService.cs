@@ -11,6 +11,7 @@ namespace SigmyzeServer.Services
     public interface IDriveService
     {
         Task<Drive> GetDrive(string lunar_id);
+        Task SaveDrive(string lunar_id, Drive _nDrive);
     }
 
     public class DriveMongoORM : IDriveService
@@ -31,6 +32,11 @@ namespace SigmyzeServer.Services
                 _tDrive = await CreateDrive(lunar_id);
 
             return _tDrive;
+        }
+
+        public async Task SaveDrive(string lunar_id, Drive _nDrive)
+        {
+            await _driveCollection.ReplaceOneAsync(x => x.Lunar_ID == lunar_id, _nDrive);
         }
 
         private async Task<Drive> CreateDrive(string lunar_id)
