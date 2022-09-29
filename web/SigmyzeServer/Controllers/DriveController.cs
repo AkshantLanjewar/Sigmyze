@@ -55,17 +55,18 @@ namespace SigmyzeServer.Controllers
             _nFolder.Folders    = new List<Folder>();
             _nFolder.Projects   = new List<Project>();
 
-            if(req.directory == "root")
-                drive.Folders!.Append(_nFolder);
+            if(req.directory!.Equals("root"))
+                drive.Folders!.Add(_nFolder);
             else
                 drive.Folders = _InsertFolder(drive.Folders!, _nFolder, req.directory!);
+
+            Console.WriteLine(drive.Folders.Count);
 
             DriveResp resp = new DriveResp();
             resp.Status    = status;
             resp.Drive     = drive;
 
             await SaveDrive(drive);
-
             return await SerializeJSON(resp);
         }
 
@@ -88,7 +89,7 @@ namespace SigmyzeServer.Controllers
             _nProject.ProjectData.Indicators = new List<Models.Data.DatasetIndicator>();
 
             if(req.directory == "root")
-                drive.Projects!.Append(_nProject);
+                drive.Projects!.Add(_nProject);
             else
                 drive.Folders = _EditProject(drive.Folders!, _nProject, req.directory!);
             
@@ -174,7 +175,7 @@ namespace SigmyzeServer.Controllers
                 if(_folder.FolderID == directory_id)
                 {
                     if(mode == "append")
-                        _folder.Folders!.Append(_nFolder);
+                        _folder.Folders!.Add(_nFolder);
                     if(mode == "delete")
                         _folder.Folders = _DeleteFolder(_folder.Folders!, _nFolder.FolderID!);
                 }    
@@ -196,7 +197,7 @@ namespace SigmyzeServer.Controllers
                 if(_folder.FolderID == directory_id)
                 {
                     if(mode == "append")
-                        _folder.Projects!.Append(_nProject);
+                        _folder.Projects!.Add(_nProject);
                     if(mode == "delete")
                         _folder.Projects = _DeleteProject(_folder.Projects!, _nProject.ProjectID!);
                     if(mode == "update")
@@ -226,7 +227,7 @@ namespace SigmyzeServer.Controllers
             List<Folder> _folders = new List<Folder>();
             for(int i = 0; i < folders.Count; i++)
                 if(folders[i].FolderID == directory)
-                    _folders.Append(folders[i]);
+                    _folders.Add(folders[i]);
 
             return _folders;
         }
@@ -236,7 +237,7 @@ namespace SigmyzeServer.Controllers
             List<Project> _projects = new List<Project>();
             for(int i = 0; i < projects.Count; i++)
                 if(projects[i].ProjectID != project_id)
-                    _projects.Append(projects[i]);
+                    _projects.Add(projects[i]);
 
             return _projects;
         }

@@ -40,11 +40,6 @@ let sidebar_components = [
         icon: <TbCloudStorm size={18} />
     },
     {
-        title: "Recent",
-        title_id: "recent_workspace",
-        icon: <TbClock size={18} />
-    },
-    {
         title: "Starred",
         title_id: "starred_workspace",
         icon: <TbStar size={18} />
@@ -64,7 +59,7 @@ const DriveSidebar = ({ }) => {
         <Box 
             pb={"md"} 
             mb={"xl"} 
-            mx={"sm"}
+            mx={"xs"}
 
             sx={(theme) => ({
                 display: 'flex', 

@@ -6,7 +6,21 @@ import { AiFillFolderAdd } from 'react-icons/ai'
 import { MdAdd }           from 'react-icons/md'
 import { VscGraphLine }    from 'react-icons/vsc'
 
-const DriveCreateMenu = ({}) => {
+import { connect }         from 'react-redux'
+import { OpenCreateModal } from '../../../../data/actions/driveActions'
+
+const DriveCreateMenu = ({ openCreateModal }) => {
+
+    function CreateFolder() {
+        let create_type = "folder"
+        openCreateModal(create_type)
+    }
+
+    function CreateLunarProject() {
+        let create_type = "project"
+        openCreateModal(create_type)
+    }
+
     return (
         <Box>
             <Menu 
@@ -38,14 +52,32 @@ const DriveCreateMenu = ({}) => {
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Menu.Item icon={<AiFillFolderAdd size={18} />}>Folder</Menu.Item>
+                    <Menu.Item 
+                        icon={<AiFillFolderAdd size={18} />}
+                        onClick={() => { CreateFolder() }}
+                    >
+                        Folder
+                    </Menu.Item>
                     <Menu.Divider />
 
-                    <Menu.Item icon={<VscGraphLine size={18} />}>Lunar Project</Menu.Item>
+                    <Menu.Item 
+                        icon={<VscGraphLine size={18} />}
+                        onClick={() => { CreateLunarProject() }}
+                    >
+                        Lunar Project
+                    </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
         </Box>
     )
 }
 
-export default DriveCreateMenu
+const mapStateToProps = state => ({
+
+})
+
+const mapDispatchToProps = dispatch => ({
+    openCreateModal: (type) => { dispatch(OpenCreateModal(type)) }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DriveCreateMenu)

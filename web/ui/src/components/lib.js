@@ -1,5 +1,7 @@
 import { useRef, useEffect } from "react"
 
+import { Tb3DCubeSphere } from 'react-icons/tb'
+
 function usePrevious(value) {
     const ref = useRef();
     useEffect(() => {
@@ -19,5 +21,31 @@ function parseTpl(template, map, fallback) {
     })
 }
 
+function capitalize(s) {
+    return s && s[0].toUpperCase() + s.slice(1);
+}
+
+const projectDictionary = [
+    {
+        name: "Lunar Project",
+        id: "lunar",
+        icon: <Tb3DCubeSphere size={22} />
+    }
+]
+
+function extractType(type) {
+    let info = null
+
+    for(let i = 0; i < projectDictionary.length; i++) {
+        let project = projectDictionary[i]
+        if(project.id == type)
+            info = project
+    }
+
+    return info
+}
+
 export { usePrevious }
 export { parseTpl }
+export { capitalize }
+export { extractType }

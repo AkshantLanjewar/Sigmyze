@@ -14,6 +14,10 @@ namespace SigmyzeServer.Models.UserData
         [JsonProperty("folder_id")]
         public string? FolderID { get; set; }
 
+        [BsonElement("starred")]
+        [JsonIgnore]
+        public string? Starred { get; set; }
+
         [BsonElement("folders")]
         [JsonProperty("folders")]
         public List<Folder>? Folders { get; set; }
@@ -32,6 +36,7 @@ namespace SigmyzeServer.Models.UserData
 
         [BsonElement("lunar_ID")]
         [JsonProperty("lunar_id")]
+        [JsonIgnore]
         public string Lunar_ID { get; set; }
 
         [BsonElement("folders")]

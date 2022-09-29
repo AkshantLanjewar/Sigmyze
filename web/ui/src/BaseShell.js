@@ -9,7 +9,8 @@ import AppShell from "./components/app/shell/shell";
 import Navbar   from "./components/composite/navbar/navbar";
 import Sidenav  from "./components/composite/sidenav/sidenav";
 
-import DriveSidebar from './components/app/shell/drive/drive-sidebar'
+import DriveSidebar 	from './components/app/shell/drive/drive-sidebar'
+import DriveCreateModal from './components/app/shell/drive/drive-createmodal';
 
 import Logo from './assets/logo.svg'
 
@@ -95,6 +96,7 @@ function BaseShell({ slot, user }) {
 
 			<AppShell.Main>
 				<Navbar />
+				<DriveCreateModal />
 
 				<div className='wrap'>
 					<ScrollArea style={{ height: "calc(100vh - 60px)" }}>
