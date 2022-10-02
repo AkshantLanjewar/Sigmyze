@@ -12,9 +12,30 @@ import useStyles from "./lunar-charts.styles"
 
 import { connect } from "react-redux"
 
+import { useSearchParams } from 'react-router-dom'
+
 const LunarCharts = ({ project, user, removeIndicator }) => {
     const { classes }                               = useStyles()
     const [displayLoginModal, setDisplayLoginModal] = useState(false)
+    const [searchParams]                            = useSearchParams()
+
+    function LoadProject() {
+        let projectId = searchParams.get('projectId')
+        if(projectId == null)
+            return
+
+        console.log(projectId)
+    }
+
+    useEffect(() => {
+        //load the project
+        LoadProject()
+    }, [])
+
+    useEffect(() => {
+        //Load the project
+        LoadProject()
+    }, [searchParams])
 
     useEffect(() => {
         let project_id         = project.project_id

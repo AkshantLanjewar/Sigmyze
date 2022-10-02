@@ -166,6 +166,59 @@ namespace SigmyzeServer.Controllers
             return await SerializeJSON(status);
         }
 
+        [HttpGet("projects/{project_id}")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> GetProject(string project_id)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error        = false;
+            status.MSG          = "got project";
+
+            Drive drive     = await GetDrive();
+            Project project = new Project();
+            bool rootProj   = false;
+
+            for(int i = 0; i < drive.Projects!.Count; i++)
+            {
+                Project _project = drive.Projects[i];
+
+                if(_project.ProjectID == project_id)
+                {
+                    project  = _project;
+                    rootProj = true;
+                }
+            }
+
+            if(rootProj == false)
+                project = _GetProject(drive.Folders!, project_id);
+
+            ProjectResp resp = new ProjectResp();
+            resp.Status      = status;
+            resp.Project     = project;
+            return await SerializeJSON(resp);
+        }
+
+        private Project _GetProject(List<Folder> folders, string project_id)
+        {
+            Project project = new Project();
+            for(int i = 0; i < folders.Count; i++)
+            {
+                Folder folder          = folders[i];
+                List<Project> projects = folder.Projects!;
+
+                for(int x = 0; x < projects.Count; x++)
+                {
+                    Project _project = projects[x];
+                    if(_project.ProjectID! == project_id)
+                        project = _project;
+                    else
+                        project = _GetProject(folder.Folders!, project_id);
+                }
+            }
+
+            return project;
+        }
+
         private List<Folder> _InsertFolder(List<Folder> directory, Folder _nFolder, string directory_id, string mode = "append")
         {
             List<Folder> _nDirectory = directory;

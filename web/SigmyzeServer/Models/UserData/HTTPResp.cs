@@ -11,4 +11,13 @@ namespace SigmyzeServer.Models.UserData
         [JsonProperty("drive")]
         public Drive? Drive { get; set; }
     }
+
+    public class ProjectResp
+    {
+        [JsonProperty("status")]
+        public APIStatusMsg? Status { get; set; }
+
+        [JsonProperty("project")]
+        public Project? Project { get; set; }
+    }
 }

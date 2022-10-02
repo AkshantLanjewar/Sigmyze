@@ -17,7 +17,6 @@ const ChartBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
 
     useEffect(() => {
         let b_styles  = block['styles']
-        console.log(block)
 
         if(b_styles !== undefined) {
             let nJustify = b_styles['justify']
