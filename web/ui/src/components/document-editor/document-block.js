@@ -51,7 +51,6 @@ const DocumentBlock = ({ block, collect_flag, data_location, UpdateNode, CreateB
                 width: '100%',
             }}
             
-            mt={'sm'}
             onFocus={() => { setFocus(true) }}
             ref={ref}
         >

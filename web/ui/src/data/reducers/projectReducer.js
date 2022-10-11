@@ -18,6 +18,7 @@ let default_state = {
         documents: []
     },
 
+    last_saved: [],
     tabs: [default_tab]
 }
 
@@ -48,6 +49,26 @@ export default ( state = default_state, action ) => {
     let n_tabs = []
 
     switch(action.type) {
+        case "load_project":
+            let n_project     = {}
+            n_project['tabs']       = [default_tab]
+            n_project['last_saved'] = []
+
+            n_project['project_name'] = payload['project_name']
+            n_project['project_id']   = payload['project_id']
+
+            n_project['project_data'] = {}
+            n_project['project_data']['indicators'] = payload['indicators']
+            n_project['project_data']['documents']  = payload['documents']
+
+
+            // create n tab state
+            let n_display = []
+            for(let i = 0; i < n_project.project_data.indicators.length; i++)
+                n_display.push(n_project.project_data.indicators)
+            n_project['tabs'][0]['indicators'] = n_display
+
+            return { ...n_project }
         case "set_project_name":
             e_state['project_name'] = payload.project_name
             return { ...e_state }

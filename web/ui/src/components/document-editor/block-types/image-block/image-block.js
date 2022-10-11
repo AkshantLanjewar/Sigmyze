@@ -35,8 +35,19 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
         let nSize    = styles['size']
 
         setJustify(nJustify)
-        if(nSize != undefined)
+        if(nSize != undefined && nSize.width > 0 && nSize.height > 0)
             setSize({ ...nSize })
+    }
+
+    function SetAspectWidth(width, height) {
+        let aspect  = width / height
+        let nWidth  = maxWidth
+        let nheight = nWidth / aspect
+
+        if(isNaN(nheight))
+            return
+
+        return { width: nWidth, height: nheight }
     }
 
     useEffect(() => {
@@ -55,9 +66,28 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
 
     useEffect(() => {
         let img_data = block['data']['image_data']
-        if(img_data !== undefined)
-            setCreated(true)
-    }, [data])
+        let img      = new Image()
+        img.src      = img_data
+
+        img.onload = function() {
+            if(block['styles']['size']['width'] == 0) {
+                let width  = this.width
+                let height = this.height
+
+                if(width > maxWidth) {
+                    let obj = SetAspectWidth(width, height)
+                
+                    width  = obj.width
+                    height = obj.height
+                }
+
+                setSize({ width: width, height: height })
+            }
+
+            if(img_data !== undefined)
+                setCreated(true)
+        }
+    }, [maxWidth])
 
     useEffect(() => {
         if(opened == false && prevOpened == true && file == null)
@@ -75,7 +105,9 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
     }, [justify, size, file])
 
     useEffect(() => {
-
+        let width = styles['size']
+        if(width == undefined)
+            return
     }, [styles])
 
     function submit() {
@@ -115,6 +147,7 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
                 ? (
                     <ImageView
                         maxWidth={maxWidth}
+                        SetAspectWidth={SetAspectWidth}
                         block={block}
                         setJustify={setJustify}
                         CreateBlock={CreateBlock}

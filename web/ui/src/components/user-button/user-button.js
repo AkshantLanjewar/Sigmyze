@@ -62,8 +62,6 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
                         userState: "signedout"
                     })
                 }
-
-                return res.json()
             })
             .then(data => {
                 const n_token = data.token

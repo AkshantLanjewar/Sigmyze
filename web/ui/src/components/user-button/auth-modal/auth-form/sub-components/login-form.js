@@ -85,6 +85,9 @@ const LoginForm = ({ changeState, authAction, userModalAction, setLoading }) => 
                 verified: verified,
                 userState: user_state
             }
+
+            //setup timestamp
+            localStorage.setItem("jwt_stamp", new Date().getTime())
             
             authAction(payload)
             setLoading(false)

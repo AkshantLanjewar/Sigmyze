@@ -50,7 +50,8 @@ const Project = ({ title, type, id }) => {
                 opened={opened}
                 setOpened={setOpened}
                 modalState={modalState}
-                setModalState={setModalState}
+                id={id}
+                title={title}
             />
 
             <Card
@@ -133,7 +134,7 @@ const Project = ({ title, type, id }) => {
 
                                 <Menu.Item
                                     icon={<TbTrash size={18} />}
-                                    onCLick={() => { DeleteProject() }}
+                                    onClick={() => { DeleteProject() }}
                                 >
                                     Delete Project
                                 </Menu.Item>
@@ -166,7 +167,7 @@ const Projects = ({ projects }) => {
                     <Project
                         key={`project-${i}`}
                         title={step.project_name}
-                        type={step.project_type}
+                        type={"lunar"}
                         id={step.project_id}
                     />
                 ))}

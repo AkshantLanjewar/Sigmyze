@@ -32,15 +32,8 @@ const TabManager = ({ project, hide_tab }) => {
             setActive(project.tabs[0].id)
         else
             setActive(project.tabs[project.tabs.length - 1].id)
-                        
-        let n_tabs = []
-        for(let i = 0; i < project.tabs.length; i++) {
-            let tab   = project.tabs[i]
-            let n_tab = { ...tab }
-            n_tabs.push(n_tab)
-        }
 
-        setTabs([...n_tabs])
+        setTabs([...project.tabs])
     }, [project])
 
     return (

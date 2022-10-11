@@ -10,6 +10,7 @@ using SigmyzeServer.Services;
 namespace SigmyzeServer.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/v{version:apiVersion}/drive")]
     [ApiVersion("1.0")]
     public class DriveController : ControllerBase
@@ -60,8 +61,6 @@ namespace SigmyzeServer.Controllers
             else
                 drive.Folders = _InsertFolder(drive.Folders!, _nFolder, req.directory!);
 
-            Console.WriteLine(drive.Folders.Count);
-
             DriveResp resp = new DriveResp();
             resp.Status    = status;
             resp.Drive     = drive;
@@ -86,7 +85,7 @@ namespace SigmyzeServer.Controllers
             
             _nProject.ProjectData            = new ProjectData();
             _nProject.ProjectData.Documents  = new List<Document>();
-            _nProject.ProjectData.Indicators = new List<Models.Data.DatasetIndicator>();
+            _nProject.ProjectData.Indicators = new List<ProjectIndicator>();
 
             if(req.directory == "root")
                 drive.Projects!.Add(_nProject);
@@ -107,14 +106,12 @@ namespace SigmyzeServer.Controllers
             status.MSG          = "project saved";
 
             Drive drive = await GetDrive();
-
-            if(req.directory == "root")
+            
+            if(req.directory! == "root")
             {
-                int project_index = 0;
                 for(int i = 0; i < drive.Projects!.Count; i++)
-                    if(drive.Projects![i].ProjectID == req.project_id)
-                        project_index = i;
-                drive.Projects![project_index] = req.project!;
+                    if(drive.Projects[i].ProjectID! == req.project_id)
+                        drive.Projects[i] = req.project!;
             }
             else
             {
@@ -122,7 +119,6 @@ namespace SigmyzeServer.Controllers
             }
 
             await SaveDrive(drive);
-
             return await SerializeJSON(status);
         }
 
@@ -143,6 +139,7 @@ namespace SigmyzeServer.Controllers
             else
                 drive.Folders = _EditProject(drive.Folders!, _sProject, req.directory!, "delete");
 
+            await SaveDrive(drive);
             return await SerializeJSON(status);
         }
 
@@ -163,6 +160,7 @@ namespace SigmyzeServer.Controllers
             else
                 drive.Folders = _InsertFolder(drive.Folders!, _sFolder, req.directory!, "delete");
 
+            await SaveDrive(drive);
             return await SerializeJSON(status);
         }
 
@@ -289,8 +287,13 @@ namespace SigmyzeServer.Controllers
         {
             List<Project> _projects = new List<Project>();
             for(int i = 0; i < projects.Count; i++)
-                if(projects[i].ProjectID != project_id)
-                    _projects.Add(projects[i]);
+            {
+                Project project = projects[i];
+                if(project.ProjectID == project_id)
+                    continue;
+
+                _projects.Add(project);
+            }
 
             return _projects;
         }

@@ -10,11 +10,12 @@ import DemoModal from "./demo-modal/demo-modal"
 
 import useStyles from "./lunar-charts.styles"
 
-import { connect } from "react-redux"
+import { LoadProject } from "../../data/actions/projectActions"
+import { connect }     from "react-redux"
 
 import { useSearchParams } from 'react-router-dom'
 
-const LunarCharts = ({ project, user, removeIndicator }) => {
+const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
     const { classes }                               = useStyles()
     const [displayLoginModal, setDisplayLoginModal] = useState(false)
     const [searchParams]                            = useSearchParams()
@@ -24,7 +25,32 @@ const LunarCharts = ({ project, user, removeIndicator }) => {
         if(projectId == null)
             return
 
-        console.log(projectId)
+        const jwt_token = user.jwtToken
+        const u_state   = user.userState
+        if(u_state !== "logged_in")
+            return
+
+        //load the project
+        try {
+            fetch(`/api/v1/drive/projects/${projectId}`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${jwt_token}` 
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                let id   = data['project']['project_id']
+                let name = data['project']['project_name']
+    
+                let ind  = data['project']['project_data']['indicators']
+                let doc  = data['project']['project_data']['documents']
+    
+                loadProject(name, id, ind, doc)
+            })
+        } catch (error) {
+            window.location.replace('/')
+        }
     }
 
     useEffect(() => {
@@ -77,7 +103,8 @@ const LunarCharts = ({ project, user, removeIndicator }) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    removeIndicator: ( indicator_id, object_id ) => dispatch(RemoveIndicator(indicator_id, object_id))
+    removeIndicator: ( indicator_id, object_id ) => dispatch(RemoveIndicator(indicator_id, object_id)),
+    loadProject: ( name, id, ind, doc ) => dispatch(LoadProject(name, id, ind, doc))
 })
 
 const mapStateToProps = state => ({

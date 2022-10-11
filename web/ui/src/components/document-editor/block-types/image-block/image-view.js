@@ -19,7 +19,7 @@ import { AiFillEdit, AiFillDelete }                from 'react-icons/ai'
 
 import align_templates from '../align-template'
 
-const ImageView = ({ maxWidth, block, setJustify, CreateBlock, DeleteBlock, EditImage, size, setSize }) => {
+const ImageView = ({ maxWidth, block, setJustify, CreateBlock, DeleteBlock, EditImage, size, setSize, SetAspectWidth }) => {
     const { hovered, ref }            = useHover()
     const [menuActive, setMenuActive] = useState(false)
     const [positions, setPositions]   = useState(align_templates)
@@ -139,6 +139,7 @@ const ImageView = ({ maxWidth, block, setJustify, CreateBlock, DeleteBlock, Edit
                 src={block.data.image_data} 
                 hovered={hovered} 
                 maxWidth={maxWidth}
+                SetAspectWidth={SetAspectWidth}
                 size={size}
                 setSize={setSize}
             />

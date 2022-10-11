@@ -1,6 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SigmyzeServer.Models.Data
 {
@@ -36,22 +37,27 @@ namespace SigmyzeServer.Models.Data
     {
         [BsonElement("indicator_id")]
         [JsonProperty("indicator_id")]
+        [JsonPropertyName("indicator_id")]
         public string? IndicatorID { get; set; }
 
         [BsonElement("indicator_units")]
         [JsonProperty("indicator_units")]
+        [JsonPropertyName("indicator_units")]
         public string? IndicatorUnits { get; set; }
 
         [BsonElement("indicator_name")]
         [JsonProperty("indicator_name")]
+        [JsonPropertyName("indicator_name")]
         public string? IndicatorName { get; set; }
 
         [BsonElement("indicator_category")]
         [JsonProperty("indicator_category")]
+        [JsonPropertyName("indicator_category")]
         public string? IndicatorCategory { get; set; }
 
         [BsonElement("indicator_data")]
         [JsonProperty("indicator_data")]
+        [JsonPropertyName("indicator_data")]
         public List<DatasetData>? IndicatorData { get; set; }
     }
 
@@ -59,15 +65,18 @@ namespace SigmyzeServer.Models.Data
     {
         [BsonElement("year")]
         [JsonProperty("year")]
+        [JsonPropertyName("year")]
         public DateTime? Year { get; set; }
 
         [BsonElement("value")]
         [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         [JsonProperty("value")]
+        [JsonPropertyName("value")]
         public float? Value { get; set; }
 
         [BsonElement("projection")]
         [JsonProperty("projection")]
+        [JsonPropertyName("projection")]
         public bool? Projection { get; set; }
     }
 }

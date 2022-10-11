@@ -46,7 +46,7 @@ const DocumentEditor = ({ data_location, scale_change, set_document_content, pro
             n_blocks.push(block)
         }
 
-        set_document_content(n_blocks, data_location)
+        set_document_content([...n_blocks], data_location)
         setBlocks([...n_blocks])
     }
 

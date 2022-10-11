@@ -8,19 +8,16 @@ import {
 import { useForm }                 from '@mantine/form'
 import { capitalize, usePrevious } from '../../../../lib'
 
-const ProjectModal = ({ opened, setOpened, modalState, setModalState }) => {
-    const prevOpened = usePrevious(opened)
-    const form       = useForm({
-        projectName: ''
-    })
+import UpdateForm from './modal-forms/update-form'
+import DeleteForm from './modal-forms/delete-form'
 
+const ProjectModal = ({ opened, setOpened, modalState, id, title }) => {
     function OnSubmit(e) {
         e.preventDefault()
     }
 
     useEffect(() => {
-        if(prevOpened == true && opened == false)
-            setModalState("update")
+        
     }, [opened])
 
     return (
@@ -31,9 +28,21 @@ const ProjectModal = ({ opened, setOpened, modalState, setModalState }) => {
                 title={`${capitalize(modalState)} Project`}
                 centered
             >
-                <form onSubmit={OnSubmit}>
+                {modalState == "update" && (
+                    <UpdateForm
+                        id={id}
+                        title={title}
+                        setOpened={setOpened}
+                    />
+                )}
 
-                </form>
+                {modalState == "delete" && (
+                    <DeleteForm 
+                        id={id} 
+                        title={title}
+                        setOpened={setOpened}
+                    />
+                )}
             </Modal>
         </Box>
     )

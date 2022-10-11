@@ -108,6 +108,9 @@ const SignupForm = ({ changeState, authAction, userModalAction, setLoading }) =>
                 userState: user_state
             }
 
+            //setup timestamp
+            localStorage.setItem("jwt_stamp", new Date().getTime())
+
             authAction(payload)
             setLoading(false)
             userModalAction(false)

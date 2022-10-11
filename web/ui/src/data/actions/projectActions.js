@@ -101,3 +101,15 @@ export const SetDocumentContent = (blocks, document_location) => {
         }
     }
 }
+
+export const LoadProject = (name, id, indicators, documents) => {
+    return {
+        type: "load_project",
+        payload: {
+            project_name: name,
+            project_id: id,
+            indicators: indicators,
+            documents: documents
+        }
+    }
+}
