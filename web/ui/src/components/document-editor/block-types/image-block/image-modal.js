@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 
 import { 
     Group,
@@ -9,17 +9,27 @@ import {
     useMantineTheme 
 } from '@mantine/core'
 
+import { ImageSize } from '../../../lib'
+
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone'
 import { BsFillCloudUploadFill, BsFillCloudDownloadFill, BsXLg } from 'react-icons/bs'
 
-const ModalView = ({ opened, setOpened, file, setFile, submit }) => {
+const ModalView = ({ opened, setOpened, file, setFile, submit, setSize, SetAspectWidth }) => {
     const theme   = useMantineTheme()
     const openRef = useRef(null)
+    const ref     = React.createRef()
+
+    const [imageURL, setImageURL] = useState(null)
 
     function onDropHandler(files) {
         let file = files[0]
         setFile(file)
     }
+
+    useEffect(() => {
+        let imageUrl = file == null ? null : URL.createObjectURL(file)
+        setImageURL(imageUrl)
+    }, [file])
 
     let dropzone = (
         <Dropzone
@@ -74,18 +84,6 @@ const ModalView = ({ opened, setOpened, file, setFile, submit }) => {
                 </Text>
             </div>
         </Dropzone>
-    )
-
-    let imageUrl = file == null ? null : URL.createObjectURL(file)
-    let preview = (
-        <div style={{ minHeight: 250, height: 250, marginBottom: 20 }}>
-            <Image
-                height={250}
-                fit={"contain"}
-                src={imageUrl}
-                imageProps={{ onLoad: () => { URL.revokeObjectURL(imageUrl) } }}
-            />
-        </div>
     )
 
     let nullButton = (
@@ -147,7 +145,19 @@ const ModalView = ({ opened, setOpened, file, setFile, submit }) => {
         >
             {file == null
                 ? dropzone
-                : preview
+                : (
+                    <div style={{ minHeight: 250, height: 250, marginBottom: 20 }}>
+                        <Image
+                            height={250}
+                            fit={"contain"}
+                            src={imageURL}
+                            imageRef={ref}
+                            imageProps={{ onLoad: () => { 
+                                ImageSize(file, SetAspectWidth, setSize)
+                            }}}
+                        />
+                    </div>
+                )
             }
 
             {file == null

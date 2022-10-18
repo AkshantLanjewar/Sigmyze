@@ -49,6 +49,37 @@ namespace SigmyzeServer.Models.UserData
         [JsonProperty("data")]
         [JsonPropertyName("data")]
         public DocumentData? Data { get; set; }
+
+        [BsonElement("styles")]
+        [JsonProperty("styles")]
+        [JsonPropertyName("styles")]
+        public BlockStyles? Styles { get; set; }
+    }
+
+    public class BlockStyles
+    {
+        [BsonElement("justify")]
+        [JsonProperty("justify")]
+        [JsonPropertyName("justify")]
+        public string? Justify { get; set; }
+
+        [BsonElement("size")]
+        [JsonProperty("size")]
+        [JsonPropertyName("size")]
+        public BlockStylesSize? Size { get; set; }
+    }
+
+    public class BlockStylesSize
+    {
+        [BsonElement("width")]
+        [JsonProperty("width")]
+        [JsonPropertyName("width")]
+        public float? Width { get; set; }
+
+        [BsonElement("height")]
+        [JsonProperty("height")]
+        [JsonPropertyName("height")]
+        public float? Height { get; set; }
     }
 
     public class DocumentIndicator

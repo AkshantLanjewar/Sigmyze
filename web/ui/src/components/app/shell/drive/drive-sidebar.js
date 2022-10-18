@@ -38,18 +38,23 @@ let sidebar_components = [
         title: "Workspace",
         title_id: "workspace",
         icon: <TbCloudStorm size={18} />
-    },
-    {
-        title: "Starred",
-        title_id: "starred_workspace",
-        icon: <TbStar size={18} />
-    },
-    {
-        title: "Trash",
-        title_id: "trashed_workspace",
-        icon: <TbTrash size={18} />
     }
 ]
+
+/* [TODO feature] -> Add in the workspaces after you finish this update
+
+{
+    title: "Starred",
+    title_id: "starred_workspace",
+    icon: <TbStar size={18} />
+},
+{
+    title: "Trash",
+    title_id: "trashed_workspace",
+    icon: <TbTrash size={18} />
+}
+
+*/
 
 const DriveSidebar = ({ }) => {
     const { classes, cx }     = useStyles()

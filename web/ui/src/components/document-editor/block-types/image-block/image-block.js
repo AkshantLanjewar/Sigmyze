@@ -20,17 +20,22 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
     const scaleRef                = React.createRef()
     const [maxWidth, setMaxWidth] = useState(0)
 
+    const [flag, setFlag]       = useState(false)
     const [size, setSize]       = useState({ width: 0, height: 0 })
     const [justify, setJustify] = useState("left")
 
     function CollectStyles() {
         let styles_obj        = {}
         styles_obj['justify'] = justify
+        styles_obj['size']    = size
 
         return styles
     }
 
     function SetStyles() {
+        if(styles == undefined)
+            return
+
         let nJustify = styles['justify']
         let nSize    = styles['size']
 
@@ -105,6 +110,13 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
     }, [justify, size, file])
 
     useEffect(() => {
+        
+    }, [size])
+
+    useEffect(() => {
+        if(styles == undefined)
+            return
+
         let width = styles['size']
         if(width == undefined)
             return
@@ -119,7 +131,9 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
             let data = fileLoadedEvent.target.result
 
             setOpened(false)
+            setCreated(true)
             UpdateNode(id, block.tag, { image_data: data, update_image: true }, styles)
+            setFlag(!flag)
         }
 
         fileReader.readAsDataURL(file)
@@ -155,6 +169,7 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
                         EditImage={EditImage}
                         size={size}
                         setSize={setSize}
+                        flag={flag}
                     />
                 )
                 : (
@@ -164,6 +179,8 @@ const ImageBlock = ({ block, collect_flag, data, UpdateNode, CreateBlock, Delete
                         file={file}
                         setFile={setFile}
                         submit={submit}
+                        setSize={setSize}
+                        SetAspectWidth={SetAspectWidth}
                     />
                 )
             }

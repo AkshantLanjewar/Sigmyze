@@ -17,8 +17,8 @@ const ChartView = ({ indicators, scale_change, tab }) => {
         let datasets  = []
         let names     = []
 
-        for(let i = 0; i < indicators[0].length; i++) {
-            let indicator = indicators[0][i]
+        for(let i = 0; i < indicators.length; i++) {
+            let indicator = indicators[i]
             
             let dataset = indicator.dataset
             let ind_id  = indicator.indicator_id

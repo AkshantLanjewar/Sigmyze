@@ -136,6 +136,9 @@ class TextBlock extends React.Component {
 
     setStyles() {
         let styles = this.props.styles
+        if(styles == undefined)
+            return
+
         let align  = styles['justify']
 
         this.setState({ align: align })

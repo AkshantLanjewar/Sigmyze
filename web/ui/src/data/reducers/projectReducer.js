@@ -65,8 +65,8 @@ export default ( state = default_state, action ) => {
             // create n tab state
             let n_display = []
             for(let i = 0; i < n_project.project_data.indicators.length; i++)
-                n_display.push(n_project.project_data.indicators)
-            n_project['tabs'][0]['indicators'] = n_display
+                n_display.push(n_project.project_data.indicators[i])
+            n_project['tabs'][0]['indicators'] = [...n_display]
 
             return { ...n_project }
         case "set_project_name":

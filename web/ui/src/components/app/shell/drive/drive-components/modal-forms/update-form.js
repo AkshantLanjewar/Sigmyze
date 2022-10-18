@@ -38,7 +38,19 @@ const UpdateForm = ({ id, title, drive, user, project, toggleUpdateDrive, setOpe
             project: new_project
         }
 
-        
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify(post),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwt_token}` 
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            toggleUpdateDrive()
+            setOpened(false)
+        })
     }
 
     return (

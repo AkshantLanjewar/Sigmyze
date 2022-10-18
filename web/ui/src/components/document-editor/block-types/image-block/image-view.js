@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import ResizeableImage from './image-resizeable'
 
@@ -19,7 +19,7 @@ import { AiFillEdit, AiFillDelete }                from 'react-icons/ai'
 
 import align_templates from '../align-template'
 
-const ImageView = ({ maxWidth, block, setJustify, CreateBlock, DeleteBlock, EditImage, size, setSize, SetAspectWidth }) => {
+const ImageView = ({ flag, maxWidth, block, setJustify, CreateBlock, DeleteBlock, EditImage, size, setSize, SetAspectWidth }) => {
     const { hovered, ref }            = useHover()
     const [menuActive, setMenuActive] = useState(false)
     const [positions, setPositions]   = useState(align_templates)

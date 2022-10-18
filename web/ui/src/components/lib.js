@@ -45,6 +45,18 @@ function extractType(type) {
     return info
 }
 
+function ImageSize(file, SetAspectWidth, setSize) {
+    let imageUrl = file == null ? null : URL.createObjectURL(file)
+    const img    = new Image()
+    img.src      = imageUrl
+
+    img.onload = function() {
+        let n_prop = SetAspectWidth(this.width, this.height)
+        setSize({ ...n_prop })
+    }
+}
+
+export { ImageSize }
 export { usePrevious }
 export { parseTpl }
 export { capitalize }

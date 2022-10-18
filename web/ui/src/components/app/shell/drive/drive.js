@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 
 import { Box } from '@mantine/core'
 
-import DriveFolders from './drive-components/folders'
-import Projects     from './drive-components/projects'
+import DriveFolders from './drive-components/drive-ui/folders'
+import Projects     from './drive-components/drive-ui/projects'
 import DriveToolbar from './drive-components/toolbar'
 import EmptyDrive   from './drive-components/empty-drive'
 
