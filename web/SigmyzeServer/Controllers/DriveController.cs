@@ -122,6 +122,31 @@ namespace SigmyzeServer.Controllers
             return await SerializeJSON(status);
         }
 
+        [HttpPost("update-folder")]
+        [MapToApiVersion("1.0")]
+        public async Task<IActionResult> UpdateFolder([FromBody]UpdateFolder req)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error        = false;
+            status.MSG          = "folder saved";
+
+            Drive drive = await GetDrive();
+
+            if(req.directory! == "root")
+            {
+                for(int i = 0; i < drive.Folders!.Count; i++)
+                    if(drive.Folders[i].FolderID == req.folder_id)
+                        drive.Folders[i] = req.folder!;
+            }
+            else
+            {
+                drive.Folders = _UpdateFolder(drive.Folders!, req.folder!, req.directory!);
+            }
+
+            await SaveDrive(drive);
+            return await SerializeJSON(status);
+        }
+
         [HttpPost("delete-project")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> DeleteProject([FromBody]DeleteProject req)
@@ -215,6 +240,27 @@ namespace SigmyzeServer.Controllers
             }
 
             return project;
+        }
+
+        private List<Folder> _UpdateFolder(List<Folder> directory, Folder _nFolder, string directory_id)
+        {
+            List<Folder> _nDirectory = directory;
+            for(int i = 0; i < _nDirectory.Count; i++)
+            {
+                Folder _folder = _nDirectory[i];
+                if(_folder.FolderID == directory_id)
+                {
+                    for(int x = 0; x < _folder.Folders!.Count; x++)
+                        if(_folder.Folders[x].FolderID == _nFolder.FolderID)
+                            _folder.Folders[x] = _nFolder;
+                }
+
+                if(_folder.Folders!.Count > 0)
+                    _folder.Folders = _UpdateFolder(_folder.Folders!, _nFolder, directory_id);
+                _nDirectory[i] = _folder;
+            }
+
+            return _nDirectory;
         }
 
         private List<Folder> _InsertFolder(List<Folder> directory, Folder _nFolder, string directory_id, string mode = "append")

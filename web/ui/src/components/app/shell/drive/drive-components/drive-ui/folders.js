@@ -1,45 +1,121 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { 
     Box, 
     Text, 
     Title,
-    SimpleGrid 
+    SimpleGrid,
+    Menu,
+    ActionIcon 
 } from '@mantine/core'
 
+import { useHover } from '@mantine/hooks'
+
+import FolderModal from './modals/folder-modal'
+
 import { AiFillFolder } from 'react-icons/ai'
+import { 
+    TbDots,
+    TbSettings,
+    TbTrash 
+} from 'react-icons/tb'
 
-const Folder = ({ folder, SetWorkingDirectory }) => {
+const Folder = ({ folder, SetWorkingDirectory, GetFolderData }) => {
+    const { hovered, ref }            = useHover()
+    const [opened, setOpened]         = useState(false)
+    const [modalState, setModalState] = useState("update")
+
+    function Update() {
+        setModalState("update")
+        setOpened(true)
+    }
+
+    function Delete() {
+        setModalState("delete")
+        setOpened(true)
+    }
+
     return (
-        <Box
-            sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 10,
+        <Box id={`drive-folder-${folder.folder_id}`} ref={ref}>
+            <FolderModal
+                opened={opened}
+                setOpened={setOpened}
+                modalState={modalState}
+                id={folder.folder_id}
+                title={folder.folder_name}
+                GetFolderData={GetFolderData}
+            />
 
-                borderRadius: theme.radius.sm,
-                border: `1px solid ${theme.colors.dark[4]}`,
+            <Box
+                sx={(theme) => ({
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 10,
+
+                    borderRadius: theme.radius.sm,
+                    border: `1px solid ${theme.colors.dark[4]}`,
+                    
+                    padding: theme.spacing.md,
+                    userSelect: 'none',
+
+                    '&:hover': {
+                        cursor: 'pointer',
+                        backgroundColor: theme.colors.dark[6],
+                        color: theme.colors.dark[0]
+                    }
+                })}
+
+                onDoubleClick={() => { SetWorkingDirectory(folder.folder_id) }}
+            >
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10
+                    }}
+                >
+                    <AiFillFolder size={28} />
+                    <Title order={5}>{folder.folder_name}</Title>
+                </Box>
                 
-                padding: theme.spacing.md,
-                userSelect: 'none',
+                {hovered && (
+                    <Menu
+                        shadow={"md"}
+                        width={200}
+                        position={"right"}
+                        withArrow
+                    >
+                        <Menu.Target>
+                            <ActionIcon>
+                                <TbDots size={16} />
+                            </ActionIcon>
+                        </Menu.Target>
 
-                '&:hover': {
-                    cursor: 'pointer',
-                    backgroundColor: theme.colors.dark[6],
-                    color: theme.colors.dark[0]
-                }
-            })}
+                        <Menu.Dropdown sx={(theme) => ({ backgroundColor: theme.colors.dark[7] })}>
+                            <Menu.Item
+                                icon={<TbSettings size={18} />}
+                                onClick={() => { Update() }}
+                            >
+                                Update Folder
+                            </Menu.Item>
 
-            onDoubleClick={() => { SetWorkingDirectory(folder.folder_id) }}
-        >
-            <AiFillFolder size={28} />
-            <Title order={5}>{folder.folder_name}</Title>
+                            <Menu.Item
+                                icon={<TbTrash size={18} />}
+                                onClick={() => { Delete() }}
+                            >
+                                Delete Folder
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                )}
+            </Box>
         </Box>
     )
 }
 
-const DriveFolders = ({ folders, SetWorkingDirectory }) => {
+const DriveFolders = ({ folders, GetFolderData, SetWorkingDirectory }) => {
     return (
         <Box mb={"xl"}>
             <Text 
@@ -59,6 +135,7 @@ const DriveFolders = ({ folders, SetWorkingDirectory }) => {
                     <Folder
                         folder={step}
                         key={`folder-${i}`}
+                        GetFolderData={GetFolderData}
                         SetWorkingDirectory={SetWorkingDirectory}
                     />
                 ))}

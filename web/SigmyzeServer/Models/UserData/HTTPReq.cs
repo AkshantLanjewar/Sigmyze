@@ -23,6 +23,14 @@ namespace SigmyzeServer.Models.UserData
         public Project? project { get; set; }
     }
 
+    public class UpdateFolder
+    {
+        public string? directory { get; set; }
+        public string? folder_id { get; set; }
+
+        public Folder? folder { get; set; }
+    }
+
     public class DeleteProject
     {
         public string? directory { get; set; }

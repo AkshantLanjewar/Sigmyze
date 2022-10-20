@@ -124,6 +124,7 @@ const Drive = ({ changeDirectory, drive }) => {
                     <Box>
                         <DriveFolders 
                             folders={folders} 
+                            GetFolderData={GetFolderData}
                             SetWorkingDirectory={SetWorkingDirectory}
                         />
                         

@@ -5,11 +5,10 @@ import {
     Modal 
 } from '@mantine/core'
 
-import { useForm }                 from '@mantine/form'
-import { capitalize, usePrevious } from '../../../../lib'
+import { capitalize } from '../../../../../../lib'
 
-import UpdateForm from './modal-forms/update-form'
-import DeleteForm from './modal-forms/delete-form'
+import UpdateForm from '../../modal-forms/update-form'
+import DeleteForm from '../../modal-forms/delete-form'
 
 const ProjectModal = ({ opened, setOpened, modalState, id, title }) => {
     function OnSubmit(e) {

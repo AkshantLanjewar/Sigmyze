@@ -11,7 +11,7 @@ import {
 } from '@mantine/core'
 
 import { useHover }    from '@mantine/hooks'
-import { extractType } from '../../../../lib'
+import { extractType } from '../../../../../lib'
 
 import { 
     TbDots,
@@ -20,7 +20,7 @@ import {
     TbCloudUpload 
 } from 'react-icons/tb'
 
-import ProjectModal from './project-modal'
+import ProjectModal from './modals/project-modal'
 
 const Project = ({ title, type, id }) => {
     const [opened, setOpened]         = useState(false)
@@ -62,6 +62,8 @@ const Project = ({ title, type, id }) => {
                 radius={"md"}
                 ref={ref}
                 sx={{ overflow: 'visible' }}
+
+                onDoubleClick={() => { OpenProject() }}
             >
                 <Card.Section
                     sx={(theme) => ({
