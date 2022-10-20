@@ -1,6 +1,8 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SigmyzeServer.Models.Data;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SigmyzeServer.Models.UserData
 {
@@ -8,22 +10,26 @@ namespace SigmyzeServer.Models.UserData
     {
         [BsonElement("folder_name")]
         [JsonProperty("folder_name")]
+        [JsonPropertyName("folder_name")]
         public string? FolderName { get; set; }
 
         [BsonElement("folder_id")]
         [JsonProperty("folder_id")]
+        [JsonPropertyName("folder_id")]
         public string? FolderID { get; set; }
 
         [BsonElement("starred")]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public string? Starred { get; set; }
 
         [BsonElement("folders")]
         [JsonProperty("folders")]
+        [JsonPropertyName("folders")]
         public List<Folder>? Folders { get; set; }
 
         [BsonElement("projects")]
         [JsonProperty("projects")]
+        [JsonPropertyName("projects")]
         public List<Project>? Projects { get; set; }
     }
 
@@ -31,12 +37,12 @@ namespace SigmyzeServer.Models.UserData
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public string? Id { get; set; }
 
         [BsonElement("lunar_ID")]
         [JsonProperty("lunar_id")]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public string Lunar_ID { get; set; }
 
         [BsonElement("folders")]

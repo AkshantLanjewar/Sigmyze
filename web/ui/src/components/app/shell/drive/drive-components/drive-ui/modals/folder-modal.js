@@ -8,6 +8,7 @@ import {
 import { capitalize } from '../../../../../../lib'
 
 import UpdateForm from './folder-update-form'
+import DeleteForm from './folder-delete-form'
 
 const FolderModal = ({ opened, setOpened, modalState, id, title, GetFolderData }) => {
     return (
@@ -23,6 +24,14 @@ const FolderModal = ({ opened, setOpened, modalState, id, title, GetFolderData }
                         id={id}
                         title={title}
                         GetFolderData={GetFolderData}
+                        setOpened={setOpened}
+                    />
+                )}
+
+                {modalState == "delete" && (
+                    <DeleteForm
+                        id={id}
+                        title={title}
                         setOpened={setOpened}
                     />
                 )}

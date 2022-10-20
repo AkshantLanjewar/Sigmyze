@@ -323,7 +323,7 @@ namespace SigmyzeServer.Controllers
         {
             List<Folder> _folders = new List<Folder>();
             for(int i = 0; i < folders.Count; i++)
-                if(folders[i].FolderID == directory)
+                if(folders[i].FolderID != directory)
                     _folders.Add(folders[i]);
 
             return _folders;
