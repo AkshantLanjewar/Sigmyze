@@ -22,8 +22,9 @@ const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
 
     function LoadProject() {
         let projectId = searchParams.get('projectId')
-        if(projectId == null)
+        if(projectId == null) {
             return
+        }
 
         const jwt_token = user.jwtToken
         const u_state   = user.userState
@@ -32,6 +33,7 @@ const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
 
         //load the project
         try {
+            
             fetch(`/api/v1/drive/projects/${projectId}`, {
                 method: "GET",
                 headers: {

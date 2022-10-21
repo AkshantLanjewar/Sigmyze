@@ -35,7 +35,6 @@ const DriveCreateMenu = ({ openCreateModal }) => {
                         color={"indigo"}
                         radius={"xl"}
                         size={"md"}
-                        ml={"md"}
 
                         sx={{ 
                             width: "50%", 

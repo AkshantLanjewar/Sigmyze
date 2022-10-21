@@ -1,0 +1,16 @@
+Organization Object
+
+organization_id       -> string
+organization_name     -> string
+organization_admin_id -> string [LunarID]
+organization_drive    -> drive
+organization_users    -> list<user>
+published_documents   -> list<document_published>
+
+Document Published Object
+published_id     -> string
+published_title  -> string
+published_author -> PublicUser
+
+[Update to user object]
+organizations -> list<organization_id>

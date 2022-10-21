@@ -13,7 +13,7 @@ import driveReducer    from './reducers/driveReducer'
 const persistConfig = {
     key: 'persistRoot',
     storage: storage,
-    stateReconciler: autoMergeLevel2
+    stateReconciler: autoMergeLevel1
 }
 
 function configureStore(state) {

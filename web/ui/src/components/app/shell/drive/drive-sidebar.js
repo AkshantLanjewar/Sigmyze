@@ -75,15 +75,7 @@ const DriveSidebar = ({ }) => {
             <DriveCreateMenu />
 
             <Box mt={"md"}>
-                {sidebar_components.map((item, index) => (
-                    <DriveTab
-                        index={index}
-                        active={active}
-                        setActive={() => { setActive(index) }}
-                        title={item.title}
-                        icon={item.icon}
-                    />
-                ))}
+                
             </Box>
         </Box>
     )
