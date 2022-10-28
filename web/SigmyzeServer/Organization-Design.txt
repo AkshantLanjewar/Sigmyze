@@ -3,14 +3,18 @@ Organization Object
 organization_id       -> string
 organization_name     -> string
 organization_admin_id -> string [LunarID]
+user_organization     -> boolean
 organization_drive    -> drive
 organization_users    -> list<user>
-published_documents   -> list<document_published>
+organization_publishers -> list<user>
+article_queue        -> list<article>
+published_articles   -> list<article>
 
-Document Published Object
+Article Object
 published_id     -> string
 published_title  -> string
 published_author -> PublicUser
+content          -> Document
 
 [Update to user object]
 organizations -> list<organization_id>

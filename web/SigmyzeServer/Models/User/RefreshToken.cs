@@ -10,7 +10,7 @@ namespace SigmyzeServer.Models.User
         public string? Id { get; set; }
 
         [BsonElement("token")]
-        public string Token { get; set; }
+        public string? Token { get; set; }
 
         [BsonElement("expires")]
         public DateTime Expires { get; set; }
@@ -19,16 +19,16 @@ namespace SigmyzeServer.Models.User
         public DateTime Created { get; set; }
 
         [BsonElement("createdByIp")]
-        public string CreatedByIp { get; set; }
+        public string? CreatedByIp { get; set; }
 
         [BsonElement("revoked")]
         public DateTime? Revoked { get; set; }
 
         [BsonElement("revokedByIp")]
-        public string RevokedByIp { get; set; }
+        public string? RevokedByIp { get; set; }
 
         [BsonElement("replacedByToken")]
-        public string ReplacedByToken { get; set; } 
+        public string? ReplacedByToken { get; set; } 
 
         public bool IsExpired => DateTime.UtcNow >= Expires;
         public bool IsActive => Revoked == null && !IsExpired;

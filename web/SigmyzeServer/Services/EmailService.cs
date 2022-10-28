@@ -5,7 +5,7 @@ namespace SigmyzeServer.Services
 {
     public interface IEmailService
     {
-        Task SendVerificationEmail(string token, string address, string name);
+        Task SendVerificationEmail(string token, string address, string? name);
     }
     
     public class EmailService : IEmailService
@@ -17,7 +17,7 @@ namespace SigmyzeServer.Services
             _config = config;
         }
 
-        public async Task SendVerificationEmail(string token, string address, string name)
+        public async Task SendVerificationEmail(string token, string address, string? name)
         {
             string key            = _config["EmailKey"].ToString();
             SendGridClient client = new SendGridClient(key);

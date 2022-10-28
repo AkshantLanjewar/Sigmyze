@@ -6,8 +6,8 @@ import {
     Title,
 } from '@mantine/core'
 
-import EmptyDrive from '../../../components/app/shell/drive/drive-components/empty-drive'
-import Drive      from '../../../components/app/shell/drive/drive'
+import EmptyDrive      from '../drive/drive-components/empty-drive'
+import Drive           from '../drive/drive'
 
 import { connect }     from 'react-redux'
 import { UpdateDrive } from '../../../data/actions/driveActions'
@@ -45,7 +45,7 @@ const Dashboard = ({ user, drive, updateDrive }) => {
     useEffect(() => {
         GrabDrive()
     }, [drive.update_drive])
-
+ 
     return (
         <Container p={"xl"} fluid>
             <Grid gutter={0} columns={24} p={"xl"}>
@@ -53,8 +53,8 @@ const Dashboard = ({ user, drive, updateDrive }) => {
                     {emptyDrive
                         ? (
                             <EmptyDrive 
-                                TitleMSG={"Welcome to your Workspace"}
-                                SubtitleMSG={"Create a project to get started"}
+                                TitleMSG={"Welcome to your Command Center"}
+                                SubtitleMSG={"Click on the + New button to get started"}
                             />
                         )
                         : <Drive drive={drive} />

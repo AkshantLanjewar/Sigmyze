@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using SigmyzeServer.Services;
 using SigmyzeServer.Models.Data;
+using SigmyzeServer.Services.DatabaseServices;
 
 namespace SigmyzeServer.Controllers
 {
@@ -16,9 +17,9 @@ namespace SigmyzeServer.Controllers
     {
         private List<Dataset> _datasets;
         private List<string> _datasetsStr;
-        private readonly IDatasetMongoORM _datasetMongoORM;
+        private readonly IDatasetMongoOrm _datasetMongoORM;
 
-        public DatasetsController(IDatasetMongoORM datasetMongoORM)
+        public DatasetsController(IDatasetMongoOrm datasetMongoORM)
         {
             _datasetMongoORM = datasetMongoORM;
             _datasets        = _datasetMongoORM.GetDatasets();
@@ -194,7 +195,7 @@ namespace SigmyzeServer.Controllers
             status.Error = false;
             status.MSG   = "Working";
 
-            List<string> objects = await _datasetMongoORM.ProcessedObjects(dataset);
+            List<string>? objects = await _datasetMongoORM.ProcessedObjects(dataset);
             int object_index = objects.FindIndex(x => x == dataset);
             if(object_index < 0)
             {

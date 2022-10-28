@@ -8,16 +8,17 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SigmyzeServer.Services.DatabaseServices;
 
 namespace SigmyzeServer.Services.Auth
 {
     public interface IUserService
     {
-        Task<AuthResp> Authenticate(LoginPost data, string ipAddress);
-        Task<AuthResp> RefreshToken(string token, string ipAddress);
-        Task<bool> RevokeToken(string token, string ipAddress);
+        Task<AuthResp> Authenticate(LoginPost data, string? ipAddress);
+        Task<AuthResp> RefreshToken(string token, string? ipAddress);
+        Task<bool> RevokeToken(string token, string? ipAddress);
         string generateJwtToken(User user);
-        (User user, string token) Register(User data, string ipAddress);
+        (User user, string token) Register(User data, string? ipAddress);
     }
 
     public class UserService : IUserService
@@ -41,21 +42,21 @@ namespace SigmyzeServer.Services.Auth
             return resp;
         }
 
-        public async Task<AuthResp> Authenticate(LoginPost data, string ipAddress)
+        public async Task<AuthResp> Authenticate(LoginPost data, string? ipAddress)
         {
             AuthResp resp = new AuthResp();
             User? pUser   = await _authService.GetAsyncEmail(data.Email);
             if(pUser == null)
                 return badAuth("user_dne");
 
-            string hashed = _hashService.HashPassword(data.Password, pUser.Salt);
+            string? hashed = _hashService.HashPassword(data.Password, pUser.Salt);
             if(hashed != pUser.Password)
                 return badAuth("pwd_bad");
 
             var token          = generateJwtToken(pUser);
             var refreshToken   = generateRefreshToken(ipAddress);
             pUser.RefreshToken = refreshToken;
-            await _authService.UpdateAsync(pUser.Lunar_ID, pUser);
+            await _authService.UpdateAsync(pUser.LunarId, pUser);
 
             resp.Authorized   = true;
             resp.Message      = "auth";
@@ -67,7 +68,7 @@ namespace SigmyzeServer.Services.Auth
             return resp;
         }
 
-        public (User user, string token) Register(User data, string ipAddress)
+        public (User user, string token) Register(User data, string? ipAddress)
         {   
             var token         = generateJwtToken(data);
             var refreshToken  = generateRefreshToken(ipAddress);
@@ -76,7 +77,7 @@ namespace SigmyzeServer.Services.Auth
             return (data, token);
         }
 
-        public async Task<AuthResp> RefreshToken(string token, string ipAddress)
+        public async Task<AuthResp> RefreshToken(string token, string? ipAddress)
         {
             AuthResp resp = new AuthResp();
             User? pUser   = await _authService.GetAsyncToken(token);
@@ -98,7 +99,7 @@ namespace SigmyzeServer.Services.Auth
             return resp;
         }
 
-        public async Task<bool> RevokeToken(string token, string ipAddress)
+        public async Task<bool> RevokeToken(string token, string? ipAddress)
         {
             User? pUser = await _authService.GetAsyncToken(token);
             if(pUser == null) return false;
@@ -120,7 +121,7 @@ namespace SigmyzeServer.Services.Auth
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Username),
-                    new Claim("Lunar_Id", user.Lunar_ID),
+                    new Claim("Lunar_Id", user.LunarId),
                     new Claim("Verified", user.Verified),
                     new Claim("Email", user.EMail),
                     new Claim("Username", user.Username),
@@ -134,7 +135,7 @@ namespace SigmyzeServer.Services.Auth
             return tokenHandler.WriteToken(token);
         }
 
-        private RefreshToken generateRefreshToken(string ipAddress)
+        private RefreshToken? generateRefreshToken(string? ipAddress)
         {
             using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
             {

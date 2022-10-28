@@ -9,8 +9,8 @@ import AppShell from "./components/app/shell/shell";
 import Navbar   from "./components/composite/navbar/navbar";
 import Sidenav  from "./components/composite/sidenav/sidenav";
 
-import DriveSidebar 	from './components/app/shell/drive/drive-sidebar'
-import DriveCreateModal from './components/app/shell/drive/drive-createmodal';
+import DriveSidebar 	from './pages/homepage/drive/drive-sidebar/drive-sidebar'
+import DriveCreateModal from './pages/homepage/drive/drive-sidebar/drive-createmodal';
 
 import Logo from './assets/logo.svg'
 

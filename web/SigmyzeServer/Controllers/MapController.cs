@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using SigmyzeServer.Models.Maps;
 using SigmyzeServer.Services;
 using SigmyzeServer.Models.Data;
+using SigmyzeServer.Services.DatabaseServices;
 
 namespace SigmyzeServer.Controllers
 {
@@ -18,9 +19,9 @@ namespace SigmyzeServer.Controllers
         private string URL_ROOT = "http://34.66.146.203:8080";
         private List<Dataset> datasets;
         private List<string> _datasetsStr;
-        private readonly IDatasetMongoORM _datasetMongoORM;
+        private readonly IDatasetMongoOrm _datasetMongoORM;
 
-        public MapsController(IDatasetMongoORM datasetMongoORM)
+        public MapsController(IDatasetMongoOrm datasetMongoORM)
         {
             _datasetMongoORM = datasetMongoORM;
             datasets         = _datasetMongoORM.GetDatasets();
@@ -61,7 +62,7 @@ namespace SigmyzeServer.Controllers
             GetMapIndicatorResp resp = new GetMapIndicatorResp();
             resp.status              = checkDataset(dataset);
 
-            List<string> objects = await _datasetMongoORM.ProcessedObjects(dataset);
+            List<string>? objects = await _datasetMongoORM.ProcessedObjects(dataset);
             List<EconomicData> p_out    = new List<EconomicData>();
 
             Parallel.For(0, objects.Count, count => {
