@@ -3,11 +3,11 @@ import React, { useEffect } from 'react'
 import { TextInput, Button } from '@mantine/core'
 
 import { useForm }           from '@mantine/form'
-import { showNotification }  from '@mantine/notifications'
+import { UpdateProject }     from "../../../../../data/backend/drive-operations";
 import { ToggleDriveUpdate } from '../../../../../data/actions/driveActions'
 import { connect }           from 'react-redux'
 
-const UpdateForm = ({ id, title, drive, user, project, toggleUpdateDrive, setOpened }) => {
+const UpdateForm = ({ id, title, drive, user, project, organization, toggleUpdateDrive, setOpened }) => {
     const ref  = React.createRef()
     const form = useForm({
         initialValues: {
@@ -38,19 +38,12 @@ const UpdateForm = ({ id, title, drive, user, project, toggleUpdateDrive, setOpe
             project: new_project
         }
 
-        fetch(url, {
-            method: "POST",
-            body: JSON.stringify(post),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}` 
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
+        const functions = { resCompleted: () => {
             toggleUpdateDrive()
             setOpened(false)
-        })
+        }}
+
+        UpdateProject(organization, functions, jwt_token, post)
     }
 
     return (
@@ -85,7 +78,8 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
     project: state.project,
     user: state.user,
-    drive: state.drive
+    drive: state.drive,
+    organization: state.organization
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpdateForm)

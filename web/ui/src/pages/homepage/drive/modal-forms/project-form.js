@@ -15,12 +15,13 @@ import { TbChevronDown }       from 'react-icons/tb'
 
 import { connect }           from 'react-redux'
 import { ToggleDriveUpdate } from '../../../../data/actions/driveActions'
+import { CreateProject } from "../../../../data/backend/drive-operations";
 
 const project_items = [
     { icon: <Tb3DCubeSphere size={22} />, name: "Lunar Project" }
 ]
 
-const ProjectForm = ({ drive, user, toggleUpdateDrive, CloseModal }) => {
+const ProjectForm = ({ drive, user, organization, toggleUpdateDrive, CloseModal }) => {
     const [opened, setOpened]     = useState(false)
     const [selected, setSelected] = useState(project_items[0])
 
@@ -44,24 +45,12 @@ const ProjectForm = ({ drive, user, toggleUpdateDrive, CloseModal }) => {
             project_type: project_type
         }
 
-        fetch("/api/v1/drive/create-project", {
-            method: "POST",
-            body: JSON.stringify(post_data),
+        const functions = {
+            'CloseModal': CloseModal,
+            'toggleUpdateDrive': toggleUpdateDrive
+        }
 
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}`
-            },
-        })
-        .then(res => {
-            if(res.status !== 200)
-                return
-            
-            toggleUpdateDrive()
-            CloseModal()
-        })
-
-        CloseModal()
+        CreateProject(organization, functions, jwt_token, post_data)
     }
 
     const items = project_items.map((item) => (
@@ -147,7 +136,8 @@ const ProjectForm = ({ drive, user, toggleUpdateDrive, CloseModal }) => {
 
 const mapStateToProps = state => ({
     drive: state.drive,
-    user: state.user
+    user: state.user,
+    organization: state.organization
 })
 
 const mapDispatchToProps = dispatch => ({

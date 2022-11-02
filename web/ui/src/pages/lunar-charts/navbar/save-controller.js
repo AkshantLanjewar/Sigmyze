@@ -7,6 +7,7 @@ import {
 } from '@mantine/core'
 
 import { connect } from 'react-redux'
+import { UpdateProject } from "../../../data/backend/drive-operations";
 
 const Loading = ({ }) => {
     return (
@@ -50,13 +51,10 @@ const Default = ({ }) => {
     )
 }
 
-const SaveController = ({ project, user, drive }) => {
+const SaveController = ({ project, user, drive, organization }) => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        //save the new project
-        setLoading(true)
-        
         const jwt_token = user.jwtToken
         const u_state   = user.userState
         if(u_state == "signedout" || jwt_token == undefined || project.project_id == 'demo') {
@@ -79,18 +77,12 @@ const SaveController = ({ project, user, drive }) => {
             project: new_project
         }
 
-        fetch("/api/v1/drive/update-project", {
-            method: "POST",
-            body: JSON.stringify(post),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}` 
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
+        const functions = { resCompleted: () => {
             setLoading(false)
-        })
+        }}
+
+        setLoading(true)
+        UpdateProject(organization, functions, jwt_token, post)
     }, [project])
 
     return (
@@ -110,7 +102,8 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
     project: state.project,
     user: state.user,
-    drive: state.drive
+    drive: state.drive,
+    organization: state.organization
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SaveController)

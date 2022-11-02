@@ -7,7 +7,9 @@ import { showNotification }  from '@mantine/notifications'
 import { ToggleDriveUpdate } from '../../../../../../data/actions/driveActions'
 import { connect }           from 'react-redux'
 
-const UpdateForm = ({ user, drive, id, title, toggleUpdateDrive, GetFolderData, setOpened }) => {
+import { UpdateFolder } from "../../../../../../data/backend/drive-operations"
+
+const UpdateForm = ({ user, drive, organization, id, title, toggleUpdateDrive, GetFolderData, setOpened }) => {
     const ref  = React.createRef()
     const form = useForm({
         initialValues: {
@@ -21,18 +23,11 @@ const UpdateForm = ({ user, drive, id, title, toggleUpdateDrive, GetFolderData, 
 
     function Update(e) {
         e.preventDefault()
-        
-        let folder_data = GetFolderData(drive, id)
-
         let jwt_token = user.jwtToken
-        let url       = "/api/v1/drive/update-folder"
 
         let n_folder            = {}
         n_folder['folder_name'] = form.values.name
         n_folder['folder_id']   = id
-        n_folder['starred']     = "no"
-        n_folder['folders']     = folder_data['folders']
-        n_folder['projects']    = folder_data['projects']
 
         let post = {
             directory: drive.working_directory,
@@ -40,21 +35,12 @@ const UpdateForm = ({ user, drive, id, title, toggleUpdateDrive, GetFolderData, 
             folder: n_folder
         }
 
-        console.log(post)
-
-        fetch(url, {
-            method: "POST",
-            body: JSON.stringify(post),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}` 
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
+        const functions = { resCompleted: () => {
             toggleUpdateDrive()
             setOpened(false)
-        })
+        }}
+
+        UpdateFolder(organization, functions, jwt_token, post)
     }
 
     return (
@@ -88,7 +74,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
     user: state.user,
-    drive: state.drive
+    drive: state.drive,
+    organization: state.organization
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpdateForm)

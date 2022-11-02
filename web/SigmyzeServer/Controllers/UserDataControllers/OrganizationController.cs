@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Organizations;
 using SigmyzeServer.Models.User;
+using SigmyzeServer.Models.UserData;
 using SigmyzeServer.Services;
 using SigmyzeServer.Services.Auth;
 using SigmyzeServer.Services.DatabaseServices;
@@ -17,15 +18,16 @@ namespace SigmyzeServer.Controllers.UserDataControllers;
 [Route("api/v{version:apiVersion}/organizations")]
 public class OrganizationController : DataControllerBase
 {
-	private readonly IUserAuth _userAuth;
-	private readonly ITokenDataService _tokenDataService;
 	private readonly IOrganizationService _organizationService;
+	private readonly IDriveService _driveService;
 
-	public OrganizationController(ITokenDataService tokenDataService, IDriveService driveService, IUserAuth userAuth, IOrganizationService organizationService) : base(tokenDataService, driveService, userAuth)
+	public OrganizationController
+		(ITokenDataService tokenDataService, IDriveService driveService, IUserAuth userAuth, IOrganizationService organizationService) 
+		: base(tokenDataService, driveService, userAuth, organizationService)
 	{
-		_tokenDataService = tokenDataService;
-		_userAuth = userAuth;
+
 		_organizationService = organizationService;
+		_driveService = driveService;
 	}
 
 	[HttpGet]
@@ -65,6 +67,34 @@ public class OrganizationController : DataControllerBase
 		}
 
 		response.Organizations = organizations;
+		return await SerializeJson(response);
+	}
+
+	[HttpGet("organization/{organizationId}")]
+	[MapToApiVersion("1.0")]
+	public async Task<IActionResult> GetOrganization(string organizationId)
+	{
+		OrganizationResponse response = new OrganizationResponse();
+		APIStatusMsg status = new APIStatusMsg();
+		
+		status.Error = false;
+		status.MSG = "Organization endpoint working";
+		response.Status = status;
+
+		Organization? organization = await _organizationService.GetOrganization(organizationId);
+		if (organization == null)
+		{
+			status.Error = true;
+			status.MSG = "Organization does not exist";
+			response.Status = status;
+
+			return await SerializeJson(status);
+		}
+		
+		Drive drive = await _driveService.GetDrive(organization.OrganizationDrive!);
+		
+		response.Organization = organization;
+		response.Drive = drive;
 		return await SerializeJson(response);
 	}
 }

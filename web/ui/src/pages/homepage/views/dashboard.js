@@ -11,8 +11,9 @@ import Drive           from '../drive/drive'
 
 import { connect }     from 'react-redux'
 import { UpdateDrive } from '../../../data/actions/driveActions'
+import { LoadDrive }   from "../../../data/backend/drive-operations"
 
-const Dashboard = ({ user, drive, updateDrive }) => {
+const Dashboard = ({ user, drive, organization, updateDrive }) => {
     const [emptyDrive, setEmptyDrive] = useState(false)
 
     function GrabDrive() {
@@ -20,22 +21,12 @@ const Dashboard = ({ user, drive, updateDrive }) => {
         if(token == "" || token == undefined)
             return
 
-        let url = '/api/v1/drive'
-        fetch(url, {
-            method: "GET",
-            headers: { 'Authorization': `Bearer ${token}`}
-        }).then(resp => resp.json()).then(data => {
-            let projects = data['drive']['projects']
-            let folders  = data['drive']['folders']
-            
-            if(folders.length == 0 && projects.length == 0)
-                setEmptyDrive(true)
-            else
-            {
-                setEmptyDrive(false)
-                updateDrive(folders, projects)
-            }
-        })
+        const functions = {
+            setEmptyDrive: setEmptyDrive,
+            updateDrive: updateDrive
+        }
+
+        LoadDrive(organization, token, functions)
     }
 
     useEffect(() => {
@@ -66,7 +57,8 @@ const Dashboard = ({ user, drive, updateDrive }) => {
 }
 
 const mapStateToProps = state => ({
-    drive: state.drive
+    drive: state.drive,
+    organization: state.organization
 })
 
 const mapDispatchToProps = dispatch => ({

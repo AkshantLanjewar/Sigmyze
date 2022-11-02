@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using SigmyzeServer.Models.UserData;
@@ -7,6 +8,12 @@ namespace SigmyzeServer.Models.Organizations;
 
 public class Organization
 {
+	[BsonId]
+	[BsonRepresentation(BsonType.ObjectId)]
+	[System.Text.Json.Serialization.JsonIgnore]
+	[Newtonsoft.Json.JsonIgnore]
+	public string? Id { get; set; }
+	
 	[BsonElement("organization_id")]
 	[JsonProperty("organization_id")]
 	[JsonPropertyName(("organization_id"))]

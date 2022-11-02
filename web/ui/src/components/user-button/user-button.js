@@ -8,6 +8,8 @@ import {
     userDataAction 
 } from "../../data/actions/userActions"
 
+import { RevertOrganization } from "../../data/actions/organizationActions"
+
 import { 
     Button
 } from "@mantine/core"
@@ -16,7 +18,7 @@ import UserControl    from "./user-control"
 
 let time_diff = 1000 * 60 * 5
 
-const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAction, user }) => {
+const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAction, revertOrganization, user }) => {
     function GrabLogoutAction() {
         authAction({
             jwtToken: "",
@@ -109,8 +111,6 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
                         verified: "no",
                         userState: "signedout"
                     })
-
-                    window.location.reload()
                 }
                 
                 return resp.json()
@@ -156,6 +156,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
             verified: "no",
             userState: "signedout"
         })
+        revertOrganization()
     }
 
     return (
@@ -187,7 +188,8 @@ const mapDispatchToProps = dispatch => ({
     userModalAction: (payload) => dispatch(userModalAction(payload)),
     verifyModalAction: (payload) => dispatch(verifyModalAction(payload)),
     authAction: (payload) => dispatch(authAction(payload)),
-    userDataAction: (payload) => dispatch(userDataAction(payload))
+    userDataAction: (payload) => dispatch(userDataAction(payload)),
+    revertOrganization: () => dispatch(RevertOrganization())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserButton)

@@ -10,9 +10,10 @@ import {
 } from '@mantine/core'
 
 import { connect }         from 'react-redux'
+import { SetOrganization } from "../../../../data/actions/organizationActions"
 import { ChangeDirectory } from '../../../../data/actions/driveActions'
-import useStyles from "./toolbar.styles"
 
+import useStyles from "./toolbar.styles"
 import { TbCloudUpload, TbChevronDown } from "react-icons/tb"
 
 const NavBox = ({ name, id, SetWorkingDirectory }) => {
@@ -27,11 +28,46 @@ const NavBox = ({ name, id, SetWorkingDirectory }) => {
     )
 }
 
-const DriveSelector = ({ }) => {
+const DriveSelector = ({ user, SetOrganizationRedux }) => {
     const [opened, setOpened] = useState(false)
-    const [selected, setSelected] = useState(0)
+    const [selected, setSelected] = useState(null)
     const [items, setItems] = useState([])
     const { classes } = useStyles(opened)
+
+    useEffect(() => {
+        let jwtToken = user.jwtToken
+        let url = "/api/v1/organizations"
+
+        fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        })
+        .then(res => res.json()).then(data => {
+            let organizations = data['organizations']
+
+            setItems([...organizations])
+            setSelected(organizations[0])
+
+            SetOrganization(organizations[0])
+        })
+    }, [])
+
+    function SetOrganization(id) {
+        let n_selected = null
+        for(let i = 0; i < items.length; i++) {
+            let item = items[i]
+            if(item.organization_id == id)
+                n_selected = item
+        }
+
+        if(n_selected !== null) {
+            SetOrganizationRedux(n_selected['user_organization'], n_selected['organization_id'], n_selected['organization_admin'])
+            setSelected({ ...n_selected })
+        }
+    }
 
     return (
         <Menu
@@ -39,7 +75,6 @@ const DriveSelector = ({ }) => {
             onChange={setOpened}
             radius={"sm"}
             withArrow
-            width={"target"}
         >
             <Menu.Target>
                 <UnstyledButton
@@ -50,7 +85,9 @@ const DriveSelector = ({ }) => {
                 >
                     <Group spacing={"xs"}>
                         <TbCloudUpload size={22} />
-                        <span className={classes.label}>My Drive</span>
+                        {selected !== null && (
+                            <span className={classes.label}>{selected['organization_name']}</span>
+                        )}
                     </Group>
 
                     <TbChevronDown
@@ -64,17 +101,21 @@ const DriveSelector = ({ }) => {
             </Menu.Target>
 
             <Menu.Dropdown>
-                <Menu.Item
-                    icon={<TbCloudUpload size={18} />}
-                >
-                    My Drive
-                </Menu.Item>
+                {items.map((step) => (
+                    <Menu.Item
+                        icon={<TbCloudUpload size={18} />}
+                        component={"button"}
+                        onClick={() => { SetOrganization(step.organization_id) }}
+                    >
+                        {step.organization_name}
+                    </Menu.Item>
+                ))}
             </Menu.Dropdown>
         </Menu>
     )
 }
 
-const DriveToolbar = ({ paths, SetWorkingDirectory }) => {
+const DriveToolbar = ({ user, paths, SetWorkingDirectory, SetOrganization }) => {
     return (
         <Box
             p={"md"}
@@ -85,7 +126,10 @@ const DriveToolbar = ({ paths, SetWorkingDirectory }) => {
             })}
         >
             <Breadcrumbs>
-                <DriveSelector />
+                <DriveSelector
+                    user={user}
+                    SetOrganizationRedux={SetOrganization}
+                />
                 
                 {paths.map((step => ( 
                     <NavBox 
@@ -100,11 +144,14 @@ const DriveToolbar = ({ paths, SetWorkingDirectory }) => {
 }
 
 const mapStateToProps = state => ({
-
+    user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
-    SetWorkingDirectory: (folder_id) => { dispatch(ChangeDirectory(folder_id)) }
+    SetWorkingDirectory: (folder_id) => { dispatch(ChangeDirectory(folder_id)) },
+    SetOrganization: (user_organization, organization_id, organization_admin) => {
+        dispatch(SetOrganization(user_organization, organization_id, organization_admin))
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DriveToolbar)

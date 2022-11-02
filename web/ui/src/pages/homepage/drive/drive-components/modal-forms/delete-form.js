@@ -40,6 +40,10 @@ const DeleteForm = ({ id, title, drive, user, toggleUpdateDrive, setOpened }) =>
             project_id: id
         }
 
+        const functions = { resCompleted: () => {
+
+        }}
+
         fetch(url, {
             method: "POST",
             body: JSON.stringify(payload),
@@ -95,7 +99,8 @@ const DeleteForm = ({ id, title, drive, user, toggleUpdateDrive, setOpened }) =>
 
 const mapStateToProps = state => ({
     drive: state.drive,
-    user: state.user
+    user: state.user,
+    organization: state.organization
 })
 
 const mapDispatchToProps = dispatch => ({

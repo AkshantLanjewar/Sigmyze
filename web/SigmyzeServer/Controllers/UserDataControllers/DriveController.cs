@@ -19,7 +19,9 @@ namespace SigmyzeServer.Controllers.UserDataControllers
         private readonly ITokenDataService _tokenDataService;
         private readonly IDriveService _driveService;
 
-        public DriveController(ITokenDataService tokenDataService, IDriveService driveService, IUserAuth userAuth) : base(tokenDataService, driveService, userAuth)
+        public DriveController
+            (ITokenDataService tokenDataService, IDriveService driveService, IUserAuth userAuth, IOrganizationService organizationService) 
+            : base(tokenDataService, driveService, userAuth, organizationService)
         {
             _tokenDataService = tokenDataService;
             _driveService     = driveService;
@@ -33,7 +35,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "Drive Working";
 
-            Drive drive = await GetDrive();
+            Drive drive = await GetDrive(null);
 
             DriveResp resp = new DriveResp();
             resp.Status    = status;
@@ -50,7 +52,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "folder created";
 
-            Drive drive         = await GetDrive();
+            Drive drive         = await GetDrive(req.organization_id);
             Folder _nFolder     = new Folder();
             _nFolder.FolderID   = Guid.NewGuid().ToString();
             _nFolder.FolderName = req.folder_name;
@@ -66,7 +68,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             resp.Status    = status;
             resp.Drive     = drive;
 
-            await SaveDrive(drive);
+            await SaveDrive(drive, req.organization_id);
             return await SerializeJson(resp);
         }
 
@@ -78,7 +80,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "project created";
 
-            Drive drive           = await GetDrive();
+            Drive drive           = await GetDrive(req.organization_id);
             Project _nProject     = new Project();
             _nProject.ProjectID   = Guid.NewGuid().ToString();
             _nProject.ProjectName = req.project_name;
@@ -93,7 +95,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             else
                 drive.Folders = _EditProject(drive.Folders!, _nProject, req.directory!);
             
-            await SaveDrive(drive);
+            await SaveDrive(drive, req.organization_id);
 
             return await SerializeJson(status);
         }
@@ -106,7 +108,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "project saved";
 
-            Drive drive = await GetDrive();
+            Drive drive = await GetDrive(req.organization_id);
             
             if(req.directory! == "root")
             {
@@ -119,7 +121,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
                 drive.Folders = _EditProject(drive.Folders!, req.project!, req.directory!, "update");
             }
 
-            await SaveDrive(drive);
+            await SaveDrive(drive, req.organization_id);
             return await SerializeJson(status);
         }
 
@@ -131,21 +133,27 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "folder saved";
 
-            Drive drive = await GetDrive();
+            Drive drive = await GetDrive(req.organization_id);
 
             if(req.directory! == "root")
             {
                 for(int i = 0; i < drive.Folders!.Count; i++)
                     if(drive.Folders[i].FolderID == req.folder_id)
-                        drive.Folders[i] = req.folder!;
+                        drive.Folders[i] = UpdateFolderContents(drive.Folders[i], req.folder!);
             }
             else
             {
                 drive.Folders = _UpdateFolder(drive.Folders!, req.folder!, req.directory!);
             }
 
-            await SaveDrive(drive);
+            await SaveDrive(drive, req.organization_id);
             return await SerializeJson(status);
+        }
+
+        private Folder UpdateFolderContents(Folder folder, Folder nFolder)
+        {
+            folder.FolderName = nFolder.FolderName;
+            return folder;
         }
 
         [HttpPost("delete-project")]
@@ -156,7 +164,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "project deleted";
 
-            Drive drive         = await GetDrive();
+            Drive drive         = await GetDrive(null);
             Project _sProject   = new Project();
             _sProject.ProjectID = req.project_id!;
 
@@ -165,7 +173,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             else
                 drive.Folders = _EditProject(drive.Folders!, _sProject, req.directory!, "delete");
 
-            await SaveDrive(drive);
+            await SaveDrive(drive, null);
             return await SerializeJson(status);
         }
 
@@ -177,7 +185,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "folder deleted";
 
-            Drive drive       = await GetDrive();
+            Drive drive       = await GetDrive(null);
             Folder _sFolder   = new Folder();
             _sFolder.FolderID = req.directory_id;
 
@@ -186,7 +194,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             else
                 drive.Folders = _InsertFolder(drive.Folders!, _sFolder, req.directory!, "delete");
 
-            await SaveDrive(drive);
+            await SaveDrive(drive, null);
             return await SerializeJson(status);
         }
 
@@ -198,7 +206,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "got project";
 
-            Drive drive     = await GetDrive();
+            Drive drive     = await GetDrive(null);
             Project project = new Project();
             bool rootProj   = false;
 
@@ -243,21 +251,21 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             return project;
         }
 
-        private List<Folder> _UpdateFolder(List<Folder> directory, Folder _nFolder, string directory_id)
+        private List<Folder> _UpdateFolder(List<Folder> directory, Folder nFolder, string directoryId)
         {
             List<Folder> _nDirectory = directory;
             for(int i = 0; i < _nDirectory.Count; i++)
             {
                 Folder _folder = _nDirectory[i];
-                if(_folder.FolderID == directory_id)
+                if(_folder.FolderID == directoryId)
                 {
                     for(int x = 0; x < _folder.Folders!.Count; x++)
-                        if(_folder.Folders[x].FolderID == _nFolder.FolderID)
-                            _folder.Folders[x] = _nFolder;
+                        if(_folder.Folders[x].FolderID == nFolder.FolderID)
+                            _folder.Folders[x] = UpdateFolderContents(_folder.Folders[x], nFolder);
                 }
 
                 if(_folder.Folders!.Count > 0)
-                    _folder.Folders = _UpdateFolder(_folder.Folders!, _nFolder, directory_id);
+                    _folder.Folders = _UpdateFolder(_folder.Folders!, nFolder, directoryId);
                 _nDirectory[i] = _folder;
             }
 

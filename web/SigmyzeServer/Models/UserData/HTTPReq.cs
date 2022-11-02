@@ -7,6 +7,7 @@ namespace SigmyzeServer.Models.UserData
     {
         public string? directory { get; set; } // ["root", "foo", "bar"] -> "root/foo/bar (Directory id's)
         public string? folder_name { get; set; }
+        public string? organization_id { get; set; }
     }
 
     public class CreateProject
@@ -14,6 +15,7 @@ namespace SigmyzeServer.Models.UserData
         public string? directory { get; set; }
         public string? project_name { get; set; }
         public string? project_type { get; set; }
+        public string? organization_id { get; set; }
     }
 
     public class UpdateProject
@@ -21,6 +23,7 @@ namespace SigmyzeServer.Models.UserData
         public string? directory { get; set; }
         public string? project_id { get; set; }
         public Project? project { get; set; }
+        public string? organization_id { get; set; }
     }
 
     public class UpdateFolder
@@ -29,6 +32,7 @@ namespace SigmyzeServer.Models.UserData
         public string? folder_id { get; set; }
 
         public Folder? folder { get; set; }
+        public string? organization_id { get; set; }
     }
 
     public class DeleteProject

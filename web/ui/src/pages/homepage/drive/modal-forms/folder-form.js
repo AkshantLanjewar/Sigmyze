@@ -7,8 +7,9 @@ import { AiFillFolderAdd } from 'react-icons/ai'
 
 import { connect }           from 'react-redux'
 import { ToggleDriveUpdate } from '../../../../data/actions/driveActions'
+import { CreateFolder } from "../../../../data/backend/drive-operations"
 
-const FolderForm = ({ drive, user, toggleUpdateDrive, CloseModal }) => {
+const FolderForm = ({ drive, user, organization, toggleUpdateDrive, CloseModal }) => {
     const form = useForm({
         folderName: ''
     })
@@ -26,23 +27,12 @@ const FolderForm = ({ drive, user, toggleUpdateDrive, CloseModal }) => {
             folder_name: folder_name
         }
 
-        fetch("/api/v1/drive/create-folder", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}`
-            },
-            body: JSON.stringify(post_data),
-        })
-        .then(res => {
-            if(res.status !== 200)
-                return
-            else
-            {
-                toggleUpdateDrive()
-                CloseModal()
-            }
-        })
+        let functions = {
+            toggleUpdateDrive: toggleUpdateDrive,
+            CloseModal: CloseModal
+        }
+
+        CreateFolder(organization, functions, jwt_token, post_data)
     }
 
     return (
@@ -72,7 +62,8 @@ const FolderForm = ({ drive, user, toggleUpdateDrive, CloseModal }) => {
 
 const mapStateToProps = state => ({
     drive: state.drive,
-    user: state.user
+    user: state.user,
+    organization: state.organization
 })
 
 const mapDispatchToProps = dispatch => ({

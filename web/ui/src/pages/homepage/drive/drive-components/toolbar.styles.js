@@ -19,7 +19,11 @@ const useStyles = createStyles((theme, { opened }) => ({
 
     label: {
         fontWeight: 500,
-        fontSize: theme.fontSizes.sm
+        fontSize: theme.fontSizes.sm,
+        maxWidth: 100,
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
     },
 
     icon: {

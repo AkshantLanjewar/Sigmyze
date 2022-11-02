@@ -5,10 +5,11 @@ import storage                          from 'redux-persist/lib/storage'
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1'
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2'
 
-import userReducer     from './reducers/userReducer'
-import lunarReducer    from './reducers/lunarReducer'
-import projectReducer  from './reducers/projectReducer'
-import driveReducer    from './reducers/driveReducer'
+import userReducer         from './reducers/userReducer'
+import lunarReducer        from './reducers/lunarReducer'
+import projectReducer      from './reducers/projectReducer'
+import driveReducer        from './reducers/driveReducer'
+import organizationReducer from "./reducers/organizationReducer";
 
 const persistConfig = {
     key: 'persistRoot',
@@ -17,18 +18,19 @@ const persistConfig = {
 }
 
 function configureStore(state) {
-    let reduers = combineReducers({ 
-        user: userReducer, 
-        lunar: lunarReducer, 
-        project: projectReducer, 
-        drive: driveReducer 
-    }) 
+    let reducers = combineReducers({
+        user: userReducer,
+        lunar: lunarReducer,
+        project: projectReducer,
+        drive: driveReducer,
+        organization: organizationReducer
+    })
 
-    let persisted_reducer = persistReducer(persistConfig, reduers) 
+    let persisted_reducer = persistReducer(persistConfig, reducers)
 
-    let store     = createStore(persisted_reducer)
-    let persistor = persistStore(store)
-    return [store, persistor]
+    let store   = createStore(persisted_reducer)
+    let persist = persistStore(store)
+    return [store, persist]
 }
 
 export default configureStore
