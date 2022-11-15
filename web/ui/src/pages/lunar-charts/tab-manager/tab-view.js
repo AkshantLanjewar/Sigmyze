@@ -1,7 +1,8 @@
 import React from 'react'
 
-import ChartView    from './views/chart-view'
-import DocumentView from './views/document-view'
+import ChartView      from './views/chart-view'
+import DocumentView   from './views/document-view'
+import PublishingView from "./views/publishing-view";
 
 import { Box } from '@mantine/core'
 
@@ -29,6 +30,13 @@ const TabView = ({ tab, scale_change }) => {
                 )
                 : null
             }
+
+            {tab.type == 'publishing' && (
+                <PublishingView
+                    document_id={tab['document_id']}
+                    document_name={tab['name']}
+                />
+            )}
         </Box>
     )
 }

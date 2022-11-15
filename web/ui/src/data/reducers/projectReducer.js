@@ -19,7 +19,8 @@ let default_state = {
     },
 
     last_saved: [],
-    tabs: [default_tab]
+    tabs: [default_tab],
+    next_tab: ""
 }
 
 /*
@@ -130,6 +131,7 @@ export default ( state = default_state, action ) => {
             return { ...e_state }
         case "hide_tab":
             let tab_id = payload.tab_id
+            let prevId = null
             n_tabs.push(tabs[0])
 
             for(let i = 0; i < tabs.length; i++) {
@@ -137,12 +139,17 @@ export default ( state = default_state, action ) => {
                     continue
                 
                 let tab = tabs[i]
-                if(tab.id == tab_id)
+                if(tab.id == tab_id) {
+                    prevId = tabs[i - 1].id
                     continue
+                }
                 n_tabs.push(tab)
             }
 
             e_state['tabs'] = n_tabs
+            if(prevId != null)
+                e_state['next_tab'] = prevId
+
             return { ...e_state }
         case "open_chart_tab":
             let o_tab = {
@@ -170,6 +177,20 @@ export default ( state = default_state, action ) => {
             }
 
             tabs.push(do_tab)
+            e_state['tabs'] = [...new Set(tabs)]
+            return { ...e_state }
+        case "open_publishing_tab":
+            let pu_tab = {
+                name: payload.document_name,
+                icon: "pub",
+                editable: true,
+                type: 'publishing',
+
+                document_id: payload.document_id,
+                id: uuidv4()
+            }
+
+            tabs.push(pu_tab)
             e_state['tabs'] = [...new Set(tabs)]
             return { ...e_state }
         case "remove_all_indicator":

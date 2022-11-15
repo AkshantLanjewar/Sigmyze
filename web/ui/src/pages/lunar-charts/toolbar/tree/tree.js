@@ -2,7 +2,8 @@ import React from 'react'
 
 import TreeNode from './node'
 
-import { Box, Text } from '@mantine/core'
+import { Box } from '@mantine/core'
+import ToolbarTitle from "../toolbar-title"
 
 const ProjectTree = ({ root }) => {
     return (
@@ -13,30 +14,10 @@ const ProjectTree = ({ root }) => {
                 width: "100%"
             }}
         >
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    userSelect: 'none',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    marginTop: 10,
-                    marginBottom: 10
-                }}
-            >
-                <Text
-                    size={'xs'}
-                    color={'dimmed'}
-                    weight={600}
-                    transform={'uppercase'}
-                >
-                    Explorer
-                </Text>
-            </Box>
+            <ToolbarTitle title={"Explorer"} />
 
             {root.map((step) => (
-                <TreeNode 
+                <TreeNode
                     additional_padding={0}
                     node_title={step.node_title}
                     node_icon={step.node_icon}

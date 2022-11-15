@@ -210,6 +210,9 @@ class TextBlock extends React.Component {
     }
 
     updateBlockHandler(tag) {
+        if(this.state.empty)
+            return
+
         let id   = this.props.id
         let html = this.state.menuOpen ? this.state.backup : this.state.html 
 

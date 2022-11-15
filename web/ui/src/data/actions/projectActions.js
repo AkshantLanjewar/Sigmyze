@@ -70,6 +70,16 @@ export const OpenDocumentTab = (document_name, data_location) => {
     }
 }
 
+export const OpenPublishingTab = (document_name, document_id) => {
+    return {
+        type: "open_publishing_tab",
+        payload: {
+            document_name: document_name,
+            document_id: document_id
+        }
+    }
+}
+
 export const CreateDocument = (document_id, document_name, document_content, data_location) => {
     return {
         type: "add_document",

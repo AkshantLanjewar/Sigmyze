@@ -6,8 +6,9 @@ import {
     Text 
 } from '@mantine/core'
 
-import { connect } from 'react-redux'
-import { UpdateProject } from "../../../data/backend/drive-operations";
+import { connect }          from 'react-redux'
+import { UpdateProject }    from "../../../data/backend/drive-operations"
+import { DehydrateProject } from '../document-hydration'
 
 const Loading = ({ }) => {
     return (
@@ -70,6 +71,7 @@ const SaveController = ({ project, user, drive, organization }) => {
         new_project['project_type'] = 'lunar'
         new_project['project_name'] = project.project_name
         new_project['project_data'] = project.project_data
+        new_project                 = DehydrateProject(new_project)
 
         let post = {
             directory: working_directory,

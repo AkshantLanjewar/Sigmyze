@@ -11,6 +11,7 @@ import { GetIndicator } from '../../../../../data/server-interface'
 
 import MiniLunarChart  from '../../../../lunar-chart/mini-chart'
 import ParseWEOData    from '../../../../../data/backend/weo-data'
+import {HydrateChart} from "../../../../../pages/lunar-charts/document-hydration";
 
 const ChartTable = ({ AddObject, RemoveObject, project }) => {
     const [toggled, setToggled] = useState(false)
@@ -106,18 +107,19 @@ const ChartTable = ({ AddObject, RemoveObject, project }) => {
         setToggled(!toggled)
     }
 
-    useEffect(() => {
+    function checkedRun() {
         let table = []
 
         for(let i = 0; i < checked.length; i++) {
             let check = checked[i]
+
             let row   = (
                 <tr key={`${i}-${check['id']}`}>
                     <td>
-                        <Checkbox 
+                        <Checkbox
                             checked={check.checked}
                             onChange={(event) => { checkboxChange(event.currentTarget.checked, check.id) }}
-                        />    
+                        />
                     </td>
 
                     <td>{check.category}</td>
@@ -140,6 +142,10 @@ const ChartTable = ({ AddObject, RemoveObject, project }) => {
         }
 
         setRows([...table])
+    }
+
+    useEffect(() => {
+        checkedRun()
     }, [checked])
 
     let checkLength = extractCheckedLength()

@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Organizations;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Models.UserData;
 using SigmyzeServer.Services;
-using SigmyzeServer.Services.Auth;
 using SigmyzeServer.Services.DatabaseServices;
 
 namespace SigmyzeServer.Controllers.UserDataControllers;
@@ -42,7 +39,7 @@ public class OrganizationController : DataControllerBase
 		response.Status = status;
 
 		User user = await GetUser();
-		if (user.Organizations == null)
+		if (user.Organizations == null || user.Organizations.Count == 0)
 		{
 			string organizationId = await _organizationService.CreateUserOrganization(user);
 			user.Organizations = new List<string> { organizationId };

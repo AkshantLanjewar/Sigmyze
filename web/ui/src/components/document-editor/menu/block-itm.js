@@ -78,7 +78,6 @@ const BlockItem = ({ icon, name, id, selected, updateBlockHandler }) => {
                     sx={{ 
                         textOverflow: 'ellipsis',
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis' ,
                         width: '100%',
                     }}
                 >

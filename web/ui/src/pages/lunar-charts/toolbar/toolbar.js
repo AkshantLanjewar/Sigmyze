@@ -5,14 +5,18 @@ import {
     Tooltip
 } from "@mantine/core"
 
-import Layers       from "./layers"
+import Layers          from "./explorer/explorer"
+import LunarPublishing from "./publishing/publishing";
+
 import AddIndicator from "./add-indicator/add-indicator"
 import AddDocument  from "./add-document/add-document"
 
-import { BsStack } from 'react-icons/bs'
+import { BsStack }   from 'react-icons/bs'
+import { MdPublish } from 'react-icons/md'
 
 let actionBarItems = [
     { label: "Explorer", icon: <BsStack size={20} />,  active: true },
+    { label: "Publishing", icon: <MdPublish size={20} />, active: false }
 ]
 
 const Toolbar = ({ }) => {
@@ -26,6 +30,7 @@ const Toolbar = ({ }) => {
 
     const labelHash = {
         "Explorer": <Layers setOpenAdd={setOpenAdd} setDocumentModal={setDocumentModal} />,
+        "Publishing": <LunarPublishing />
     }
 
     function StackClick(label) {

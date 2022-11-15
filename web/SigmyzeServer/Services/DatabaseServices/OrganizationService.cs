@@ -36,8 +36,6 @@ public class OrganizationService : IOrganizationService
 		organization.OrganizationDrive = user.LunarId;
 		organization.OrganizationUsers = new List<string>();
 		organization.OrganizationPublishers = new List<string>();
-		organization.ArticleQueue = new List<Article>();
-		organization.Articles = new List<Article>();
 
 		await _organizationCollection.InsertOneAsync(organization);
 		return organization.OrganizationId;

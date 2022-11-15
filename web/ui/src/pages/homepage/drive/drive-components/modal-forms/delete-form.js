@@ -12,8 +12,9 @@ import { TbAlertCircle } from 'react-icons/tb'
 import { showNotification }  from '@mantine/notifications'
 import { ToggleDriveUpdate } from '../../../../../data/actions/driveActions'
 import { connect }           from 'react-redux'
+import { DeleteItem }     from "../../../../../data/backend/drive-operations";
 
-const DeleteForm = ({ id, title, drive, user, toggleUpdateDrive, setOpened }) => {
+const DeleteForm = ({ id, title, drive, user, organization, toggleUpdateDrive, setOpened }) => {
     const inputRef = React.createRef()
 
     function Delete(e) {
@@ -41,24 +42,11 @@ const DeleteForm = ({ id, title, drive, user, toggleUpdateDrive, setOpened }) =>
         }
 
         const functions = { resCompleted: () => {
-
-        }}
-
-        fetch(url, {
-            method: "POST",
-            body: JSON.stringify(payload),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}`
-            }
-        })
-        .then(res => {
-            if(res.status !== 200)
-                return
-
             toggleUpdateDrive()
             setOpened(false)
-        })
+        }}
+
+        DeleteItem("project", organization, functions, jwt_token, payload)
     }
 
     return (

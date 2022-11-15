@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
-import { Box }      from '@mantine/core'
-import ChartPreview from './components/chart-preview'
+import ChartRender  from "./chart-render"
 
 const ChartView = ({ block, justify, setJustify, CreateBlock, DeleteBlock, EditChart }) => {
     let selected    = block.data.indicators
@@ -9,21 +7,15 @@ const ChartView = ({ block, justify, setJustify, CreateBlock, DeleteBlock, EditC
     let description = block.data.description
 
     return (
-        <Box sx={{ width: "100%" }} mb={"md"}>
-            <ChartPreview
-                justify={justify}
-                setJustify={setJustify}
-                selected={selected}
-                title={title}
-                description={description}
-                useMenu={true}
-                noMargin={true}
-                block={block}
-                CreateBlock={CreateBlock}
-                DeleteBlock={DeleteBlock}
-                EditChart={EditChart}
-            />
-        </Box>
+        <ChartRender
+            block={block}
+            editor={true}
+            justify={justify}
+            setJustify={setJustify}
+            CreateBlock={CreateBlock}
+            DeleteBlock={DeleteBlock}
+            EditChart={EditChart}
+        />
     )
 }
 

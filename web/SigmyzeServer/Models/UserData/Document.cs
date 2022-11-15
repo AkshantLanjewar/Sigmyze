@@ -82,22 +82,55 @@ namespace SigmyzeServer.Models.UserData
         public float? Height { get; set; }
     }
 
-    public class DocumentIndicator
+    public class DocumentIndicatorIds
     {
-        [BsonElement("indicator_id")]
-        [JsonProperty("indicator_id")]
-        [JsonPropertyName("indicator_id")]
-        public string? IndicatorID { get; set; }
-
-        [BsonElement("object_id")]
-        [JsonProperty("object_id")]
-        [JsonPropertyName("object_id")]
-        public string? ObjectID { get; set; }
-
         [BsonElement("dataset")]
         [JsonProperty("dataset")]
         [JsonPropertyName("dataset")]
         public string? Dataset { get; set; }
+
+        [BsonElement("indicator_id")]
+        [JsonProperty("indicator_id")]
+        [JsonPropertyName("indicator_id")]
+        public string? IndicatorId { get; set; }
+
+        [BsonElement("object_id")]
+        [JsonProperty("object_id")]
+        [JsonPropertyName("object_id")]
+        public string? ObjectId { get; set; }
+
+        [BsonElement("object_fullname")]
+        [JsonProperty("object_fullname")]
+        [JsonPropertyName("object_fullname")]
+        public string? ObjectFullname { get; set; }
+    }
+
+    public class DocumentIndicator
+    {
+        [BsonElement("id")]
+        [JsonProperty("id")]
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
+
+        [BsonElement("checked")]
+        [JsonProperty("checked")]
+        [JsonPropertyName("checked")]
+        public bool Checked { get; set; }
+
+        [BsonElement("category")]
+        [JsonProperty("category")]
+        [JsonPropertyName("category")]
+        public string? Category { get; set; }
+
+        [BsonElement("name")]
+        [JsonProperty("name")]
+        [JsonPropertyName("name")]
+        public string? Name { get; set; }
+
+        [BsonElement("indicator")]
+        [JsonProperty("indicator")]
+        [JsonPropertyName("indicator")]
+        public DocumentIndicatorIds? Indicator { get; set; }
     }
 
     public class DocumentData

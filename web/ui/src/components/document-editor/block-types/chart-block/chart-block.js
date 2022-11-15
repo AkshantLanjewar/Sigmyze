@@ -35,6 +35,8 @@ const ChartBlock = ({ block, UpdateNode, CreateBlock, DeleteBlock }) => {
 
     useEffect(() => {
         let indicator_data = block['data']['indicators']
+        if(indicator_data == null)
+            return
         if(indicator_data !== undefined && indicator_data.length > 0)
             setCreated(true)
     }, [block['data']])

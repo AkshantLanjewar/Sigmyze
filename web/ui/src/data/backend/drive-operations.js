@@ -123,8 +123,26 @@ function UpdateFolder(organization, functions, jwtToken, projectData) {
 }
 
 //DELETE functions
-function DeleteProject(organization, functions, jwtToken, projectData) {
+function DeleteItem(type, organization, functions, jwtToken, projectData) {
+    const resCompleted = functions['resCompleted']
+    const projectPOST = InsertOrganizationId(organization, projectData)
 
+    let url = "/api/v1/drive/delete-project"
+    if(type == "folder")
+        url = "/api/v1/drive/delete-folder"
+
+    fetch(url, {
+        method: "POST",
+        body: JSON.stringify(projectPOST),
+
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
+        },
+    })
+        .then(res => {
+            resCompleted()
+        })
 }
 
 //LIB
@@ -143,5 +161,6 @@ export {
     CreateProject,
     CreateFolder,
     UpdateProject,
-    UpdateFolder
+    UpdateFolder,
+    DeleteItem
 }

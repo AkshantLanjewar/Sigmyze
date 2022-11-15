@@ -1,4 +1,4 @@
-import React   from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@mantine/core'
 
 import DocumentEditor from '../../../../components/document-editor/document-editor'

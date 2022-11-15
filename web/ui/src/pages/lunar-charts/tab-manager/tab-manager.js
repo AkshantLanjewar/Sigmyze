@@ -16,25 +16,42 @@ import { HideTab } from '../../../data/actions/projectActions'
 import { FaMix }          from 'react-icons/fa'
 import { MdBarChart }     from 'react-icons/md'
 import { HiDocumentText } from 'react-icons/hi'
+import { MdPublish }      from 'react-icons/md'
+
+import { usePrevious } from "../../../components/lib"
 
 let icon_dict = {
     "mix": <FaMix size={14} />,
     "bar": <MdBarChart size={14} />,
-    "doc": <HiDocumentText size={14} />
+    "doc": <HiDocumentText size={14} />,
+    "pub": <MdPublish size={14} />
 }
 
 const TabManager = ({ project, hide_tab }) => {
     const [active, setActive]         = useState(null)
     const [tabs, setTabs]             = useState([])
+    const tabLengthPrev               = usePrevious(tabs.length)
 
     useEffect(() => {
-        if(active == null)
-            setActive(project.tabs[0].id)
-        else
-            setActive(project.tabs[project.tabs.length - 1].id)
-
         setTabs([...project.tabs])
     }, [project])
+
+    useEffect(() => {
+        //check if current active in tabs
+        let activeFound = false
+        for(let i = 0; i < tabs.length; i++) {
+            let tab = tabs[i]
+            if(tab.id == active)
+                activeFound = true
+        }
+
+        if(tabs.length == 0)
+            return
+        if(active == null || !activeFound)
+            setActive(tabs[0].id)
+        if(tabs.length > tabLengthPrev)
+            setActive(tabs[tabs.length - 1].id)
+    }, [tabs])
 
     return (
         <Box
@@ -48,6 +65,8 @@ const TabManager = ({ project, hide_tab }) => {
                 borderRadius: theme.radius.md,
                 marginRight: theme.spacing.xs
             })}
+
+            id={"workspace-panel-lunar"}
         >
             <Tabs
                 color={'pink'}

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react"
 
 import { connect } from 'react-redux'
-import { GetIndicator } from "../../../data/server-interface"
+import { GetIndicator } from "../../../../data/server-interface"
 import { 
     RemoveIndicator, 
     OpenChartTab,
     OpenDocumentTab,
     RemoveDocument 
-} from "../../../data/actions/projectActions"
+} from "../../../../data/actions/projectActions"
 
 import { FiPackage }    from 'react-icons/fi'
 import { MdBarChart }   from 'react-icons/md'
@@ -18,10 +18,10 @@ import { AiFillFolder, AiFillDelete } from 'react-icons/ai'
 import { FiFilePlus }                 from 'react-icons/fi'
 import { HiDocumentText }             from 'react-icons/hi'
 
-import ProjectTree from "./tree/tree"
+import ProjectTree from "../tree/tree"
 
 /*
-    [COMPONENT] -> Layers
+    [COMPONENT] -> Explorer
 
     [param] indicators: list of indicators with barebones info
         1. indicator_id
@@ -32,7 +32,7 @@ import ProjectTree from "./tree/tree"
         2. object_id
 */
 
-const Layers = ({ setOpenAdd, setDocumentModal, remove_indicator, project, open_chart_tab, open_document_tab, remove_document }) => {
+const Explorer = ({ setOpenAdd, setDocumentModal, remove_indicator, project, open_chart_tab, open_document_tab, remove_document }) => {
     const [tree, setTree]   = useState([])
 
     let project_data = project.project_data
@@ -186,4 +186,4 @@ const mapDispatchToProps = dispatch => ({
     remove_document: (document_id, data_location) => dispatch(RemoveDocument(document_id, data_location))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Layers)
+export default connect(mapStateToProps, mapDispatchToProps)(Explorer)

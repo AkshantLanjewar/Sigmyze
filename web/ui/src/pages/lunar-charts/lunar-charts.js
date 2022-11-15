@@ -10,8 +10,9 @@ import DemoModal from "./demo-modal/demo-modal"
 
 import useStyles from "./lunar-charts.styles"
 
-import { LoadProject } from "../../data/actions/projectActions"
-import { connect }     from "react-redux"
+import { RehydrateProject } from "./document-hydration"
+import { LoadProject }      from "../../data/actions/projectActions"
+import { connect }          from "react-redux"
 
 import { useSearchParams } from 'react-router-dom'
 
@@ -25,6 +26,9 @@ const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
         if(projectId == null) {
             return
         }
+
+        if(projectId != null && user.userState == "signedout")
+            window.location.replace("/")
 
         const jwt_token = user.jwtToken
         const u_state   = user.userState
@@ -41,10 +45,13 @@ const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
                 }
             })
             .then(res => res.json())
-            .then(data => {
+            .then(async data => {
                 let id   = data['project']['project_id']
                 let name = data['project']['project_name']
-    
+
+                let project = data['project']
+                project     = await RehydrateProject(project)
+
                 let ind  = data['project']['project_data']['indicators']
                 let doc  = data['project']['project_data']['documents']
     

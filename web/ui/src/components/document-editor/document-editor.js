@@ -131,7 +131,7 @@ const DocumentEditor = ({ data_location, scale_change, set_document_content, pro
 
             if(document.data_location == data_location) {
                 let content = document.document_content
-                if(Array.isArray(content))
+                if(Array.isArray(content) && content.length > 0)
                     n_blocks = content
             }
         }

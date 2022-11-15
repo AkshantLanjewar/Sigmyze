@@ -49,13 +49,4 @@ public class Organization
 	[JsonPropertyName(("organization_publishers"))]
 	public List<string>? OrganizationPublishers { get; set; }
 	
-	[BsonElement("article_queue")]
-	[JsonProperty("article_queue")]
-	[JsonPropertyName(("article_queue"))]
-	public List<Article>? ArticleQueue { get; set; }
-	
-	[BsonElement("articles")]
-	[JsonProperty("articles")]
-	[JsonPropertyName(("articles"))]
-	public List<Article>? Articles { get; set; }
 }

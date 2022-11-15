@@ -12,16 +12,15 @@ import { TbAlertCircle } from 'react-icons/tb'
 import { showNotification }  from '@mantine/notifications'
 import { connect }           from 'react-redux'
 import { ToggleDriveUpdate } from '../../../../../../data/actions/driveActions'
+import { DeleteItem }        from "../../../../../../data/backend/drive-operations";
 
-const DeleteForm = ({ drive, user, title, id, setOpened, toggleUpdateDrive }) => {
+const DeleteForm = ({ organization, drive, user, title, id, setOpened, toggleUpdateDrive }) => {
     const inputRef = React.createRef()
 
     function Delete(e) {
         e.preventDefault()
 
-        let url = '/api/v1/drive/delete-folder'
         let val = inputRef.current.value
-
         if(val == undefined || val !== title) {
             showNotification({
                 title: 'Folder Delete',
@@ -40,21 +39,12 @@ const DeleteForm = ({ drive, user, title, id, setOpened, toggleUpdateDrive }) =>
             directory_id: id
         }
 
-        fetch(url, {
-            method: "POST",
-            body: JSON.stringify(post),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwt_token}`
-            }
-        })
-        .then(res => {
-            if(res.status !== 200)
-                return
-
+        const functions = { resCompleted: () => {
             toggleUpdateDrive()
             setOpened(false)
-        })
+        }}
+
+        DeleteItem("folder", organization, functions, jwt_token, post)
     }
 
     return (
@@ -94,7 +84,8 @@ const DeleteForm = ({ drive, user, title, id, setOpened, toggleUpdateDrive }) =>
 
 const mapStateToProps = state => ({
     drive: state.drive,
-    user: state.user
+    user: state.user,
+    organization: state.organization
 })
 
 const mapDispatchToProps = dispatch => ({
