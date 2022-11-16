@@ -60,6 +60,7 @@ const SaveController = ({ project, user, drive, organization }) => {
         const u_state   = user.userState
         if(u_state == "signedout" || jwt_token == undefined || project.project_id == 'demo') {
             setLoading(false)
+            window.location.replace('/')
             return
         }
 

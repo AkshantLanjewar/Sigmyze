@@ -12,7 +12,6 @@ import ProjectForm from '../modal-forms/project-form'
 
 const DriveCreateModal = ({ drive, closeCreateModal }) => {
     const [opened, setOpened] = useState(false)
-    const prevModal           = usePrevious(false)
 
     let proj_type = drive.create_type
 

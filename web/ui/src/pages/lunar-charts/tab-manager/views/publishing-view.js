@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box } from '@mantine/core'
 
 import DocumentPreview  from "../../toolbar/publishing/document-preview"
 import DocumentSettings from "../../toolbar/publishing/document-settings";
 
 const PublishingView = ({ document_id, document_name }) => {
+    const [articleImage, setArticleImage] = useState(null)
+
     return (
         <Box
             sx={(theme) => ({
@@ -13,6 +15,7 @@ const PublishingView = ({ document_id, document_name }) => {
 
                 display: 'flex',
                 flexDirection: 'row',
+                justifyContent: 'space-between',
 
                 paddingLeft: theme.spacing.xl,
                 paddingRight: theme.spacing.xl,

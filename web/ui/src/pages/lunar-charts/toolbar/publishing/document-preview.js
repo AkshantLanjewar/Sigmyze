@@ -23,7 +23,7 @@ const DocumentPreview = ({ document_id, document_name }) => {
                 textAlign: 'center',
 
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
             }}
 
             ref={ref}

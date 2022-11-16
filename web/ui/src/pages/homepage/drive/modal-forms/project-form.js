@@ -9,6 +9,8 @@ import {
     Group 
 } from '@mantine/core'
 
+import DropdownSelect from '../../../../components/ui/dropdown-select'
+
 import { SiAzuredataexplorer } from 'react-icons/si'
 import { Tb3DCubeSphere      } from 'react-icons/tb'
 import { TbChevronDown }       from 'react-icons/tb'
@@ -75,51 +77,12 @@ const ProjectForm = ({ drive, user, organization, toggleUpdateDrive, CloseModal 
                     {...form.getInputProps('projectName')}
                 />
 
-                <Menu
-                    onOpen={() => { setOpened(true) }}
-                    onClose={() => { setOpened(false) }}
+                <DropdownSelect
                     radius={"md"}
-                    width={"target"}
-                >
-                    <Menu.Target>
-                        <UnstyledButton
-                            sx={(theme) => ({
-                                display: 'flex',
-                                width: "75%",
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                padding: '10px 15px',
-                                borderRadius: theme.radius.md,
-                                border: `1px solid ${theme.colors.dark[6]}`,
-                                transition: 'background-color 150ms ease',
-                                margin: `${theme.spacing.md}px auto`,
-
-                                '&:hover': {
-                                    backgroundColor: theme.colors.dark[5]
-                                }
-                            })}
-                        >
-                            <Group spacing={"xs"}>
-                                {selected.icon}
-
-                                <span 
-                                    style={{ 
-                                        fontWeight: 500,
-                                        fontSize: 18
-                                    }}
-                                >
-                                    {selected.name}
-                                </span>
-                            </Group>
-
-                            <TbChevronDown size={16}  />
-                        </UnstyledButton>
-                    </Menu.Target>
-
-                    <Menu.Dropdown sx={(theme) => ({ backgroundColor: theme.colors.dark[7] })}>
-                        {items}
-                    </Menu.Dropdown>
-                </Menu>
+                    items={items}
+                    selectedIcon={selected.icon}
+                    selectedName={selected.name}
+                />
 
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <Button
