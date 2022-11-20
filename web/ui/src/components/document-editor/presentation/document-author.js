@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
     Box,
@@ -6,7 +6,12 @@ import {
     Text
 } from '@mantine/core'
 
-const DocumentAuthor = ({ }) => {
+import { GenerateInitials } from '../../lib'
+
+const DocumentAuthor = ({ author }) => {
+    const [date, setDate] = useState(new Date())
+    let options = { month: 'short', day: 'numeric', year: 'numeric' }
+
     return (
         <Box
             sx={{
@@ -16,19 +21,19 @@ const DocumentAuthor = ({ }) => {
             }}
         >
             <Avatar
-                radius={"xl"}
+                radius={"md"}
                 src={null}
-                color={"Blue"}
+                color={"gray"}
                 mr={"sm"}
 
                 sx={{ width: 40, height: 40 }}
             >
-                A
+                {GenerateInitials(author.name)}
             </Avatar>
 
             <Box>
-                <Text size={"sm"} color={"dimmed"}>Akshant Lanjewar</Text>
-                <Text size={"sm"} color={"dimmed"}>May 18</Text>
+                <Text size={"sm"} color={"dimmed"}>{author.name}</Text>
+                <Text size={"sm"} color={"dimmed"}>{date.toLocaleDateString("en-US", options)}</Text>
             </Box>
         </Box>
     )

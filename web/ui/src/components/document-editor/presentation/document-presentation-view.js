@@ -13,7 +13,7 @@ import DocumentRenderer from "./document-renderer"
 
 import { connect } from "react-redux"
 
-const DocumentPresentationView = ({ max_height, preview, document_id, project }) => {
+const DocumentPresentationView = ({ max_height, preview, document_id, project, articleTitle, articleImage, author }) => {
     const [nodes, setNodes]       = useState([])
     const [document, setDocument] = useState(null)
 
@@ -58,7 +58,8 @@ const DocumentPresentationView = ({ max_height, preview, document_id, project })
                     order={1}
                     sx={{ fontSize: 45 }}
                 >
-                    Article Title
+                    {articleTitle.title == null || articleTitle.title.length == '0' && (<span>Article Title</span>)}
+                    {articleTitle.title}
                 </Title>
 
                 <Title
@@ -69,32 +70,30 @@ const DocumentPresentationView = ({ max_height, preview, document_id, project })
                         fontSize: 30
                     })}
                 >
-                    Short description for article
+                    {articleTitle.subtitle == null || articleTitle.subtitle.length == '0' && (
+                        <span>Short Description of Article</span>
+                    )}
+                    {articleTitle.subtitle}
                 </Title>
 
-                <DocumentAuthor />
+                <DocumentAuthor author={author} />
 
-                <Image
-                    radius={"md"}
-                    mt={"md"}
-                    fit={"fill"}
-                    height={425}
-                    src={"https://free4kwallpapers.com/uploads/originals/2020/09/20/cool-geometric-triangular-abstract-wallpaper.jpg"}
-                />
-                <Text
-                    size={"sm"}
-                    transform={"uppercase"}
-                    color={"dimmed"}
-                    align={"center"}
-                    mb={"lg"}
-                >
-                    Caption
-                </Text>
+                {articleImage !== null && (
+                    <Image
+                        radius={"md"}
+                        mt={"md"}
+                        fit={"fill"}
+                        height={425}
+                        src={articleImage}
+                    />
+                )}
 
-                <DocumentRenderer
-                    document={document}
-                    max_height={max_height}
-                />
+                <Box mt={'sm'}>
+                    <DocumentRenderer
+                        document={document}
+                        max_height={max_height}
+                    />
+                </Box>
             </Box>
         </ScrollArea>
     )

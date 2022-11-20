@@ -56,8 +56,32 @@ function ImageSize(file, SetAspectWidth, setSize) {
     }
 }
 
-export { ImageSize }
-export { usePrevious }
-export { parseTpl }
-export { capitalize }
-export { extractType }
+async function AsyncGet(url, params) {
+    const resp = await fetch(url, params)
+    return await resp.json()
+}
+
+function GenerateInitials(username) {
+    if(username == null)
+        return ""
+
+    let parts    = username.split(' ')
+    let initials = ''
+
+    for(let i = 0; i < parts.length; i++) {
+        let part = parts[i]
+        initials += part.charAt(0).toUpperCase()
+    }
+
+    return initials
+}
+
+export { 
+    ImageSize,
+    usePrevious,
+    parseTpl,
+    capitalize,
+    extractType,
+    AsyncGet,
+    GenerateInitials 
+}

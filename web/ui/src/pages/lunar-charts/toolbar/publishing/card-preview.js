@@ -17,14 +17,14 @@ import {
 import ListArticle   from '../../../../components/ui/article-views/list-article'
 import BannerArticle from '../../../../components/ui/article-views/banner-article'
 
-const CardPreview = ({ }) => {
+const CardPreview = ({ articleTitle, articleImage, author, date }) => {
     const [value, setValue]   = useState('list')
     const [height, setHeight] = useState(null)
-    const ref = React.createRef(null)
-
-    useEffect(() => {
-        setHeight(ref.current.clientHeight)
-    }, [])
+    const ref = React.useCallback((node) => {
+        if(node !== null) {
+            setHeight(node.clientHeight)
+        }
+    })
 
     return (
         <Box
@@ -36,60 +36,63 @@ const CardPreview = ({ }) => {
                 flexGrow: 1,
             }}
         >
-            <ScrollArea 
-                sx={{ height: height !== null ? height : 'auto' }} 
-                offsetScrollbars
+            
+            <Group
+                position='apart'
+                align={'center'}
             >
-                <Group
-                    position='apart'
-                    align={'center'}
-                >
-                    <Title order={3}>Card Preview</Title>
-                    
-                    <SegmentedControl
-                        value={value}
-                        onChange={setValue}
+                <Title order={3}>Card Preview</Title>
+                
+                <SegmentedControl
+                    value={value}
+                    onChange={setValue}
 
-                        data={[
-                            {
-                                value: 'list',
-                                label: (
-                                    <Center>
-                                        <TbList size={16} />
-                                        <Box ml={5}>List View</Box>
-                                    </Center>
-                                )
-                            },
-                            {
-                                value: 'banner',
-                                label: (
-                                    <Center>
-                                        <TbNews size={16} />
-                                        <Box ml={5}>Banner View</Box>
-                                    </Center>
-                                )
-                            }
-                        ]}
+                    data={[
+                        {
+                            value: 'list',
+                            label: (
+                                <Center>
+                                    <TbList size={16} />
+                                    <Box ml={5}>List View</Box>
+                                </Center>
+                            )
+                        },
+                        {
+                            value: 'banner',
+                            label: (
+                                <Center>
+                                    <TbNews size={16} />
+                                    <Box ml={5}>Banner View</Box>
+                                </Center>
+                            )
+                        }
+                    ]}
+                />
+            </Group>
+
+            <Box
+                pt={'md'}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+            >
+                {value == 'list' && (
+                    <ListArticle 
+                        title={articleTitle}
+                        articleImage={articleImage}
+                        author={author}
+                        date={date}
                     />
-                </Group>
+                )}
 
-                <Box
-                    pt={'md'}
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    {value == 'list' && (
-                        <ListArticle />
-                    )}
-
-                    {value == 'banner' && (
-                        <BannerArticle />
-                    )}
-                </Box>          
-            </ScrollArea>
+                {value == 'banner' && (
+                    <BannerArticle 
+                        title={articleTitle}
+                    />
+                )}
+            </Box>
         </Box>
     )
 }

@@ -147,12 +147,15 @@ function DeleteItem(type, organization, functions, jwtToken, projectData) {
 
 //LIB
 function InsertOrganizationId(organization, post_data) {
-    let organizationId = organization['organization_id']
+    let organizationId   = organization['organization_id']
     let userOrganization = organization['user_organization']
 
     let projectPOST = post_data
     if(organizationId != null && userOrganization == false)
         projectPOST['organization_id'] = organizationId
+    if(userOrganization == true)
+        projectPOST['organization_id'] = organization.organization_admin
+
     return projectPOST
 }
 

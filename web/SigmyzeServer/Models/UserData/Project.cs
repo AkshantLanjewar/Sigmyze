@@ -13,6 +13,11 @@ namespace SigmyzeServer.Models.UserData
         [JsonPropertyName("project_id")]
         public string? ProjectID { get; set; }
 
+        [BsonElement("organization_id")]
+        [JsonProperty("organization_id")]
+        [JsonPropertyName("organization_id")]
+        public string? OrganizationId { get; set; }
+
         [BsonElement("project_type")]
         [JsonProperty("project_type")]
         [JsonPropertyName("project_type")]

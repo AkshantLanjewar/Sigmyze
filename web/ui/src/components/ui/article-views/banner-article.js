@@ -12,7 +12,7 @@ import {
 const useStyles = createStyles((theme) => ({
     card: {
         height: 440,
-        width: 350,
+        width: 300,
 
         display: 'flex',
         flexDirection: 'column',
@@ -38,7 +38,7 @@ const useStyles = createStyles((theme) => ({
     }
 }))
 
-const BannerArticle = ({ }) => {
+const BannerArticle = ({ title }) => {
     const { classes } = useStyles()
 
     return (
@@ -54,7 +54,10 @@ const BannerArticle = ({ }) => {
                 </Text>
 
                 <Title order={3} className={classes.title}>
-                    Article Title
+                    {title == null || title.length == 0
+                        ? "Article Title"
+                        : title
+                    }
                 </Title>
             </Box>
 

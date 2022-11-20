@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Organizations;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Models.UserData;
@@ -73,5 +74,56 @@ public class DataControllerBase : ControllerBase
 		string lunarId      = _tokenDataService.ExtractLunarID(accessToken!);
 
 		await _userAuth.UpdateAsync(lunarId, user);
+	}
+
+	public async Task<ProjectResp> GetProject(string? organization_id, string project_id)
+	{	
+		APIStatusMsg status = new APIStatusMsg();
+		status.MSG 			= "Endpoint working";
+		status.Error		= false;
+
+		Drive drive     = await GetDrive(organization_id);
+		Project project = new Project();
+		bool rootProj   = false;
+
+		for(int i = 0; i < drive.Projects!.Count; i++)
+		{
+			Project _project = drive.Projects[i];
+
+			if(_project.ProjectID == project_id)
+			{
+				project  = _project;
+				rootProj = true;
+			}
+		}
+
+		if(rootProj == false)
+			project = _GetProject(drive.Folders!, project_id);
+
+		ProjectResp resp = new ProjectResp();
+		resp.Status      = status;
+		resp.Project     = project;
+		return resp;
+	}
+
+	public Project _GetProject(List<Folder> folders, string project_id)
+	{
+		Project project = new Project();
+		for(int i = 0; i < folders.Count; i++)
+		{
+			Folder folder          = folders[i];
+			List<Project> projects = folder.Projects!;
+
+			for(int x = 0; x < projects.Count; x++)
+			{
+				Project _project = projects[x];
+				if(_project.ProjectID! == project_id)
+					project = _project;
+				else
+					project = _GetProject(folder.Folders!, project_id);
+			}
+		}
+
+		return project;
 	}
 }

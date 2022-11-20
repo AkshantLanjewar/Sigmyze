@@ -10,6 +10,8 @@ import {
     createStyles 
 } from '@mantine/core'
 
+import { GenerateInitials } from '../../lib'
+
 const useStyles = createStyles((theme) => ({
     card: {
         backgroundColor: theme.colors.dark[7],
@@ -26,8 +28,9 @@ const useStyles = createStyles((theme) => ({
     }
 }))
 
-const ListArticle = ({ }) => {
+const ListArticle = ({ title, articleImage, author, date }) => {
     const { classes } = useStyles()
+    let options       = { month: 'short', day: 'numeric', year: 'numeric' }
 
     return (
         <Card
@@ -38,7 +41,7 @@ const ListArticle = ({ }) => {
         >
             <Group noWrap spacing={0}>
                 <Image
-                    src={null}
+                    src={articleImage}
                     height={140}
                     width={140}
                     withPlaceholder
@@ -50,7 +53,7 @@ const ListArticle = ({ }) => {
                     </Text>
 
                     <Text className={classes.title} mt="xs" mb="md">
-                        Article Title
+                        { title == '' ? 'Article Title' : title }
                     </Text>
 
                     <Group noWrap spacing={"xs"}>
@@ -60,13 +63,18 @@ const ListArticle = ({ }) => {
                                 src={null}
                                 color={'blue'}
                             >
-                                AL
+                                { GenerateInitials(author['name']) }
                             </Avatar>
-                            <Text size="xs">Author Name</Text>
+                            <Text size="xs">{author['name']}</Text>
                         </Group>
 
                         <Text size="xs" color="dimmed">•</Text>
-                        <Text size="xs" color="dimmed">Feb 6th</Text>
+                        <Text size="xs" color="dimmed">
+                            {date == null
+                                ? null
+                                : date.toLocaleDateString("en-US", options)
+                            }
+                        </Text>
                     </Group>
                 </Box>
             </Group>

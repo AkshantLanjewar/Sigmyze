@@ -5,6 +5,7 @@ import { Box } from '@mantine/core'
 import DriveFolders from './drive-components/drive-ui/folders'
 import Projects     from './drive-components/drive-ui/projects'
 import DriveToolbar from './drive-components/toolbar'
+import EmptyDrive   from './drive-components/empty-drive'
 
 import { connect }         from 'react-redux'
 import { ChangeDirectory } from '../../../data/actions/driveActions'
@@ -84,7 +85,7 @@ function GetFolderData(drive, id) {
     return { folders: folders, projects: projects }
 }
 
-const Drive = ({ changeDirectory, drive }) => {
+const Drive = ({ changeDirectory, drive, emptyDrive }) => {
     const [projects, setProjects] = useState(drive.projects)
     const [folders, setFolders]   = useState(drive.folders)
     const [paths, setPaths]       = useState([{ name: "Workspace", id: "root" }])
@@ -108,15 +109,25 @@ const Drive = ({ changeDirectory, drive }) => {
                 paths={paths}
             />
 
-            <Box>
-                <DriveFolders 
-                    folders={folders} 
-                    GetFolderData={GetFolderData}
-                    SetWorkingDirectory={SetWorkingDirectory}
-                />
-                
-                <Projects projects={projects} />
-            </Box>
+            {emptyDrive
+                ? (
+                    <EmptyDrive 
+                        TitleMSG={"Welcome to your Command Center"}
+                        SubtitleMSG={"Click on the + New button to get started"}
+                    />
+                )
+                : (
+                    <Box>
+                        <DriveFolders 
+                            folders={folders} 
+                            GetFolderData={GetFolderData}
+                            SetWorkingDirectory={SetWorkingDirectory}
+                        />
+                        
+                        <Projects projects={projects} />
+                    </Box>
+                )
+            }
         </div>
     )
 }

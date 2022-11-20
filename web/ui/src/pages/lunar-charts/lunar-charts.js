@@ -16,7 +16,7 @@ import { connect }          from "react-redux"
 
 import { useSearchParams } from 'react-router-dom'
 
-const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
+const LunarCharts = ({ project, user, organization, removeIndicator, loadProject }) => {
     const { classes }                               = useStyles()
     const [displayLoginModal, setDisplayLoginModal] = useState(false)
     const [searchParams]                            = useSearchParams()
@@ -37,8 +37,14 @@ const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
 
         //load the project
         try {
-            
-            fetch(`/api/v1/drive/projects/${projectId}`, {
+            //check organization object before request
+            let url = `/api/v1/drive/projects/${projectId}`
+            if(organization.user_organization == false) {
+                let organization_id = organization.organization_id
+                url = `/api/v1/organizations/organization/${organization_id}/projects/${projectId}`
+            }
+
+            fetch(url, {
                 method: "GET",
                 headers: {
                     'Authorization': `Bearer ${jwt_token}` 
@@ -54,6 +60,9 @@ const LunarCharts = ({ project, user, removeIndicator, loadProject }) => {
 
                 let ind  = data['project']['project_data']['indicators']
                 let doc  = data['project']['project_data']['documents']
+
+                //set organization
+                let organization_id = data['project']['organization_id']
     
                 loadProject(name, id, ind, doc)
             })
@@ -118,7 +127,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
     project: state.project,
-    user: state.user
+    user: state.user,
+    organization: state.organization
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LunarCharts)

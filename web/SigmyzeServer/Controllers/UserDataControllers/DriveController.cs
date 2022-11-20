@@ -80,11 +80,12 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.Error        = false;
             status.MSG          = "project created";
 
-            Drive drive           = await GetDrive(req.organization_id);
-            Project _nProject     = new Project();
-            _nProject.ProjectID   = Guid.NewGuid().ToString();
-            _nProject.ProjectName = req.project_name;
-            _nProject.ProjectType = req.project_type;
+            Drive drive              = await GetDrive(req.organization_id);
+            Project _nProject        = new Project();
+            _nProject.ProjectID      = Guid.NewGuid().ToString();
+            _nProject.ProjectName    = req.project_name;
+            _nProject.ProjectType    = req.project_type;
+            _nProject.OrganizationId = req.organization_id;
             
             _nProject.ProjectData            = new ProjectData();
             _nProject.ProjectData.Documents  = new List<Document>();
@@ -109,6 +110,7 @@ namespace SigmyzeServer.Controllers.UserDataControllers
             status.MSG          = "project saved";
 
             Drive drive = await GetDrive(req.organization_id);
+            req.project!.OrganizationId = req.organization_id;
             
             if(req.directory! == "root")
             {
@@ -200,55 +202,9 @@ namespace SigmyzeServer.Controllers.UserDataControllers
 
         [HttpGet("projects/{project_id}")]
         [MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetProject(string project_id)
+        public async Task<IActionResult> GetProjectController(string project_id)
         {
-            APIStatusMsg status = new APIStatusMsg();
-            status.Error        = false;
-            status.MSG          = "got project";
-
-            Drive drive     = await GetDrive(null);
-            Project project = new Project();
-            bool rootProj   = false;
-
-            for(int i = 0; i < drive.Projects!.Count; i++)
-            {
-                Project _project = drive.Projects[i];
-
-                if(_project.ProjectID == project_id)
-                {
-                    project  = _project;
-                    rootProj = true;
-                }
-            }
-
-            if(rootProj == false)
-                project = _GetProject(drive.Folders!, project_id);
-
-            ProjectResp resp = new ProjectResp();
-            resp.Status      = status;
-            resp.Project     = project;
-            return await SerializeJson(resp);
-        }
-
-        private Project _GetProject(List<Folder> folders, string project_id)
-        {
-            Project project = new Project();
-            for(int i = 0; i < folders.Count; i++)
-            {
-                Folder folder          = folders[i];
-                List<Project> projects = folder.Projects!;
-
-                for(int x = 0; x < projects.Count; x++)
-                {
-                    Project _project = projects[x];
-                    if(_project.ProjectID! == project_id)
-                        project = _project;
-                    else
-                        project = _GetProject(folder.Folders!, project_id);
-                }
-            }
-
-            return project;
+            return await SerializeJson(await GetProject(null, project_id));
         }
 
         private List<Folder> _UpdateFolder(List<Folder> directory, Folder nFolder, string directoryId)

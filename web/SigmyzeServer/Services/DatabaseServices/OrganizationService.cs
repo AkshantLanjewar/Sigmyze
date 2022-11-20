@@ -10,6 +10,7 @@ public interface IOrganizationService
 {
 	Task<string> CreateUserOrganization(User user);
 	Task<Organization?> GetOrganization(string organizationId);
+	Task CreateOrganization(Organization organization);
 }
 
 public class OrganizationService : IOrganizationService
@@ -36,9 +37,16 @@ public class OrganizationService : IOrganizationService
 		organization.OrganizationDrive = user.LunarId;
 		organization.OrganizationUsers = new List<string>();
 		organization.OrganizationPublishers = new List<string>();
+		organization.HasPage = false;
+		organization.PageId = "";
 
 		await _organizationCollection.InsertOneAsync(organization);
 		return organization.OrganizationId;
+	}
+
+	public async Task CreateOrganization(Organization organization)
+	{
+		await _organizationCollection.InsertOneAsync(organization);
 	}
 
 	public async Task<Organization?> GetOrganization(string organizationId)

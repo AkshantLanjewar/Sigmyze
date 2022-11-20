@@ -17,6 +17,7 @@ public class OrganizationController : DataControllerBase
 {
 	private readonly IOrganizationService _organizationService;
 	private readonly IDriveService _driveService;
+	private bool checkFlag;
 
 	public OrganizationController
 		(ITokenDataService tokenDataService, IDriveService driveService, IUserAuth userAuth, IOrganizationService organizationService) 
@@ -25,12 +26,14 @@ public class OrganizationController : DataControllerBase
 
 		_organizationService = organizationService;
 		_driveService = driveService;
+		checkFlag     = false;
 	}
 
 	[HttpGet]
 	[MapToApiVersion("1.0")]
 	public async Task<IActionResult> OrganizationsRoot()
 	{
+		await createLunarOrganization();
 		RootResponse response = new RootResponse();
 		APIStatusMsg status = new APIStatusMsg();
 		
@@ -93,5 +96,44 @@ public class OrganizationController : DataControllerBase
 		response.Organization = organization;
 		response.Drive = drive;
 		return await SerializeJson(response);
+	}
+
+	[HttpGet("organization/{organizationId}/projects/{projectId}")]
+	[MapToApiVersion("1.0")]
+	public async Task<IActionResult> GetOrganizationProject(string organizationId, string projectId)
+	{
+		Console.WriteLine(organizationId);
+		ProjectResp resp = await GetProject(organizationId, projectId);
+		return await SerializeJson(resp);
+	}
+
+	private async Task createOrganization(string admin, string id, string name)
+	{
+		Organization organization = new Organization();
+		organization.OrganizationId = id;
+		organization.OrganizationName = name;
+		organization.OrganizationAdmin = admin;
+		organization.UserOrganization = false;
+		organization.OrganizationDrive = id;
+		organization.OrganizationUsers = new List<string>();
+		organization.OrganizationPublishers = new List<string>();
+		organization.HasPage = true;
+		organization.PageId  = "sigmyze_root";
+
+		//create the drive
+		Drive drive = await _driveService.GetDrive(id);
+		await _organizationService.CreateOrganization(organization);
+	}
+
+	private async Task createLunarOrganization()
+	{
+		if(checkFlag)
+			return;
+		Organization? organization = await _organizationService.GetOrganization("sigmyze_root");
+		if(organization != null)
+			return;
+
+		await createOrganization("", "sigmyze_root", "Sigmyze");
+		checkFlag = true;
 	}
 }

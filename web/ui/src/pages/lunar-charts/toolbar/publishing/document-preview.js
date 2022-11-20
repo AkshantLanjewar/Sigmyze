@@ -7,7 +7,7 @@ import {
 
 import DocumentPresentationView from "../../../../components/document-editor/presentation/document-presentation-view"
 
-const DocumentPreview = ({ document_id, document_name }) => {
+const DocumentPreview = ({ document_id, articleTitle, articleImage, author }) => {
     const ref                 = React.createRef()
     const [height, setHeight] = useState(0)
 
@@ -34,6 +34,9 @@ const DocumentPreview = ({ document_id, document_name }) => {
                 document_id={document_id}
                 max_height={height}
                 preview={true}
+                articleTitle={articleTitle}
+                articleImage={articleImage}
+                author={author}
             />
         </Box>
     )

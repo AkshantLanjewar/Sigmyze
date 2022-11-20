@@ -2,10 +2,17 @@ import React, { useState } from 'react'
 import { Box } from '@mantine/core'
 
 import DocumentPreview  from "../../toolbar/publishing/document-preview"
-import DocumentSettings from "../../toolbar/publishing/document-settings";
+import DocumentSettings from "../../toolbar/publishing/document-settings"
+import PublishingDialog from '../../toolbar/publishing/publishing-dialog'
 
-const PublishingView = ({ document_id, document_name }) => {
+const PublishingView = ({ height, document_id, document_name }) => {
     const [articleImage, setArticleImage] = useState(null)
+    const [articleTitle, setArticleTitle] = useState({ title: null, subtitle: null })
+    const [author, setAuthor]             = useState({ icon: null, name: null })
+
+    function Publish(title, subtitle) {
+
+    }
 
     return (
         <Box
@@ -23,11 +30,23 @@ const PublishingView = ({ document_id, document_name }) => {
                 color: theme.colors.dark[0]
             })}
         >
+            <PublishingDialog />
+            
             <DocumentPreview
                 document_id={document_id}
+                articleImage={articleImage}
+                articleTitle={articleTitle}
+                author={author}
             />
 
-            <DocumentSettings />
+            <DocumentSettings 
+                articleImage={articleImage}
+                setArticleImage={setArticleImage}
+                setArticleTitle={setArticleTitle}
+                setAuthor={setAuthor}
+                height={height}
+                Publish={Publish}
+            />
         </Box>
     )
 }

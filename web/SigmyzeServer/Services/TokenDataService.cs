@@ -19,7 +19,7 @@ namespace SigmyzeServer.Services
     {
         public TokenDataService()
         {
-
+            
         }
 
         public string ExtractLunarID(string token)

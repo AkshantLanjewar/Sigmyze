@@ -27,6 +27,7 @@ public class Organization
 	[BsonElement("organization_admin")]
 	[JsonProperty("organization_admin")]
 	[JsonPropertyName(("organization_admin"))]
+	[Newtonsoft.Json.JsonIgnore]
 	public string? OrganizationAdmin { get; set; }
 	
 	[BsonElement("user_organization")]
@@ -37,16 +38,28 @@ public class Organization
 	[BsonElement("organization_drive")]
 	[JsonProperty("organization_drive")]
 	[JsonPropertyName(("organization_drive"))]
+	[Newtonsoft.Json.JsonIgnore]
 	public string? OrganizationDrive { get; set; }
 	
 	[BsonElement("organization_users")]
 	[JsonProperty("organization_users")]
 	[JsonPropertyName(("organization_users"))]
+	[Newtonsoft.Json.JsonIgnore]
 	public List<string>? OrganizationUsers { get; set; }
 	
 	[BsonElement("organization_publishers")]
 	[JsonProperty("organization_publishers")]
 	[JsonPropertyName(("organization_publishers"))]
+	[Newtonsoft.Json.JsonIgnore]
 	public List<string>? OrganizationPublishers { get; set; }
-	
+
+	[BsonElement("has_page")]
+	[JsonProperty("has_page")]
+	[JsonPropertyName("has_page")]
+	public bool HasPage { get; set; }
+
+	[BsonElement("page_id")]
+	[JsonProperty("page_id")]
+	[JsonPropertyName("page_id")]
+	public string? PageId { get; set; }
 }

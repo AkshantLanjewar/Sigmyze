@@ -8,7 +8,7 @@ import { multimedia_blocks, text_blocks, ExtractTags } from './menu/menu-compone
 import { connect }            from 'react-redux'
 import { SetDocumentContent } from '../../data/actions/projectActions'
 
-const DocumentEditor = ({ data_location, scale_change, set_document_content, project }) => {
+const DocumentEditor = ({ page_height, data_location, scale_change, set_document_content, project }) => {
     const [blocks, setBlocks] = useState([])
     const [height, setHeight] = useState(0)
     const [width, setWidth]   = useState(0)
@@ -162,7 +162,7 @@ const DocumentEditor = ({ data_location, scale_change, set_document_content, pro
         >
             <ScrollArea 
                 style={{ 
-                    height: height, 
+                    height: page_height, 
                     width: width ,
                     position: 'static',
                 }}

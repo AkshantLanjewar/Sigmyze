@@ -17,3 +17,12 @@ export const RevertOrganization = () => {
         }
     }
 }
+
+export const SetOrganizations = (organizations) => {
+    return {
+        type: "set_organizations",
+        payload: {
+            organizations: organizations
+        }
+    }
+}

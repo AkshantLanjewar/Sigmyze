@@ -10,8 +10,14 @@ import {
 } from '@mantine/core'
 
 import { connect }         from 'react-redux'
-import { SetOrganization } from "../../../../data/actions/organizationActions"
-import { ChangeDirectory } from '../../../../data/actions/driveActions'
+import { 
+    ChangeDirectory,
+    ToggleDriveUpdate
+} from '../../../../data/actions/driveActions'
+import { 
+    SetOrganization,
+    SetOrganizations 
+} from "../../../../data/actions/organizationActions"
 
 import useStyles from "./toolbar.styles"
 import { TbCloudUpload, TbChevronDown } from "react-icons/tb"
@@ -28,7 +34,7 @@ const NavBox = ({ name, id, SetWorkingDirectory }) => {
     )
 }
 
-const DriveSelector = ({ user, SetOrganizationRedux }) => {
+const DriveSelector = ({ user, drive, ToggleDriveUpdate, SetOrganizations, SetOrganizationRedux }) => {
     const [opened, setOpened] = useState(false)
     const [selected, setSelected] = useState(null)
     const [items, setItems] = useState([])
@@ -49,11 +55,15 @@ const DriveSelector = ({ user, SetOrganizationRedux }) => {
             let organizations = data['organizations']
 
             setItems([...organizations])
-            setSelected(organizations[0])
-
-            SetOrganization(organizations[0])
+            SetOrganizations(organizations)
         })
-    }, [])
+    }, [drive.update_drive])
+
+    useEffect(() => {
+        if(selected == null && items.length > 0)
+            SetOrganization(items[0].organization_id)
+        ToggleDriveUpdate()
+    }, [items])
 
     function SetOrganization(id) {
         let n_selected = null
@@ -66,6 +76,7 @@ const DriveSelector = ({ user, SetOrganizationRedux }) => {
         if(n_selected !== null) {
             SetOrganizationRedux(n_selected['user_organization'], n_selected['organization_id'], n_selected['organization_admin'])
             setSelected({ ...n_selected })
+            ToggleDriveUpdate()
         }
     }
 
@@ -115,7 +126,7 @@ const DriveSelector = ({ user, SetOrganizationRedux }) => {
     )
 }
 
-const DriveToolbar = ({ user, paths, SetWorkingDirectory, SetOrganization }) => {
+const DriveToolbar = ({ user, drive, paths, ToggleDriveUpdate, SetOrganizations, SetWorkingDirectory, SetOrganization }) => {
     return (
         <Box
             p={"md"}
@@ -128,6 +139,9 @@ const DriveToolbar = ({ user, paths, SetWorkingDirectory, SetOrganization }) => 
             <Breadcrumbs>
                 <DriveSelector
                     user={user}
+                    drive={drive}
+                    ToggleDriveUpdate={ToggleDriveUpdate}
+                    SetOrganizations={SetOrganizations}
                     SetOrganizationRedux={SetOrganization}
                 />
                 
@@ -144,10 +158,13 @@ const DriveToolbar = ({ user, paths, SetWorkingDirectory, SetOrganization }) => 
 }
 
 const mapStateToProps = state => ({
-    user: state.user
+    user: state.user,
+    drive: state.drive
 })
 
 const mapDispatchToProps = dispatch => ({
+    ToggleDriveUpdate: () => { dispatch(ToggleDriveUpdate()) },
+    SetOrganizations: (organizations) => { dispatch(SetOrganizations(organizations)) },
     SetWorkingDirectory: (folder_id) => { dispatch(ChangeDirectory(folder_id)) },
     SetOrganization: (user_organization, organization_id, organization_admin) => {
         dispatch(SetOrganization(user_organization, organization_id, organization_admin))

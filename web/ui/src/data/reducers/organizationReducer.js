@@ -2,7 +2,9 @@ let default_state = {
     user_organization: false,
 
     organization_id: null,
-    organization_admin: null
+    organization_admin: null,
+
+    total_organizations: []
 }
 
 export default ( state = default_state, action ) => {
@@ -21,6 +23,9 @@ export default ( state = default_state, action ) => {
             e_state['organization_id'] = null
             e_state['organization_admin'] = null
 
+            return { ...e_state }
+        case "set_organizations":
+            e_state['total_organizations'] = payload.organizations
             return { ...e_state }
         default:
             return e_state

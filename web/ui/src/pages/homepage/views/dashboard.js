@@ -6,9 +6,8 @@ import {
     Title,
 } from '@mantine/core'
 
-import EmptyDrive      from '../drive/drive-components/empty-drive'
-import Drive           from '../drive/drive'
 
+import Drive           from '../drive/drive'
 import { connect }     from 'react-redux'
 import { UpdateDrive } from '../../../data/actions/driveActions'
 import { LoadDrive }   from "../../../data/backend/drive-operations"
@@ -41,15 +40,10 @@ const Dashboard = ({ user, drive, organization, updateDrive }) => {
         <Container p={"xl"} fluid>
             <Grid gutter={0} columns={24} p={"xl"}>
                 <Grid.Col span={24} pl={"xl"}>
-                    {emptyDrive
-                        ? (
-                            <EmptyDrive 
-                                TitleMSG={"Welcome to your Command Center"}
-                                SubtitleMSG={"Click on the + New button to get started"}
-                            />
-                        )
-                        : <Drive drive={drive} />
-                    }
+                    <Drive 
+                        emptyDrive={emptyDrive}
+                        drive={drive} 
+                    />
                 </Grid.Col>
             </Grid>
         </Container>

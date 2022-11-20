@@ -5,7 +5,7 @@ import { GetIndicator } from "../../../../data/server-interface"
 import ParseWEOData     from "../../../../data/backend/weo-data"
 import LunarChart       from "../../../../components/lunar-chart/chart"
 
-const ChartView = ({ indicators, scale_change, tab }) => {
+const ChartView = ({ height, indicators, scale_change, tab }) => {
     const [data, setData]   = useState([])
     const [names, setNames] = useState([])
 
@@ -69,7 +69,7 @@ const ChartView = ({ indicators, scale_change, tab }) => {
     }, [])
 
     return (
-        <Box sx={{ height: '100%' }}>
+        <Box sx={{ height: height }}>
             <LunarChart
                 data={data}
                 names={names}
