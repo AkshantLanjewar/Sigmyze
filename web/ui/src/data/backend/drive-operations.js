@@ -14,14 +14,34 @@ function LoadDrive(organization, jwtToken, functions) {
         headers: { 'Authorization': `Bearer ${jwtToken}`}
     })
     .then(resp => resp.json()).then(data => {
-        let projects =  CleanseProjects(data['drive']['projects'])
-        let folders  = data['drive']['folders']
+        let projects  =  CleanseProjects(data['drive']['projects'])
+        let folders   = data['drive']['folders']
+        let pubQueue  = []
+        let published = []
 
+        let organization = null
+        if('organization' in data)
+            organization = data['organization']
+
+        if(organization != null) {
+            if('published_queue' in organization)
+                pubQueue = organization['published_queue']
+            if('published' in organization)
+                published = organization['published']
+        }
+
+        let payload = {
+            folders: folders,
+            projects: projects,
+            published_queue: pubQueue,
+            published: published
+        }
+
+        updateDrive(payload)
         if(folders.length == 0 && projects.length == 0)
             setEmptyDrive(true)
         else {
             setEmptyDrive(false)
-            updateDrive(folders, projects)
         }
     })
 }

@@ -127,7 +127,7 @@ namespace SigmyzeServer.Services.Auth
                     new Claim("Username", user.Username),
                     new Claim("Role", user.Role)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(60),
+                Expires = DateTime.UtcNow.AddMinutes(120),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

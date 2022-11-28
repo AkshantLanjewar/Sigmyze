@@ -117,29 +117,37 @@ const Folder = ({ folder, SetWorkingDirectory, GetFolderData }) => {
 
 const DriveFolders = ({ folders, GetFolderData, SetWorkingDirectory }) => {
     return (
-        <Box mb={"xl"}>
-            <Text 
-                size={"sm"} 
-                color={"dimmed"} 
-                transform={"uppercase"}
-            >
-                Folders
-            </Text> 
+        <Box mb={"xl"} mt={'xl'}>
+            {folders.length > 0
+                ? (
+                    <Box>
+                        <Text 
+                            size={"sm"} 
+                            color={"dimmed"} 
+                            transform={"uppercase"}
+                        >
+                            Folders
+                        </Text> 
 
-            <SimpleGrid
-                cols={6}
-                spacing={"md"}
-                mt={"sm"}
-            >
-                {folders.map((step, i) => (
-                    <Folder
-                        folder={step}
-                        key={`folder-${i}`}
-                        GetFolderData={GetFolderData}
-                        SetWorkingDirectory={SetWorkingDirectory}
-                    />
-                ))}
-            </SimpleGrid>
+                        <SimpleGrid
+                            cols={6}
+                            spacing={"md"}
+                            mt={"sm"}
+                        >
+                            {folders.map((step, i) => (
+                                <Folder
+                                    folder={step}
+                                    key={`folder-${i}`}
+                                    GetFolderData={GetFolderData}
+                                    SetWorkingDirectory={SetWorkingDirectory}
+                                />
+                            ))}
+                        </SimpleGrid>
+                    </Box>
+                )
+
+                : null
+            }
         </Box>
     )
 }

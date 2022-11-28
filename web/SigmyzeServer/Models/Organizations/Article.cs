@@ -17,6 +17,11 @@ public class Article
 	[JsonProperty("published_title")]
 	[JsonPropertyName(("published_title"))]
 	public string? PublishedTitle { get; set; }
+
+	[BsonElement("published_subtitle")]
+	[JsonProperty("published_subtitle")]
+	[JsonPropertyName("published_subtitle")]
+	public string? PublishedSubtitle { get; set; }
 	
 	[BsonElement("published_date")]
 	[JsonProperty("published_date")]

@@ -8,7 +8,10 @@ let default_state = {
 
     //drive structure
     folders: [],
-    projects: []
+    projects: [],
+
+    published: [],
+    published_queue: []
 }
 
 export default ( state = default_state, action ) => {
@@ -29,9 +32,13 @@ export default ( state = default_state, action ) => {
         case "update_drive":
             let n_folders  = payload.folders
             let n_projects = payload.projects
+            let n_queue    = payload.published_queue
+            let n_pub      = payload.published
 
-            e_state['folders']  = n_folders
-            e_state['projects'] = n_projects
+            e_state['folders']         = n_folders
+            e_state['projects']        = n_projects
+            e_state['published_queue'] = n_queue
+            e_state['published']       = n_pub
             return { ...e_state }
         case "change_directory":
             let n_id = payload.folder_id

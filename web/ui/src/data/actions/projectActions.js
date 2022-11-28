@@ -123,3 +123,15 @@ export const LoadProject = (name, id, indicators, documents) => {
         }
     }
 }
+
+export const DefaultProject = () => {
+    return {
+        type: "load_project",
+        payload: {
+            project_name: "",
+            project_id: "demo",
+            indicators: [],
+            documents: []
+        }
+    }
+}

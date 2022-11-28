@@ -4,6 +4,7 @@ using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Organizations;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Models.UserData;
+using SigmyzeServer.Models.Polis;
 using SigmyzeServer.Services;
 using SigmyzeServer.Services.DatabaseServices;
 
@@ -17,14 +18,18 @@ public class OrganizationController : DataControllerBase
 {
 	private readonly IOrganizationService _organizationService;
 	private readonly IDriveService _driveService;
+	private readonly IPolisService _polisService;
 	private bool checkFlag;
 
 	public OrganizationController
-		(ITokenDataService tokenDataService, IDriveService driveService, IUserAuth userAuth, IOrganizationService organizationService) 
+		(ITokenDataService tokenDataService, IPolisService polisService,
+			IDriveService driveService, IUserAuth userAuth, IOrganizationService organizationService) 
 		: base(tokenDataService, driveService, userAuth, organizationService)
 	{
 
 		_organizationService = organizationService;
+		_polisService		 = polisService;
+
 		_driveService = driveService;
 		checkFlag     = false;
 	}
@@ -63,6 +68,10 @@ public class OrganizationController : DataControllerBase
 				continue;
 			}
 
+			Organization? cOrg = await checkPolis(organization);
+			if(cOrg != null)
+				organization = cOrg;
+
 			organizations.Add(organization);
 		}
 
@@ -81,6 +90,7 @@ public class OrganizationController : DataControllerBase
 		status.MSG = "Organization endpoint working";
 		response.Status = status;
 
+		string lunarId 			   = await GetQueryString(null);
 		Organization? organization = await _organizationService.GetOrganization(organizationId);
 		if (organization == null)
 		{
@@ -92,7 +102,9 @@ public class OrganizationController : DataControllerBase
 		}
 		
 		Drive drive = await _driveService.GetDrive(organization.OrganizationDrive!);
-		
+		if(!organization.OrganizationUsers!.Contains(lunarId))
+			organization.PublishedQueue = new List<Article>();
+
 		response.Organization = organization;
 		response.Drive = drive;
 		return await SerializeJson(response);
@@ -102,8 +114,134 @@ public class OrganizationController : DataControllerBase
 	[MapToApiVersion("1.0")]
 	public async Task<IActionResult> GetOrganizationProject(string organizationId, string projectId)
 	{
-		Console.WriteLine(organizationId);
 		ProjectResp resp = await GetProject(organizationId, projectId);
+		return await SerializeJson(resp);
+	}
+
+	[HttpPost("organization/{organizationId}/projects/{projectId}/publish")]
+	[MapToApiVersion("1.0")]
+	public async Task<IActionResult> PublishDocument([FromBody]Article article, string organizationId, string projectId)
+	{
+		APIStatusMsg resp = new APIStatusMsg();
+		resp.Error  	  = false;
+		resp.MSG	      = "document_published";
+
+		Organization? organization = await _organizationService.GetOrganization(organizationId);
+		if(organization == null)
+		{
+			resp.Error = true;
+			resp.MSG   = "organization_dne";
+			return await SerializeJson(resp);
+		}
+
+		//check if a user published document
+		if(article.PublicUser!.LunarId == "user") 
+		{
+			string lunarId = await GetQueryString(null);
+			article.PublicUser!.LunarId = lunarId;
+		}
+
+		article.PublishedId = Guid.NewGuid().ToString();
+		if(organization.PublishedQueue == null)
+			organization.PublishedQueue = new List<Article>();
+		organization.PublishedQueue.Add(article);
+
+		await _organizationService.SaveOrganization(organization, organizationId);
+		return await SerializeJson(resp);
+	}
+
+	[HttpGet("organization/{organizationId}/deny/{publishedId}")]
+	[MapToApiVersion("1.0")]
+	public async Task<IActionResult> DenyArticle(string organizationId, string publishedId)
+	{
+		APIStatusMsg resp = new APIStatusMsg();
+		resp.Error  	  = false;
+		resp.MSG	      = "document_published";
+
+		Organization? organization = await _organizationService.GetOrganization(organizationId);
+		if(organization == null)
+		{
+			resp.Error = true;
+			resp.MSG   = "organization_dne";
+			return await SerializeJson(resp);
+		}
+
+		if(organization.PublishedQueue == null)
+			organization.PublishedQueue = new List<Article>();
+		List<Article> n_queue = new List<Article>();
+
+		for(int i = 0; i < organization.PublishedQueue.Count; i++)
+		{
+			Article article = organization.PublishedQueue[i];
+			if(article.PublishedId == publishedId || article.PublishedId == null)
+				continue;
+
+			n_queue.Add(article);
+		}
+
+		organization.PublishedQueue = n_queue;
+		await _organizationService.SaveOrganization(organization, organizationId);
+		return await SerializeJson(resp);
+	}
+
+	[HttpGet("organization/{organizationId}/delete/{publishedId}")]
+	[MapToApiVersion("1.0")]
+	public async Task<IActionResult> DeleteArticle(string organizationId, string publishedId)
+	{
+		APIStatusMsg resp = new APIStatusMsg();
+		resp.Error  	  = false;
+		resp.MSG	      = "article_deleted";
+
+		Organization? organization = await _organizationService.GetOrganization(organizationId);
+		List<Article> published    = new List<Article>();
+		if(organization!.Published != null)
+			published = organization.Published;
+
+		List<Article> n_published = new List<Article>();
+		for(int i = 0; i < published.Count; i++)
+		{
+			Article article = published[i];
+			if(article.PublishedId == publishedId)
+				continue;
+			
+			n_published.Add(article);
+		}
+
+		organization.Published = published;
+		await _organizationService.SaveOrganization(organization, organizationId);
+		return await SerializeJson(resp);
+	}
+
+	[HttpGet("organization/{organizationId}/approve/{publishedId}")]
+	[MapToApiVersion("1.0")]
+	public async Task<IActionResult> ApproveArticle(string organizationId, string publishedId)
+	{
+		APIStatusMsg resp = new APIStatusMsg();
+		resp.Error  	  = false;
+		resp.MSG	      = "document_approved";
+
+		Organization? organization = await _organizationService.GetOrganization(organizationId);
+		List<Article> n_queue      = new List<Article>();
+		List<Article> published    = new List<Article>();
+
+		if(organization!.Published != null)
+			published = organization.Published;
+		
+		for(int i = 0; i < organization.PublishedQueue!.Count; i++)
+		{
+			Article article = organization.PublishedQueue[i];
+			if(article.PublishedId == publishedId)
+			{
+				published.Add(article);
+				continue;
+			}
+
+			n_queue.Add(article);
+		}
+
+		organization.Published 		= published;
+		organization.PublishedQueue = n_queue;
+		await _organizationService.SaveOrganization(organization, organizationId);
 		return await SerializeJson(resp);
 	}
 
@@ -135,5 +273,57 @@ public class OrganizationController : DataControllerBase
 
 		await createOrganization("", "sigmyze_root", "Sigmyze");
 		checkFlag = true;
+	}
+
+	private async Task<Organization?> checkPolis(Organization organization)
+	{
+		if(organization.HasPage == false || organization.PolisId != null)
+			return null;
+
+		//create polis
+		Polis polis = new Polis();
+		polis.PolisId 		 = organization.OrganizationId;
+		polis.OrganizationId = organization.OrganizationId;
+
+		//polis data
+		PolisData data = new PolisData();
+		data.Articles  = new List<Article>();
+		if(organization.Published != null)
+			data.Articles = organization.Published;
+		
+		//polis layout
+		Layout layout   = new Layout();
+		layout.LayoutId = "blog";
+		layout.Panes    = defaultLayout();
+
+		polis.ActiveLayout = layout;
+		polis.Data		   = data;
+
+		organization.PolisId = polis.PolisId;
+
+		await _organizationService.SaveOrganization(organization, organization.OrganizationId!);
+		await _polisService.CreatePolis(polis);
+		return organization;
+	}
+
+	private List<LayoutPane> defaultLayout()
+	{
+		List<LayoutPane> layout = new List<LayoutPane>();
+
+		LayoutPane _blogHeader = new LayoutPane();
+		_blogHeader.PaneId	   = "blog-header";
+		_blogHeader.Title	   = "Sigmyze News Feed";
+
+		LayoutPane _mainArticle = new LayoutPane();
+		_mainArticle.PaneId		= "main-article";
+
+		LayoutPane _articleBlock = new LayoutPane();
+		_articleBlock.PaneId     = "article-block";
+
+		layout.Add(_blogHeader);
+		layout.Add(_mainArticle);
+		layout.Add(_articleBlock);
+
+		return layout;
 	}
 }

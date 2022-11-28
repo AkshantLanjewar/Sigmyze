@@ -7,18 +7,18 @@ import {
 
 import DocumentPresentationView from "../../../../components/document-editor/presentation/document-presentation-view"
 
-const DocumentPreview = ({ document_id, articleTitle, articleImage, author }) => {
+const DocumentPreview = ({ document_id, articleTitle, articleImage, author, setDocument }) => {
     const ref                 = React.createRef()
     const [height, setHeight] = useState(0)
 
     useEffect(() => {
-        setHeight(800)
+        setHeight(1123)
     }, [])
 
     return (
         <Box
             sx={{
-                width: 816,
+                width: 794,
                 height: '98.5%',
                 textAlign: 'center',
 
@@ -37,6 +37,7 @@ const DocumentPreview = ({ document_id, articleTitle, articleImage, author }) =>
                 articleTitle={articleTitle}
                 articleImage={articleImage}
                 author={author}
+                documentSetter={setDocument}
             />
         </Box>
     )

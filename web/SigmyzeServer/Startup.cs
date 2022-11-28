@@ -50,6 +50,7 @@ namespace SigmyzeServer
             services.AddSingleton<IDatasetMongoOrm, DatasetMongoOrm>(); // dataset service for hosted datasets
             services.AddSingleton<IDriveService, DriveMongoOrm>(); // drive service for user drives
             services.AddSingleton<IOrganizationService, OrganizationService>(); // organization service for organizations
+            services.AddSingleton<IPolisService, PolisORM>();
 
             services.AddTransient<IHashService, HashService>();
             services.AddSingleton<IEmailService, EmailService>();

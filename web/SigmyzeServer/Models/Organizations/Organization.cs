@@ -62,4 +62,19 @@ public class Organization
 	[JsonProperty("page_id")]
 	[JsonPropertyName("page_id")]
 	public string? PageId { get; set; }
+
+	[BsonElement("published_queue")]
+	[JsonProperty("published_queue")]
+	[JsonPropertyName("published_queue")]
+	public List<Article>? PublishedQueue { get; set; }
+
+	[BsonElement("published")]
+	[JsonProperty("published")]
+	[JsonPropertyName("published")]
+	public List<Article>? Published { get; set; }
+
+	[BsonElement("polis_id")]
+	[JsonProperty("polis_id")]
+	[JsonPropertyName("polis_id")]
+	public string? PolisId { get; set; }
 }

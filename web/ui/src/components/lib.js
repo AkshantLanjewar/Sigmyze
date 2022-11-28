@@ -76,6 +76,18 @@ function GenerateInitials(username) {
     return initials
 }
 
+function GetOrganization(organization_id, organizations) {
+    let organization = null
+
+    for(let i = 0; i < organizations.length; i++) {
+        let organ = organizations[i]
+        if(organ.organization_id === organization_id)
+            organization = organ
+    }
+
+    return organization
+}
+
 export { 
     ImageSize,
     usePrevious,
@@ -83,5 +95,6 @@ export {
     capitalize,
     extractType,
     AsyncGet,
-    GenerateInitials 
+    GenerateInitials,
+    GetOrganization
 }

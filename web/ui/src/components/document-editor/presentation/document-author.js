@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
     Box,
@@ -11,6 +11,11 @@ import { GenerateInitials } from '../../lib'
 const DocumentAuthor = ({ author }) => {
     const [date, setDate] = useState(new Date())
     let options = { month: 'short', day: 'numeric', year: 'numeric' }
+
+    useEffect(() => {
+        if('date' in author)
+            setDate(author.date)
+    }, [author])
 
     return (
         <Box
@@ -33,7 +38,9 @@ const DocumentAuthor = ({ author }) => {
 
             <Box>
                 <Text size={"sm"} color={"dimmed"}>{author.name}</Text>
-                <Text size={"sm"} color={"dimmed"}>{date.toLocaleDateString("en-US", options)}</Text>
+                <Text size={"sm"} color={"dimmed"}>
+                    {date.toLocaleDateString("en-US", options)}
+                </Text>
             </Box>
         </Box>
     )

@@ -20,7 +20,8 @@ let default_state = {
 
     last_saved: [],
     tabs: [default_tab],
-    next_tab: ""
+    next_tab: "",
+    content_loaded: false
 }
 
 /*
@@ -68,6 +69,7 @@ export default ( state = default_state, action ) => {
             for(let i = 0; i < n_project.project_data.indicators.length; i++)
                 n_display.push(n_project.project_data.indicators[i])
             n_project['tabs'][0]['indicators'] = [...n_display]
+            n_project['content_loaded']        = true
 
             return { ...n_project }
         case "set_project_name":

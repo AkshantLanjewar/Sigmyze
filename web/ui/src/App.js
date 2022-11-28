@@ -10,19 +10,18 @@ import About       from './pages/about/about'
 import Resources   from './pages/indicators/indicators'
 import Dataset     from './pages/dataset/dataset'
 import LunarCharts from './pages/lunar-charts/lunar-charts'
-import Blog 	   from './pages/blog/blog';
+import Polis 	   from './polis/polis'
 
 import VerifyModal from './components/user-button/verify-modal/verify-modal'
 import AuthModal   from './components/user-button/auth-modal/auth-modal';
 import BaseShell   from './BaseShell'
+import Blog from './pages/blog/blog';
 
 function App({  }) {
 	const [navState, setNavState] = useState([])
 	useEffect(() => {
 		
 	}, [])
-
-	
 
 	return (
 		<div>
@@ -56,7 +55,9 @@ function App({  }) {
 								<Route path="/indicators" 		 element={ <BaseShell slot={<Resources />} /> } />
 								<Route path="/datasets/:dataset" element={ <BaseShell slot={<Dataset />} /> } />
 								<Route path="/lunar"	  		 element={ <LunarCharts /> } />
-								<Route path="/blog"				 element={ <BaseShell slot={<Blog />} /> } />
+								<Route path="/blog"				 
+									element={ <BaseShell slot={<Blog polis_id={"sigmyze_root"} />} /> } 
+								/>
 							</Routes>
 						</BrowserRouter>
 				</NotificationsProvider>

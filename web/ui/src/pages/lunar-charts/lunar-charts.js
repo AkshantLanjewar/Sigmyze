@@ -11,23 +11,31 @@ import DemoModal from "./demo-modal/demo-modal"
 import useStyles from "./lunar-charts.styles"
 
 import { RehydrateProject } from "./document-hydration"
-import { LoadProject }      from "../../data/actions/projectActions"
 import { connect }          from "react-redux"
+import { 
+    LoadProject,
+    DefaultProject 
+} from "../../data/actions/projectActions"
 
 import { useSearchParams } from 'react-router-dom'
 
-const LunarCharts = ({ project, user, organization, removeIndicator, loadProject }) => {
+const LunarCharts = ({ project, user, organization, removeIndicator, loadProject, defaultProject }) => {
     const { classes }                               = useStyles()
     const [displayLoginModal, setDisplayLoginModal] = useState(false)
+    const [contentLoaded, setContentLoaded]         = useState(false)
     const [searchParams]                            = useSearchParams()
 
     function LoadProject() {
+        let reducerProjectId = project.project_id
+
         let projectId = searchParams.get('projectId')
         if(projectId == null) {
+            defaultProject()
+            setContentLoaded(true)
             return
         }
 
-        if(projectId != null && user.userState == "signedout")
+        if(projectId !== null && user.userState == "signedout")
             window.location.replace("/")
 
         const jwt_token = user.jwtToken
@@ -43,7 +51,7 @@ const LunarCharts = ({ project, user, organization, removeIndicator, loadProject
                 let organization_id = organization.organization_id
                 url = `/api/v1/organizations/organization/${organization_id}/projects/${projectId}`
             }
-
+            
             fetch(url, {
                 method: "GET",
                 headers: {
@@ -60,11 +68,9 @@ const LunarCharts = ({ project, user, organization, removeIndicator, loadProject
 
                 let ind  = data['project']['project_data']['indicators']
                 let doc  = data['project']['project_data']['documents']
-
-                //set organization
-                let organization_id = data['project']['organization_id']
     
                 loadProject(name, id, ind, doc)
+                setContentLoaded(true)
             })
         } catch (error) {
             window.location.replace('/')
@@ -108,7 +114,7 @@ const LunarCharts = ({ project, user, organization, removeIndicator, loadProject
 
     return (
         <div className={classes.wrapper}>
-            <Navbar />
+            <Navbar contentLoaded={contentLoaded} />
             <DemoModal active={displayLoginModal} close={CloseDemoModal} />
 
             <div className={classes.body}>
@@ -122,7 +128,8 @@ const LunarCharts = ({ project, user, organization, removeIndicator, loadProject
 
 const mapDispatchToProps = dispatch => ({
     removeIndicator: ( indicator_id, object_id ) => dispatch(RemoveIndicator(indicator_id, object_id)),
-    loadProject: ( name, id, ind, doc ) => dispatch(LoadProject(name, id, ind, doc))
+    loadProject: ( name, id, ind, doc ) => dispatch(LoadProject(name, id, ind, doc)),
+    defaultProject: () => dispatch(DefaultProject())
 })
 
 const mapStateToProps = state => ({

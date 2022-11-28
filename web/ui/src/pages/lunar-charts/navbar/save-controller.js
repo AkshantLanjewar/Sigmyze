@@ -52,13 +52,16 @@ const Default = ({ }) => {
     )
 }
 
-const SaveController = ({ project, user, drive, organization }) => {
+const SaveController = ({ contentLoaded, project, user, drive, organization }) => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const jwt_token = user.jwtToken
         const u_state   = user.userState
-        if(u_state == "signedout" || jwt_token == undefined || project.project_id == 'demo') {
+        if(project.project_id == 'demo')
+            return
+        
+        if((u_state == "signedout" || jwt_token == undefined) && contentLoaded) {
             setLoading(false)
             window.location.replace('/')
             return

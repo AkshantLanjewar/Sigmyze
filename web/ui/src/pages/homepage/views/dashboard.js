@@ -56,7 +56,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    updateDrive: (folders, projects) => { dispatch(UpdateDrive(folders, projects)) }
+    updateDrive: (payload) => { dispatch(UpdateDrive(payload)) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

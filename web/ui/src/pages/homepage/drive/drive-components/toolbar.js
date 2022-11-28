@@ -4,9 +4,9 @@ import {
     Box, 
     Breadcrumbs, 
     Button,
-    Menu,
-    UnstyledButton,
-    Group
+    Group,
+    Center,
+    SegmentedControl
 } from '@mantine/core'
 
 import { connect }         from 'react-redux'
@@ -19,14 +19,17 @@ import {
     SetOrganizations 
 } from "../../../../data/actions/organizationActions"
 
-import useStyles from "./toolbar.styles"
-import { TbCloudUpload, TbChevronDown } from "react-icons/tb"
+import DriveSelector       from './drive-selector'
+import { GetOrganization } from '../../../../components/lib'
+
+import { TiCloudStorage }  from 'react-icons/ti'
+import { AiFillDashboard } from 'react-icons/ai'
 
 const NavBox = ({ name, id, SetWorkingDirectory }) => {
     return (
         <Button
             variant={'subtle'}
-            color={'teal'}
+            color={'cyan'}
             onClick={() => { SetWorkingDirectory(id) }}
         >
             {name}
@@ -34,99 +37,66 @@ const NavBox = ({ name, id, SetWorkingDirectory }) => {
     )
 }
 
-const DriveSelector = ({ user, drive, ToggleDriveUpdate, SetOrganizations, SetOrganizationRedux }) => {
-    const [opened, setOpened] = useState(false)
-    const [selected, setSelected] = useState(null)
-    const [items, setItems] = useState([])
-    const { classes } = useStyles(opened)
+const DriveToolbar = 
+({ user, drive, organization, paths, ToggleDriveUpdate, SetOrganizations, SetWorkingDirectory, SetOrganization, view, setView }) => {
+    const breadcrumbRef = React.useCallback((node) => {
+        if(node !== null && node.clientWidth > 0 && !breadcrumbLoaded) {
+            setBreadcrumbWidth(node.clientWidth - 200)
+            setBreadcrumbLoaded(true)
+        }
+    })
+    
+    const [breadcrumbWidth, setBreadcrumbWidth]   = useState(0)
+    const [breadcrumbLoaded, setBreadcrumbLoaded] = useState(false)
+    const [breadcrumbItems, setBreadcrumbItems]   = useState([])
+
+    const [segmentData, setSegmentData] = useState([])
 
     useEffect(() => {
-        let jwtToken = user.jwtToken
-        let url = "/api/v1/organizations"
+        if(!breadcrumbLoaded)
+            return
+        
+        setBreadcrumbItems([...paths])
+    }, [breadcrumbLoaded])
 
-        fetch(url, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${jwtToken}`
+    useEffect(() => {
+        if(paths.length !== breadcrumbItems.length)
+            setBreadcrumbItems([...paths])
+    }, [paths])
+
+    useEffect(() => {
+        let segments = []
+
+        let driveTab = {
+            value: 'drive',
+            label: (
+                <Center>
+                    <TiCloudStorage size={16} />
+                    <Box ml={10}>Disk</Box>
+                </Center>
+            )
+        }
+        segments.push(driveTab)
+
+        let organization_id  = organization.organization_id
+        let organization_    = GetOrganization(organization_id, organization.total_organizations)
+        if(organization_.has_page) {
+            let publishedTab = {
+                value: 'published',
+                label: (
+                    <Center>
+                        <AiFillDashboard size={16} />
+                        <Box ml={10}>Admin</Box>
+                    </Center>
+                )
             }
-        })
-        .then(res => res.json()).then(data => {
-            let organizations = data['organizations']
 
-            setItems([...organizations])
-            SetOrganizations(organizations)
-        })
-    }, [drive.update_drive])
-
-    useEffect(() => {
-        if(selected == null && items.length > 0)
-            SetOrganization(items[0].organization_id)
-        ToggleDriveUpdate()
-    }, [items])
-
-    function SetOrganization(id) {
-        let n_selected = null
-        for(let i = 0; i < items.length; i++) {
-            let item = items[i]
-            if(item.organization_id == id)
-                n_selected = item
+            segments.push(publishedTab)
         }
 
-        if(n_selected !== null) {
-            SetOrganizationRedux(n_selected['user_organization'], n_selected['organization_id'], n_selected['organization_admin'])
-            setSelected({ ...n_selected })
-            ToggleDriveUpdate()
-        }
-    }
+        setSegmentData([...segments])
+    }, [organization])
 
-    return (
-        <Menu
-            opened={opened}
-            onChange={setOpened}
-            radius={"sm"}
-            withArrow
-        >
-            <Menu.Target>
-                <UnstyledButton
-                    className={classes.control}
-                    sx={(theme) => ({
-                        backgroundColor: theme.colors.dark[opened ? 5 : 7]
-                    })}
-                >
-                    <Group spacing={"xs"}>
-                        <TbCloudUpload size={22} />
-                        {selected !== null && (
-                            <span className={classes.label}>{selected['organization_name']}</span>
-                        )}
-                    </Group>
-
-                    <TbChevronDown
-                        size={16}
-                        className={classes.icon}
-                        sx={{
-                            transform: opened ? 'rotate(180deg)' : 'rotate(0deg)'
-                        }}
-                    />
-                </UnstyledButton>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-                {items.map((step) => (
-                    <Menu.Item
-                        icon={<TbCloudUpload size={18} />}
-                        component={"button"}
-                        onClick={() => { SetOrganization(step.organization_id) }}
-                    >
-                        {step.organization_name}
-                    </Menu.Item>
-                ))}
-            </Menu.Dropdown>
-        </Menu>
-    )
-}
-
-const DriveToolbar = ({ user, drive, paths, ToggleDriveUpdate, SetOrganizations, SetWorkingDirectory, SetOrganization }) => {
     return (
         <Box
             p={"md"}
@@ -136,30 +106,60 @@ const DriveToolbar = ({ user, drive, paths, ToggleDriveUpdate, SetOrganizations,
                 borderBottom: `1px solid ${theme.colors.dark[3]}`
             })}
         >
-            <Breadcrumbs>
-                <DriveSelector
-                    user={user}
-                    drive={drive}
-                    ToggleDriveUpdate={ToggleDriveUpdate}
-                    SetOrganizations={SetOrganizations}
-                    SetOrganizationRedux={SetOrganization}
-                />
-                
-                {paths.map((step => ( 
-                    <NavBox 
-                        name={step.name} 
-                        id={step.id}
-                        SetWorkingDirectory={SetWorkingDirectory}
-                    /> 
-                )))}
-            </Breadcrumbs>
+            <Group position={'apart'} noWrap>
+                <Group sx={{ flexGrow: 1 }}>
+                    <DriveSelector
+                        user={user}
+                        drive={drive}
+                        setSegmentData={setSegmentData}
+                        setView={setView}
+                        ToggleDriveUpdate={ToggleDriveUpdate}
+                        SetOrganizations={SetOrganizations}
+                        SetOrganizationRedux={SetOrganization}
+                    />
+                    
+                    <div 
+                        style={{ 
+                            flexGrow: 1, 
+                            overflow: 'scroll', 
+                            maxWidth: breadcrumbWidth == 0 ? 'auto' : breadcrumbWidth,
+                            overflowX: 'scroll' 
+                        }} 
+                        ref={breadcrumbRef}
+                    >
+                        <div style={{ display: 'inline-block' }}>
+                            <Breadcrumbs sx={{ flexDirection: 'row-reverse', overflowX: 'scroll' }}>    
+                                {breadcrumbItems.reverse().map((step => ( 
+                                    <NavBox 
+                                        name={step.name} 
+                                        id={step.id}
+                                        SetWorkingDirectory={SetWorkingDirectory}
+                                    /> 
+                                )))}
+                            </Breadcrumbs>
+                        </div>
+                    </div>
+                </Group>
+
+                <Box>
+                    {segmentData.length > 0 && (
+                        <SegmentedControl 
+                            color={"cyan"} 
+                            data={segmentData} 
+                            value={view}
+                            onChange={setView}
+                        />
+                    )}
+                </Box>
+            </Group>
         </Box>
     )
 }
 
 const mapStateToProps = state => ({
     user: state.user,
-    drive: state.drive
+    drive: state.drive,
+    organization: state.organization
 })
 
 const mapDispatchToProps = dispatch => ({

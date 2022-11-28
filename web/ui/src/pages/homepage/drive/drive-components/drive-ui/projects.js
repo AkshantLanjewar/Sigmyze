@@ -4,13 +4,10 @@ import {
     Box,
     Text,
     SimpleGrid,
-    Card,
-    Title,
     Menu,
     ActionIcon 
 } from '@mantine/core'
 
-import { useHover }    from '@mantine/hooks'
 import { extractType } from '../../../../../components/lib'
 
 import { 
@@ -21,13 +18,12 @@ import {
 } from 'react-icons/tb'
 
 import ProjectModal from './modals/project-modal'
+import ProjectShell from './project-shell'
 
 const Project = ({ title, type, id }) => {
     const [opened, setOpened]         = useState(false)
     const [modalState, setModalState] = useState("update")
-
-    let projectInfo        = extractType(type)
-    const { hovered, ref } = useHover()
+    let projectInfo                   = extractType(type)
 
     function OpenProject() {
         let url = `/lunar?projectId=${id}`
@@ -44,6 +40,44 @@ const Project = ({ title, type, id }) => {
         setOpened(true)
     }
 
+    let menu = (
+        <Menu
+            shadow={"md"}
+            width={200}
+            position={"bottom"}
+            withArrow
+        >
+            <Menu.Target>
+                <ActionIcon>
+                    <TbDots size={16} />
+                </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown sx={(theme) => ({ backgroundColor: theme.colors.dark[7] })}>
+                <Menu.Item
+                    icon={<TbCloudUpload size={18} />}
+                    onClick={() => { OpenProject() }}
+                >
+                    Open Project
+                </Menu.Item>
+
+                <Menu.Item
+                    icon={<TbSettings size={18} />}
+                    onClick={() => { UpdateProject() }}
+                >
+                    Update Project
+                </Menu.Item>
+
+                <Menu.Item
+                    icon={<TbTrash size={18} />}
+                    onClick={() => { DeleteProject() }}
+                >
+                    Delete Project
+                </Menu.Item>
+            </Menu.Dropdown>
+        </Menu>
+    )
+
     return (
         <Box>
             <ProjectModal 
@@ -54,97 +88,13 @@ const Project = ({ title, type, id }) => {
                 title={title}
             />
 
-            <Card
-                shadow={"md"}
-                p={"md"}
-                component={"a"}
-                href={"#"}
-                radius={"md"}
-                ref={ref}
-                sx={{ overflow: 'visible' }}
-
-                onDoubleClick={() => { OpenProject() }}
-            >
-                <Card.Section
-                    sx={(theme) => ({
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: 175,
-                        backgroundColor: theme.colors.dark[9],
-                    })}
-                >
-                    <Box
-                        sx={{
-                            transition: 'transform 300ms ease',
-                            transform: `scale(${hovered ? 1.2 : 1})`
-                        }}
-                    >
-                        {React.cloneElement(projectInfo['icon'], { size: 72 })}
-                    </Box>
-                </Card.Section>
-                
-                <Card.Section
-                    p={"md"}
-                    sx={(theme) => ({
-                        backgroundColor: theme.colors.dark[6],
-                    })}
-                >
-                    <Title order={3}>{title}</Title>
-                    
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between'
-                        }}
-                    >
-                        <Text
-                            color='dimmed'
-                            size={"sm"}
-                            transform={"uppercase"}
-                        >
-                            {type} Project
-                        </Text>
-
-                        <Menu
-                            shadow={"md"}
-                            width={200}
-                            position={"bottom"}
-                            withArrow
-                        >
-                            <Menu.Target>
-                                <ActionIcon>
-                                    <TbDots size={16} />
-                                </ActionIcon>
-                            </Menu.Target>
-
-                            <Menu.Dropdown sx={(theme) => ({ backgroundColor: theme.colors.dark[7] })}>
-                                <Menu.Item
-                                    icon={<TbCloudUpload size={18} />}
-                                    onClick={() => { OpenProject() }}
-                                >
-                                    Open Project
-                                </Menu.Item>
-
-                                <Menu.Item
-                                    icon={<TbSettings size={18} />}
-                                    onClick={() => { UpdateProject() }}
-                                >
-                                    Update Project
-                                </Menu.Item>
-
-                                <Menu.Item
-                                    icon={<TbTrash size={18} />}
-                                    onClick={() => { DeleteProject() }}
-                                >
-                                    Delete Project
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
-                    </Box>
-                </Card.Section>
-            </Card>
+            <ProjectShell
+                dblClick={OpenProject}
+                title={title}
+                type={`${type} Project`}
+                menu={menu}
+                icon={projectInfo['icon']}
+            />
         </Box>
     )
 }

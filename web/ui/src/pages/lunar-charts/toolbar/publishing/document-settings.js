@@ -66,6 +66,7 @@ const DocumentSettings =
             user_option['initials'] = GenerateInitials(user['username'])
             user_option['name']     = user['username']
             user_option['type']     = 'user'
+            user_option['id']       = 'user'
             author_options.push(user_option)
 
             let organizations   = organization.total_organizations
@@ -168,7 +169,7 @@ const DocumentSettings =
         if(flag)
             return
 
-        Publish(title, subt)
+        Publish()
     }
 
     return (

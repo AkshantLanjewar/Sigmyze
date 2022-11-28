@@ -39,12 +39,12 @@ public class DataControllerBase : ControllerBase
 	{
 		string? accessToken = await HttpContext.GetTokenAsync("access_token");
 		string lunarId = _tokenDataService.ExtractLunarID(accessToken!);
-		User user = await _userAuth.GetAsync(lunarId);
+		User? user = await _userAuth.GetAsync(lunarId);
 
-		return user;
+		return user!;
 	}
 
-	private async Task<string> GetQueryString(string? organizationId)
+	public async Task<string> GetQueryString(string? organizationId)
 	{
 		if (organizationId == null)
 		{
@@ -74,6 +74,11 @@ public class DataControllerBase : ControllerBase
 		string lunarId      = _tokenDataService.ExtractLunarID(accessToken!);
 
 		await _userAuth.UpdateAsync(lunarId, user);
+	}
+
+	public async Task SaveOrganization(Organization organization, string organizationId)
+	{
+		
 	}
 
 	public async Task<ProjectResp> GetProject(string? organization_id, string project_id)

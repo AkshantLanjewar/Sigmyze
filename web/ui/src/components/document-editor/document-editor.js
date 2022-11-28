@@ -118,7 +118,7 @@ const DocumentEditor = ({ page_height, data_location, scale_change, set_document
         let rect  = ref.current.getBoundingClientRect()
         let width = 8.5 * 96
 
-        setWidth(width)
+        setWidth(794)
         setHeight(rect.height - 16)
     }
 

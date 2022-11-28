@@ -25,12 +25,14 @@ export const ToggleDriveUpdate = () => {
     }
 }
 
-export const UpdateDrive = (folders, projects) => {
+export const UpdateDrive = (payload) => {
     return {
         type: "update_drive",
         payload: {
-            folders: folders,
-            projects: projects
+            folders: payload['folders'],
+            projects: payload['projects'],
+            published: payload['published'],
+            published_queue: payload['published_queue']
         }
     }
 }

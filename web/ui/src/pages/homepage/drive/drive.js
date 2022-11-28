@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react'
 
-import { Box } from '@mantine/core'
-
-import DriveFolders from './drive-components/drive-ui/folders'
-import Projects     from './drive-components/drive-ui/projects'
-import DriveToolbar from './drive-components/toolbar'
-import EmptyDrive   from './drive-components/empty-drive'
+import DriveToolbar  from './drive-components/toolbar'
+import DriveView     from './views/drive-view'
+import DashboardView from './views/dashboard-view'
 
 import { connect }         from 'react-redux'
 import { ChangeDirectory } from '../../../data/actions/driveActions'
@@ -86,9 +83,10 @@ function GetFolderData(drive, id) {
 }
 
 const Drive = ({ changeDirectory, drive, emptyDrive }) => {
-    const [projects, setProjects] = useState(drive.projects)
-    const [folders, setFolders]   = useState(drive.folders)
-    const [paths, setPaths]       = useState([{ name: "Workspace", id: "root" }])
+    const [projects, setProjects]     = useState(drive.projects)
+    const [folders, setFolders]       = useState(drive.folders)
+    const [paths, setPaths]           = useState([{ name: "Workspace", id: "root" }])
+    const [view, setView]             = useState('drive')
 
     function SetWorkingDirectory(id) {
         changeDirectory(id)
@@ -101,33 +99,29 @@ const Drive = ({ changeDirectory, drive, emptyDrive }) => {
         setProjects([...n_drive.projects])
         setFolders([...n_drive.folders])        
         setPaths([...n_directory])
-    }, [drive.working_directory, drive.folders, drive.projects])
+    }, [drive.working_directory, drive.folders, drive.projects, drive.published_queue])
 
     return (
         <div>
             <DriveToolbar 
                 paths={paths}
+                view={view}
+                setView={setView}
             />
 
-            {emptyDrive
-                ? (
-                    <EmptyDrive 
-                        TitleMSG={"Welcome to your Command Center"}
-                        SubtitleMSG={"Click on the + New button to get started"}
-                    />
-                )
-                : (
-                    <Box>
-                        <DriveFolders 
-                            folders={folders} 
-                            GetFolderData={GetFolderData}
-                            SetWorkingDirectory={SetWorkingDirectory}
-                        />
-                        
-                        <Projects projects={projects} />
-                    </Box>
-                )
-            }
+            {view == 'drive' && (
+                <DriveView
+                    folders={folders}
+                    GetFolderData={GetFolderData}
+                    SetWorkingDirectory={SetWorkingDirectory}
+                    projects={projects}
+                    emptyDrive={emptyDrive}
+                />
+            )}
+
+            {view == 'published' && (
+                <DashboardView />
+            )}
         </div>
     )
 }

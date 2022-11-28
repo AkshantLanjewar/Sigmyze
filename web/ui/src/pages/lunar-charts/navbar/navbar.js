@@ -14,7 +14,7 @@ import SaveController from "./save-controller"
 
 import Filename from "./filename"
 
-const Navbar = ({ }) => {
+const Navbar = ({ contentLoaded }) => {
     const { classes } = useStyles()
 
     return (
@@ -40,7 +40,7 @@ const Navbar = ({ }) => {
                 </Group>
 
                 <Group position={"right"}>
-                    <SaveController />
+                    <SaveController contentLoaded={contentLoaded} />
                     <UserButton />
                 </Group>
             </Group>

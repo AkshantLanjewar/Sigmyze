@@ -11,6 +11,7 @@ public interface IOrganizationService
 	Task<string> CreateUserOrganization(User user);
 	Task<Organization?> GetOrganization(string organizationId);
 	Task CreateOrganization(Organization organization);
+	Task SaveOrganization(Organization organization, string organization_id);
 }
 
 public class OrganizationService : IOrganizationService
@@ -47,6 +48,11 @@ public class OrganizationService : IOrganizationService
 	public async Task CreateOrganization(Organization organization)
 	{
 		await _organizationCollection.InsertOneAsync(organization);
+	}
+
+	public async Task SaveOrganization(Organization organization, string organization_id)
+	{
+		await _organizationCollection.ReplaceOneAsync(x => x.OrganizationId == organization_id, organization);
 	}
 
 	public async Task<Organization?> GetOrganization(string organizationId)

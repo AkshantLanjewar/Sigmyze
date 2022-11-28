@@ -8,7 +8,7 @@ import {
 import { capitalize } from '../../../../../../components/lib'
 
 import UpdateForm from './folder-update-form'
-import DeleteForm from './folder-delete-form'
+import DeleteForm from '../../../delete-form'
 
 const FolderModal = ({ opened, setOpened, modalState, id, title, GetFolderData }) => {
     return (
@@ -30,6 +30,7 @@ const FolderModal = ({ opened, setOpened, modalState, id, title, GetFolderData }
 
                 {modalState == "delete" && (
                     <DeleteForm
+                        formType={"folder"}
                         id={id}
                         title={title}
                         setOpened={setOpened}

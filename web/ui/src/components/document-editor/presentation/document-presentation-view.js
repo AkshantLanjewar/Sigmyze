@@ -13,28 +13,33 @@ import DocumentRenderer from "./document-renderer"
 
 import { connect } from "react-redux"
 
-const DocumentPresentationView = ({ max_height, preview, document_id, project, articleTitle, articleImage, author }) => {
-    const [nodes, setNodes]       = useState([])
+const DocumentPresentationView = 
+    ({ max_height, preview, documentP, document_id, project, articleTitle, articleImage, author, documentSetter }) => {
     const [document, setDocument] = useState(null)
 
     useEffect(() => {
-        let documents = project['project_data']['documents']
-        let document_tmp  = null
+        if(preview) {
+            let documents = project['project_data']['documents']
+            let document_tmp  = null
 
-        for(let i = 0; i < documents.length; i++) {
-            let document_ = documents[i]
-            if(document_.document_id == document_id)
-                document_tmp = document_
+            for(let i = 0; i < documents.length; i++) {
+                let document_ = documents[i]
+                if(document_.document_id == document_id)
+                    document_tmp = document_
+            }
+
+            if(document_tmp !== null) {
+                setDocument(document_tmp)
+                documentSetter(document_tmp)
+            }
+        } else {
+            setDocument(documentP)
         }
-
-        if(document_tmp !== null)
-            setDocument(document_tmp)
     }, [])
 
     return (
         <ScrollArea
-            style={{ height: `${max_height}px` }}
-            offsetScrollbars
+            style={{ maxHeight: `${max_height}px` }}
         >
             <Box
                 sx={(theme) => ({
@@ -50,16 +55,21 @@ const DocumentPresentationView = ({ max_height, preview, document_id, project, a
 
                     paddingLeft: theme.spacing.xl,
                     paddingRight: theme.spacing.xl,
-
-                    minHeight: max_height * 0.95
+                    paddingBottom: 32
                 })}
             >
                 <Title
                     order={1}
                     sx={{ fontSize: 45 }}
                 >
-                    {articleTitle.title == null || articleTitle.title.length == '0' && (<span>Article Title</span>)}
-                    {articleTitle.title}
+                    {articleTitle !== undefined && (
+                        <Box>
+                            {articleTitle.title == null || articleTitle.title.length == '0' && (
+                                <span>Article Title</span>
+                            )}
+                            {articleTitle.title}
+                        </Box>
+                    )}
                 </Title>
 
                 <Title
@@ -70,22 +80,30 @@ const DocumentPresentationView = ({ max_height, preview, document_id, project, a
                         fontSize: 30
                     })}
                 >
-                    {articleTitle.subtitle == null || articleTitle.subtitle.length == '0' && (
-                        <span>Short Description of Article</span>
+                    {articleTitle !== undefined && (
+                        <Box>
+                            {articleTitle.subtitle == null || articleTitle.subtitle.length == '0' && (
+                                <span>Short Description of Article</span>
+                            )}
+                            {articleTitle.subtitle}
+                        </Box>
                     )}
-                    {articleTitle.subtitle}
                 </Title>
 
-                <DocumentAuthor author={author} />
+                {author !== undefined && ( <DocumentAuthor author={author} /> )}
 
-                {articleImage !== null && (
-                    <Image
-                        radius={"md"}
-                        mt={"md"}
-                        fit={"fill"}
-                        height={425}
-                        src={articleImage}
-                    />
+                { articleImage !== undefined && (
+                    <Box>
+                        {articleImage !== null && (
+                            <Image
+                                radius={"md"}
+                                mt={"md"}
+                                fit={"fill"}
+                                height={425}
+                                src={articleImage}
+                            />
+                        )}
+                    </Box>
                 )}
 
                 <Box mt={'sm'}>
