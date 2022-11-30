@@ -56,6 +56,9 @@ const TabManager = ({ project, hide_tab }) => {
             }
         }
 
+        if(index >= tabs.length)
+            index = 0
+
         if(tabs.length == 0)
             return
         if(active == null || !activeFound)
