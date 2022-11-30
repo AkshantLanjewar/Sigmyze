@@ -7,6 +7,11 @@ import DashboardView from './views/dashboard-view'
 import { connect }         from 'react-redux'
 import { ChangeDirectory } from '../../../data/actions/driveActions'
 
+import { 
+    Box,
+    LoadingOverlay 
+} from '@mantine/core'
+
 function HasChild(folders, id) {
     for(let i = 0; i < folders.length; i++) {
         let folder = folders[i]
@@ -82,7 +87,7 @@ function GetFolderData(drive, id) {
     return { folders: folders, projects: projects }
 }
 
-const Drive = ({ changeDirectory, drive, emptyDrive }) => {
+const Drive = ({ changeDirectory, drive, emptyDrive, loading }) => {
     const [projects, setProjects]     = useState(drive.projects)
     const [folders, setFolders]       = useState(drive.folders)
     const [paths, setPaths]           = useState([{ name: "Workspace", id: "root" }])
@@ -109,19 +114,23 @@ const Drive = ({ changeDirectory, drive, emptyDrive }) => {
                 setView={setView}
             />
 
-            {view == 'drive' && (
-                <DriveView
-                    folders={folders}
-                    GetFolderData={GetFolderData}
-                    SetWorkingDirectory={SetWorkingDirectory}
-                    projects={projects}
-                    emptyDrive={emptyDrive}
-                />
-            )}
+            <Box sx={{ position: 'relative' }}>
+                <LoadingOverlay visible={loading} overlayBlur={2} />
 
-            {view == 'published' && (
-                <DashboardView />
-            )}
+                {view == 'drive' && (
+                    <DriveView
+                        folders={folders}
+                        GetFolderData={GetFolderData}
+                        SetWorkingDirectory={SetWorkingDirectory}
+                        projects={projects}
+                        emptyDrive={emptyDrive}
+                    />
+                )}
+
+                {view == 'published' && (
+                    <DashboardView />
+                )}
+            </Box>
         </div>
     )
 }

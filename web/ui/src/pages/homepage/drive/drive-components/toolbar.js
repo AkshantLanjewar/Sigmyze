@@ -116,17 +116,19 @@ const DriveToolbar =
                         ToggleDriveUpdate={ToggleDriveUpdate}
                         SetOrganizations={SetOrganizations}
                         SetOrganizationRedux={SetOrganization}
+                        SetWorkingDirectory={SetWorkingDirectory}
                     />
                     
                     <div 
                         style={{ 
                             flexGrow: 1, 
                             maxWidth: breadcrumbWidth == 0 ? 'auto' : breadcrumbWidth,
+                            overflowX: 'auto'
                         }} 
                         ref={breadcrumbRef}
                     >
                         <div style={{ display: 'inline-block' }}>
-                            <Breadcrumbs sx={{ flexDirection: 'row-reverse', overflowX: 'auto' }}>    
+                            <Breadcrumbs sx={{ flexDirection: 'row-reverse' }}>    
                                 {breadcrumbItems.reverse().map((step => ( 
                                     <NavBox 
                                         name={step.name} 

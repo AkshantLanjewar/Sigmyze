@@ -1,7 +1,11 @@
 //LOADING functions
 function LoadDrive(organization, jwtToken, functions) {
     const setEmptyDrive = functions['setEmptyDrive']
-    const updateDrive = functions['updateDrive']
+    const updateDrive   = functions['updateDrive']
+    const setLoading    = functions['setLoading']
+
+    setLoading(true)
+
     const organization_id = organization.organization_id
     const user_organization = organization.user_organization
 
@@ -43,6 +47,8 @@ function LoadDrive(organization, jwtToken, functions) {
         else {
             setEmptyDrive(false)
         }
+
+        setLoading(false)
     })
 }
 

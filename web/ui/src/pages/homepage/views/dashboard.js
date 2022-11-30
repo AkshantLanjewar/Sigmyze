@@ -14,6 +14,7 @@ import { LoadDrive }   from "../../../data/backend/drive-operations"
 
 const Dashboard = ({ user, drive, organization, updateDrive }) => {
     const [emptyDrive, setEmptyDrive] = useState(false)
+    const [loading, setLoading]       = useState(false)
 
     function GrabDrive() {
         let token = user.jwtToken
@@ -22,7 +23,8 @@ const Dashboard = ({ user, drive, organization, updateDrive }) => {
 
         const functions = {
             setEmptyDrive: setEmptyDrive,
-            updateDrive: updateDrive
+            updateDrive: updateDrive,
+            setLoading: setLoading
         }
 
         LoadDrive(organization, token, functions)
@@ -43,6 +45,7 @@ const Dashboard = ({ user, drive, organization, updateDrive }) => {
                     <Drive 
                         emptyDrive={emptyDrive}
                         drive={drive} 
+                        loading={loading}
                     />
                 </Grid.Col>
             </Grid>

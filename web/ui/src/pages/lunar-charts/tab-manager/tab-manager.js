@@ -31,6 +31,8 @@ const TabManager = ({ project, hide_tab }) => {
     const [active, setActive]         = useState(null)
     const [tabs, setTabs]             = useState([])
     const tabLengthPrev               = usePrevious(tabs.length)
+    const prevActive                  = usePrevious(active)
+    const prevTabs                    = usePrevious(tabs)
 
     useEffect(() => {
         setTabs([...project.tabs])
@@ -45,10 +47,19 @@ const TabManager = ({ project, hide_tab }) => {
                 activeFound = true
         }
 
+        let index = 0
+        if(prevTabs !== undefined) {
+            for(let i = 0; i < prevTabs.length; i++) {
+                let tab = prevTabs[i]
+                if(tab.id == prevActive)
+                    index = i - 1
+            }
+        }
+
         if(tabs.length == 0)
             return
         if(active == null || !activeFound)
-            setActive(tabs[0].id)
+            setActive(tabs[index].id)
         if(tabs.length > tabLengthPrev)
             setActive(tabs[tabs.length - 1].id)
     }, [tabs])

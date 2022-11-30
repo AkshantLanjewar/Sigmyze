@@ -9,6 +9,7 @@ import {
 import { connect }          from 'react-redux'
 import { UpdateProject }    from "../../../data/backend/drive-operations"
 import { DehydrateProject } from '../document-hydration'
+import { usePrevious }      from '../../../components/lib'
 
 const Loading = ({ }) => {
     return (
@@ -54,11 +55,15 @@ const Default = ({ }) => {
 
 const SaveController = ({ contentLoaded, project, user, drive, organization }) => {
     const [loading, setLoading] = useState(false)
+    //prev values
+    const tabLengthPrev = usePrevious(project.tabs.length)
 
     useEffect(() => {
         const jwt_token = user.jwtToken
         const u_state   = user.userState
         if(project.project_id == 'demo')
+            return
+        if(tabLengthPrev !== project.tabs.length)
             return
         
         if((u_state == "signedout" || jwt_token == undefined) && contentLoaded) {

@@ -9,7 +9,7 @@ import {
 
 import { TbCloudUpload, TbChevronDown } from "react-icons/tb"
 
-const DriveSelector = ({ user, setSegmentData, setView, ToggleDriveUpdate, SetOrganizations, SetOrganizationRedux }) => {
+const DriveSelector = ({ user, setSegmentData, setView, ToggleDriveUpdate, SetOrganizations, SetOrganizationRedux, SetWorkingDirectory }) => {
     const [opened, setOpened]     = useState(false)
     const [selected, setSelected] = useState(null)
     const [items, setItems]       = useState([])
@@ -37,11 +37,11 @@ const DriveSelector = ({ user, setSegmentData, setView, ToggleDriveUpdate, SetOr
     useEffect(() => {
         if(selected == null && items.length > 0)
             SetOrganization(items[0].organization_id)
-        ToggleDriveUpdate()
     }, [items])
 
     function SetOrganization(id) {
         setSegmentData([])
+        SetWorkingDirectory('root')
         setView('drive')
 
         let n_selected = null
