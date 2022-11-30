@@ -1,0 +1,11 @@
+version: '1'
+
+services:
+    server:
+        build: ./Server.Dockerfile
+        ports:
+            - "5000:5000"
+    nginx:
+        build: ./NginX.Dockerfile
+        ports:
+            - "8080:80"
