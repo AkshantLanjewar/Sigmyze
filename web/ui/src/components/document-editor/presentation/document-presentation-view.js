@@ -14,7 +14,7 @@ import DocumentRenderer from "./document-renderer"
 import { connect } from "react-redux"
 
 const DocumentPresentationView = 
-    ({ max_height, preview, documentP, document_id, project, articleTitle, articleImage, author, documentSetter }) => {
+    ({ max_height, preview, documentP, document_id, project, articleTitle, articleImage, author, documentSetter, official }) => {
     const [document, setDocument] = useState(null)
 
     useEffect(() => {
@@ -37,15 +37,21 @@ const DocumentPresentationView =
         }
     }, [])
 
+    useEffect(() => {
+        if(preview == false)
+            setDocument(documentP)
+    }, [documentP])
+
     return (
         <ScrollArea
             style={{ maxHeight: `${max_height}px` }}
+            pb={'sm'}
         >
             <Box
                 sx={(theme) => ({
                     textAlign: 'left',
                     backgroundColor: theme.colors.dark[8],
-                    border: `2px solid ${theme.colors.dark[5]}`,
+                    border: official ? '' : `2px solid ${theme.colors.dark[5]}`,
 
                     flexGrow: 1,
 

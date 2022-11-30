@@ -9,8 +9,11 @@ import {
     useMantineTheme 
 } from '@mantine/core'
 
-import { ImageSize }  from '../../../lib'
 import { MIME_TYPES } from '@mantine/dropzone'
+import { 
+    ImageSize,
+    ImageBase64 
+}  from '../../../lib'
 
 const ModalView = ({ opened, setOpened, file, setFile, submit, setSize, SetAspectWidth }) => {
     const theme   = useMantineTheme()
@@ -25,8 +28,7 @@ const ModalView = ({ opened, setOpened, file, setFile, submit, setSize, SetAspec
     }
 
     useEffect(() => {
-        let imageUrl = file == null ? null : URL.createObjectURL(file)
-        setImageURL(imageUrl)
+        ImageBase64(file, setImageURL)
     }, [file])
 
     let dropzone = (

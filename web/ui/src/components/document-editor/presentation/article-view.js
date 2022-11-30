@@ -4,10 +4,11 @@ import { Box } from '@mantine/core'
 
 import DocumentPresentationView from './document-presentation-view'
 
-const ArticleView = ({ article }) => {
+const ArticleView = ({ article, official }) => {
     const [articleTitle, setArticleTitle] = useState({ title: undefined, subtitle: undefined })
     const [author, setAuthor]             = useState({ name: "Author", date: new Date() })
     const [document, setDocument]         = useState(null)
+    const [articleImage, setArticleImage] = useState(null)
 
     useEffect(() => {
         let title = article['published_title']
@@ -16,6 +17,11 @@ const ArticleView = ({ article }) => {
         let uname = article['public_user']['username']
         let date  = new Date(article['published_date'])
 
+        let nArticleImage = null
+        if('published_image' in article)
+            nArticleImage = article['published_image']
+
+        setArticleImage(nArticleImage)
         setArticleTitle({ title: title, subtitle: subt })
         setAuthor({ name: uname, date: date })
         setDocument(article['content'])
@@ -29,6 +35,8 @@ const ArticleView = ({ article }) => {
                 articleTitle={articleTitle}
                 author={author}
                 documentP={document}
+                articleImage={articleImage}
+                official={official}
             />
         </Box>
     )

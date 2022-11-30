@@ -54,26 +54,6 @@ const useStyles = createStyles((theme) => {
                 textAlign: 'left',
                 fontSize: theme.fontSizes.md
             }
-        },
-
-        mainArticleContainer: {
-            marginTop: "-2em",
-            justifyContent: "center"
-        },
-
-        articleCard: {
-            backgroundColor: theme.colors.dark[8],
-            maxWidth: 325
-        },
-
-        articleTitle: {
-            fontFamily: 'Poppins'
-        },
-
-        articleFooter: {
-            padding: `${theme.spacing.xs}px ${theme.spacing.lg}px`,
-            marginTop: theme.spacing.md,
-            borderTop: `1px solid ${theme.colors.dark[5]}`
         }
     }
 })

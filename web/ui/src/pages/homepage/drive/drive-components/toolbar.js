@@ -121,14 +121,12 @@ const DriveToolbar =
                     <div 
                         style={{ 
                             flexGrow: 1, 
-                            overflow: 'scroll', 
                             maxWidth: breadcrumbWidth == 0 ? 'auto' : breadcrumbWidth,
-                            overflowX: 'scroll' 
                         }} 
                         ref={breadcrumbRef}
                     >
                         <div style={{ display: 'inline-block' }}>
-                            <Breadcrumbs sx={{ flexDirection: 'row-reverse', overflowX: 'scroll' }}>    
+                            <Breadcrumbs sx={{ flexDirection: 'row-reverse', overflowX: 'auto' }}>    
                                 {breadcrumbItems.reverse().map((step => ( 
                                     <NavBox 
                                         name={step.name} 

@@ -30,6 +30,11 @@ public class LayoutPane
     [JsonPropertyName("title")]
     public string? Title { get; set; }
 
+    [BsonElement("focus_title")]
+    [JsonProperty("focus_title")]
+    [JsonPropertyName("focus_title")]
+    public string? FocusTitle { get; set; }
+
     [BsonElement("subtitle")]
     [JsonProperty("subtitle")]
     [JsonPropertyName("subtitle")]

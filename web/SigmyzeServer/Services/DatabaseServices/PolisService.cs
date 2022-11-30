@@ -9,6 +9,7 @@ namespace SigmyzeServer.Services.DatabaseServices
     {
         Task<Polis?> GetPolis(string polisId);
         Task CreatePolis(Polis polis);
+        Task SavePolis(string polisId, Polis polis);
     }
 
     public class PolisORM : IPolisService
@@ -30,6 +31,11 @@ namespace SigmyzeServer.Services.DatabaseServices
         public async Task CreatePolis(Polis polis)
         {
             await _collection.InsertOneAsync(polis);
+        }
+
+        public async Task SavePolis(string polisId, Polis polis)
+        {
+            await _collection.ReplaceOneAsync(x => x.PolisId == polisId, polis);
         }
     }
 }

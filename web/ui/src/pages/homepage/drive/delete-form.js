@@ -49,7 +49,7 @@ const DeleteForm =
     function DeleteArticle() {
         let published_id    = article.published_id
         let organization_id = organization.organization_id
-        let url             = `/api/v1/organizations/organization/${organization_id}/approve/${published_id}`
+        let url             = `/api/v1/organizations/organization/${organization_id}/delete/${published_id}`
 
         fetch(url, {
             method: "GET",

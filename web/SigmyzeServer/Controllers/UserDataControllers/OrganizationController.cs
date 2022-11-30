@@ -207,7 +207,7 @@ public class OrganizationController : DataControllerBase
 			n_published.Add(article);
 		}
 
-		organization.Published = published;
+		organization.Published = n_published;
 		await _organizationService.SaveOrganization(organization, organizationId);
 		return await SerializeJson(resp);
 	}
@@ -312,7 +312,10 @@ public class OrganizationController : DataControllerBase
 
 		LayoutPane _blogHeader = new LayoutPane();
 		_blogHeader.PaneId	   = "blog-header";
-		_blogHeader.Title	   = "Sigmyze News Feed";
+		_blogHeader.Title	   = "Sigmyze";
+		_blogHeader.FocusTitle = "News Feed";
+		_blogHeader.Subtitle   = 
+		"Get all the latest platform news, whether it is a new feature we are launching, planning, or simply just a new usecase we found";
 
 		LayoutPane _mainArticle = new LayoutPane();
 		_mainArticle.PaneId		= "main-article";

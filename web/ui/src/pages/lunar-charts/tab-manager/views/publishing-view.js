@@ -45,6 +45,7 @@ const PublishingView = ({ height, document_id, organization, project, user }) =>
             published_title: articleTitle.title,
             published_subtitle: articleTitle.subtitle,
             published_date: new Date(),
+            published_image: articleImage,
             content: document,
 
             public_user: {

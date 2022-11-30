@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Polis;
+using SigmyzeServer.Models.Organizations;
 using SigmyzeServer.Services.DatabaseServices;
 using Microsoft.AspNetCore.Authorization;
 
@@ -14,10 +15,12 @@ namespace SigmyzeServer.Controllers
     public class PolisController : ControllerBase
     {
         private readonly IPolisService _polisService;
+        private readonly IOrganizationService _organizationService;
 
-        public PolisController(IPolisService polisService)
+        public PolisController(IPolisService polisService, IOrganizationService organizationService)
         {
-            _polisService = polisService;
+            _polisService        = polisService;
+            _organizationService = organizationService;
         }
 
         [HttpGet]
@@ -44,6 +47,16 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(status);
             }
 
+            //update the polis data
+            string organization_id    = polis.OrganizationId!;
+            Organization organization = (await _organizationService.GetOrganization(organization_id))!;
+            
+            if(polis.Data == null)
+                polis.Data = new PolisData();
+            if(organization.Published != null)
+                polis.Data.Articles = organization.Published;
+
+            await _polisService.SavePolis(polisId, polis);
             return await SerializeJSON(polis);
         }
 

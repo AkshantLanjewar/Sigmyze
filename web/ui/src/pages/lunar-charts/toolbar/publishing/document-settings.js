@@ -25,13 +25,15 @@ import ImageDropdzone  from '../../../../components/ui/image-dropzone'
 import CardPreview     from './card-preview'
 
 import { SetOrganizations } from '../../../../data/actions/organizationActions'
-import { GenerateInitials } from '../../../../components/lib'
+import { 
+    GenerateInitials,
+    ImageBase64 
+} from '../../../../components/lib'
 
 import { connect }  from 'react-redux'
 import { AsyncGet } from '../../../../components/lib'
 
 import { showNotification } from '@mantine/notifications'
-import PublishingDialog     from './publishing-dialog'
 
 const DocumentSettings = 
     ({ height, articleImage, setArticleImage, setArticleTitle, setAuthor, user, organization, SetOrganizations, Publish }) => {
@@ -49,9 +51,8 @@ const DocumentSettings =
 
     function DropHandler(files) {
         let file = files[0]
-        let url  = file == null ? null : URL.createObjectURL(file)
-
-        setArticleImage(url)
+        
+        ImageBase64(file, setArticleImage)
     }
 
     useEffect(() => {

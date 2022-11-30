@@ -24,7 +24,9 @@ const OrganizationQueue = ({ drive, organization, user, ToggleDriveUpdate }) => 
     const [opened, setOpened]                   = useState(false)
     const [selectedArticle, setSelectedArticle] = useState(null)
 
-    let published_queue = drive.published_queue
+    let published_queue = []
+    if("published_queue" in drive)
+        published_queue = drive.published_queue
 
     useEffect(() => {
         let articleQueue = []
@@ -133,7 +135,7 @@ const OrganizationQueue = ({ drive, organization, user, ToggleDriveUpdate }) => 
                 DenyArticle={DenyArticle}
             />
 
-            {drive.working_directory == "root" && drive.published_queue.length > 0
+            {drive.working_directory == "root" && published_queue.length > 0
                 ? (
                     <Box mb={'xl'} pb={'xl'}>
                         <Text

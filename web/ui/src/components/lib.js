@@ -88,6 +88,16 @@ function GetOrganization(organization_id, organizations) {
     return organization
 }
 
+function ImageBase64(file, setData) {
+    var reader = new FileReader()
+    reader.readAsDataURL(file)
+
+    reader.onload = function() {
+        let result = reader.result
+        setData(result)
+    }
+}
+
 export { 
     ImageSize,
     usePrevious,
@@ -96,5 +106,6 @@ export {
     extractType,
     AsyncGet,
     GenerateInitials,
-    GetOrganization
+    GetOrganization,
+    ImageBase64
 }
