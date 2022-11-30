@@ -1,3 +1,5 @@
+using SigmyzeServer.Services;
+
 namespace SigmyzeServer
 {
     public class Program

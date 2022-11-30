@@ -4,48 +4,17 @@ import useStyles from "./navbar.styles"
 import {
     Group,
     Button,
-    Text,
-    Input,
     Tooltip
 } from "@mantine/core"
 
-import { MdOutlineInsertDriveFile } from 'react-icons/md'
-import { BiChevronDown, BiExit } from 'react-icons/bi'
+import { BiExit } from 'react-icons/bi'
 
-import UserButton from '../../../components/user-button/user-button'
+import UserButton     from '../../../components/user-button/user-button'
+import SaveController from "./save-controller"
 
-function Filename() {
-    const { classes } = useStyles()
-    const [editName, setEditName] = useState(true)
-    let opacity = editName ? 1 : 0
+import Filename from "./filename"
 
-    return (
-        <div>
-            <Group className={classes.filenameGroup}>
-                <MdOutlineInsertDriveFile size={14} style={{ opacity: opacity }} />
-                <Text style={{ opacity: opacity }} className={classes.folder}>Folder Name /</Text>
-
-                {editName
-                    ? <Text className={classes.file} onClick={() => { setEditName(false) }}>Project Name</Text>
-                    : (
-                        <form onSubmit={() => { setEditName(true) }}>
-                            <Input
-                                variant={"unstyled"}
-                                defaultValue={"Project Name"}
-                                autoFocus
-                                onBlur={() => { setEditName(true) }}
-                            />
-                        </form>
-                    ) 
-                }
-
-                <BiChevronDown style={{ opacity: opacity }} size={14} />
-            </Group>
-        </div>
-    )
-}
-
-const Navbar = ({ }) => {
+const Navbar = ({ contentLoaded }) => {
     const { classes } = useStyles()
 
     return (
@@ -71,6 +40,7 @@ const Navbar = ({ }) => {
                 </Group>
 
                 <Group position={"right"}>
+                    <SaveController contentLoaded={contentLoaded} />
                     <UserButton />
                 </Group>
             </Group>

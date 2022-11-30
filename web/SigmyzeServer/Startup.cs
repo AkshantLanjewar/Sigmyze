@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Services.Auth;
+using SigmyzeServer.Services.DatabaseServices;
 
 namespace SigmyzeServer
 {
@@ -46,10 +47,14 @@ namespace SigmyzeServer
 
             //add authentication
             services.AddSingleton<IUserAuth, AuthService>();
-            services.AddSingleton<IDatasetMongoORM, DatasetMongoORM>();
-            
+            services.AddSingleton<IDatasetMongoOrm, DatasetMongoOrm>(); // dataset service for hosted datasets
+            services.AddSingleton<IDriveService, DriveMongoOrm>(); // drive service for user drives
+            services.AddSingleton<IOrganizationService, OrganizationService>(); // organization service for organizations
+            services.AddSingleton<IPolisService, PolisORM>();
+
             services.AddTransient<IHashService, HashService>();
             services.AddSingleton<IEmailService, EmailService>();
+            services.AddSingleton<ITokenDataService, TokenDataService>();
 
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

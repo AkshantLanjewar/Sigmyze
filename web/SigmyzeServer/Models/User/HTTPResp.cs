@@ -16,6 +16,9 @@ namespace SigmyzeServer.Models.User
         [JsonProperty("verified")]
         public string? Verified { get; set; }
 
+        [JsonProperty("role")]
+        public string? Role { get; set; }
+
         [JsonIgnore]
         public string? RefreshToken { get; set; }
     }

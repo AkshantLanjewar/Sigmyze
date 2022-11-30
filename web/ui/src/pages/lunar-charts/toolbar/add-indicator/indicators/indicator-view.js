@@ -189,9 +189,10 @@ const IndicatorView = ({ dataset, category, country, setIndicator }) => {
                             <Autocomplete
                                 placeholder="Search Indicators"
                                 data={indicators}
-                                sx={{ maxWidth: 300 }}
+                                sx={{ maxWidth: 300, width: 300 }}
                                 value={value}
                                 onChange={setValue}
+                                width={300}
                             />
                         </Group>
 
@@ -209,7 +210,7 @@ const IndicatorView = ({ dataset, category, country, setIndicator }) => {
                                             description={`${step.object.object_id}: ${step.indicator.indicator_id}`}
                                             data={step.data}
                                             verticalTooltip={true}
-                                            height={"300px"}
+                                            height={"330px"}
                                             active={step.active}
                                         />
                                     </div>

@@ -2,51 +2,46 @@ import React, { useState } from "react"
 
 import useStyles from "./toolbar.styles"
 import { 
-    Tooltip ,
-    Text,
-    Title,
-    Menu
+    Tooltip
 } from "@mantine/core"
 
-import Layers       from "./layers/layers"
-import AddIndicator from "./add-indicator/add-indicator"
+import Layers          from "./explorer/explorer"
+import LunarPublishing from "./publishing/publishing";
 
-import { BsStack } from 'react-icons/bs'
-import { IoMdAdd } from 'react-icons/io' 
+import AddIndicator from "./add-indicator/add-indicator"
+import AddDocument  from "./add-document/add-document"
+
+import { BsStack }   from 'react-icons/bs'
+import { MdPublish } from 'react-icons/md'
 
 let actionBarItems = [
-    { label: "Layers",        icon: <BsStack size={20} />,  active: true },
-    { label: "Add Indicators", icon: <IoMdAdd size={20} />, active: false }
+    { label: "Explorer", icon: <BsStack size={20} />,  active: true },
+    { label: "Publishing", icon: <MdPublish size={20} />, active: false }
 ]
-
-const labelHash = {
-    "Layers": <Layers />,
-    "Add Indicators": <AddIndicator />
-}
 
 const Toolbar = ({ }) => {
     const { classes, cx } = useStyles()
 
     const [actionBar, setActionBar]       = useState(actionBarItems)
-    const [activeAction, setActiveAction] = useState("Layers")
-    const [openAdd, setOpenAdd]           = useState(false)
+    const [activeAction, setActiveAction] = useState("Explorer")
+
+    const [documentModal, setDocumentModal] = useState(false)
+    const [openAdd, setOpenAdd]             = useState(false)
+
+    const labelHash = {
+        "Explorer": <Layers setOpenAdd={setOpenAdd} setDocumentModal={setDocumentModal} />,
+        "Publishing": <LunarPublishing />
+    }
 
     function StackClick(label) {
         let barItems = actionBar
 
         for(let i = 0; i < barItems.length; i++) {
             let item    = barItems[i]
-            if(label == "Add Indicators" && item.active)
+            item.active = false
+            if(item.label == label)
                 item.active = true
-            else
-                item.active = false
 
-            if(label === "Add Indicators") {
-                setOpenAdd(true)
-                return
-            }
-            if(item.label == label && label !== "Add Indicators")
-                item.active = true
             barItems[i] = item
         }
         
@@ -72,8 +67,6 @@ const Toolbar = ({ }) => {
 
             <div className={classes.contentBar}>
                 <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-                    <Text className={classes.contentTitle}>{activeAction}</Text>
-
                     {labelHash[activeAction]}
                 </div>
             </div>
@@ -81,6 +74,11 @@ const Toolbar = ({ }) => {
             <AddIndicator 
                 opened={openAdd}
                 setOpened={setOpenAdd}
+            />
+
+            <AddDocument
+                opened={documentModal}
+                setOpened={setDocumentModal}
             />
         </div>
     )

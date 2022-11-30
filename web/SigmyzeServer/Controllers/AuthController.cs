@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using SigmyzeServer.Services;
 using SigmyzeServer.Services.Auth;
 using System.IdentityModel.Tokens.Jwt;
+using SigmyzeServer.Services.DatabaseServices;
 
 namespace SigmyzeServer.Controllers
 {
@@ -66,9 +67,10 @@ namespace SigmyzeServer.Controllers
             string username = jwt.Claims.First(claim => claim.Type == "Username").Value.ToString();
             string email    = jwt.Claims.First(claim => claim.Type == "Email").Value.ToString();
             string verified = jwt.Claims.First(claim => claim.Type == "Verified").Value.ToString();
+            string role     = jwt.Claims.First(claim => claim.Type == "Role").Value.ToString();
             
             resp.EMail    = email;
-            resp.Role     = "user";
+            resp.Role     = role;
             resp.Username = username;
             resp.Verified = verified;
 
@@ -101,14 +103,17 @@ namespace SigmyzeServer.Controllers
             User aUser = new User();
             aUser.EMail             = data.Email;
             aUser.Username          = data.Username;
-            aUser.Lunar_ID          = Guid.NewGuid().ToString();
+            aUser.LunarId          = Guid.NewGuid().ToString();
             aUser.VerificationToken = Guid.NewGuid().ToString();
             aUser.Role              = "User";
             aUser.Verified          = "no";
+
+            if(data.Email == "akshant.lanjewar@gmail.com")
+                aUser.Role = "Admin";
             
             //salt and hash password
-            string salt = _hashService.GenerateSalt(128);
-            string pwd  = _hashService.HashPassword(data.Password, salt);
+            string? salt = _hashService.GenerateSalt(128);
+            string? pwd  = _hashService.HashPassword(data.Password, salt);
 
             aUser.Password = pwd;
             aUser.Salt     = salt;
@@ -133,6 +138,7 @@ namespace SigmyzeServer.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
             AuthResp resp    = await _userService.RefreshToken(refreshToken, ipAddress());
+
             if(resp.Authorized)
                 setTokenCookie(resp.RefreshToken);
 
@@ -182,7 +188,7 @@ namespace SigmyzeServer.Controllers
             pUser.Verified = "yes";
 
             string nToken = _userService.generateJwtToken(pUser);
-            await _userAuth.UpdateAsync(pUser.Lunar_ID, pUser);
+            await _userAuth.UpdateAsync(pUser.LunarId, pUser);
 
             resp.Verified = true;
             resp.Token    = nToken;
@@ -200,7 +206,7 @@ namespace SigmyzeServer.Controllers
             User pUser   = await _userAuth.GetAsync(Lunar_id);
             string email = pUser.EMail;
             string code  = pUser.VerificationToken;
-            string name  = pUser.Username;
+            string? name  = pUser.Username;
 
             await _emailService.SendVerificationEmail(code, email, name);
             resp.Resent = true;
@@ -208,7 +214,7 @@ namespace SigmyzeServer.Controllers
             return await SerializeJSON(resp);
         }
 
-        private void setTokenCookie(string token)
+        private void setTokenCookie(string? token)
         {
             var cookieOptions = new CookieOptions
             {
@@ -219,7 +225,7 @@ namespace SigmyzeServer.Controllers
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }
 
-        private string ipAddress()
+        private string? ipAddress()
         {
             if(Request.Headers.ContainsKey("X-Forwarded-For"))
                 return Request.Headers["X-Forwarded-For"];

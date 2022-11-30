@@ -69,12 +69,15 @@ const Indicators = ({ dataset, setIndicator }) => {
     const [categories, setCategories] = useState([])
     const [activeCountry, setActiveCountry] = useState({ object_id: 'USA', object_fullname: "United States" })
 
+    const [tabValue, setTabValue] = useState([])
+
     async function main() {
         let country = await FetchCountries(dataset)
         setCountries([...country])
 
         let cats = await FetchCategories(dataset)
         setCategories([...cats])
+        setTabValue(cats[0].category)
     }
 
     useEffect(() => {
@@ -102,23 +105,46 @@ const Indicators = ({ dataset, setIndicator }) => {
                     limit={10}
                     defaultValue={"United States"}
                     onItemSubmit={(item) => { setActiveCountry(item) }}
+                    width={300}
+                    sx={{ width: 300 }}
                 />
 
                 {categories.length == 0
                     ? <Group mt={"xl"} pt={"xl"} position={"center"}><Loader variant="bars" color="indigo" /></Group>
                     : (
-                        <Tabs variant={"pills"} position={"center"} mt={"lg"}>
+                        <Tabs 
+                            variant={'pills'}
+                            position={'center'}
+                            mt={'lg'}
+                            value={tabValue}
+                            onTabChange={setTabValue}
+                        >
+                            <Tabs.List sx={{ justifyContent: 'center' }}>
+                                {categories.map((step) => (
+                                    <Tabs.Tab
+                                        value={step.category}
+                                        icon={step.icon}
+                                        key={`modal-category-${step.category}`}
+                                    >
+                                        {step.category}
+                                    </Tabs.Tab>
+                                ))}
+                            </Tabs.List>
+
                             {categories.map((step) => (
-                                <Tabs.Tab label={step.category} icon={step.icon} key={`modal-category-${step.category}`}>
+                                <Tabs.Panel
+                                    value={step.category}
+                                    pt={'xs'}
+                                >
                                     <IndicatorView
                                         dataset={dataset}
                                         category={step.category}
                                         country={activeCountry}
                                         setIndicator={setIndicator}
                                     />
-                                </Tabs.Tab>
+                                </Tabs.Panel>
                             ))}
-                        </Tabs>
+                        </Tabs> 
                     )
                 }
             </Stack>

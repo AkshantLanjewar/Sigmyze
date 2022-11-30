@@ -25,3 +25,10 @@ export const authAction = (payload) => {
         payload: payload
     }
 }
+
+export const userDataAction = (payload) => {
+    return {
+        type: 'userData',
+        payload: payload
+    }
+}

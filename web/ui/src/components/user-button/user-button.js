@@ -1,84 +1,92 @@
 import React, { useEffect, useState } from "react"
 
 import { connect } from "react-redux"
-import { userModalAction, verifyModalAction, authAction } from "../../data/actions/userActions"
+import { 
+    userModalAction, 
+    verifyModalAction, 
+    authAction,
+    userDataAction 
+} from "../../data/actions/userActions"
+
+import { RevertOrganization } from "../../data/actions/organizationActions"
 
 import { 
-    Button,
-    Avatar,
-    Menu,
-    Divider,
-    Group,
-    Text 
+    Button
 } from "@mantine/core"
 
-import { VscSignOut } from 'react-icons/vsc'
+import UserControl    from "./user-control"
 
-const UserControl = ({ username, email, logout }) => (
-    <div>
-        <Menu 
-            control={<Avatar src={null} alt={username} color={"blue"}>AL</Avatar>}
-            size={300}
-            withArrow
-        >
-            <Menu.Item>
-                <Group>
-                    <Avatar 
-                        radius={"xl"}
-                        src={null}
-                        alt={username}
-                        color={"blue"}
-                    >
-                        AL
-                    </Avatar>
+let time_diff = 1000 * 60 * 5
 
-                    <div>
-                        <Text weight={500}>{username}</Text>
-                        <Text size={"xs"} color={"dimmed"}>
-                            {email}
-                        </Text>
-                    </div>
-                </Group>
-            </Menu.Item>
+const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAction, revertOrganization, user }) => {
+    function GrabLogoutAction() {
+        authAction({
+            jwtToken: "",
+            verified: "no",
+            userState: "signedout"
+        })
 
-            <Divider />
+        window.location.replace("/")
 
-            <Menu.Item icon={<VscSignOut size={14} />} onClick={logout}>Logout</Menu.Item>
-        </Menu>
-    </div>
-)
+        return
+    }
 
-const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) => {
     //manage the refreshing of the token here
-    async function ManageAuthState(user) {
-        const jwt_token = user.jwt_token
+    async function ManageAuthState(user, intial_state = false) {
+        const jwt_token = user.jwtToken
         const u_state   = user.userState
 
-        if(jwt_token == "" || u_state == "signedout")
+        if(jwt_token == "" || u_state == "signedout" || jwt_token == undefined)
             return
 
-        fetch("/api/v1/auth/refresh-token", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' }
-        }).then(res => {
-            let data = res.json()
+        let timestamp = localStorage.getItem("jwt_stamp")
+        if(timestamp == null) {
+            let n_timestamp = new Date().getTime()
+            localStorage.setItem("jwt_stamp", n_timestamp)
+            timestamp = n_timestamp
+        }
 
-            const n_token = data.token
-            authAction({
-                jwtToken: n_token,
-                verified: user.verified,
-                userState: user.userState
+        timestamp = parseInt(timestamp)
+        if(new Date().getTime() - timestamp > 1000 * 60 * 5 || intial_state) {
+            localStorage.setItem("jwt_stamp", new Date().getTime())
+            console.log("[Lunar DEBUG] : Refreshing Token")
+
+            fetch("/api/v1/auth/refresh-token", {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwt_token}` 
+                }
             })
-        })
+            .then(res => {
+                if(res.status !== 200) {
+                    authAction({
+                        jwtToken: "",
+                        verified: "no",
+                        userState: "signedout"
+                    })
+                }
+            })
+            .then(data => {
+                const n_token = data.token
+                
+                authAction({
+                    jwtToken: n_token,
+                    verified: user.verified,
+                    userState: user.userState
+                })
+            })
+        }
     }
 
     const [userData, setUserData] = useState({
         email: "",
-        username: ""
+        username: "",
+        role: ""
     })
 
     useEffect(() => {
-        ManageAuthState()
+        ManageAuthState(user, true)
         GrabUserData()
     }, [])
 
@@ -87,22 +95,47 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) =>
     }, [user.jwtToken])
 
     function GrabUserData() {
-        let token = user.jwtToken
-        if(token == "")
+        let token     = user.jwtToken
+        const u_state = user.userState
+
+        if(token == "" || token == undefined || u_state == "signedout")
             return
 
-        fetch("/api/v1/auth/user-data", {
-            method: "GET",
-            headers: { 'Authorization': `Bearer ${token}`}
-        }).then(resp => resp.json()).then(data => {
-            setUserData({
-                email: data.email,
-                username: data.username
+        try {
+            fetch("/api/v1/auth/user-data", {
+                method: "GET",
+                headers: { 'Authorization': `Bearer ${token}`}
             })
-        })  
+            .then(resp => {
+                if(resp.status !== 200) {
+                    authAction({
+                        jwtToken: "",
+                        verified: "no",
+                        userState: "signedout"
+                    })
+                }
+                
+                return resp.json()
+            })
+            .then(data => {
+                setUserData({
+                    email: data.email,
+                    username: data.username,
+                    role: data.role
+                })
+    
+                userDataAction({
+                    email: data.email,
+                    username: data.username,
+                    role: data.role
+                })
+            })   
+        } catch (error) {
+            GrabLogoutAction()
+        }
     }
 
-    setInterval(ManageAuthState, 60000 * 40)
+    setInterval(() => { ManageAuthState(user) }, 60000)
 
     function Logout() {
         fetch("/api/v1/auth/revoke-token", {
@@ -119,6 +152,13 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, user }) =>
                 userState: "signedout"
             })
         })
+
+        authAction({
+            jwtToken: "",
+            verified: "no",
+            userState: "signedout"
+        })
+        revertOrganization()
     }
 
     return (
@@ -149,7 +189,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     userModalAction: (payload) => dispatch(userModalAction(payload)),
     verifyModalAction: (payload) => dispatch(verifyModalAction(payload)),
-    authAction: (payload) => dispatch(authAction(payload))
+    authAction: (payload) => dispatch(authAction(payload)),
+    userDataAction: (payload) => dispatch(userDataAction(payload)),
+    revertOrganization: () => dispatch(RevertOrganization())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserButton)

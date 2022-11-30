@@ -14,7 +14,7 @@ const useStyles = createStyles((theme) => ({
 
     actionBar: {
         height: "100%",
-        borderRight: `2px solid ${theme.colors.dark[4]}`,
+        borderRight: `2px solid ${theme.colors.dark[6]}`,
         width: 60,
         minWidth: 60,
 
@@ -49,10 +49,6 @@ const useStyles = createStyles((theme) => ({
 
     contentBar: {
         flexGrow: 1,
-
-        paddingTop: 45 / 2,
-        paddingLeft: 15,
-        paddingRight: 15,
         height: "100%"
     },
 
@@ -69,7 +65,7 @@ const useStyles = createStyles((theme) => ({
         color: theme.colors.dark[1],
         paddingTop: 5,
         paddingBottom: 5,
-        paddingLeft: 1,
+        paddingLeft: 0,
         cursor: "pointer",
     },
 

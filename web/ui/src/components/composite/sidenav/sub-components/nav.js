@@ -4,12 +4,10 @@ import './nav.scoped.scss'
 import { Tooltip } from "@mantine/core"
 
 const Nav = ({ expanded, children }) => {
-    const elements = React.Children.map(children, child => child.type.displayName === 'element' ? child : null)
-
     return (
         <div className="nav">
             <ul className={`${expanded ? 'expanded' : ''}`}>
-                {elements}
+                {children}
             </ul>
         </div>
     )
