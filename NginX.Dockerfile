@@ -1,22 +1,25 @@
-FROM node:16-alpine3.14 as react-stage
+FROM node:16-alpine3.14 as builder
 
-WORKDIR /react-stage
+WORKDIR /ui
+COPY web/ui ./
 
-COPY web/ui .
-COPY web/sigmyze-charting .
+WORKDIR /sigmyze-charting
+COPY web/sigmyze-charting ./
 
-WORKDIR /react-stage/sigmyze-charting
+RUN yarn install && yarn build
 RUN yarn link
 
-WORKDIR /react-stage/ui
+WORKDIR /ui
 
 RUN yarn link sigmyze-charting
 RUN yarn install && yarn build
 
 FROM nginx:alpine
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
+COPY --from=builder /ui/build .
 
-COPY --from=react-stage /react-stage/ui/build .
-COPY server.conf /etc/nginx/conf.d/
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
