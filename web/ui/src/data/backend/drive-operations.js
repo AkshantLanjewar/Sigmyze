@@ -10,7 +10,7 @@ function LoadDrive(organization, jwtToken, functions) {
     const user_organization = organization.user_organization
 
     let url = `/api/v1/organizations/organization/${organization_id}`
-    if(user_organization)
+    if(user_organization || organization_id == null)
         url = '/api/v1/drive'
 
     fetch(url, {
