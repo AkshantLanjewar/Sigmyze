@@ -80,7 +80,7 @@ const DriveToolbar =
 
         let organization_id  = organization.organization_id
         let organization_    = GetOrganization(organization_id, organization.total_organizations)
-        if(organization_.has_page) {
+        if(organization_ !== null && organization_.has_page) {
             let publishedTab = {
                 value: 'published',
                 label: (
