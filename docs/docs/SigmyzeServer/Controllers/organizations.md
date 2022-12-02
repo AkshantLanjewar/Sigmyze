@@ -35,10 +35,10 @@ GET /api/v1/organizations
 ```
 
 #### Response Object
-| Key           | Type                | Description                               |
-|---------------|-------------------- |-------------------------------------------|
-| status        | APIStatusMessage    | Status of the controller (not used atm)   |
-| organizations | List<Organization\> | List of organizations  |
+| Key           | Type                                                   | Description                               |
+|---------------|--------------------                                    |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
+| organizations | List<Organization\>                                    | List of organizations  |
 
 ### Get Organization
 This endpoint returns an organization based off the provided organization id
@@ -53,11 +53,11 @@ GET /api/v1/organizations/{organization_id}
 | organization_id | The id for the respective organization |
 
 #### Response Object
-| Key           | Type                | Description                               |
-|---------------|-------------------- |-------------------------------------------|
-| status        | APIStatusMessage    | Status of the controller (not used atm)   |
-| organization  | Organization        | Matching organization, null if not found  |
-| drive         | Drive               | Related organization drive                |
+| Key           | Type                                                   | Description                               |
+|---------------|--------------------                                    |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
+| organization  | Organization                                           | Matching organization, null if not found  |
+| drive         | Drive                                                  | Related organization drive                |
 
 ### Get Project
 This endpoint retreives a project from the requested organization
@@ -73,13 +73,14 @@ GET /api/v1/organizations/{organization_id}/projects/{project_id}
 | project_id      | The id for the project being requested |
 
 #### Response Object
-| Key           | Type                | Description                               |
-|---------------|-------------------- |-------------------------------------------|
-| status        | APIStatusMessage    | Status of the controller (not used atm)   |
-| project       | Project             | The requested project (can be null)       |
+| Key           | Type                                                   | Description                               |
+|---------------|--------------------                                    |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
+| project       | Project                                                | The requested project (can be null)       |
 
 ### Publish Article
-This endpoint publishes a document into the temporary article queue of the specified Organization
+This endpoint publishes a document into the temporary 
+[article](../Models/Organization/article.md) queue of the specified Organization
 
 ```http title="HTTP Request"
 POST /api/v1/organizations/organization/{organization_id}/projects/{project_id}/publish
@@ -92,17 +93,18 @@ POST /api/v1/organizations/organization/{organization_id}/projects/{project_id}/
 | project_id      | The id for the project being requested |
 
 #### Request Body (JSON Format)
-| Key           | Type                | Description                                             |
-|---------------|-------------------- |-------------------------------------------              |
-| article       | Article             | Published version of document including author and date |
+| Key           | Type                                         | Description                                             |
+|---------------|--------------------                          |-------------------------------------------              |
+| article       | [Article](../Models/Organization/article.md) | Published version of document including author and date |
 
 #### Response Object
-| Key           | Type                | Description                               |
-|---------------|-------------------- |-------------------------------------------|
-| status        | APIStatusMessage    | Status of the controller (not used atm)   |
+| Key           | Type                                                   | Description                               |
+|---------------|--------------------                                    |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
 
 ### Approve Article
-This endpoint approves an article, moving it from the temporary queue into the final published list
+This endpoint approves an [article](../Models/Organization/article.md), 
+moving it from the temporary queue into the final published list
 
 ```http title="HTTP Request"
 GET /api/v1/organizations/organization/{organization_id}/approve/{published_id}
@@ -115,12 +117,13 @@ GET /api/v1/organizations/organization/{organization_id}/approve/{published_id}
 | published_id    | The id for the respective article      |
 
 #### Response Object
-| Key           | Type                | Description                               |
-|---------------|-------------------- |-------------------------------------------|
-| status        | APIStatusMessage    | Status of the controller (not used atm)   |
+| Key           | Type                                                   | Description                               |
+|---------------|--------------------                                    |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
 
 ### Deny Article
-This endpoint denys an article, removing it from the temporary queue
+This endpoint denys an [article](../Models/Organization/article.md), 
+removing it from the temporary queue
 
 ```http title="HTTP Request"
 GET /api/v1/organizations/organization/{organization_id}/deny/{published_id}
@@ -133,12 +136,12 @@ GET /api/v1/organizations/organization/{organization_id}/deny/{published_id}
 | published_id    | The id for the respective article      |
 
 #### Response Object
-| Key           | Type                | Description                               |
-|---------------|-------------------- |-------------------------------------------|
-| status        | APIStatusMessage    | Status of the controller (not used atm)   |
+| Key           | Type                                                   | Description                               |
+|---------------|--------------------                                    |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
 
 ### Delete Article
-This endpoint deletes an article from the pubnlished list
+This endpoint deletes an [article](../Models/Organization/article.md) from the pubnlished list
 
 ```http title="HTTP Request"
 GET /api/v1/organizations/organization/{organization_id}/delete/{published_id}
@@ -151,6 +154,6 @@ GET /api/v1/organizations/organization/{organization_id}/delete/{published_id}
 | published_id    | The id for the respective article      |
 
 #### Response Object
-| Key           | Type                | Description                               |
-|---------------|-------------------- |-------------------------------------------|
-| status        | APIStatusMessage    | Status of the controller (not used atm)   |
+| Key           | Type                                                   | Description                               |
+|---------------|--------------------                                    |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
