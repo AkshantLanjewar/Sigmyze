@@ -58,11 +58,6 @@ public class Organization
 	[JsonPropertyName("has_page")]
 	public bool HasPage { get; set; }
 
-	[BsonElement("page_id")]
-	[JsonProperty("page_id")]
-	[JsonPropertyName("page_id")]
-	public string? PageId { get; set; }
-
 	[BsonElement("published_queue")]
 	[JsonProperty("published_queue")]
 	[JsonPropertyName("published_queue")]

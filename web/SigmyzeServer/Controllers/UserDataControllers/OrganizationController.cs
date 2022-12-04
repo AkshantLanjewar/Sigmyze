@@ -256,7 +256,6 @@ public class OrganizationController : DataControllerBase
 		organization.OrganizationUsers = new List<string>();
 		organization.OrganizationPublishers = new List<string>();
 		organization.HasPage = true;
-		organization.PageId  = "sigmyze_root";
 
 		//create the drive
 		Drive drive = await _driveService.GetDrive(id);

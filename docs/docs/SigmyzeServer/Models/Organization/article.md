@@ -8,7 +8,7 @@ The concept behind the Article is currently as a prebuilt datatype for blogging.
 It is created by publishing taking a document, and adding a title, subtitle and image
 and publishing it to list of articles in the organization. **Eventually** the Article data type 
 is to be converted into a more general publishing type that can be customized and created within
-the Lunar editor.
+the Lunar editor. 
 
 ## Implementation
 ```cs

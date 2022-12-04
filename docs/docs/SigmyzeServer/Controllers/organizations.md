@@ -35,10 +35,10 @@ GET /api/v1/organizations
 ```
 
 #### Response Object
-| Key           | Type                                                   | Description                               |
-|---------------|--------------------                                    |-------------------------------------------|
-| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
-| organizations | List<Organization\>                                    | List of organizations  |
+| Key           | Type                                                                | Description                               |
+|---------------|--------------------                                                 |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)                 | Status of the controller (not used atm)   |
+| organizations | List<[Organization](../Models/Organization/organization-model.md)\> | List of organizations  |
 
 ### Get Organization
 This endpoint returns an organization based off the provided organization id
@@ -53,11 +53,11 @@ GET /api/v1/organizations/{organization_id}
 | organization_id | The id for the respective organization |
 
 #### Response Object
-| Key           | Type                                                   | Description                               |
-|---------------|--------------------                                    |-------------------------------------------|
-| status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
-| organization  | Organization                                           | Matching organization, null if not found  |
-| drive         | Drive                                                  | Related organization drive                |
+| Key           | Type                                                         | Description                               |
+|---------------|--------------------                                          |-------------------------------------------|
+| status        | [APIStatusMessage](../Models/api_status_message.md)          | Status of the controller (not used atm)   |
+| organization  | [Organization](../Models/Organization/organization-model.md) | Matching organization, null if not found  |
+| drive         | Drive                                                        | Related organization drive                |
 
 ### Get Project
 This endpoint retreives a project from the requested organization
