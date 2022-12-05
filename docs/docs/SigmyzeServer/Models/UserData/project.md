@@ -30,7 +30,7 @@ public class Project
 
 ### OrganizationId (organization_id)
 `string?`
-> The organization the project was created under
+> The [organization](../Organization/organization-model.md) the project was created under
 
 ### ProjectType (project_type)
 `string?`

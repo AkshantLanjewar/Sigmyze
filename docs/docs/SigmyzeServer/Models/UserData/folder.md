@@ -42,4 +42,4 @@ public class Folder
 
 ### Projects
 `List<Project>?`
-> Projects within the folder 
+> [Projects](./project.md) within the folder 
