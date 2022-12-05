@@ -40,7 +40,7 @@ public class Project
 `string?`
 > Name of the project
 
-### ProjectData (project_data)
+### [ProjectData](#projectdata-subclass) (project_data)
 `ProjectData?`
 > Data stored within the project.
 
@@ -61,8 +61,43 @@ public class ProjectData
 
 #### Indicators
 `List<ProjectIndicator>?`
-> List of indicators used in project
+> List of [indicators](#projectindicator-subclass) used in project
 
 #### Documents
 `List<Document>?`
-> List of documentcs created in project
+> List of [documents](./document.md) created in project
+
+## ProjectIndicator (subclass)
+Indicator class used within the project
+
+### Implementation
+```cs
+public class ProjectIndicator
+{
+    public string? Dataset { get; set; }
+
+    public string? IndicatorID { get; set; }
+
+    public string? ObjectFullname { get; set; }
+
+    public string? ObjectID { get; set; }
+}
+```
+
+### Members
+
+#### Dataset (dataset)
+`string?`
+> Dataset the indicator belongs too
+
+#### IndicatorID (indicator_id)
+`string?`
+> ID assigned to the individual indicator
+
+#### ObjectFullname (object_fullname)
+`string?`
+> Fullname of the object indicator is a part of 
+
+#### ObjectID (object_id)
+`string?`
+> ID of the object indicator is a part of

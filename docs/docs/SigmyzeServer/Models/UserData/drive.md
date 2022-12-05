@@ -32,8 +32,8 @@ public class Drive
 
 ### RecentlyEditedProjects (recently_edited)
 `List<Project>?`
-> This is a list of projects that were recently edited (TODO)
+> This is a list of [projects](./project.md) that were recently edited (TODO)
 
 ### Projects (projects)
 `List<Project>?`
-> This is a list of the projects in the root directory
+> This is a list of the [projects](./project.md) in the root directory

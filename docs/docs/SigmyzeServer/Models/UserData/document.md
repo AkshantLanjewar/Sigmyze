@@ -35,7 +35,7 @@ public class Document
 `string?`
 > Name of the Document
 
-### DocumentBlocks (document_blocks)
+### [DocumentBlocks](#documentblock-subclass) (document_blocks)
 `List<DocumentBlock>?`
 > Actual content of the document
 
@@ -74,11 +74,11 @@ public class DocumentBlock
 
 #### Data (data)
 `DocumentData?`
-> Data for the node itself
+> [Data](#documentdata-subclass) for the node itself
 
 #### Styles (styles)
 `BlockStyles?`
-> Styles for the individual node
+> [Styles](#blockstyles-subclass) for the individual node
 
 ## DocumentData (subclass)
 Data storage for a [DocumentBlock](#documentblock-subclass)
@@ -127,5 +127,48 @@ public class DocumentData
 `List<DocumentIndicator>`
 > A list of indicators used in the chart node
 
-## DocumentIndicator (subclass)
-TODO fix spaghetti code
+## BlockStyles (subclass)
+Styles that an associated block may have
+
+### Implementation
+```cs
+public class BlockStyles
+{
+    public string? Justify { get; set; }
+
+    public BlockStylesSize? Size { get; set; }
+}
+```
+
+### Members
+
+#### Justify (justify)
+`string?`
+> This is the justify of the node, either left, right or center
+
+#### Size (size)
+`BlockStylesSize?`
+> This is the [size](#blockstylessize-subclass) of the image if it is an image node
+
+## BlockStylesSize (subclass)
+Width and height of the image block
+
+### Implementation
+```cs
+public class BlockStylesSize
+{
+    public float? Width { get; set; }
+
+    public float? Height { get; set; }
+}
+```
+
+### Members
+
+#### Width (width)
+`float?`
+> Width of the image in px
+
+#### Height (height)
+`float?`
+> Height of the image in px

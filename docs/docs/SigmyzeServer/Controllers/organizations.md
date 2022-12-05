@@ -57,7 +57,7 @@ GET /api/v1/organizations/{organization_id}
 |---------------|--------------------                                          |-------------------------------------------|
 | status        | [APIStatusMessage](../Models/api_status_message.md)          | Status of the controller (not used atm)   |
 | organization  | [Organization](../Models/Organization/organization-model.md) | Matching organization, null if not found  |
-| drive         | Drive                                                        | Related organization drive                |
+| drive         | [Drive](../Models/UserData/drive.md)                         | Related organization drive                |
 
 ### Get Project
 This endpoint retreives a project from the requested organization
@@ -76,7 +76,7 @@ GET /api/v1/organizations/{organization_id}/projects/{project_id}
 | Key           | Type                                                   | Description                               |
 |---------------|--------------------                                    |-------------------------------------------|
 | status        | [APIStatusMessage](../Models/api_status_message.md)    | Status of the controller (not used atm)   |
-| project       | Project                                                | The requested project (can be null)       |
+| project       | [Project](../Models/UserData/project.md)               | The requested project (can be null)       |
 
 ### Publish Article
 This endpoint publishes a document into the temporary 
