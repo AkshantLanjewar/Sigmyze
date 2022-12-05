@@ -54,8 +54,30 @@ public class Article
 
 ### PublicUser (public_user)
 `PublicUser?`
-> This is the author of the article. Can be either an individual account or organization. **Mandatory field**
+> This is the [author](#publicuser-subclass) of the article. Can be either an individual account or organization. **Mandatory field**
 
 ### Content (content)
 `Document?`
-> This is the actual content that is published within the article. **Mandatory field**
+> This is the actual [document](../UserData/document.md) that is published within the article. **Mandatory field**
+
+## PublicUser (subclass)
+Public user that external users can see.
+
+### Implementation
+```cs
+public class PublicUser
+{
+	public string? Username { get; set; }
+	
+	public string? LunarId { get; set; }
+}
+```
+### Members
+
+#### Username (username)
+`string?`
+> Username of the user
+
+#### LunarId (lunar_id)
+`string?`
+> Public access token for the user

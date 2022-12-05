@@ -10,11 +10,11 @@ This endpoint is manipulates organizations within the database.
 It Creates, Updates and Deletes organizations if a valid user is authenticated.
 
 ### Dependent Services
-| Service              | Service Interface    | Service Description                                      |
-|----------------------|----------------------|----------------------------------------------------------|
-| Organization Service | IOrganizationService | Service that interfaces with the organization collection |
-| Drive Service        | IDriveService        | Service that interfaces with the drive collection        |
-| Polis Service        | IPolisService        | Service that interfaces with the service collection      |
+| Service              | Service Interface                             | Service Description                                      |
+|----------------------|----------------------                         |----------------------------------------------------------|
+| Organization Service | IOrganizationService                          | Service that interfaces with the organization collection |
+| Drive Service        | [IDriveService](../Services/IDriveService.md) | Service that interfaces with the drive collection        |
+| Polis Service        | IPolisService                                 | Service that interfaces with the service collection      |
 
 ### Required HTTP Headers
 Since this is a protected route each request needs certain HTTP headers
