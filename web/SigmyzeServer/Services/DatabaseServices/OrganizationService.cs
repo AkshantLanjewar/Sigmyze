@@ -40,7 +40,7 @@ public class OrganizationService : IOrganizationService
 		organization.OrganizationPublishers = new List<string>();
 		organization.HasPage = false;
 
-		await _organizationCollection.InsertOneAsync(organization);
+		await this.CreateOrganization(organization);
 		return organization.OrganizationId;
 	}
 

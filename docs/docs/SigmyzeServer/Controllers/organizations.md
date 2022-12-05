@@ -12,9 +12,9 @@ It Creates, Updates and Deletes organizations if a valid user is authenticated.
 ### Dependent Services
 | Service              | Service Interface                             | Service Description                                      |
 |----------------------|----------------------                         |----------------------------------------------------------|
-| Organization Service | IOrganizationService                          | Service that interfaces with the organization collection |
+| Organization Service | [IOrganizationService](../Services/IOrganizationService.md) | Service that interfaces with the organization collection |
 | Drive Service        | [IDriveService](../Services/IDriveService.md) | Service that interfaces with the drive collection        |
-| Polis Service        | IPolisService                                 | Service that interfaces with the service collection      |
+| Polis Service        | [IPolisService](../Services/IPolisService.md) | Service that interfaces with the service collection      |
 
 ### Required HTTP Headers
 Since this is a protected route each request needs certain HTTP headers
