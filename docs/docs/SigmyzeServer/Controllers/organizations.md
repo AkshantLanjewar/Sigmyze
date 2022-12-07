@@ -29,7 +29,6 @@ which are detailed below
 ### Get Organizations
 This returns all the organizations that the requesting user is a part of. 
 
-
 ```http title="HTTP Request"
 GET /api/v1/organizations
 ```

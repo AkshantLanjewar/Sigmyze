@@ -1,6 +1,6 @@
 # IPolisService
 The polis service is how the application interacts with the polis collection.
-Currently it can create, update, and retreive polis objects from the database.
+Currently it can create, update, and retreive [polis](../Models/Polis/polis-model.md) objects from the database.
 
 ## Implementation
 ```cs
@@ -18,12 +18,12 @@ public interface IPolisService
 
 ### GetPolis(string polisId)
 `Task<Polis?>`
-> This function retreives the polis from the database if it does not exist.
+> This function retreives the [polis](../Models/Polis/polis-model.md) from the database if it does not exist.
 
 ### CreatePolis(Polis polis)
 `Task`
-> This function inserts a polis into the database
+> This function inserts a [polis](../Models/Polis/polis-model.md) into the database
 
 ### SavePolis(string polisId, Polis polis)
 `Task`
-> This function updates a polis based on the given polisId
+> This function updates a [polis](../Models/Polis/polis-model.md) based on the given polisId
