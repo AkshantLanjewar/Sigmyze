@@ -25,12 +25,6 @@ namespace SigmyzeServer.Models.Data
 
         [BsonElement("added_countries")]
         public List<string>? AddedObjects { get; set; }
-
-        [BsonElement("categories")]
-        public List<string>? Categories { get; set; }
-
-        [BsonElement("logo")]
-        public string? Logo { get; set; }
     }
 
     public class DatasetIndicator

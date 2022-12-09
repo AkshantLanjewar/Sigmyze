@@ -82,29 +82,6 @@ namespace SigmyzeServer.Models.UserData
         public float? Height { get; set; }
     }
 
-    public class DocumentIndicatorIds
-    {
-        [BsonElement("dataset")]
-        [JsonProperty("dataset")]
-        [JsonPropertyName("dataset")]
-        public string? Dataset { get; set; }
-
-        [BsonElement("indicator_id")]
-        [JsonProperty("indicator_id")]
-        [JsonPropertyName("indicator_id")]
-        public string? IndicatorId { get; set; }
-
-        [BsonElement("object_id")]
-        [JsonProperty("object_id")]
-        [JsonPropertyName("object_id")]
-        public string? ObjectId { get; set; }
-
-        [BsonElement("object_fullname")]
-        [JsonProperty("object_fullname")]
-        [JsonPropertyName("object_fullname")]
-        public string? ObjectFullname { get; set; }
-    }
-
     public class DocumentIndicator
     {
         [BsonElement("id")]
@@ -130,7 +107,7 @@ namespace SigmyzeServer.Models.UserData
         [BsonElement("indicator")]
         [JsonProperty("indicator")]
         [JsonPropertyName("indicator")]
-        public DocumentIndicatorIds? Indicator { get; set; }
+        public ProjectIndicator? Indicator { get; set; }
     }
 
     public class DocumentData

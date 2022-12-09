@@ -39,9 +39,8 @@ public class OrganizationService : IOrganizationService
 		organization.OrganizationUsers = new List<string>();
 		organization.OrganizationPublishers = new List<string>();
 		organization.HasPage = false;
-		organization.PageId = "";
 
-		await _organizationCollection.InsertOneAsync(organization);
+		await this.CreateOrganization(organization);
 		return organization.OrganizationId;
 	}
 
