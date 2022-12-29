@@ -14,26 +14,34 @@ import { RehydrateProject } from "./document-hydration"
 import { connect }          from "react-redux"
 import { 
     LoadProject,
-    DefaultProject 
+    DefaultProject,
+    RefreshUi 
 } from "../../data/actions/projectActions"
 
 import { useSearchParams } from 'react-router-dom'
 
-const LunarCharts = ({ project, user, organization, removeIndicator, loadProject, defaultProject }) => {
+const LunarCharts = ({ project, user, organization, removeIndicator, loadProject, defaultProject, refreshUi }) => {
     const { classes }                               = useStyles()
     const [displayLoginModal, setDisplayLoginModal] = useState(false)
     const [contentLoaded, setContentLoaded]         = useState(false)
     const [searchParams]                            = useSearchParams()
 
-    function LoadProject() {
+    function DemoProject() {
         let reducerProjectId = project.project_id
-
-        let projectId = searchParams.get('projectId')
-        if(projectId == null) {
+        let projectId        = searchParams.get('projectId')
+        
+        if(projectId == null && reducerProjectId !== "demo") {
             defaultProject()
             setContentLoaded(true)
+            refreshUi()
+
             return
         }
+    }
+
+    function LoadProject() {
+        let projectId = searchParams.get('projectId')
+        DemoProject()
 
         if(projectId !== null && user.userState == "signedout")
             window.location.replace("/")
@@ -88,6 +96,10 @@ const LunarCharts = ({ project, user, organization, removeIndicator, loadProject
     }, [searchParams])
 
     useEffect(() => {
+        DemoProject()
+    }, [project])
+
+    useEffect(() => {
         let project_id         = project.project_id
         let project_indicators = project.project_data.indicators
         let user_state         = user.userState
@@ -129,7 +141,8 @@ const LunarCharts = ({ project, user, organization, removeIndicator, loadProject
 const mapDispatchToProps = dispatch => ({
     removeIndicator: ( indicator_id, object_id ) => dispatch(RemoveIndicator(indicator_id, object_id)),
     loadProject: ( name, id, ind, doc ) => dispatch(LoadProject(name, id, ind, doc)),
-    defaultProject: () => dispatch(DefaultProject())
+    defaultProject: () => dispatch(DefaultProject()),
+    refreshUi: () => dispatch(RefreshUi())
 })
 
 const mapStateToProps = state => ({

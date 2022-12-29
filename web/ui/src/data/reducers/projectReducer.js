@@ -21,7 +21,8 @@ let default_state = {
     last_saved: [],
     tabs: [default_tab],
     next_tab: "",
-    content_loaded: false
+    content_loaded: false,
+    refresh: false,
 }
 
 /*
@@ -256,6 +257,9 @@ export default ( state = default_state, action ) => {
             }
 
             e_state['project_data'] = project_data
+            return { ...e_state }
+        case "refresh_ui":
+            e_state['refresh'] = !e_state['refresh']
             return { ...e_state }
         default: 
             return e_state

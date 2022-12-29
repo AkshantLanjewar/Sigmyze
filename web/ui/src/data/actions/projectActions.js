@@ -135,3 +135,9 @@ export const DefaultProject = () => {
         }
     }
 }
+
+export const RefreshUi = () => {
+    return {
+        type: "refresh_ui"
+    }
+}

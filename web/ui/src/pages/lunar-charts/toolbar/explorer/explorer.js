@@ -35,6 +35,7 @@ import ProjectTree from "../tree/tree"
 const Explorer = ({ setOpenAdd, setDocumentModal, remove_indicator, project, open_chart_tab, open_document_tab, remove_document }) => {
     const [tree, setTree]   = useState([])
 
+    let refresh      = project.refresh
     let project_data = project.project_data
     let indicators   = project_data.indicators
     let documents    = project_data.documents
@@ -166,7 +167,7 @@ const Explorer = ({ setOpenAdd, setDocumentModal, remove_indicator, project, ope
     // update the main function every time the indicator list changes
     useEffect(() => {
         main()
-    }, [project])
+    }, [indicators, documents, refresh])
 
     return (
         <div>
