@@ -16,15 +16,10 @@ services:
             dockerfile: ./NginX.Dockerfile
         ports:
             - "8080:80"
-            - "443:443"
         restart: always
-        volumes:
-            - ./certbot/www:/var/www/certbot/:ro
-            - ./certbot/conf/:/etc/nginx/ssl/:ro
     certbot:
         image: certbot/certbot
         container_name: certbot
         volumes: 
             - ./certbot/www/:/var/www/certbot/:rw
             - ./certbot/conf/:/etc/letsencrypt/:rw
-        command: certonly --webroot --webroot-path /var/www/certbot/ -d sigmyze.com
