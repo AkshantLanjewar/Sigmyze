@@ -1,8 +1,10 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Data;
+using SigmyzeServer.Models.User;
 
 namespace SigmyzeServer.Services.DatabaseServices
 {
@@ -22,7 +24,7 @@ namespace SigmyzeServer.Services.DatabaseServices
         private readonly Dictionary<string, IMongoCollection<DatasetCollection>> _collectionObjMap;
         private IMongoDatabase _database;
 
-        public DatasetMongoOrm()
+        public DatasetMongoOrm(IOptions<AuthDatabaseSettings> authDatabaseSettings)
         {
             var mongoClient   = new MongoClient("mongodb+srv://root:root@cluster0.sbwn1.mongodb.net");
             var mongoDatabase = mongoClient.GetDatabase("SigmyzeData");
