@@ -6,6 +6,7 @@ module.exports = {
     ],
 
     devServer: {
+        port: 5000,
         proxy: {
             '/api': {
                 target: 'http://[::1]:5000'
