@@ -104,7 +104,7 @@ const ChartCard = ({
 
         setTimeout(() => {
             window.location.replace("/lunar")
-        }, 500)
+        }, 20)
     }
 
     return (

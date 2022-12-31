@@ -11,4 +11,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /App
 
 COPY --from=build-env /App/build .
+COPY --from=build-env /App/data /App
+
 ENTRYPOINT ["dotnet", "SigmyzeServer.dll"]

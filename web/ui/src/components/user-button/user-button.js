@@ -159,6 +159,7 @@ const UserButton = ({ userModalAction, verifyModalAction, authAction, userDataAc
             userState: "signedout"
         })
         revertOrganization()
+        window.location.replace('/')
     }
 
     return (
