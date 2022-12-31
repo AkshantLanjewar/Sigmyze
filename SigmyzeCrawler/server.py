@@ -19,6 +19,7 @@ def index():
 
 @app.route("/weo", methods=['POST'])
 def weo_upload():
+    print(request.files)
     if 'file' not in request.files:
         resp = jsonify({ 'msg': 'No File in request' })
         resp.status_code = 400

@@ -26,7 +26,7 @@ namespace SigmyzeServer.Services.DatabaseServices
 
         public DatasetMongoOrm(IOptions<AuthDatabaseSettings> authDatabaseSettings)
         {
-            var mongoClient   = new MongoClient("mongodb+srv://root:root@cluster0.sbwn1.mongodb.net");
+            var mongoClient   = new MongoClient(authDatabaseSettings.Value.ConnectionString);
             var mongoDatabase = mongoClient.GetDatabase("SigmyzeData");
             _collectionMap    = new Dictionary<string, IMongoCollection<BsonDocument>>();
             _collectionObjMap = new Dictionary<string, IMongoCollection<DatasetCollection>>();

@@ -10,7 +10,7 @@ from crawlers.WEO import WEO_Categories
 
 class WEO_Parser:
     def __init__(self) -> None:
-        self.frame = pd.read_csv('./tmp/weo.xls', index_col=0, sep='\t', encoding='utf-16-le')
+        self.frame = pd.read_table('./tmp/weo.xls', encoding='windows-1252')
         self.cols  = list(self.frame.columns)
         
         self.desc   = []
@@ -22,7 +22,7 @@ class WEO_Parser:
 
     def upload(self) -> None:
         ca     = certifi.where()
-        client = MongoClient("mongodb+srv://root:root@cluster0.sbwn1.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=ca)
+        client = MongoClient("mongodb://lunar:thisIsADBPassword%2445592@35.171.161.237:27017/?authMechanism=DEFAULT&authSource=admin")
         db     = client.SigmyzeData
         col    = db['WEO']
 
@@ -61,7 +61,6 @@ class WEO_Parser:
             if indicator_id in object_ids:
                 assigned_category = category
 
-        print(assigned_category)
         return assigned_category
 
     
@@ -90,7 +89,7 @@ class WEO_Parser:
         col_dict = {}
         for col in self.cols:
             col_dict[col] = self.frame[col].to_numpy()
-        
+        print(col_dict)
         iso_codes = col_dict['ISO']
         for i in range(len(iso_codes)):
             iso_code  = iso_codes[i]
