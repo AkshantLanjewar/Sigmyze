@@ -1,4 +1,4 @@
-version: '1'
+version: '2.2'
 
 services:
     dotnet:
@@ -17,6 +17,7 @@ services:
         ports:
             - "8080:80"
         restart: always
+        image: akshantlanjewar/sigmyze-prod
     certbot:
         image: certbot/certbot
         container_name: certbot
