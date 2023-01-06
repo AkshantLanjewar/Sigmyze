@@ -13,10 +13,11 @@ import HeaderS from './static/header'
 interface LayoutProps {
     title: string,
     description: string,
+    location: string,
     children: JSX.Element | never[]
 }
 
-const DefaultLayout: React.FC<LayoutProps> = ({ title, description, children }) : JSX.Element => {
+const DefaultLayout: React.FC<LayoutProps> = ({ title, description, location, children }) : JSX.Element => {
     return (
         <>
             <Head>
@@ -44,11 +45,11 @@ const DefaultLayout: React.FC<LayoutProps> = ({ title, description, children }) 
 				fontFamily: 'Poppins'
 			}}>
                 <AppShell
-                    padding={"md"}
-                    navbar={<NavbarS />}
+                    padding={0}
+                    navbar={<NavbarS location={location} />}
                     header={<HeaderS />}
-                    styles={(theme) => ({
-                        main: { backgroundColor: theme.colors.dark[8] }
+                    styles={(theme: any) => ({
+                        main: { backgroundColor: theme.colors.dark[7] }
                     })}
                 >
                     {children}

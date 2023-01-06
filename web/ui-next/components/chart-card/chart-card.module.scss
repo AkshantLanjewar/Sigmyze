@@ -1,0 +1,39 @@
+.card {
+    cursor: pointer;
+    background-color: #2C2E33;
+    border: 1px solid #1A1B1E;
+    height: 280px;
+
+    .chart {
+        background-color: #101113;
+        min-height: 175px;
+        height: 175px;
+
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
+
+    .body {
+        margin-top: 12px;
+        padding-bottom: 12px;
+        height: calc(280px - 175px - 12px);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+            color: white;
+            font-weight: 500;
+            line-height: 1;
+            margin-bottom: 7px;
+        }
+
+        .description {
+            font-size: 12px;
+            line-height: 1.5;
+            color: #909296;
+        }
+    }
+}

@@ -6,6 +6,7 @@ export default function Home() {
 			<DefaultLayout
 				title="Sigmyze"
 				description=""
+				location="/"
 			>
 				<div>
 					Swag

@@ -4,7 +4,8 @@ import {
     Group,
     Stack,
     Tooltip,
-    UnstyledButton 
+    UnstyledButton, 
+    MantineTheme
 } from '@mantine/core'
 
 import { 
@@ -17,17 +18,17 @@ import {
 
 const routes = [
     { icon: IconHome2, label: 'Home', path: '/' },
-    { icon: IconDatabase, label: 'Indicators', path: '/indicators' },
+    { icon: IconDatabase, label: 'Datasets', path: '/datasets' },
     { icon: IconGlobe, label: 'Lunar', path: '/lunar' },
     { icon: IconZoomQuestion, label: 'About Us', path: '/about' },
     { icon: IconNews, label: 'Blog', path: '/blog' }
 ]
 
 interface NavbarProps {
-
+    location: string
 }
 
-const NavbarS: React.FC<NavbarProps> = ({  }) : JSX.Element => {
+const NavbarS: React.FC<NavbarProps> = ({ location  }) : JSX.Element => {
     const links = routes.map((link, index) => (
         <Tooltip 
             label={link.label} 
@@ -35,8 +36,8 @@ const NavbarS: React.FC<NavbarProps> = ({  }) : JSX.Element => {
             withArrow
         >
             <UnstyledButton
-                onClick={() => {  }}
-                sx={(theme) => ({
+                onClick={() => { window.location.assign(link.path) }}
+                sx={(theme: MantineTheme) => ({
                     width: 50,
                     height: 50,
                     borderRadius: theme.radius.md,
@@ -47,11 +48,13 @@ const NavbarS: React.FC<NavbarProps> = ({  }) : JSX.Element => {
                     color: theme.colors.dark[0],
 
                     '&:hover': {
-                        backgroundColor: theme.colors.dark[5]
-                    }
+                        backgroundColor: link.path === location ? theme.colors.indigo[6] : theme.colors.dark[5]
+                    },
+
+                    backgroundColor: link.path === location ? theme.colors.indigo[6] : 'transparent'
                 })}
             >
-                <link.icon stroke={1.5} />
+                <link.icon stroke={2} />
             </UnstyledButton>
         </Tooltip>
     ))
