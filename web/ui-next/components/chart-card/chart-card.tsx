@@ -4,10 +4,10 @@ import SparkLine from '../chart/spark-line'
 import { 
     IIndicator,
     IUnparsedIndicator 
-} from "../data/DatasetsTypes"
+} from "../data/datasets/DatasetsTypes"
 
 import { PrepareData }  from '../chart/utils'
-import { GetIndicator } from '../data/DatasetsAPI'
+import { GetIndicator } from '../data/datasets/DatasetsAPI'
 
 import { useEffect, useState } from 'react'
 

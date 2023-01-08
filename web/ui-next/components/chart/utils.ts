@@ -1,7 +1,7 @@
 import { 
     IUnparsedIndicator,
     IIndicatorData 
-} from '../data/DatasetsTypes'
+} from '../data/datasets/DatasetsTypes'
 
 export const date_options = { month: 'long', day: 'numeric', year: 'numeric' }
 export const date_locale  = "en-US"

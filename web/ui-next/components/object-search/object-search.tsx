@@ -21,7 +21,7 @@ import {
 import styles from './object-search.module.scss'
 import { IconSearch } from "@tabler/icons"
 
-import { IDatasetObject } from "../data/DatasetsTypes"
+import { IDatasetObject } from "../data/datasets/DatasetsTypes"
 
 interface IObjectSearchProps {
     objects?: Array<IDatasetObject>,

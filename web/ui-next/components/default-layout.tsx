@@ -26,24 +26,29 @@ const DefaultLayout: React.FC<LayoutProps> = ({ title, description, location, ch
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
 
-            <MantineProvider theme={{ 
-				colorScheme: 'dark',
-				colors: {
-					dark: [
-						"#C1C2C5",
-						"#A6A7AB",
-						"#909296",
-						"#5c5f66",
-						"#373A40",
-						"#2C2E33",
-						"#25262b",
-						"#1A1B1E",
-						"#141517",
-						"#101113"
-					]
-				},
-				fontFamily: 'Poppins'
-			}}>
+            <MantineProvider 
+                withGlobalStyles
+                withNormalizeCSS
+                withCSSVariables 
+                theme={{ 
+                    colorScheme: 'dark',
+                    colors: {
+                        light: [
+                            "#C1C2C5",
+                            "#A6A7AB",
+                            "#909296",
+                            "#5c5f66",
+                            "#373A40",
+                            "#2C2E33",
+                            "#25262b",
+                            "#1A1B1E",
+                            "#141517",
+                            "#101113"
+                        ]
+                    },
+                    fontFamily: 'Poppins'
+                }}
+            >
                 <AppShell
                     padding={0}
                     navbar={<NavbarS location={location} />}

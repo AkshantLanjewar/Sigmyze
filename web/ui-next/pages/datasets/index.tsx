@@ -13,12 +13,12 @@ import {
 import Image                         from "next/image"
 import { GetServerSidePropsContext } from "next"
 
-import { IDataset } from "../../components/data/DatasetsTypes"
+import { IDataset } from "../../components/data/datasets/DatasetsTypes"
 import { 
     DatasetsTable,
     GetDatasets,
     IDatasetsTable 
-} from "../../components/data/DatasetsAPI"
+} from "../../components/data/datasets/DatasetsAPI"
 
 interface IDatasetProps {
     datasets?: Array<IDataset>;

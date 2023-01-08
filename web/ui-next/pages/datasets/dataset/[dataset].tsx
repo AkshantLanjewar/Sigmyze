@@ -20,24 +20,24 @@ import {
 import { 
     IDatasetsTable,
     DatasetsTable 
-} from "../../../components/data/DatasetsAPI"
+} from "../../../components/data/datasets/DatasetsAPI"
 
 import { 
     IObjectIndicator,
     IIndicator 
-} from "../../../components/data/DatasetsTypes"
+} from "../../../components/data/datasets/DatasetsTypes"
 
 import { SelectedState }  from "../../../components/object-search/object-search"
 import ObjectSearch       from "../../../components/object-search/object-search"
 import ChartCard          from "../../../components/chart-card/chart-card"
-import { IDatasetObject } from "../../../components/data/DatasetsTypes"
+import { IDatasetObject } from "../../../components/data/datasets/DatasetsTypes"
 
 import { 
     GetObjects,
     GetDatasets,
     GetCategories,
     GetIndicators 
-} from "../../../components/data/DatasetsAPI"
+} from "../../../components/data/datasets/DatasetsAPI"
 
 import { 
     IconInfinity,
