@@ -1,3 +1,5 @@
+import { MantineNumberSize } from "@mantine/core"
+
 interface IStatus {
     error: boolean,
     msg: string
@@ -13,13 +15,22 @@ interface IDatasetObject {
     object_fullname: string,
     object_logo: string,
 
+    //this is object-search customization
+    image_size_x?: number,
+    image_size_y?: number,
+    text_size?: MantineNumberSize,
+    indicator?: IIndicator
+
     active?: boolean
 }
 
 interface IObjectIndicator {
     indicator_id: string,
     indicator_fullname: string,
-    category: string
+    category: string,
+
+    //for tracking
+    dataset?: string
 }
 
 interface IIndicator {
@@ -57,6 +68,11 @@ interface IDatasetsObjectsResponse {
     objects: Array<IDatasetObject>
 }
 
+interface IDatasetObjects {
+    dataset: string,
+    objects: Array<IDatasetObject>
+}
+
 interface IDatasetsCategoriesResponse {
     status: IStatus,
     categories: Array<string>
@@ -83,5 +99,6 @@ export type {
     IDatasetsIndicatorsResponse,
     IDatasetsIndicatorResponse,
     IUnparsedIndicator,
-    IIndicatorData 
+    IIndicatorData,
+    IDatasetObjects 
 }

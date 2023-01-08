@@ -15,7 +15,8 @@ import {
     TextInput,
     ScrollArea,
     Stack,
-    Button 
+    Button, 
+    MantineNumberSize
 } from "@mantine/core"
 
 import styles from './object-search.module.scss'
@@ -25,15 +26,20 @@ import { IDatasetObject } from "../data/datasets/DatasetsTypes"
 
 interface IObjectSearchProps {
     objects?: Array<IDatasetObject>,
-    submitFunc?: Function
+    submitFunc?: Function,
+    useModal: boolean,
+    submitButton?: boolean
+    setSelected?: Function,
+    type?: string
 }
 
 interface SelectedState {
     value: boolean,
-    object: IDatasetObject
+    object: IDatasetObject,
 }
 
-const ObjectSearch: React.FC<IObjectSearchProps> = ({ objects, submitFunc }): JSX.Element => {
+const ObjectSearch: React.FC<IObjectSearchProps> 
+    = ({ objects, submitFunc, useModal, submitButton, setSelected, type }): JSX.Element => {
     let defaultSelectedState = { 
         value: false,
         object: {
@@ -51,14 +57,18 @@ const ObjectSearch: React.FC<IObjectSearchProps> = ({ objects, submitFunc }): JS
     const [selectedO, setSelectedO] = useState<SelectedState>({
         value: false,
         object: {
-            object_logo: objects![0].object_logo,
-            object_fullname: objects![0].object_fullname
+            object_logo: objects![0] ? objects![0].object_logo : '',
+            object_fullname: objects![0] ? objects![0].object_fullname : ''
         } as IDatasetObject
     })
 
     useEffect(() => {
         setObjectsV(objects!)
     }, [])
+
+    useEffect(() => {
+        setObjectsV(objects!)
+    }, [objects])
 
     useEffect(() => {
         if(opened === false)
@@ -88,6 +98,12 @@ const ObjectSearch: React.FC<IObjectSearchProps> = ({ objects, submitFunc }): JS
             value: true,
             object: object
         })
+
+        if(setSelected !== undefined)
+            setSelected({
+                value: true,
+                object: object
+            })
     }
 
     function Submit() {
@@ -113,38 +129,56 @@ const ObjectSearch: React.FC<IObjectSearchProps> = ({ objects, submitFunc }): JS
                 <div className={styles.objects}>
                     <ScrollArea style={{ height: "55vh" }}>
                         <Stack style={{ gap: 0 }}>
-                            {objectsV.map((step: IDatasetObject) => (
-                                <UnstyledButton
-                                    className={`${styles.object} ${
-                                        step.object_fullname == selectedV.object.object_fullname ? styles.active : ''
-                                    }`}
-                                    key={`${step.object_id}`}
-                                    onClick={() => { SetSelected(step) }}
-                                >
-                                    <Group align={"center"}>
-                                        <Image
-                                            width={24}
-                                            height={16}
-                                            src={`data:image/svg+xml;base64,${step.object_logo}`}
-                                            alt={""}
-                                        />
+                            {objectsV.map((step: IDatasetObject) => {
+                                let width  = 24
+                                if(step.image_size_x !== undefined)
+                                    width = step.image_size_x
+                                let height = 16
+                                if(step.image_size_y !== undefined)
+                                    height = step.image_size_y
+                                let text_size="md" as MantineNumberSize
+                                if(step.text_size !== undefined)
+                                    text_size = step.text_size
 
-                                        <Text>{step.object_fullname}</Text>
-                                    </Group>
-                                </UnstyledButton>
-                            ))}
+                                if(type !== "indicators")
+                                    return (
+                                        <UnstyledButton
+                                            className={`${styles.object} ${
+                                                step.object_fullname == selectedV.object.object_fullname ? styles.active : ''
+                                            }`}
+                                            key={`${step.object_id}`}
+                                            onClick={() => { SetSelected(step) }}
+                                        >
+                                            <Group align={"center"}>
+                                                <Image
+                                                    width={width}
+                                                    height={height}
+                                                    src={`data:image/svg+xml;base64,${step.object_logo}`}
+                                                    alt={""}
+                                                />
+        
+                                                <Text size={text_size}>{step.object_fullname}</Text>
+                                            </Group>
+                                        </UnstyledButton>
+                                    )
+                            })}
                         </Stack>
                     </ScrollArea>
-
-                    <Group position="center" mb={"md"}>
-                        <Button 
-                            size={'sm'}
-                            disabled={!selectedV.value} 
-                            onClick={() => { Submit() }}
-                        >
-                            Submit
-                        </Button>
-                    </Group>
+                    
+                    {submitButton === false
+                        ? null
+                        : (
+                            <Group position="center" mb={"md"}>
+                                <Button 
+                                    size={'sm'}
+                                    disabled={!selectedV.value} 
+                                    onClick={() => { Submit() }}
+                                >
+                                    Submit
+                                </Button>
+                            </Group>
+                        )
+                    }
                 </div>
             </div>
         </div>
@@ -152,37 +186,44 @@ const ObjectSearch: React.FC<IObjectSearchProps> = ({ objects, submitFunc }): JS
 
     return (
         <>
-            <UnstyledButton 
-                className={styles.search}
-                onClick={() => { setOpened(true) }}
-            >
-                <Group>
-                    <Image 
-                        width={24} 
-                        height={16} 
-                        src={`data:image/svg+xml;base64,${selectedO.object.object_logo}`} 
-                        alt={``}
-                    />
+            {useModal
+                ? (
+                    <div>
+                        <UnstyledButton 
+                            className={styles.search}
+                            onClick={() => { setOpened(true) }}
+                        >
+                            <Group>
+                                <Image 
+                                    width={24} 
+                                    height={16} 
+                                    src={`data:image/svg+xml;base64,${selectedO.object.object_logo}`} 
+                                    alt={``}
+                                />
 
-                    <Text size={"md"}>{selectedO.object.object_fullname}</Text>
-                </Group>
-            </UnstyledButton>
+                                <Text size={"md"}>{selectedO.object.object_fullname}</Text>
+                            </Group>
+                        </UnstyledButton>
 
-            <Modal  
-                centered
-                opened={opened}
-                onClose={() => { setOpened(false) }}
-                size={"lg"}
-                withCloseButton={false}
-                sx={(theme) => ({
-                    '.mantine-Paper-root': {
-                        padding: 0,
-                        backgroundColor: theme.colors.dark[8]
-                    }
-                })}
-            >
-                {layout}
-            </Modal>
+                        <Modal  
+                            centered
+                            opened={opened}
+                            onClose={() => { setOpened(false) }}
+                            size={"lg"}
+                            withCloseButton={false}
+                            sx={(theme) => ({
+                                '.mantine-Paper-root': {
+                                    padding: 0,
+                                    backgroundColor: theme.colors.dark[8]
+                                }
+                            })}
+                        >
+                            {layout}
+                        </Modal>
+                    </div>
+                )
+                : layout
+            }
         </>
     )
 }

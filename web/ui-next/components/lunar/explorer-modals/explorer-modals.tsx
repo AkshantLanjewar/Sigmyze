@@ -1,30 +1,32 @@
-import { Button, Group, Modal, TextInput } from "@mantine/core"
-import { FormEvent, useRef } from "react"
-import { ILunarUIData, createProject } from "../../data/lunar/types"
+import { Button, Group, Modal, TextInput, Alert, Switch } from "@mantine/core"
+import { FormEvent, useRef, useState } from "react"
+import { ILunarUIData, createProject, deleteProject } from "../../data/lunar/types"
 
+import ObjectSearch from "../../object-search/object-search"
+
+import { AiOutlineWarning } from 'react-icons/ai'
 import { 
     FcFolder,
     FcDocument,
     FcComboChart 
 } from 'react-icons/fc'
-
-interface IExplorerModalProps {
-    ui: ILunarUIData,
-    modalState: string | undefined | null,
-    close: () => void,
-    createProject: createProject
-}
+import AddIndicatorModal, { IAddIndicatorData } from "./add-indicator"
 
 interface IModalTemplateProps {
     id: string,
     title: string,
     modalState: string | undefined | null,
-    children: JSX.Element
+    submitBtn: string,
+    children: JSX.Element,
+    warning?: JSX.Element,
     close: () => void,
     onSubmit: (e: FormEvent<HTMLFormElement>, type: string) => void
 }
 
-const ModalTemplate: React.FC<IModalTemplateProps> = ({ id, title, modalState, children, close, onSubmit }) => {
+const ModalTemplate: React.FC<IModalTemplateProps> 
+    = ({ id, title, modalState, children, warning, close, onSubmit, submitBtn }) => {
+    const [checked, setChecked] = useState(warning ? false : true)
+    
     return (
         <Modal
             opened={modalState === id}
@@ -39,15 +41,31 @@ const ModalTemplate: React.FC<IModalTemplateProps> = ({ id, title, modalState, c
             })}
             title={title}
         >
+            { warning }
+
             <form onSubmit={(e) => { onSubmit(e, id) }}>
                 {children}
+
+                {warning
+                    ? (
+                        <Switch
+                            mt={"md"}
+                            checked={checked}
+                            onChange={(e) => { setChecked(e.currentTarget.checked) }}
+                            label={`I Agree to delete this ${id.split("_")[0]}`}
+                            color={"indigo"}
+                        />
+                    )
+                    : null
+                }
 
                 <Group position="center" mt={"md"}>
                     <Button
                         color={"indigo"}
                         type={"submit"}
+                        disabled={!checked}
                     >
-                        Create
+                        {submitBtn}
                     </Button>
                 </Group>
             </form>
@@ -55,7 +73,36 @@ const ModalTemplate: React.FC<IModalTemplateProps> = ({ id, title, modalState, c
     )
 }
 
-const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, createProject }) => {
+interface IModalWarningProps {
+    icon: JSX.Element,
+    title: string,
+    description: string
+}
+
+const ModalWarning: React.FC<IModalWarningProps> = ({ icon, title, description }): JSX.Element => {
+    return (
+        <div>
+            <Alert
+                icon={icon}
+                title={title}
+                color={"yellow"}
+            >
+                {description}
+            </Alert>
+        </div>
+    )
+}
+
+interface IExplorerModalProps {
+    ui: ILunarUIData,
+    modalState: string | undefined | null,
+    close: () => void,
+    createProject: createProject,
+    deleteProject: deleteProject,
+    pkg: IAddIndicatorData
+}
+
+const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, createProject, deleteProject, pkg }) => {
     const folderRef   = useRef<HTMLInputElement>(null)
     const documentRef = useRef<HTMLInputElement>(null)
     const chartRef    = useRef<HTMLInputElement>(null)
@@ -83,14 +130,28 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, c
         close()
     }
 
+    function onSubmitDelete(e: FormEvent<HTMLFormElement>, type: string) {
+        e.preventDefault()
+
+        deleteProject(ui.visual_id, ui.visual_type)
+        close()
+    }
+
     return (
         <div>
+            <AddIndicatorModal
+                modalState={modalState}
+                close={close}
+                data={pkg}
+            />
+
             <ModalTemplate
                 id={"folder"} 
                 title={"Create Folder"}
                 modalState={modalState}
                 close={close}
                 onSubmit={onSubmit}
+                submitBtn={"Create"}
             >
                 <TextInput
                     label="Folder Name"
@@ -103,11 +164,71 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, c
             </ModalTemplate>
 
             <ModalTemplate
+                id="folder_delete"
+                title={"Delete Folder"}
+                modalState={modalState}
+                close={close}
+                onSubmit={onSubmitDelete}
+                submitBtn={"Delete"}
+                warning={(
+                    <ModalWarning 
+                        icon={<AiOutlineWarning size={16} />}
+                        title={"Permanent Action"}
+                        description={`Deleting this folder is a permanent action. 
+                        There is no way to undo or recover the data deleted.`}
+                    />
+                )}
+            >
+                <div>
+
+                </div>
+            </ModalTemplate>
+
+            <ModalTemplate
+                id="chart_delete"
+                title={"Delete Chart"}
+                modalState={modalState}
+                close={close}
+                onSubmit={onSubmitDelete}
+                submitBtn={"Delete"}
+                warning={(
+                    <ModalWarning 
+                        icon={<AiOutlineWarning size={16} />}
+                        title={"Permanent Action"}
+                        description={`Deleting this chart is a permanent action. 
+                        There is no way to undo or recover the data deleted.`}
+                    />
+                )}
+            >
+                <div></div>
+            </ModalTemplate>
+
+            <ModalTemplate
+                id="document_delete"
+                title={"Delete Document"}
+                modalState={modalState}
+                close={close}
+                onSubmit={onSubmitDelete}
+                submitBtn={"Delete"}
+                warning={(
+                    <ModalWarning 
+                        icon={<AiOutlineWarning size={16} />}
+                        title={"Permanent Action"}
+                        description={`Deleting this document is a permanent action. 
+                        There is no way to undo or recover the data deleted.`}
+                    />
+                )}
+            >
+                <div></div>
+            </ModalTemplate>
+
+            <ModalTemplate
                 id={"document"}
                 title={"Create Document"}
                 modalState={modalState}
                 close={close}
                 onSubmit={onSubmit}
+                submitBtn={"Create"}
             >
                 <TextInput
                     label="Document Name"
@@ -125,6 +246,7 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, c
                 modalState={modalState}
                 close={close}
                 onSubmit={onSubmit}
+                submitBtn={"Create"}
             >
                 <TextInput
                     label="Document Name"
@@ -132,7 +254,7 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, c
                     variant="filled"
                     data-autofocus
                     icon={<FcComboChart size={22} />}
-                    ref={documentRef}
+                    ref={chartRef}
                 />
             </ModalTemplate>
         </div>

@@ -47,7 +47,7 @@ const Explorer: React.FC = ({ }) => {
 
         let nNodes = ConvertToTree(data.splits, { deleteProject, createProject, setExplorerModal }) 
         //set the active from the ui
-        nNodes = SetActive(nNodes, ui.active_id)
+        nNodes = SetActive(nNodes, ui.visual_id)
 
         setNodes([ ...nNodes ]) 
     }, [data, ui])

@@ -201,6 +201,7 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
                             mb="lg"
                         >
                             <ObjectSearch 
+                                useModal={true}
                                 objects={objects}
                                 submitFunc={setSelectedObject}
                             />
@@ -279,4 +280,5 @@ export async function getStaticProps(context: GetServerSidePropsContext) {
     }
 }
 
+export { DefaultIndicatorTable }
 export default DatasetPage

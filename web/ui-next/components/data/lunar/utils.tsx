@@ -11,7 +11,7 @@ import {
     setExplorerModal 
 } from "./types"
 
-import { folderMenu } from './menu-templates'
+import { chartMenu, documentMenu, folderMenu } from './menu-templates'
 
 let project_actions = [
     {
@@ -125,6 +125,15 @@ function HydrateContextItems(items: Array<IContextMenuItem>, actions: IActionFun
             case "Delete Folder":
                 item.cb = () => { actions.setExplorerModal!("folder_delete") }
                 break
+            case "Delete Chart":
+                item.cb = () => { actions.setExplorerModal!("chart_delete") }
+                break
+            case "Delete Document":
+                item.cb = () => { actions.setExplorerModal!("document_delete") }
+                break
+            case "Add Indicator":
+                item.cb = () => { actions.setExplorerModal!("add_indicator") }
+                break
             default:
                 item.cb = () => {  }
                 break
@@ -153,10 +162,36 @@ function ConvertToTree(splits: Array<IProjectNode>, actions: IActionFunctions): 
             case "folder":
                 node['contextItems'] = HydrateContextItems(folderMenu, actions, node.node_id)
                 break
+            case "chart":
+                node['contextItems'] = HydrateContextItems(chartMenu, actions, node.node_id)
+                break
+            case "document":
+                node['contextItems'] = HydrateContextItems(documentMenu, actions, node.node_id)
+                break
         }
 
         node['actions']  = GenerateActions(split.node_id, split.node_type, actions)
         node['children'] = ConvertToTree(split.children, actions)
+        if(split.node_type === "chart") {
+            node['useActive'] = true
+            let indicators = split.data!.indicators
+            if(indicators !== undefined) {
+                for(let i = 0; i < indicators.length; i++) {
+                    let indicator = indicators[i]
+                    let indicator_child = {
+                        node_id: `${node.node_id}-${indicator.object.object_id}:${indicator.indicator.indicator_id}`,
+                        node_type: 'indicator',
+                        node_title: `${indicator.object.object_id}:${indicator.indicator.indicator_id}`,
+    
+                        opened: true,
+                        useActive: true
+                    } as ITreeNode
+    
+                    node['children'].push(indicator_child)
+                }
+            }
+        }
+
         if(split.node_type === "project")
             node['opened'] = true
         else

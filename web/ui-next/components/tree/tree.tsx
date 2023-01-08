@@ -9,6 +9,7 @@ interface ITreeNode {
     opened?: boolean,
     active?: boolean,
     context?: boolean,
+    useActive?: boolean,
 
     children: Array<ITreeNode>,
     actions?: Array<ITreeAction>,

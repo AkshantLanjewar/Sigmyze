@@ -108,11 +108,13 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
                 }}
             >
                 <div className={`${styles.title}`}>
-                    {needsCaret && active 
-                        ? <IconChevronDown size={18} stroke={2} />
-                        : needsCaret
-                            ? <IconChevronRight size={18} stroke={2} />
-                            : null
+                    {node.useActive === false || node.useActive === undefined
+                        ? needsCaret && active 
+                            ? <IconChevronDown size={18} stroke={2} />
+                            : needsCaret
+                                ? <IconChevronRight size={18} stroke={2} />
+                                : null
+                        : null
                     }
 
                     <div className={`${styles.icon}`}>

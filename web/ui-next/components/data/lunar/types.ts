@@ -1,4 +1,5 @@
 import { ITreeNode } from "../../tree/tree"
+import { IIndicator } from "../datasets/DatasetsTypes"
 
 type deleteProject = (id: string, type: string) => void
 type createProject = (parent_id: string, name: string, type: string) => void
@@ -20,6 +21,8 @@ interface ILunarState {
 interface ILunarUIData {
     active_id: string,
     active_type: string,
+    visual_id: string,
+    visual_type: string,
     explorer_modal: string | null | undefined
 }
 
@@ -49,8 +52,9 @@ interface IProjectNodeAction {
 }
 
 interface IProjectNodeData {
-
+    indicators?: Array<IIndicator>
 }
+
 
 //functions
 
@@ -72,7 +76,10 @@ const DEFAULT_PROJECT = {
                     node_type: "chart",
 
                     actions: [],
-                    children: []
+                    children: [],
+                    data: {
+                        indicators: []
+                    }
                 } as IProjectNode
             ]
         } as IProjectNode

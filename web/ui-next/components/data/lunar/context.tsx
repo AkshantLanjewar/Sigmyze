@@ -11,14 +11,16 @@ import { DEFAULT_PROJECT } from "./types"
 import { EnumerateNodes } from "./utils"
 
 import ExplorerModal from "../../lunar/explorer-modals/explorer-modals"
+import { IAddIndicatorData } from "../../lunar/explorer-modals/add-indicator"
 
 interface ILunarContextProps {
+    pkg: IAddIndicatorData
     children?: JSX.Element | never[]
 }
 
 const LunarContextData = createContext<ILunarState | null>(null)
 
-const LunarContext: React.FC<ILunarContextProps> = ({ children }) => {
+const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const [data, setData] = useState<ILunarProjectData | null>(null)
     const [ui, setUI]     = useState<ILunarUIData | null>(null)
 
@@ -29,6 +31,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children }) => {
         let defaultUi = {} as ILunarUIData
         defaultUi.active_id = default_project.splits[0].node_id
         defaultUi.active_type = default_project.splits[0].node_type
+        defaultUi.visual_id = default_project.splits[0].node_id
+        defaultUi.visual_type = default_project.splits[0].node_type
         defaultUi.explorer_modal = null
 
         setData({ ...default_project })
@@ -96,6 +100,10 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children }) => {
             data: {}
         } as IProjectNode
 
+        if(type === "chart") {
+            nNode['data']!.indicators = []
+        }
+
         let nData = data
         nData.splits = CreateProjectItem(nData.splits, parent_id, nNode)
         setData({ ...nData })
@@ -103,12 +111,19 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children }) => {
 
     //handles the ui state
     function SetActiveItem(id: string, type: string) {
-        if(type === "chart" || type === "document")
-            return
-
+        let updateActiveFlag = true
         let n_ui = ui as ILunarUIData
-        n_ui!.active_id = id
-        n_ui!.active_type = type 
+
+        n_ui.visual_id = id
+        n_ui.visual_type = type
+        if(type === "chart" || type === "document")
+            updateActiveFlag = false
+        
+        if(updateActiveFlag) {
+            n_ui.active_id = id
+            n_ui.active_type = type 
+        }
+        
         setUI({ ...n_ui })
     }
 
@@ -145,6 +160,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children }) => {
                             modalState={ui.explorer_modal}
                             close={CloseModal}
                             createProject={CreateProjectItemWrapper}
+                            deleteProject={DeleteProjectItemWrapper}
+                            pkg={pkg}
                         />
                     )}
 
