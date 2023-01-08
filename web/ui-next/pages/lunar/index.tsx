@@ -13,7 +13,10 @@ import { GetServerSidePropsContext } from "next"
 import { GetDatasets, GetIndicators, GetObjects } from "../../components/data/datasets/DatasetsAPI"
 import { IAddIndicatorData, RawIndicator } from "../../components/lunar/explorer-modals/add-indicator"
 import { IDatasetObjects, IObjectIndicator } from "../../components/data/datasets/DatasetsTypes"
-import { DefaultIndicatorTable } from "../datasets/dataset/[dataset]"
+
+const DefaultIndicatorTable = {
+    weo: "USA"
+}
 
 interface ILunarProps {
     pkg: IAddIndicatorData

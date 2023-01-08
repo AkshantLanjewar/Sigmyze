@@ -1,4 +1,4 @@
-import { MantineNumberSize } from "@mantine/core"
+import { GroupPosition, MantineNumberSize } from "@mantine/core"
 
 interface IStatus {
     error: boolean,
@@ -19,7 +19,11 @@ interface IDatasetObject {
     image_size_x?: number,
     image_size_y?: number,
     text_size?: MantineNumberSize,
-    indicator?: IIndicator
+    text_weight?: string,
+    text_position?: GroupPosition
+    indicator?: IIndicator,
+    hideLogo?: boolean,
+    sparkline?: boolean,
 
     active?: boolean
 }

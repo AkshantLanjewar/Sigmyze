@@ -28,6 +28,7 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
 
     const [selectedD, setSelectedD] = useState<SelectedState | null>(null)
     const [selectedO, setSelectedO] = useState<SelectedState | null>(null)
+    const [selectedI, setSelectedI] = useState<SelectedState | null>(null)
 
     const [dataPacket, setData] = useState<IIndicator>({} as IIndicator)
 
@@ -55,6 +56,7 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
         setPage(0)
         setSelectedD(null)
         setSelectedO(null)
+        setSelectedI(null)
         setData({} as IIndicator)
     }, [modalState])
 
@@ -73,11 +75,58 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
             objects[1] = selected_objects
             setObjects([ ...nObjects ])
         }
+
+        if(dataset !== undefined && dataPacket.object !== undefined) {
+            let object = dataPacket.object
+            let selected_objects = [] as IDatasetObject[]
+            let completed = [] as string[]
+
+            for(let i = 0; i < data.indicators.length; i++) {
+                let dataset_ = data.indicators[i]
+                if(dataset_.dataset !== dataset || dataset_.dataset in completed)
+                    continue
+                
+                
+                for(let x = 0; x < dataset_.indicators.length; x++) {
+                    let indicator = dataset_.indicators[x]
+                    
+                    let indicator_ = { } as IIndicator
+                    indicator_.dataset = dataset
+                    indicator_.indicator = indicator
+                    indicator_.object = object
+
+                    let selected_object = {} as IDatasetObject
+                    selected_object.object_id = indicator.indicator_id
+                    selected_object.object_fullname = `${indicator.indicator_fullname} [${indicator.indicator_id}]`
+                    selected_object.object_logo = ""
+                    selected_object.text_size = "sm"
+                    selected_object.text_weight = "bold"
+                    selected_object.text_position = "apart"
+                    selected_object.indicator = indicator_
+                    selected_object.hideLogo = true
+                    selected_object.sparkline = true
+
+                    console.log(selected_object)
+
+                    completed.push(dataset_.dataset)
+                    selected_objects.push(selected_object)
+                }
+            }
+            let oObjects = objects
+            oObjects[2] = []
+            setObjects([ ...oObjects ])
+
+            let nObjects = objects
+            objects[2] = selected_objects.filter((v, i, a) => a.indexOf(v) === i)
+            setObjects([ ...nObjects ])
+        }
     }, [dataPacket])
 
     let selectFunc = setSelectedD
     if(page === 1)
         selectFunc = setSelectedO
+    if(page === 2)
+        selectFunc = setSelectedI
 
     return (
         <Modal

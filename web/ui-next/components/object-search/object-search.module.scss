@@ -46,4 +46,10 @@
     &.active {
         background-color: #2C2E33;
     }
+
+    .textWrapper {
+        width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }

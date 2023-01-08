@@ -16,13 +16,15 @@ import {
     ScrollArea,
     Stack,
     Button, 
-    MantineNumberSize
+    MantineNumberSize,
+    GroupPosition
 } from "@mantine/core"
 
 import styles from './object-search.module.scss'
 import { IconSearch } from "@tabler/icons"
 
 import { IDatasetObject } from "../data/datasets/DatasetsTypes"
+import ChartSpark from "../chart-spark/chart-spark"
 
 interface IObjectSearchProps {
     objects?: Array<IDatasetObject>,
@@ -139,6 +141,12 @@ const ObjectSearch: React.FC<IObjectSearchProps>
                                 let text_size="md" as MantineNumberSize
                                 if(step.text_size !== undefined)
                                     text_size = step.text_size
+                                let text_weight = "normal"
+                                if(step.text_weight !== undefined)
+                                    text_weight = step.text_weight
+                                let position = "left" as GroupPosition
+                                if(step.text_position !== undefined)
+                                    position = step.text_position
 
                                 if(type !== "indicators")
                                     return (
@@ -149,15 +157,36 @@ const ObjectSearch: React.FC<IObjectSearchProps>
                                             key={`${step.object_id}`}
                                             onClick={() => { SetSelected(step) }}
                                         >
-                                            <Group align={"center"}>
-                                                <Image
-                                                    width={width}
-                                                    height={height}
-                                                    src={`data:image/svg+xml;base64,${step.object_logo}`}
-                                                    alt={""}
-                                                />
-        
-                                                <Text size={text_size}>{step.object_fullname}</Text>
+                                            <Group align={"center"} position={position}>
+                                                {step.hideLogo === true
+                                                    ? null
+                                                    : (
+                                                        <Image
+                                                            width={width}
+                                                            height={height}
+                                                            src={`data:image/svg+xml;base64,${step.object_logo}`}
+                                                            alt={""}
+                                                        />
+                                                    )
+                                                }
+
+                                                <div className={styles.textWrapper}>
+                                                    <Text 
+                                                        size={text_size} 
+                                                        weight={text_weight}
+                                                    >
+                                                        {step.object_fullname}
+                                                    </Text>
+                                                </div>
+
+                                                {step.sparkline === true
+                                                    ? (
+                                                        <div>
+                                                            <ChartSpark />
+                                                        </div>
+                                                    )
+                                                    : null
+                                                }
                                             </Group>
                                         </UnstyledButton>
                                     )

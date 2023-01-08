@@ -280,5 +280,4 @@ export async function getStaticProps(context: GetServerSidePropsContext) {
     }
 }
 
-export { DefaultIndicatorTable }
 export default DatasetPage
