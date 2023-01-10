@@ -32,7 +32,8 @@ interface IObjectSearchProps {
     useModal: boolean,
     submitButton?: boolean
     setSelected?: Function,
-    type?: string
+    type?: string,
+    chips?: JSX.Element
 }
 
 interface SelectedState {
@@ -41,7 +42,7 @@ interface SelectedState {
 }
 
 const ObjectSearch: React.FC<IObjectSearchProps> 
-    = ({ objects, submitFunc, useModal, submitButton, setSelected, type }): JSX.Element => {
+    = ({ objects, submitFunc, useModal, submitButton, setSelected, type, chips }): JSX.Element => {
     let defaultSelectedState = { 
         value: false,
         object: {
@@ -52,6 +53,7 @@ const ObjectSearch: React.FC<IObjectSearchProps>
 
     const ref = createRef<HTMLInputElement>()
 
+    const [objectsI, setObjectsI] = useState<Array<IDatasetObject>>([])
     const [objectsV, setObjectsV] = useState<Array<IDatasetObject>>([])
     const [opened, setOpened]     = useState(false)
     
@@ -70,6 +72,7 @@ const ObjectSearch: React.FC<IObjectSearchProps>
 
     useEffect(() => {
         setObjectsV(objects!)
+        setObjectsI([])
     }, [objects])
 
     useEffect(() => {
@@ -78,6 +81,17 @@ const ObjectSearch: React.FC<IObjectSearchProps>
         
         setSelectedV(defaultSelectedState)
     }, [opened])
+
+    function DeleteObjectEntry(id: string) {
+        let nObjects = objectsI
+        for(let i = 0; i < objectsV.length; i++) {
+            let object = objectsV[i]
+            if(object.object_id === id)
+                nObjects.push(object)
+        }
+
+        setObjectsI([ ...nObjects ])
+    }
 
     function onKeyUp(e: KeyboardEvent<HTMLInputElement>) {
         e.preventDefault()
@@ -127,6 +141,12 @@ const ObjectSearch: React.FC<IObjectSearchProps>
                 ref={ref}
             />
 
+            {chips && (
+                <div>
+                    {chips}
+                </div>
+            )}
+
             <div>
                 <div className={styles.objects}>
                     <ScrollArea style={{ height: "55vh" }}>
@@ -147,6 +167,16 @@ const ObjectSearch: React.FC<IObjectSearchProps>
                                 let position = "left" as GroupPosition
                                 if(step.text_position !== undefined)
                                     position = step.text_position
+
+                                let testIgnore = false
+                                for(let i = 0; i < objectsI.length; i++) {
+                                    let object = objectsI[i]
+                                    if(object.object_id === step.object_id)
+                                        testIgnore = true
+                                }
+
+                                if(testIgnore === true)
+                                    return null
 
                                 if(type !== "indicators")
                                     return (
@@ -182,7 +212,12 @@ const ObjectSearch: React.FC<IObjectSearchProps>
                                                 {step.sparkline === true
                                                     ? (
                                                         <div>
-                                                            <ChartSpark />
+                                                            <ChartSpark 
+                                                                indicator={step.indicator!} 
+                                                                id={step.object_id}
+                                                                checks={["deleteIfEmpty"]}
+                                                                deleteEntry={DeleteObjectEntry}
+                                                            />
                                                         </div>
                                                     )
                                                     : null
@@ -197,7 +232,7 @@ const ObjectSearch: React.FC<IObjectSearchProps>
                     {submitButton === false
                         ? null
                         : (
-                            <Group position="center" mb={"md"}>
+                            <Group position="center" mb={"md"} mt={"md"}>
                                 <Button 
                                     size={'sm'}
                                     disabled={!selectedV.value} 

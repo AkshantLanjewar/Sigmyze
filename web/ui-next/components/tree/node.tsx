@@ -21,7 +21,7 @@ import {
     FcDocument 
 } from 'react-icons/fc'
 
-import { useHover } from '@mantine/hooks'
+import { useHover, usePrevious } from '@mantine/hooks'
 import { useState, useEffect } from 'react'
 import { Collapse, Text, Tooltip, ActionIcon, Group } from '@mantine/core'
 
@@ -45,10 +45,21 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
     const [active, setActiveState] = useState(node.opened ? node.opened : false)
     const [nodeUiId, setId] = useState<string>("")
     const { hovered, ref } = useHover()
+    const prevNode = usePrevious(node)
+    const prevActive = usePrevious(active)
 
     useEffect(() => {
         setId(uuid())
     }, [])
+
+    useEffect(() => {
+        if(node.node_type === "chart") {
+            if(node.active === true && node.children.length > 0)
+                setActiveState(true)
+            else
+                setActiveState(false)
+        }
+    }, [node])
 
     const { show } = useContextMenu({
         id: nodeUiId
@@ -75,6 +86,10 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
         ))
         : []
 
+    let box = ( <div className={styles.box}></div> )
+    if(node.node_type === "chart" && node.children.length > 0)
+        box = ( <div className={`${styles.box} ${styles.show}`}></div> )
+
     return (
         <div>
             <div 
@@ -86,7 +101,7 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
                     if(!node.context)
                         return 
                     
-                    if(setActive !== undefined)
+                    if(setActive !== undefined && node.node_type !== 'indicator')
                         setActive(node.node_id, node.node_type)
                     show({ event: e })
                 }}
@@ -100,8 +115,11 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
                         return
                     if(target === 'side-ico')
                         return
+                    if(node.node_type === 'indicator')
+                        return
                     if(name == 'button' || name == 'div' || name == 'svg') {
-                        setActiveState(!active)
+                        if(node.node_type !== "chart")
+                            setActiveState(!active)
                         if(setActive !== undefined)
                             setActive(node.node_id, node.node_type)
                     }
@@ -116,6 +134,8 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
                                 : null
                         : null
                     }
+
+                    {box}
 
                     <div className={`${styles.icon}`}>
                         {icon_table[node.node_type as keyof typeof icon_table]}
@@ -173,4 +193,5 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
     )
 }
 
+export { icon_table }
 export default Node

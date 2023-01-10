@@ -104,5 +104,6 @@ export type {
     IDatasetsIndicatorResponse,
     IUnparsedIndicator,
     IIndicatorData,
-    IDatasetObjects 
+    IDatasetObjects,
+    IDatasetIndicator 
 }

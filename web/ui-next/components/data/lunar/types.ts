@@ -5,6 +5,9 @@ type deleteProject = (id: string, type: string) => void
 type createProject = (parent_id: string, name: string, type: string) => void
 type setActiveItem = (id: string, type: string) => void
 type setExplorerModal = (id: string) => void
+type addIndicator = ( id: string, indicator: IIndicator ) => void
+type idExists = ( id: string ) => boolean
+type changeTab = (id: string ) => void
 
 interface ILunarState {
     data?: ILunarProjectData | null,
@@ -14,7 +17,10 @@ interface ILunarState {
     deleteProject: deleteProject,
     createProject: createProject,
     setActiveItem: setActiveItem,
-    setExplorerModal: setExplorerModal
+    setExplorerModal: setExplorerModal,
+    addIndicator: addIndicator,
+    idExists: idExists,
+    changeTab: changeTab
 }
 
 //ui
@@ -23,7 +29,17 @@ interface ILunarUIData {
     active_type: string,
     visual_id: string,
     visual_type: string,
-    explorer_modal: string | null | undefined
+    explorer_modal: string | null | undefined,
+
+    tabs: ILunarTab[],
+    activeTab: string | null
+}
+
+interface ILunarTab {
+    linked_node_id: string,
+    tab_type: "chart" | "document",
+    tab_name: string
+    tab_id: string
 }
 
 //data
@@ -92,6 +108,8 @@ export type {
     ILunarProjectData,
     ILunarUIData,
     IProjectNodeAction,
+    IProjectNodeData,
+    ILunarTab,
     IProjectNode,
     deleteProject,
     createProject,

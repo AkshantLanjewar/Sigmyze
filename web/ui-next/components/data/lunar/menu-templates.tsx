@@ -62,3 +62,12 @@ export const documentMenu = [
         cb: () => {  }
     }
 ] as IContextMenuItem[]
+
+export const indicatorMenu = [
+    {
+        type: "item",
+        name: "Delete Indicator",
+        icon: <TbTrash size={16} color={"red"} />,
+        cb: () => {  }
+    }
+]

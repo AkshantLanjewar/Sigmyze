@@ -15,7 +15,8 @@ import {
     ICrosshairLine,
     ICrosshairZooming,
     ICrosshairSnap,
-    IChartInteractions
+    IChartInteractions,
+    IChartTooltips
 } from './option-types'
 
 class LunarChartBuilder {
@@ -36,6 +37,7 @@ class LunarChartBuilder {
         this.options.scales      = {} as IChartScales
         this.options.plugins     = {} as IChartPlugins
         this.options.interaction = {} as IChartInteractions
+        this.options.tooltips    = {} as IChartTooltips
 
         this.options.interaction.intersect = false
 
@@ -104,6 +106,10 @@ class LunarChartBuilder {
         this.options.layout!.padding = padding
     }
 
+    SetTooltipsEnabled(enabled: boolean) {
+        this.options.plugins!.tooltip!.enabled = enabled
+    }
+
     SetLabel(dataset_id: string, label: string) {
         let index = this.getDatasetIndex(dataset_id)
         this.state.datasets[index].label = label
@@ -117,13 +123,14 @@ class LunarChartBuilder {
         return index
     }
 
-    Render(ctx: HTMLCanvasElement) {
+    Render(ctx: HTMLCanvasElement, disableTooltip?: boolean) {
+        //if(disableTooltip === true || disableTooltip === undefined)
         Chart.register(CrosshairPlugin)
 
         let chartStatus = Chart.getChart(ctx)
         if(chartStatus !== undefined)
             chartStatus.destroy()
-
+        
         this.chart = new Chart(ctx as any, {
             type: 'line',
             data: this.state as any,

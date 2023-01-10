@@ -11,7 +11,7 @@ import {
     setExplorerModal 
 } from "./types"
 
-import { chartMenu, documentMenu, folderMenu } from './menu-templates'
+import { chartMenu, documentMenu, folderMenu, indicatorMenu } from './menu-templates'
 
 let project_actions = [
     {
@@ -184,7 +184,9 @@ function ConvertToTree(splits: Array<IProjectNode>, actions: IActionFunctions): 
                         node_title: `${indicator.object.object_id}:${indicator.indicator.indicator_id}`,
     
                         opened: true,
-                        useActive: true
+                        useActive: true,
+                        context: true,
+                        contextItems: HydrateContextItems(indicatorMenu, actions, node.node_id)
                     } as ITreeNode
     
                     node['children'].push(indicator_child)

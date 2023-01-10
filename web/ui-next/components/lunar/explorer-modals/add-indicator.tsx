@@ -1,9 +1,12 @@
 import { Button, Group, Modal } from '@mantine/core'
 import ObjectSearch, { SelectedState } from '../../object-search/object-search'
 
+import { ILunarState, ILunarUIData } from "../../data/lunar/types"
 import { DatasetsTable } from '../../data/datasets/DatasetsAPI'
 import { IDataset, IDatasetObject, IIndicator, IDatasetObjects, IObjectIndicator } from '../../data/datasets/DatasetsTypes'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import ModalChips from './modal-chips'
+import { LunarContextData } from '../../data/lunar/context/context'
 
 interface RawIndicator {
     dataset: string,
@@ -19,7 +22,7 @@ interface IAddIndicatorData {
 interface IAddIndicatorProps {
     modalState: string | undefined | null,
     close: () => void,
-    data: IAddIndicatorData
+    data: IAddIndicatorData,
 }
 
 const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, data }) => {
@@ -31,6 +34,8 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
     const [selectedI, setSelectedI] = useState<SelectedState | null>(null)
 
     const [dataPacket, setData] = useState<IIndicator>({} as IIndicator)
+
+    const { ui, addIndicator } = useContext(LunarContextData) as ILunarState
 
     useEffect(() => {
         let datasetObjects = [] as IDatasetObject[]
@@ -106,8 +111,6 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
                     selected_object.hideLogo = true
                     selected_object.sparkline = true
 
-                    console.log(selected_object)
-
                     completed.push(dataset_.dataset)
                     selected_objects.push(selected_object)
                 }
@@ -150,12 +153,14 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
                 useModal={false}
                 submitButton={false}
                 setSelected={selectFunc}
+                chips={<ModalChips indicator={dataPacket} />}
             />
 
             {page === 0 && (
                 <Group 
                     position={'center'}
                     mb={'md'}
+                    mt={'md'}
                 >
                     <Button
                         disabled={selectedD === null}
@@ -177,6 +182,7 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
                 <Group 
                     position={'center'}
                     mb={'md'}
+                    mt={'md'}
                 >
                     <Button
                         color={"indigo"}
@@ -205,12 +211,33 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
                 <Group 
                     position={'center'}
                     mb={'md'}
+                    mt={'md'}
                 >
                     <Button
                         color={"indigo"}
-                        onClick={() => { setPage(1) }}
+                        onClick={() => { 
+                            setPage(1) 
+                            setSelectedI(null)
+                        }}
                     >
                         Previous
+                    </Button>
+
+                    <Button
+                        disabled={selectedI === null}
+                        color={"indigo"}
+                        onClick={() => {
+                            let indicator = selectedI?.object.indicator
+                            if(indicator === undefined)
+                                return
+                            if(ui === null || ui === undefined)
+                                return
+
+                            addIndicator(ui.visual_id, indicator)
+                            close()
+                        }}
+                    >
+                        Add Indicator
                     </Button>
                 </Group>
             )}

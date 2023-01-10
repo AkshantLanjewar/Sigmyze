@@ -1,8 +1,6 @@
 import { Button, Group, Modal, TextInput, Alert, Switch } from "@mantine/core"
-import { FormEvent, useRef, useState } from "react"
-import { ILunarUIData, createProject, deleteProject } from "../../data/lunar/types"
-
-import ObjectSearch from "../../object-search/object-search"
+import { FormEvent, useContext, useRef, useState } from "react"
+import { ILunarState } from "../../data/lunar/types"
 
 import { AiOutlineWarning } from 'react-icons/ai'
 import { 
@@ -11,6 +9,7 @@ import {
     FcComboChart 
 } from 'react-icons/fc'
 import AddIndicatorModal, { IAddIndicatorData } from "./add-indicator"
+import { LunarContextData } from "../../data/lunar/context/context"
 
 interface IModalTemplateProps {
     id: string,
@@ -94,21 +93,32 @@ const ModalWarning: React.FC<IModalWarningProps> = ({ icon, title, description }
 }
 
 interface IExplorerModalProps {
-    ui: ILunarUIData,
     modalState: string | undefined | null,
     close: () => void,
-    createProject: createProject,
-    deleteProject: deleteProject,
     pkg: IAddIndicatorData
 }
 
-const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, createProject, deleteProject, pkg }) => {
+const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }) => {
     const folderRef   = useRef<HTMLInputElement>(null)
     const documentRef = useRef<HTMLInputElement>(null)
     const chartRef    = useRef<HTMLInputElement>(null)
 
+    const { 
+        createProject, 
+        deleteProject,
+        setActiveItem,
+        ui,
+        idExists,
+        data
+    } = useContext(LunarContextData) as ILunarState 
+
     function onSubmit(e: FormEvent<HTMLFormElement>, type: string) {
         e.preventDefault()
+        if(ui === null || ui === undefined)
+            return
+        if(data === null || data === undefined)
+            return
+
         let value = ""
         switch(type) {
             case "folder":
@@ -124,7 +134,13 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, c
                 return
         }
 
-        const ui_id = ui.active_id
+        let ui_id = ui.active_id
+        //check if the id exists
+        let exists = idExists(ui_id)
+        if(exists === false) {
+            ui_id = data.splits[0].node_id
+            setActiveItem(ui_id, data.splits[0].node_type)
+        }
 
         createProject(ui_id, value, type)
         close()
@@ -132,6 +148,8 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ ui, modalState, close, c
 
     function onSubmitDelete(e: FormEvent<HTMLFormElement>, type: string) {
         e.preventDefault()
+        if(ui === null || ui === undefined)
+            return
 
         deleteProject(ui.visual_id, ui.visual_type)
         close()

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import styles from './explorer.module.scss'
-import { LunarContextData } from '../../data/lunar/context'
+import { LunarContextData } from '../../data/lunar/context/context'
 import { ILunarState } from '../../data/lunar/types'
 import { ConvertToTree } from '../../data/lunar/utils'
 
@@ -19,6 +19,9 @@ const Explorer: React.FC = ({ }) => {
 
     function SetActive(oNodes: Array<ITreeNode>, id: string) {
         let nNodes = []
+        if(oNodes === undefined)
+            return []
+
         for(let i = 0; i < oNodes.length; i++) {
             let node   = oNodes[i]
             node.active = false
@@ -46,6 +49,8 @@ const Explorer: React.FC = ({ }) => {
             return
 
         let nNodes = ConvertToTree(data.splits, { deleteProject, createProject, setExplorerModal }) 
+        if(nNodes === undefined)
+            return
         //set the active from the ui
         nNodes = SetActive(nNodes, ui.visual_id)
 

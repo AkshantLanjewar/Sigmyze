@@ -3,10 +3,11 @@ import LunarChartBuilder from "./option-builder"
 
 interface ISparkLineProps {
     data: any[],
-    labels: string[]
+    labels: string[],
+    disableTooltip?: boolean
 }
 
-const SparkLine: React.FC<ISparkLineProps> = ({ data, labels }): JSX.Element => {
+const SparkLine: React.FC<ISparkLineProps> = ({ data, labels, disableTooltip }): JSX.Element => {
     const ref = createRef<HTMLCanvasElement>()
 
     function BuildChart() {
@@ -36,7 +37,10 @@ const SparkLine: React.FC<ISparkLineProps> = ({ data, labels }): JSX.Element => 
         chartBuilder.SetPadding(10)
         chartBuilder.SetLegendDisplay(false)
 
-        chartBuilder.Render(ref.current!)
+        if(disableTooltip === true)
+            chartBuilder.SetTooltipsEnabled(false)
+
+        chartBuilder.Render(ref.current!, disableTooltip)
     }
 
     useEffect(() => {

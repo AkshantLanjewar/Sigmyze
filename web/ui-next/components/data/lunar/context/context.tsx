@@ -3,15 +3,18 @@ import {
     ILunarState, 
     ILunarProjectData, 
     IProjectNode,
-    ILunarUIData 
-} from "./types"
+    ILunarUIData, 
+    ILunarTab
+} from "../types"
 
 import { v4 as uuidv4 } from 'uuid'
-import { DEFAULT_PROJECT } from "./types"
-import { EnumerateNodes } from "./utils"
+import { DEFAULT_PROJECT } from "../types"
+import { EnumerateNodes } from "../utils"
 
-import ExplorerModal from "../../lunar/explorer-modals/explorer-modals"
-import { IAddIndicatorData } from "../../lunar/explorer-modals/add-indicator"
+import ExplorerModal from "../../../lunar/explorer-modals/explorer-modals"
+import { IAddIndicatorData } from "../../../lunar/explorer-modals/add-indicator"
+import { AddIndicator, ChangeTab, CreateProjectItemWrapper, DeleteProjectItemWrapper, GetItem, IdExists, TabOpen } from "./functions"
+import { IIndicator } from "../../datasets/DatasetsTypes"
 
 interface ILunarContextProps {
     pkg: IAddIndicatorData
@@ -34,6 +37,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         defaultUi.visual_id = default_project.splits[0].node_id
         defaultUi.visual_type = default_project.splits[0].node_type
         defaultUi.explorer_modal = null
+        defaultUi.tabs = []
+        defaultUi.activeTab = null
 
         setData({ ...default_project })
         setUI({ ...defaultUi })
@@ -41,73 +46,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
 
     // handles deleting of a project from the context state
     // ex deleting a folder, chart, or document
-    function DeleteProjectItem(splits: Array<IProjectNode>, id: string, type: string): IProjectNode[] {
-        let nNodes = [] as IProjectNode[]
-
-        for(let i = 0; i < splits.length; i++) {
-            let split = splits[i]
-            if(split.node_id === id)
-                continue
-            
-            //go thru children
-            let children   = split.children
-            split.children = DeleteProjectItem(children, id, type)
-            nNodes.push(split)
-        }
-
-        return nNodes
-    }
-
-    function DeleteProjectItemWrapper(id: string, type: string): void {
-        if(data == null)
-            return
-
-        let project_splits = data.splits ? data!.splits : []
-        project_splits     = DeleteProjectItem(project_splits, id, type)
-        
-        let nData = data
-        nData.splits = project_splits
-        setData({ ...nData })
-    }
 
     //handles the creation of a new project item
-    function CreateProjectItem(splits: Array<IProjectNode>, parent_id: string, node: IProjectNode): IProjectNode[] {
-        let nNodes = [] as IProjectNode[]
-        for(let i = 0; i < splits.length; i++) {
-            let split = splits[i]
-            if(split.node_id === parent_id)
-                split.children.push(node)
-            
-            let children = split.children
-            split.children = CreateProjectItem(children, parent_id, node)
-            nNodes.push(split)
-        }
-
-        return nNodes
-    }
-
-    function CreateProjectItemWrapper(parent_id: string, name: string, type: string): void {
-        if(data == null)
-            return
-        
-        let nNode = {
-            node_id: uuidv4(),
-            node_name: name,
-            node_type: type,
-
-            children: [],
-            actions: [],
-            data: {}
-        } as IProjectNode
-
-        if(type === "chart") {
-            nNode['data']!.indicators = []
-        }
-
-        let nData = data
-        nData.splits = CreateProjectItem(nData.splits, parent_id, nNode)
-        setData({ ...nData })
-    }
 
     //handles the ui state
     function SetActiveItem(id: string, type: string) {
@@ -116,8 +56,33 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
 
         n_ui.visual_id = id
         n_ui.visual_type = type
-        if(type === "chart" || type === "document")
+        if(type === "chart" || type === "document") {
             updateActiveFlag = false
+
+            //check if there isa tab open
+            let open_tab = TabOpen(id, n_ui.tabs)
+            if(open_tab === null) {
+                let node  = GetItem(id, data!.splits)
+
+                if(node !== null) {
+                    let n_tab = {} as ILunarTab
+                    n_tab.linked_node_id = id
+                    n_tab.tab_type = type
+                    n_tab.tab_name = node.node_name
+                    n_tab.tab_id = uuidv4()
+
+                    n_ui.tabs.push(n_tab)
+                    n_ui.activeTab = n_tab.tab_id
+                }                
+            } else {
+                //find the tab
+                for(let i = 0; i < n_ui.tabs.length; i++) {
+                    let tab = n_ui.tabs[i]
+                    if(tab.linked_node_id === id)
+                        n_ui.activeTab = tab.tab_id
+                }
+            }
+        }
         
         if(updateActiveFlag) {
             n_ui.active_id = id
@@ -143,24 +108,32 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         //console.log(ui)
     }, [ui])
 
+    const deleteProject = (id: string, type: string) => DeleteProjectItemWrapper(data, setData, id, type)
+    const createProject = ( pId: string, name: string, type: string ) => 
+        CreateProjectItemWrapper(data, setData, pId, name, type)
+    const addIndicator = ( id: string, indicator: IIndicator ) =>
+        AddIndicator(data, setData, id, indicator)
+    const idExists = ( id: string ) => data ? IdExists(data.splits, id) : false
+    const changeTab = ( id: string ) => ChangeTab(ui!, setUI, id, ui!.tabs)
+
     return (
         <>
             <LunarContextData.Provider value={{ 
                 data, 
                 ui,
-                deleteProject: DeleteProjectItemWrapper, 
-                createProject: CreateProjectItemWrapper,
+                deleteProject: deleteProject, 
+                createProject: createProject,
                 setActiveItem: SetActiveItem,
-                setExplorerModal: OpenModal 
+                setExplorerModal: OpenModal,
+                addIndicator: addIndicator,
+                idExists: idExists,
+                changeTab: changeTab 
             }}>
                 <div style={{ width: "100%", height: "100%" }}>
                     {ui !== null && (
                         <ExplorerModal 
-                            ui={ui}
                             modalState={ui.explorer_modal}
                             close={CloseModal}
-                            createProject={CreateProjectItemWrapper}
-                            deleteProject={DeleteProjectItemWrapper}
                             pkg={pkg}
                         />
                     )}

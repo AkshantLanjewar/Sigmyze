@@ -38,7 +38,8 @@ interface ILegendOptions {
 interface ITooltipOptions {
     mode?: string
     position?: string
-    intersect?: boolean
+    intersect?: boolean,
+    enabled?: boolean
 }
 
 interface ICrosshairLine {
@@ -71,11 +72,16 @@ interface IChartInteractions {
     intersect?: boolean
 }
 
+interface IChartTooltips {
+    enabled: boolean
+}
+
 interface IChartOptions {
     layout?: IChartLayout,
     scales?: IChartScales,
     plugins?: IChartPlugins,
-    interaction?: IChartInteractions
+    interaction?: IChartInteractions,
+    tooltips?: IChartTooltips,
 
     maintainAspectRatio?: boolean
     animation?: boolean
@@ -96,5 +102,6 @@ export type {
     ICrosshairLine,
     ICrosshairZooming,
     IChartInteractions,
-    ICrosshairSnap
+    ICrosshairSnap,
+    IChartTooltips
 }

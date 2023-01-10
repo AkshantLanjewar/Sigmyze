@@ -35,6 +35,17 @@
 
         gap: 0px;
 
+        .box {
+            display: none;
+
+            &.show {
+                display: flex;
+
+                width: 18px;
+                height: 18px;
+            }
+        }
+
         .icon {
             display: flex;
             align-items: center;
