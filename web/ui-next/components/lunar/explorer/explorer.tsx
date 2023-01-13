@@ -5,9 +5,12 @@ import { ILunarState } from '../../data/lunar/types'
 import { ConvertToTree } from '../../data/lunar/utils'
 
 import Tree, { ITreeNode } from '../../tree/tree'
+import { usePrevious } from '@mantine/hooks'
 
 const Explorer: React.FC = ({ }) => {
     const [nodes, setNodes] = useState<Array<ITreeNode>>([])
+    const prevNodes = usePrevious(nodes)
+
     const { 
         data,
         ui,
@@ -15,7 +18,8 @@ const Explorer: React.FC = ({ }) => {
         createProject,
         setActiveItem,
         setExplorerModal,
-        deleteIndicator 
+        deleteIndicator,
+        setDataNodes 
     } = useContext(LunarContextData) as ILunarState 
 
     function SetActive(oNodes: Array<ITreeNode>, id: string) {
@@ -55,8 +59,16 @@ const Explorer: React.FC = ({ }) => {
         //set the active from the ui
         nNodes = SetActive(nNodes, ui.visual_id)
 
+        //setDataNodes([ ...nNodes ])
         setNodes([ ...nNodes ]) 
     }, [data, ui])
+
+    useEffect(() => {
+        if(ui?.active_id === null || ui?.active_id === undefined)
+            return
+        
+        setDataNodes([ ...nodes ])
+    }, [ui?.active_id])
 
     return (
         <div className={styles['scroll-wrapper']}>

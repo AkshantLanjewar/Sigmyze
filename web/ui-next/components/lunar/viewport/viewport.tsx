@@ -4,6 +4,7 @@ import { LunarContextData } from '../../data/lunar/context/context'
 import { ILunarState, IProjectNodeData } from '../../data/lunar/types'
 import { icon_table } from '../../tree/node'
 import ChartView from '../chart-view/chart-view'
+import DocumentEditor from '../document-editor/document-editor'
 import styles from './viewport.module.scss'
 
 const Viewport: React.FC = ({ }) => {
@@ -28,6 +29,8 @@ const Viewport: React.FC = ({ }) => {
             let panelBody = null
             if(step.tab_type === "chart")
                 panelBody = <ChartView tabId={step.tab_id} />
+            if(step.tab_type === "document")
+                panelBody = <DocumentEditor tabId={step.tab_id} />
 
             return (
                 <Tabs.Panel

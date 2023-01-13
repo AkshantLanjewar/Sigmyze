@@ -1,5 +1,7 @@
 import { ITreeNode } from "../../tree/tree"
 import { IIndicator } from "../datasets/DatasetsTypes"
+import { IChartSettings, IGlobalChartSettings, IIndicatorSetting } from "./chart-types"
+import { IDocument } from "./document-types"
 
 type deleteProject = (id: string, type: string) => void
 type createProject = (parent_id: string, name: string, type: string) => void
@@ -29,7 +31,9 @@ interface ILunarState {
     createIndicatorSetting: Function,
     createGlobals: Function,
     setChartTitle: Function,
-    getNode: Function
+    getNode: Function,
+    setDataNodes: Function,
+    setNode: Function
 }
 
 //ui
@@ -79,20 +83,8 @@ interface IProjectNodeAction {
 interface IProjectNodeData {
     indicators?: Array<IIndicator>,
     chartSettings?: IChartSettings,
-    chartGlobals?: IGlobalChartSettings
-}
-
-interface IGlobalChartSettings {
-    chartTitle: string
-}
-
-interface IChartSettings {
-    indicatorSettings: IIndicatorSetting[]
-}
-
-interface IIndicatorSetting {
-    indicator: IIndicator,
-    lineColor?: string    
+    chartGlobals?: IGlobalChartSettings,
+    document?: IDocument
 }
 
 //default project

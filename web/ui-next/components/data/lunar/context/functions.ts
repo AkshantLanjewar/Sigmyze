@@ -1,8 +1,14 @@
 import { Dispatch, SetStateAction } from "react";
 import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode, IProjectNodeData } from "../types";
 import { v4 as uuidv4 } from "uuid";
-import { GetItem, SetItem, GetNodeIdFromTab } from "./util-functions"
 
+export { 
+    GetItem, 
+    SetItem, 
+    GetNodeIdFromTab, 
+    SetDataNodes,
+    SetItemWrapper 
+} from "./util-functions"
 
 export { 
     AddIndicator, 
@@ -14,6 +20,10 @@ export {
     SetChartTitle,
     CompareIndicators 
 } from "./chart-functions"
+
+export {
+    CreateBlock
+} from './document-functions'
 
 function DeleteProjectItem(splits: Array<IProjectNode>, id: string, type: string) {
     let nNodes = [] as IProjectNode[]
@@ -143,8 +153,5 @@ export {
     CreateProjectItemWrapper,
     IdExists,
     TabOpen,
-    GetItem,
-    SetItem,
-    GetNodeIdFromTab,
     ChangeTab,
 }

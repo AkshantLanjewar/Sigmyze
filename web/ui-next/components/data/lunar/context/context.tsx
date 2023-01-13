@@ -29,8 +29,11 @@ import {
     GetNodeIdFromTab, 
     IdExists, 
     SetChartTitle, 
-    TabOpen 
+    TabOpen,
+    SetDataNodes 
 } from "./functions"
+import { GetTreeItem, SetItemWrapper } from "./util-functions"
+import { ITreeNode } from "../../../tree/tree"
 
 interface ILunarContextProps {
     pkg: IAddIndicatorData
@@ -121,8 +124,55 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     }
 
     useEffect(() => {
-        //console.log(ui)
-    }, [ui])
+        let activeTab = ui?.activeTab
+        let tabs = ui?.tabs
+        if(activeTab === null || activeTab === undefined || tabs === undefined)
+            return
+
+        //check if the node is active
+        let tab = null
+        for(let i = 0; i < tabs.length; i++) {
+            let tab_ = tabs[i]
+            if(tab_.tab_id === activeTab)
+                tab = tab_
+        }
+
+        if(tab === null)
+            return
+        let nodeId = tab.linked_node_id
+        let node = data ? GetItem(nodeId, data.splits) : null
+        if(node === null)
+            return
+
+        let nUi = ui!
+        nUi.visual_id = nodeId
+        nUi.visual_type = node.node_type
+        setUI({ ...nUi })
+    }, [ui?.activeTab])
+
+    //prune the tabs
+    useEffect(() => {
+        let tabs = ui?.tabs
+        if(tabs === undefined)
+            return
+        if(data?.nodes === undefined)
+            return
+        
+        let nodes = data.splits
+        let nTabs = []
+        for(let i = 0; i < tabs.length; i++) {
+            let tab = tabs[i]
+            let nodeId = tab.linked_node_id
+
+            let node = GetItem(nodeId, nodes)
+            if(node !== null)
+                nTabs.push(tab)
+        }
+
+        let nUi = ui!
+        nUi.tabs = nTabs
+        setUI({ ...nUi })
+    }, [data?.nodes])
 
     const deleteProject = (id: string, type: string) => DeleteProjectItemWrapper(data, setData, id, type)
     const createProject = ( pId: string, name: string, type: string ) => 
@@ -132,8 +182,10 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const createSettings = (id: string) => CreateSettings(data, setData, id)
     const getNodeIdTab = (id: string) => GetNodeIdFromTab(ui!, id)
     const getNode = (id: string) => data ? GetItem(id, data.splits) : null
+    const setNode = (node: IProjectNode) => SetItemWrapper(data, setData, node)
     const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
         CreateIndicatorSetting(data, setData, id, setting)
+    const setDataNodes = (nodes: ITreeNode[]) => SetDataNodes(data, setData, nodes)
 
     //chart functions
     const createGlobals = (id: string) => CreateGlobals(data, setData, id)
@@ -144,6 +196,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         AddIndicator(data, setData, id, indicator)
     const deleteIndicator = (id: string, indicator: IIndicator) =>
         DeleteIndicator(data, setData, id, indicator)
+
+    //document functions
 
     return (
         <>
@@ -164,7 +218,9 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 deleteIndicator,
                 createGlobals,
                 setChartTitle,
-                getNode
+                getNode,
+                setDataNodes,
+                setNode
             }}>
                 <div style={{ width: "100%", height: "100%" }}>
                     {ui !== null && (

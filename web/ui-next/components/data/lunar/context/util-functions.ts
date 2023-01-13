@@ -1,4 +1,6 @@
-import { ILunarUIData, IProjectNode } from "../types"
+import { SetStateAction } from "react"
+import { ITreeNode } from "../../../tree/tree"
+import { ILunarProjectData, ILunarUIData, IProjectNode } from "../types"
 
 function GetItem(id: string, splits: Array<IProjectNode>): IProjectNode | null {
     let item: IProjectNode | null = null
@@ -11,6 +13,35 @@ function GetItem(id: string, splits: Array<IProjectNode>): IProjectNode | null {
     }
 
     return item
+}
+
+function GetTreeItem(id: string | null, nodes?: Array<ITreeNode>): ITreeNode | null {
+    let item: ITreeNode | null = null
+    if(nodes === undefined || id === null)
+        return null
+
+    for(let i = 0; i < nodes.length; i++) {
+        let node = nodes[i]
+        if(node.node_id === id)
+            return node
+
+        item = GetTreeItem(id, node.children)
+    }
+
+    return item
+}
+
+function SetDataNodes(
+    data: ILunarProjectData | null, 
+    setData: (value: SetStateAction<ILunarProjectData | null>) => void,
+    nodes: ITreeNode[]
+) {
+    if(data === null)
+        return
+
+    let nData = data
+    nData.nodes = nodes
+    setData({ ...nData })
 }
 
 function SetItem(node: IProjectNode, splits: Array<IProjectNode>) {
@@ -28,6 +59,20 @@ function SetItem(node: IProjectNode, splits: Array<IProjectNode>) {
     return nSplits
 }
 
+function SetItemWrapper(
+    data: ILunarProjectData | null, 
+    setData: (value: SetStateAction<ILunarProjectData | null>) => void,
+    node: IProjectNode, 
+) {
+    if(data === null)
+        return
+    let nData = data
+    let nSplits = SetItem(node, nData.splits)
+
+    nData.splits = nSplits
+    setData({ ...nData })
+}
+
 function GetNodeIdFromTab(ui: ILunarUIData, tabId: string): string | null {
     let tabs = ui.tabs
     let nodeId = null
@@ -43,5 +88,8 @@ function GetNodeIdFromTab(ui: ILunarUIData, tabId: string): string | null {
 export {
     GetItem,
     SetItem,
-    GetNodeIdFromTab
+    GetNodeIdFromTab,
+    GetTreeItem,
+    SetDataNodes,
+    SetItemWrapper
 }

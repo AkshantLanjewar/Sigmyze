@@ -1,0 +1,13 @@
+.paragraphBlock {
+    flex-grow: 1;
+    
+    [contenteditable="true"]:active,
+    [contenteditable="true"]:focus { 
+        border:none;
+        outline:none;
+    }
+
+    &:focus {
+        outline: none!important;
+    }
+}
