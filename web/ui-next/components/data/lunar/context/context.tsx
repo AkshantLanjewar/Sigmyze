@@ -4,7 +4,8 @@ import {
     ILunarProjectData, 
     IProjectNode,
     ILunarUIData, 
-    ILunarTab
+    ILunarTab,
+    IIndicatorSetting
 } from "../types"
 
 import { v4 as uuidv4 } from 'uuid'
@@ -13,8 +14,23 @@ import { EnumerateNodes } from "../utils"
 
 import ExplorerModal from "../../../lunar/explorer-modals/explorer-modals"
 import { IAddIndicatorData } from "../../../lunar/explorer-modals/add-indicator"
-import { AddIndicator, ChangeTab, CreateProjectItemWrapper, DeleteProjectItemWrapper, GetItem, IdExists, TabOpen } from "./functions"
 import { IIndicator } from "../../datasets/DatasetsTypes"
+import { 
+    AddIndicator, 
+    ChangeTab, 
+    CreateGlobals, 
+    CreateIndicatorSetting, 
+    CreateProjectItemWrapper, 
+    CreateSettings, 
+    DeleteIndicator, 
+    DeleteProjectItemWrapper, 
+    GetIndicatorSetting, 
+    GetItem, 
+    GetNodeIdFromTab, 
+    IdExists, 
+    SetChartTitle, 
+    TabOpen 
+} from "./functions"
 
 interface ILunarContextProps {
     pkg: IAddIndicatorData
@@ -111,10 +127,23 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const deleteProject = (id: string, type: string) => DeleteProjectItemWrapper(data, setData, id, type)
     const createProject = ( pId: string, name: string, type: string ) => 
         CreateProjectItemWrapper(data, setData, pId, name, type)
-    const addIndicator = ( id: string, indicator: IIndicator ) =>
-        AddIndicator(data, setData, id, indicator)
     const idExists = ( id: string ) => data ? IdExists(data.splits, id) : false
     const changeTab = ( id: string ) => ChangeTab(ui!, setUI, id, ui!.tabs)
+    const createSettings = (id: string) => CreateSettings(data, setData, id)
+    const getNodeIdTab = (id: string) => GetNodeIdFromTab(ui!, id)
+    const getNode = (id: string) => data ? GetItem(id, data.splits) : null
+    const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
+        CreateIndicatorSetting(data, setData, id, setting)
+
+    //chart functions
+    const createGlobals = (id: string) => CreateGlobals(data, setData, id)
+    const getIndicatorSetting = (id: string, indicator: IIndicator) => GetIndicatorSetting(data, id, indicator)
+    const setChartTitle = (id: string, name: string) =>
+        SetChartTitle(data, setData, id, name)
+    const addIndicator = ( id: string, indicator: IIndicator ) =>
+        AddIndicator(data, setData, id, indicator)
+    const deleteIndicator = (id: string, indicator: IIndicator) =>
+        DeleteIndicator(data, setData, id, indicator)
 
     return (
         <>
@@ -127,7 +156,15 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 setExplorerModal: OpenModal,
                 addIndicator: addIndicator,
                 idExists: idExists,
-                changeTab: changeTab 
+                changeTab: changeTab,
+                createSettings: createSettings ,
+                getNodeIdTab: getNodeIdTab,
+                getIndicatorSetting,
+                createIndicatorSetting,
+                deleteIndicator,
+                createGlobals,
+                setChartTitle,
+                getNode
             }}>
                 <div style={{ width: "100%", height: "100%" }}>
                     {ui !== null && (

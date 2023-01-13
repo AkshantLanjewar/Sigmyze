@@ -1,3 +1,6 @@
+import { IIndicator } from "../../../data/datasets/DatasetsTypes"
+import { IIndicatorSetting } from "../../../data/lunar/types"
+
 interface IChartRender {
     labels: Date[]
 }
@@ -16,7 +19,9 @@ interface IChartMargin {
 
 interface ILunarChart {
     data: IChartData[],
-    id: string
+    id: string,
+    indicator: IIndicator,
+    setting?: IIndicatorSetting
 }
 
 interface IChartData {
@@ -28,8 +33,12 @@ type linearScale = d3.ScaleLinear<number, number, never>
 
 interface ID3Chart {
     type: string,
+    id: string,
+    color: string,
+    name: string,
     rdScale: linearScale,
-    data: IChartData[]
+    data: IChartData[],
+    setting?: IIndicatorSetting
 }
 
 interface IChartD3Scales {

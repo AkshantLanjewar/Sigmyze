@@ -1,7 +1,19 @@
 import { Dispatch, SetStateAction } from "react";
 import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode, IProjectNodeData } from "../types";
 import { v4 as uuidv4 } from "uuid";
-import { IIndicator } from "../../datasets/DatasetsTypes";
+import { GetItem, SetItem, GetNodeIdFromTab } from "./util-functions"
+
+
+export { 
+    AddIndicator, 
+    DeleteIndicator,
+    CreateSettings, 
+    GetIndicatorSetting, 
+    CreateIndicatorSetting,
+    CreateGlobals,
+    SetChartTitle,
+    CompareIndicators 
+} from "./chart-functions"
 
 function DeleteProjectItem(splits: Array<IProjectNode>, id: string, type: string) {
     let nNodes = [] as IProjectNode[]
@@ -79,61 +91,6 @@ function CreateProjectItemWrapper(
     setData({ ...nData })
 }
 
-function GetItem(id: string, splits: Array<IProjectNode>): IProjectNode | null {
-    let item: IProjectNode | null = null
-    for(let i = 0; i < splits.length; i++) {
-        let split = splits[i]
-        if(split.node_id === id)
-            return split
-
-        item = GetItem(id, split.children)
-    }
-
-    return item
-}
-
-function SetItem(node: IProjectNode, splits: Array<IProjectNode>) {
-    let nSplits = []
-    for(let i = 0; i < splits.length; i++) {
-        let split = splits[i]
-        split.children = SetItem(node, split.children)
-
-        if(split.node_id === node.node_id)
-            nSplits.push(node)
-        else
-            nSplits.push(split)
-    }
-
-    return nSplits
-}
-
-function AddIndicator(
-    data: ILunarProjectData | null,
-    setData: (value: SetStateAction<ILunarProjectData | null>) => void,
-    id: string,
-    indicator: IIndicator
-) {
-    if(data === null)
-        return
-    let node = GetItem(id, data.splits)
-    if(node === null)
-        return
-    if(node.node_type !== "chart")
-        return
-
-    if(node.data === undefined)
-        node.data = { indicators: [] } as IProjectNodeData
-    if(node.data.indicators === undefined)
-        node.data.indicators = []
-    
-    node.data.indicators.push(indicator)
-    let nSplits = SetItem(node, data.splits)
-    let nData   = data
-    nData.splits = nSplits
-
-    setData({ ...nData })
-}
-
 function IdExists(splits: Array<IProjectNode>, id: string): boolean {
     if(splits === undefined)
         return false
@@ -182,11 +139,12 @@ function ChangeTab(
 }
 
 export { 
-    AddIndicator, 
     DeleteProjectItemWrapper,
     CreateProjectItemWrapper,
     IdExists,
     TabOpen,
     GetItem,
-    ChangeTab
+    SetItem,
+    GetNodeIdFromTab,
+    ChangeTab,
 }

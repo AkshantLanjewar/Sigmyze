@@ -14,7 +14,8 @@ const Explorer: React.FC = ({ }) => {
         deleteProject,
         createProject,
         setActiveItem,
-        setExplorerModal 
+        setExplorerModal,
+        deleteIndicator 
     } = useContext(LunarContextData) as ILunarState 
 
     function SetActive(oNodes: Array<ITreeNode>, id: string) {
@@ -48,7 +49,7 @@ const Explorer: React.FC = ({ }) => {
         if(ui == null)
             return
 
-        let nNodes = ConvertToTree(data.splits, { deleteProject, createProject, setExplorerModal }) 
+        let nNodes = ConvertToTree(data.splits, { deleteProject, createProject, setExplorerModal, deleteIndicator }) 
         if(nNodes === undefined)
             return
         //set the active from the ui

@@ -73,22 +73,28 @@ namespace SigmyzeServer.Services.DatabaseServices
 
         public async Task<List<DatasetObject>> ProcessedObjectsDetailed(string dataset)
         {
-            List<DatasetObject> objects                    = new List<DatasetObject>();
+            List<DatasetObject> objects = new List<DatasetObject>();
             IMongoCollection<DatasetCollection> collection = _collectionObjMap[dataset];
-            List<DatasetCollection> documents              = await collection.Find(x => true).ToListAsync();
+            DatasetCollection? document = await collection.Find(x => x.ObjectID == "metadata").FirstOrDefaultAsync();
 
-            for(int i = 0; i < documents.Count; i++)
-            {
-                DatasetCollection document = documents[i];
-                if(document.ObjectID == "metadata")
-                    continue;
+            if(document == null)
+                return objects;
+            List<string>? added_objects = document.AddedObjects;
+            if(added_objects == null)
+                return objects;
 
-                DatasetObject detailedObject  = new DatasetObject();
-                detailedObject.ObjectID       = document.ObjectID;
-                detailedObject.ObjectFullname = document.ObjectFullname;
-                detailedObject.ObjectLogo     = document.ObjectLogo;
+            Parallel.For(0, added_objects.Count, count => {
+                string added_object = added_objects[count];
+                DatasetCollection country = Task.Run(async () => { 
+                    return await GetObject(dataset, added_object); 
+                }).Result;
+
+                DatasetObject detailedObject = new DatasetObject();
+                detailedObject.ObjectID       = country.ObjectID;
+                detailedObject.ObjectFullname = country.ObjectFullname;
+                detailedObject.ObjectLogo     = country.ObjectLogo;
                 objects.Add(detailedObject);
-            }
+            });
 
             return objects;
         }

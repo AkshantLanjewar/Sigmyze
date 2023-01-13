@@ -45,8 +45,6 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
     const [active, setActiveState] = useState(node.opened ? node.opened : false)
     const [nodeUiId, setId] = useState<string>("")
     const { hovered, ref } = useHover()
-    const prevNode = usePrevious(node)
-    const prevActive = usePrevious(active)
 
     useEffect(() => {
         setId(uuid())

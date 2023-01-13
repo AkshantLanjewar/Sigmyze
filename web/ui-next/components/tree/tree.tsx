@@ -1,5 +1,6 @@
 import styles from './tree.module.scss'
 import Node   from './node'
+import { IIndicator } from '../data/datasets/DatasetsTypes'
 
 interface ITreeNode {
     node_id: string,
@@ -10,10 +11,15 @@ interface ITreeNode {
     active?: boolean,
     context?: boolean,
     useActive?: boolean,
+    data?: ITreeNodeData,
 
     children: Array<ITreeNode>,
     actions?: Array<ITreeAction>,
     contextItems?: Array<IContextMenuItem>
+}
+
+interface ITreeNodeData {
+    indicator?: IIndicator
 }
 
 interface IContextMenuItem {
@@ -50,5 +56,5 @@ const Tree: React.FC<ITreeProps> = ({ nodes, setActive }): JSX.Element => {
     )
 }
 
-export type { ITreeNode, IContextMenuItem }
+export type { ITreeNode, IContextMenuItem, ITreeNodeData }
 export default Tree

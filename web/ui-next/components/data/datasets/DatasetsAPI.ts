@@ -6,6 +6,8 @@ import {
     IDatasetsIndicatorResponse 
 } from "./DatasetsTypes"
 
+import cacheData from 'memory-cache'
+
 const dev           = process.env.NODE_ENV !== 'production';
 export const server = dev ? 'http://localhost:3000' : 'https://your_deployment.server.com'
 
@@ -17,9 +19,20 @@ let DatasetsTable: IDatasetsTable = {
     WEO: "World Economic Outlook" 
 }
 
+async function GET_Cache<Type>(url: string): Promise<Type> {
+    const value = cacheData.get(url)
+    if(value)
+        return value
+    
+    const hours = 72
+    const res = await fetch(url)
+    const data = await res.json()
+    cacheData.put(url, data, hours * 1000 * 60 * 60)
+    return data
+}
+
 async function GET<Type>(url: string): Promise<Type> {
-    const resp = await fetch(url)
-    return await resp.json()
+    return await GET_Cache(url)
 }
 
 async function GetDatasets() : Promise<IDatasetsResponse> { 

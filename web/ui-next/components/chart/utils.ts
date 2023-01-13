@@ -115,4 +115,13 @@ async function PrepareData(indicators: Array<IUnparsedIndicator>) {
     return { labels: labels, data: datasets }
 }
 
-export { PrepareData }
+function toLocaleUTCDateString(date: Date, locales: any, options: any): string {
+    const timeDiff = date.getTimezoneOffset() * 60000
+    const adjustedDate = new Date(date.valueOf() + timeDiff)
+    return adjustedDate.toLocaleDateString(locales, options)
+}
+
+export { 
+    PrepareData,
+    toLocaleUTCDateString 
+}

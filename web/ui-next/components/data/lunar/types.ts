@@ -4,10 +4,11 @@ import { IIndicator } from "../datasets/DatasetsTypes"
 type deleteProject = (id: string, type: string) => void
 type createProject = (parent_id: string, name: string, type: string) => void
 type setActiveItem = (id: string, type: string) => void
-type setExplorerModal = (id: string) => void
 type addIndicator = ( id: string, indicator: IIndicator ) => void
 type idExists = ( id: string ) => boolean
-type changeTab = (id: string ) => void
+type idVoid = (id: string ) => void
+type idStringNull = (id: string) => string | null
+type getIndicatorSetting = (id: string, indicator: IIndicator) => IIndicatorSetting | null
 
 interface ILunarState {
     data?: ILunarProjectData | null,
@@ -17,10 +18,18 @@ interface ILunarState {
     deleteProject: deleteProject,
     createProject: createProject,
     setActiveItem: setActiveItem,
-    setExplorerModal: setExplorerModal,
+    setExplorerModal: idVoid,
     addIndicator: addIndicator,
+    deleteIndicator: addIndicator
     idExists: idExists,
-    changeTab: changeTab
+    changeTab: idVoid,
+    createSettings: idVoid,
+    getNodeIdTab: idStringNull,
+    getIndicatorSetting: getIndicatorSetting,
+    createIndicatorSetting: Function,
+    createGlobals: Function,
+    setChartTitle: Function,
+    getNode: Function
 }
 
 //ui
@@ -68,11 +77,23 @@ interface IProjectNodeAction {
 }
 
 interface IProjectNodeData {
-    indicators?: Array<IIndicator>
+    indicators?: Array<IIndicator>,
+    chartSettings?: IChartSettings,
+    chartGlobals?: IGlobalChartSettings
 }
 
+interface IGlobalChartSettings {
+    chartTitle: string
+}
 
-//functions
+interface IChartSettings {
+    indicatorSettings: IIndicatorSetting[]
+}
+
+interface IIndicatorSetting {
+    indicator: IIndicator,
+    lineColor?: string    
+}
 
 //default project
 const DEFAULT_PROJECT = {
@@ -102,7 +123,19 @@ const DEFAULT_PROJECT = {
     ]
 } as ILunarProjectData
 
-export { DEFAULT_PROJECT }
+const DEFAULT_SETTINGS = {
+    indicatorSettings: []
+} as IChartSettings
+
+const DEFAULT_CHART_GLOBALS = {
+    chartTitle: "Cool Swaggy Title"
+} as IGlobalChartSettings
+
+export { 
+    DEFAULT_PROJECT,
+    DEFAULT_SETTINGS,
+    DEFAULT_CHART_GLOBALS 
+}
 export type { 
     ILunarState,
     ILunarProjectData,
@@ -111,7 +144,12 @@ export type {
     IProjectNodeData,
     ILunarTab,
     IProjectNode,
+    IChartSettings,
+    IGlobalChartSettings,
+    IIndicatorSetting,
     deleteProject,
     createProject,
-    setExplorerModal 
+    idVoid,
+    getIndicatorSetting,
+    addIndicator 
 }

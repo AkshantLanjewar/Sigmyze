@@ -1,27 +1,31 @@
 import { ParentSize } from '@visx/responsive';
-import dynamic from 'next/dynamic';
 import { useContext, useEffect, useState } from 'react';
 import { LunarContextData } from '../../data/lunar/context/context';
 import { GetItem } from '../../data/lunar/context/functions';
-import { ILunarState, IProjectNodeData } from '../../data/lunar/types';
+import { DEFAULT_SETTINGS, IChartSettings, ILunarState, IProjectNodeData } from '../../data/lunar/types';
 import styles from './chart-view.module.scss'
 import ChartEngine from './engine/chart-engine';
 import { ILunarChart } from './engine/types';
-import { FetchIndicators } from './utils';
-
-const Mix = dynamic(() => import('@ant-design/plots').then(({ Mix }) => Mix),
-    { ssr: false }
-);
+import { FetchIndicators, ParseSettings } from './utils';
 
 interface IChartViewProps {
     tabId: string
 }
 
 const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
-    const [nodeData, setNodeData] = useState<IProjectNodeData>({} as IProjectNodeData)
-   
-    const { ui, data } = useContext(LunarContextData) as ILunarState
+    const [nodeData, setNodeData] = useState<IProjectNodeData>({} as IProjectNodeData)   
     const [chart, setChart] = useState([] as ILunarChart[])
+    const [nodeId, setNodeId] = useState<string | null>(null)
+
+    const { 
+        ui, 
+        data,
+        createSettings,
+        getNodeIdTab,
+        getIndicatorSetting,
+        createIndicatorSetting,
+        createGlobals 
+    } = useContext(LunarContextData) as ILunarState
 
     function FetchData() {
         if(ui === null || ui === undefined)
@@ -41,7 +45,17 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
             node = GetItem(tab.linked_node_id, data.splits)
         if(node !== null && node.data !== undefined) 
             setNodeData({ ...node.data })  
+
+        let globals = node!.data!.chartGlobals
+        let nodeId = getNodeIdTab(tabId)
+        if(globals === undefined)
+            createGlobals(nodeId)
     }
+
+    useEffect(() => {
+        let nodeId = getNodeIdTab(tabId)
+        setNodeId(nodeId)
+    }, [])
 
     useEffect(() => {
           FetchData()
@@ -58,10 +72,20 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
             return
 
         let charts = await FetchIndicators(indicators)
+        charts = ParseSettings(nodeId!, charts, getIndicatorSetting, createIndicatorSetting) 
         setChart([ ...charts ]) 
     }
 
     useEffect(() => {
+        if(nodeId === null)
+            return
+
+        let settings = nodeData.chartSettings
+        if(settings === undefined) {
+            createSettings(nodeId)
+            return
+        }
+
         GenerateChart()
     }, [nodeData])
 
@@ -73,6 +97,7 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
                         width={width}
                         height={height}
                         charts={chart}
+                        globals={nodeData.chartGlobals}
                     />
                 }
             </ParentSize>

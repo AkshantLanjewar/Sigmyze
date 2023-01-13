@@ -1,24 +1,16 @@
-import * as d3 from "d3"
 import { useEffect, useRef, useState } from "react"
 import styles from './chart-engine.module.scss'
 
-import * as allCurves from '@visx/curve'
 import { Group } from '@visx/group'
-import { Line, LinePath } from '@visx/shape'
-import { ChartDims, dummyData, IChartD3Scales, IChartData, IChartMargin, ILunarChart } from "./types"
+import { ChartDims, IChartD3Scales, IChartData, IChartMargin, ILunarChart } from "./types"
 import dynamic from "next/dynamic"
-import { useTooltip } from '@visx/tooltip'
-import { localPoint, touchPoint } from '@visx/event'
-import { bisector } from "d3"
 
-import { MouseEvent, TouchEvent } from "react"
-import { Motion, spring, presets } from 'react-motion'
-import { getPathYFromX, processCharts } from "./utils"
+import { processCharts } from "./utils"
 import D3Chart from "../d3-chart/d3-chart"
-
-const AxisRight = dynamic(() => import('@visx/axis').then(({ AxisRight }) => AxisRight),
-    { ssr: false }
-);
+import D3Tooltip from "../d3-chart/d3-tooltip"
+import D3TooltipBox from "../d3-chart/d3-tooltip-box"
+import D3ChartTitle from "../d3-chart/d3-chart-title"
+import { IGlobalChartSettings } from "../../../data/lunar/types"
 
 const AxisBottom = dynamic(() => import('@visx/axis').then(({ AxisBottom }) => AxisBottom),
     { ssr: false }
@@ -27,28 +19,40 @@ const AxisBottom = dynamic(() => import('@visx/axis').then(({ AxisBottom }) => A
 interface IChartEngineProps {
     width: number,
     height: number,
-    charts?: ILunarChart[]
+    charts?: ILunarChart[],
+    globals?: IGlobalChartSettings
 }
 
-const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts }) => {
-    const ref = useRef<HTMLDivElement>(null)
-    const getX = (d: IChartData) => d.date
-    const getY = (d: IChartData) => d.value
-    const bisect = bisector((d: IChartData) => d.date).center
+interface ITooltipState {
+    tooltipOpen: boolean,
+    tooltipLeft: number,
+    tooltipTop: number,
+    tooltipData?: IChartData[],
+    vertLineLeft: number,
+    longestIndex: number,
+    chartArrays?: IChartData[][]
+}
 
-    const [dimensions, setDimensions] = useState({ height: 0, width: 0 })
+const defaultTooltipState = {
+    tooltipOpen: false,
+    tooltipLeft: 0,
+    tooltipTop: 0,
+    tooltipData: undefined,
+    vertLineLeft: 0,
+    longestIndex: 0
+} as ITooltipState
+
+const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globals }) => {
+    const ref = useRef<HTMLDivElement>(null)
+    const svgRef = useRef<SVGSVGElement>(null)
+    const tooltipRef = useRef<HTMLDivElement>(null)
+
     const [scales, setScales] = useState<IChartD3Scales>({})
     const [boxDims, setBoxDims] = useState<ChartDims>({ x: 0, y: 0 })
+    const [pathRefs, setPathRefs] = useState<any | null>({})
+    const [tooltipData, setTooltipData] = useState<ITooltipState>(defaultTooltipState)
 
     const margin = { top: 40, right: 50, bottom: 40, left: 30 } as IChartMargin
-
-    useEffect(() => {
-        if(ref.current === null)
-            return
-
-        const bBox = ref.current.getBoundingClientRect()
-        setDimensions({ width: bBox.width, height: bBox.height })
-    }, [])
 
     useEffect(() => {
         if(charts === undefined)
@@ -70,9 +74,34 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts }) => 
         setBoxDims({ x: calcWidth, y: calcHeight })
     }, [width, height])
 
+    function setPathRef(ref?: any) {
+        if(!ref) {
+            setPathRefs(null)
+            return
+        }
+
+        if(pathRefs === null)
+            return
+        let oPathRefs = pathRefs
+        oPathRefs[ref.getAttribute('data-index')] = ref
+        setPathRefs({ ...oPathRefs })
+    }
+
+    function closeTooltip() {
+        setTooltipData({ ...defaultTooltipState })
+    }
+
     return (
         <div ref={ref} style={{ width: "100%", height: "100%", position: 'relative' }}>
-            <svg className={styles.svg}>
+            <D3ChartTitle
+                margin={margin}
+                globals={globals}
+                indicators={scales.d3Charts}
+                tooltipData={tooltipData}
+                charts={charts}
+            />
+
+            <svg className={styles.svg} ref={svgRef}>
                 <Group left={margin.left} top={margin.top}>
                     {scales.d3Charts && scales.d3Charts.map((step, i) => (
                         <D3Chart
@@ -80,8 +109,24 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts }) => 
                             chart={step}
                             dims={boxDims}
                             timescale={scales.timescale!}
+                            index={i}
+                            setPathRef={setPathRef}
                         />
                     ))}
+
+                    <D3Tooltip 
+                        dims={boxDims}
+                        charts={scales.d3Charts}
+                        timescale={scales.timescale}
+                        margin={margin}
+                        pathRefs={pathRefs}
+
+                        tooltipRef={tooltipRef.current}
+                        tooltipData={tooltipData}
+                        setTooltipData={setTooltipData}
+                        closeTooltip={closeTooltip}
+
+                    />
 
                     {scales.timescale && (
                         <AxisBottom
@@ -102,8 +147,17 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts }) => 
                     )}
                 </Group>
             </svg>
+
+            <D3TooltipBox
+                margin={margin}
+                dims={boxDims}
+                tooltipData={tooltipData}
+                ref={tooltipRef}
+                charts={scales.d3Charts}
+            />
         </div>
     )
 }
 
+export type { ITooltipState }
 export default ChartEngine
