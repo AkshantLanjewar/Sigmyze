@@ -93,13 +93,15 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globa
 
     return (
         <div ref={ref} style={{ width: "100%", height: "100%", position: 'relative' }}>
-            <D3ChartTitle
-                margin={margin}
-                globals={globals}
-                indicators={scales.d3Charts}
-                tooltipData={tooltipData}
-                charts={charts}
-            />
+            {scales.d3Charts && scales.d3Charts.length > 0 && (
+                <D3ChartTitle
+                    margin={margin}
+                    globals={globals}
+                    indicators={scales.d3Charts}
+                    tooltipData={tooltipData}
+                    charts={charts}
+                />
+            )}
 
             <svg className={styles.svg} ref={svgRef}>
                 <Group left={margin.left} top={margin.top}>

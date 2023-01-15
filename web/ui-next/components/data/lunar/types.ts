@@ -84,7 +84,7 @@ interface IProjectNodeData {
     indicators?: Array<IIndicator>,
     chartSettings?: IChartSettings,
     chartGlobals?: IGlobalChartSettings,
-    document?: IDocument
+    document_id?: string
 }
 
 //default project

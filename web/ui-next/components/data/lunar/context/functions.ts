@@ -42,7 +42,9 @@ function DeleteProjectItem(splits: Array<IProjectNode>, id: string, type: string
 
 function DeleteProjectItemWrapper(
     data: ILunarProjectData | null, 
+    ui: ILunarUIData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void, 
+    setUI: (value: SetStateAction<ILunarUIData | null>) => void,
     id: string, 
     type: string
 ): void {
@@ -55,6 +57,23 @@ function DeleteProjectItemWrapper(
     let nData = data
     nData.splits = project_splits
     setData({ ...nData })
+
+    //prune tabs
+    let tabs = ui?.tabs
+    let nTabs = []
+    if(ui === null || tabs === undefined)
+        return
+    
+    for(let i = 0; i < tabs.length; i++) {
+        let tab = tabs[i]
+        if(tab.linked_node_id === id)
+            continue
+
+        nTabs.push(tab)
+    }
+
+    ui.tabs = nTabs
+    setUI({ ...ui })
 }
 
 function CreateProjectItem(splits: Array<IProjectNode>, parent_id: string, node: IProjectNode): IProjectNode[] {

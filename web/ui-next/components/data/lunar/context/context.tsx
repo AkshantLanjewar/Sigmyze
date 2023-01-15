@@ -174,7 +174,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         setUI({ ...nUi })
     }, [data?.nodes])
 
-    const deleteProject = (id: string, type: string) => DeleteProjectItemWrapper(data, setData, id, type)
+    const deleteProject = (id: string, type: string) => 
+        DeleteProjectItemWrapper(data, ui, setData, setUI, id, type)
     const createProject = ( pId: string, name: string, type: string ) => 
         CreateProjectItemWrapper(data, setData, pId, name, type)
     const idExists = ( id: string ) => data ? IdExists(data.splits, id) : false

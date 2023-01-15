@@ -13,15 +13,21 @@
         overflow-x: hidden;
         overflow-y: scroll;
 
-        .page {
-            margin: 18px auto;
-            width: 612pt;
-            height: 792pt;
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
 
-            //padding
-            padding: 36pt;
-            background-color: #101113;
-            border-radius: 8px;
+            .page {
+                margin: 18px auto;
+                width: 612pt;
+                height: 792pt;
+    
+                //padding
+                padding: 36pt;
+                background-color: #101113;
+                border-radius: 8px;
+            }
         }
     }
 }
