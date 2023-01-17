@@ -16,8 +16,7 @@ import ExplorerModal from "../../../lunar/explorer-modals/explorer-modals"
 import { IAddIndicatorData } from "../../../lunar/explorer-modals/add-indicator"
 import { IIndicator } from "../../datasets/DatasetsTypes"
 import { 
-    AddIndicator, 
-    ChangeTab, 
+    AddIndicator,  
     CreateGlobals, 
     CreateIndicatorSetting, 
     CreateProjectItemWrapper, 
@@ -29,10 +28,11 @@ import {
     GetNodeIdFromTab, 
     IdExists, 
     SetChartTitle, 
-    TabOpen,
     SetDataNodes, 
     CloseTab,
-    SetItemWrapper
+    SetItemWrapper,
+    SetActiveItem,
+    SwitchTab
 } from "./functions"
 
 import { ITreeNode } from "../../../tree/tree"
@@ -66,55 +66,7 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         setUI({ ...defaultUi })
     }, [])
 
-    // handles deleting of a project from the context state
-    // ex deleting a folder, chart, or document
-
-    //handles the creation of a new project item
-
-    //handles the ui state
-
     //sets the active item based on the id and type
-    function SetActiveItem(id: string, type: string) {
-        let updateActiveFlag = true
-        let n_ui = ui as ILunarUIData
-
-        n_ui.visual_id = id
-        n_ui.visual_type = type
-        if(type === "chart" || type === "document") {
-            updateActiveFlag = false
-
-            //check if there isa tab open
-            let open_tab = TabOpen(id, n_ui.tabs)
-            if(open_tab === null) {
-                let node  = GetItem(id, data!.splits)
-
-                if(node !== null) {
-                    let n_tab = {} as ILunarTab
-                    n_tab.linked_node_id = id
-                    n_tab.tab_type = type
-                    n_tab.tab_name = node.node_name
-                    n_tab.tab_id = uuidv4()
-
-                    n_ui.tabs.push(n_tab)
-                    n_ui.activeTab = n_tab.tab_id
-                }                
-            } else {
-                //find the tab
-                for(let i = 0; i < n_ui.tabs.length; i++) {
-                    let tab = n_ui.tabs[i]
-                    if(tab.linked_node_id === id)
-                        n_ui.activeTab = tab.tab_id
-                }
-            }
-        }
-        
-        if(updateActiveFlag) {
-            n_ui.active_id = id
-            n_ui.active_type = type 
-        }
-        
-        setUI({ ...n_ui })
-    }
 
     //opens a modal based on the modals id
     function OpenModal(id: string) {
@@ -129,34 +81,6 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         n_ui.explorer_modal = undefined
         setUI({ ...n_ui })
     }
-
-    //effect for when the active tab changes, to update the sidebar as well
-    useEffect(() => {
-        let activeTab = ui?.activeTab
-        let tabs = ui?.tabs
-        if(activeTab === null || activeTab === undefined || tabs === undefined)
-            return
-
-        //check if the node is active
-        let tab = null
-        for(let i = 0; i < tabs.length; i++) {
-            let tab_ = tabs[i]
-            if(tab_.tab_id === activeTab)
-                tab = tab_
-        }
-
-        if(tab === null)
-            return
-        let nodeId = tab.linked_node_id
-        let node = data ? GetItem(nodeId, data.splits) : null
-        if(node === null)
-            return
-
-        let nUi = ui!
-        nUi.visual_id = nodeId
-        nUi.visual_type = node.node_type
-        setUI({ ...nUi })
-    }, [ui?.activeTab])
 
     //prune the tabs once the node list has changed
     useEffect(() => {
@@ -186,7 +110,7 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const deleteProject = (id: string, type: string) => 
         DeleteProjectItemWrapper(data, ui, setData, setUI, id, type)
     const createProject = ( pId: string, name: string, type: string ) => 
-        CreateProjectItemWrapper(data, setData, pId, name, type)
+        CreateProjectItemWrapper(ui, data, setData, setUI, pId, name, type)
 
     //sidebar node functions
     const idExists = ( id: string ) => data ? IdExists(data.splits, id) : false
@@ -197,10 +121,12 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
         CreateIndicatorSetting(data, setData, id, setting)
     const setDataNodes = (nodes: ITreeNode[]) => SetDataNodes(data, setData, nodes)
+    const setActiveItem = (id: string, type: string) =>
+        SetActiveItem(ui, data, setUI, id, type)
 
     //tab functions
-    const changeTab = ( id: string ) => ChangeTab(ui!, setUI, id, ui!.tabs)
-    const closeTab = (tabId: string) => CloseTab(ui!, setUI, tabId)
+    const changeTab = (id: string) => SwitchTab(ui!, data, setUI, id)
+    const closeTab = (tabId: string) => CloseTab(ui!, data, setUI, tabId)
 
     //chart functions
     const createGlobals = (id: string) => CreateGlobals(data, setData, id)
@@ -221,7 +147,7 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 ui,
                 deleteProject: deleteProject, 
                 createProject: createProject,
-                setActiveItem: SetActiveItem,
+                setActiveItem: setActiveItem,
                 setExplorerModal: OpenModal,
                 addIndicator: addIndicator,
                 idExists: idExists,

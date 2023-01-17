@@ -4,7 +4,8 @@ export {
     GetNodeIdFromTab, 
     SetDataNodes,
     SetItemWrapper,
-    IdExists 
+    IdExists,
+    SetActiveItem 
 } from "./functions/util-functions"
 
 export { 
@@ -29,6 +30,7 @@ export {
 
 export { 
     TabOpen,
-    ChangeTab,
-    CloseTab
+    CloseTab,
+    SwitchTab,
+    CreateTabFromNode
 } from './functions/tab-functions'

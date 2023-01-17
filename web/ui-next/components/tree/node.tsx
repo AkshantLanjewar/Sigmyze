@@ -40,10 +40,11 @@ interface INodeProps {
     node: ITreeNode,
     additional_padding: number,
     root?: boolean,
-    setActive?: (id: string, type: string) => void
+    setActive?: (id: string, type: string) => void,
+    openParent?: () => void
 }
 
-const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive }): JSX.Element => {
+const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive, openParent }): JSX.Element => {
     const [active, setActiveState] = useState(node.opened ? node.opened : false)
     const [nodeUiId, setId] = useState<string>("")
     const { hovered, ref } = useHover()
@@ -60,6 +61,19 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
                 setActiveState(false)
         }
     }, [node])
+
+    useEffect(() => {
+        if(node.active !== true)
+            return
+        if(openParent === undefined)
+            return
+        
+        openParent()
+    }, [node.active])
+
+    function OpenParent() {
+        setActiveState(true)
+    }
 
     const { show } = useContextMenu({
         id: nodeUiId
@@ -168,6 +182,7 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
                         root={false}
                         additional_padding={additional_padding + 18}
                         setActive={setActive}
+                        openParent={OpenParent}
                     />
                 ))}
             </Collapse>

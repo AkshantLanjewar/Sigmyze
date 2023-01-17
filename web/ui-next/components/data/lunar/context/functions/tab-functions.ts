@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
-import { ILunarTab, ILunarUIData } from "../../types"
+import { v4 } from "uuid"
+import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode } from "../../types"
+import { GetItem } from "./util-functions"
 
 function TabOpen(id: string, tabs: ILunarTab[]): ILunarTab | null {
     for(let i = 0; i < tabs.length; i++) {
@@ -11,32 +13,46 @@ function TabOpen(id: string, tabs: ILunarTab[]): ILunarTab | null {
     return null
 }
 
-function ChangeTab(
+function SwitchTab(
     ui: ILunarUIData, 
+    data: ILunarProjectData | null,
     setUI: Dispatch<SetStateAction<ILunarUIData | null>>, 
     id: string, 
-    tabs: ILunarTab[]
-): void {
-    let realTab = false
+) {
+    let nUi = ui
+    let tabs = nUi.tabs
+    let tab = null
+    if(data === null)
+        return
+
     for(let i = 0; i < tabs.length; i++) {
-        let tab = tabs[i]
-        if(tab.tab_id === id)
-            realTab = true
+        let tab_ = tabs[i]
+        if(tab_.tab_id === id)
+            tab = tab_
     }
 
-    let nUI = ui
-    if(realTab) {
-        nUI.activeTab = id
-    }   
+    if(tab !== null) {
+        let node = GetItem(tab.linked_node_id, data.splits)
+        if(node === null)
+            return
 
-    setUI({ ...nUI })
+        nUi.activeTab = tab.tab_id
+        nUi.visual_id = node.node_id
+        nUi.visual_type = node.node_type
+    }
+
+    setUI({ ...nUi })
 }
 
 function CloseTab(
-    ui: ILunarUIData, 
+    ui: ILunarUIData,
+    data: ILunarProjectData | null,
     setUI: Dispatch<SetStateAction<ILunarUIData | null>>,
     tabId: string
 ) {
+    if(data === null)
+        return
+
     let nUi = ui
     let tabs = []
     let leftTabId = null
@@ -58,10 +74,23 @@ function CloseTab(
     }
 
     nUi.tabs = tabs
+    nUi.visual_id = ui.active_id
+    nUi.visual_type = ui.active_type
+
     setUI({ ...nUi })
 
     if(leftTabId !== null)
-        ChangeTab(ui, setUI, leftTabId, nUi.tabs)
+        SwitchTab(nUi, data, setUI, leftTabId)
+}
+
+function CreateTabFromNode(node: IProjectNode) {
+    let nTab = {} as ILunarTab
+    nTab.linked_node_id = node.node_id
+    nTab.tab_name = node.node_name
+    nTab.tab_type = node.node_type as "chart" | "document"
+    nTab.tab_id = v4()
+
+    return nTab
 }
 
 function CreateTab(
@@ -69,12 +98,18 @@ function CreateTab(
     setUI: Dispatch<SetStateAction<ILunarUIData | null>>, 
     nTab: ILunarTab
 ) {
+    let nUi = ui
+    let tabs = ui.tabs
+    tabs.push(nTab)
 
+    nUi.tabs = tabs
+    setUI({ ...nUi })
 }
 
 export {
     TabOpen,
-    ChangeTab,
     CreateTab,
-    CloseTab
+    CloseTab,
+    SwitchTab,
+    CreateTabFromNode
 }

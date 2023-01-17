@@ -1,6 +1,7 @@
 import { SetStateAction } from "react"
 import { v4 } from "uuid"
 import { ILunarProjectData, ILunarUIData, IProjectNode } from "../../types"
+import { CreateTab, CreateTabFromNode, SwitchTab } from "./tab-functions"
 
 function DeleteProjectItem(splits: Array<IProjectNode>, id: string, type: string) {
     let nNodes = [] as IProjectNode[]
@@ -69,13 +70,17 @@ function CreateProjectItem(splits: Array<IProjectNode>, parent_id: string, node:
 }
 
 function CreateProjectItemWrapper(
+    ui: ILunarUIData | null,
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
+    setUI: (value: SetStateAction<ILunarUIData | null>) => void,
     parent_id: string, 
     name: string, 
     type: string
 ): void {
-    if(data == null)
+    if(data === null)
+        return
+    if(ui === null)
         return
     
     let nNode = {
@@ -95,6 +100,13 @@ function CreateProjectItemWrapper(
     let nData = data
     nData.splits = CreateProjectItem(nData.splits, parent_id, nNode)
     setData({ ...nData })
+
+    //create the new tab for the project
+    if(type === "chart" || type === "document") {
+        let nTab = CreateTabFromNode(nNode)
+        CreateTab(ui, setUI, nTab)
+        SwitchTab(ui, data, setUI, nTab.tab_id)
+    }
 }
 
 export {

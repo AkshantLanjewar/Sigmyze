@@ -150,7 +150,8 @@ const SlashMenu: React.FC<ISlashMenuProps> =
                         style={{ 
                             top: style.top, 
                             left: style.left,
-                            opacity: inputActive ? 1 : 0
+                            opacity: inputActive ? 1 : 0,
+                            pointerEvents: inputActive ? 'auto' : 'none'
                         }}
                         ref={ref}
                     >

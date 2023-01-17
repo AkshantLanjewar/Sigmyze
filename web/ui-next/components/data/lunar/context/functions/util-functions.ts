@@ -1,6 +1,8 @@
-import { SetStateAction } from "react"
+import { Dispatch, SetStateAction } from "react"
+import { v4 } from "uuid"
 import { ITreeNode } from "../../../../tree/tree"
-import { ILunarProjectData, ILunarUIData, IProjectNode } from "../../types"
+import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode } from "../../types"
+import { CreateTab, CreateTabFromNode, SwitchTab, TabOpen } from "./tab-functions"
 
 function GetItem(id: string, splits: Array<IProjectNode>): IProjectNode | null {
     let item: IProjectNode | null = null
@@ -101,6 +103,56 @@ function IdExists(splits: Array<IProjectNode>, id: string): boolean {
     return exists
 }
 
+function SetActiveItem(
+    ui: ILunarUIData | null, 
+    data: ILunarProjectData | null,
+    setUI: Dispatch<SetStateAction<ILunarUIData | null>>,
+    nodeId: string, 
+    nodeType: string
+) {
+    if(ui === null)
+        return
+
+    let nUi = ui
+    let updateActiveUiItemFlag = true
+
+    let tabId = null
+    let tabFunction = "switch" as "create" | "switch"
+
+    if(nodeType === "chart" || nodeType === "document") {
+        updateActiveUiItemFlag = false
+        let openTab = TabOpen(nodeId, nUi.tabs)
+
+        if(openTab === null)
+            tabFunction = "create"
+        else
+            tabId = openTab.tab_id
+    }
+
+    if(updateActiveUiItemFlag === true) {
+        nUi.active_id = nodeId
+        nUi.active_type = nodeType 
+        nUi.visual_id = nodeId
+        nUi.active_type = nodeType
+    }
+
+    setUI({ ...nUi })
+
+    if(tabFunction === "switch" && tabId !== null)
+        SwitchTab(ui, data, setUI, tabId)
+    if(tabFunction === "create" && updateActiveUiItemFlag == false) {
+        if(data === null)
+            return
+        let node = GetItem(nodeId, data.splits)
+        if(node === null)
+            return
+
+        let n_tab = CreateTabFromNode(node)
+        CreateTab(ui, setUI, n_tab)
+        SwitchTab(ui, data, setUI, n_tab.tab_id)
+    }
+}
+
 export {
     GetItem,
     SetItem,
@@ -108,5 +160,6 @@ export {
     GetTreeItem,
     SetDataNodes,
     SetItemWrapper,
-    IdExists
+    IdExists,
+    SetActiveItem
 }
