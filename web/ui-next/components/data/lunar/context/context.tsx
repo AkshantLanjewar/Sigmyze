@@ -30,9 +30,11 @@ import {
     IdExists, 
     SetChartTitle, 
     TabOpen,
-    SetDataNodes 
+    SetDataNodes, 
+    CloseTab,
+    SetItemWrapper
 } from "./functions"
-import { GetTreeItem, SetItemWrapper } from "./util-functions"
+
 import { ITreeNode } from "../../../tree/tree"
 
 interface ILunarContextProps {
@@ -46,6 +48,7 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const [data, setData] = useState<ILunarProjectData | null>(null)
     const [ui, setUI]     = useState<ILunarUIData | null>(null)
 
+    //sets the context's default state
     useEffect(() => {
         let default_project    = DEFAULT_PROJECT
         default_project.splits = EnumerateNodes(default_project.splits) 
@@ -69,6 +72,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     //handles the creation of a new project item
 
     //handles the ui state
+
+    //sets the active item based on the id and type
     function SetActiveItem(id: string, type: string) {
         let updateActiveFlag = true
         let n_ui = ui as ILunarUIData
@@ -111,18 +116,21 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         setUI({ ...n_ui })
     }
 
+    //opens a modal based on the modals id
     function OpenModal(id: string) {
         let n_ui = ui as ILunarUIData
         n_ui.explorer_modal = id
         setUI({ ...n_ui })
     }
 
+    //univsersal close function for modal
     function CloseModal() {
         let n_ui = ui as ILunarUIData
         n_ui.explorer_modal = undefined
         setUI({ ...n_ui })
     }
 
+    //effect for when the active tab changes, to update the sidebar as well
     useEffect(() => {
         let activeTab = ui?.activeTab
         let tabs = ui?.tabs
@@ -150,7 +158,7 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         setUI({ ...nUi })
     }, [ui?.activeTab])
 
-    //prune the tabs
+    //prune the tabs once the node list has changed
     useEffect(() => {
         let tabs = ui?.tabs
         if(tabs === undefined)
@@ -174,12 +182,14 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         setUI({ ...nUi })
     }, [data?.nodes])
 
+    //project functions
     const deleteProject = (id: string, type: string) => 
         DeleteProjectItemWrapper(data, ui, setData, setUI, id, type)
     const createProject = ( pId: string, name: string, type: string ) => 
         CreateProjectItemWrapper(data, setData, pId, name, type)
+
+    //sidebar node functions
     const idExists = ( id: string ) => data ? IdExists(data.splits, id) : false
-    const changeTab = ( id: string ) => ChangeTab(ui!, setUI, id, ui!.tabs)
     const createSettings = (id: string) => CreateSettings(data, setData, id)
     const getNodeIdTab = (id: string) => GetNodeIdFromTab(ui!, id)
     const getNode = (id: string) => data ? GetItem(id, data.splits) : null
@@ -187,6 +197,10 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
         CreateIndicatorSetting(data, setData, id, setting)
     const setDataNodes = (nodes: ITreeNode[]) => SetDataNodes(data, setData, nodes)
+
+    //tab functions
+    const changeTab = ( id: string ) => ChangeTab(ui!, setUI, id, ui!.tabs)
+    const closeTab = (tabId: string) => CloseTab(ui!, setUI, tabId)
 
     //chart functions
     const createGlobals = (id: string) => CreateGlobals(data, setData, id)
@@ -221,7 +235,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 setChartTitle,
                 getNode,
                 setDataNodes,
-                setNode
+                setNode,
+                closeTab
             }}>
                 <div style={{ width: "100%", height: "100%" }}>
                     {ui !== null && (

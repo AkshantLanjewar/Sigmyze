@@ -6,7 +6,7 @@ import { ChartDims, IChartMargin, ID3Chart, ILunarChart } from "../engine/types"
 import { useClickOutside } from '@mantine/hooks'
 import { LunarContextData } from '../../../data/lunar/context/context'
 import { ITooltipState } from './d3-tooltip'
-import { CompareIndicators } from '../../../data/lunar/context/chart-functions'
+import { CompareIndicators } from '../../../data/lunar/context/functions/chart-functions'
 
 interface ID3ChartTitleProps {
     margin: IChartMargin,

@@ -1,6 +1,6 @@
 import { SetStateAction } from "react"
-import { IIndicator } from "../../datasets/DatasetsTypes"
-import { DEFAULT_CHART_GLOBALS, DEFAULT_SETTINGS, IIndicatorSetting, ILunarProjectData, IProjectNodeData } from "../types"
+import { IIndicator } from "../../../datasets/DatasetsTypes"
+import { DEFAULT_CHART_GLOBALS, DEFAULT_SETTINGS, IIndicatorSetting, ILunarProjectData, IProjectNodeData } from "../../types"
 import { GetItem, SetItem } from "./util-functions"
 
 function AddIndicator(

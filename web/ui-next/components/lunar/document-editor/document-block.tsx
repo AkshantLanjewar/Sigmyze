@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { IDocumentBlock } from '../../data/lunar/document-types'
+import { IDocumentBlock, IDocumentMenuItem } from '../../data/lunar/document-types'
 import TextBlock from "./blocks/text-block"
 import { 
     createBlock, 
@@ -9,7 +9,9 @@ import {
     menuPosState, 
     oldInput, 
     setLastActive, 
-    updateBlock 
+    updateBlock,
+    closeMenuState, 
+    inputIdState
 } from "./document-editor"
 
 interface IDocumentBlockProps {
@@ -24,7 +26,13 @@ interface IDocumentBlockProps {
     oldInput: oldInput,
     inputActive: inputActiveState,
     inputValue: inputValueState,
-    menuPosState: menuPosState
+    menuPosState: menuPosState,
+    closeMenuState: closeMenuState,
+    inputIdState: inputIdState,
+
+    leafMenuUpdate: boolean,
+    leafMenuItem: IDocumentMenuItem | null,
+    moveFocus: (id: string, direction: "up" | "down") => void
 }
 
 const LEAF_BLOCK = {
@@ -46,7 +54,12 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
     oldInput, 
     inputActive, 
     inputValue,
-    menuPosState 
+    menuPosState,
+    closeMenuState,
+    inputIdState,
+    leafMenuItem,
+    leafMenuUpdate,
+    moveFocus 
 }) => {
     const [internalBlock, setInternalBlock] = useState<IDocumentBlock | null>(null)
     
@@ -56,17 +69,37 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
     }, [])
 
     useEffect(() => {
+        if(leafMenuItem === null)
+            return
+        if(internalBlock === null)
+            return
+        if(leaf === false)
+            return
+
+        let nBlock = leafMenuItem.config
+        nBlock.id = internalBlock.id
+        nBlock.textNodes = internalBlock.textNodes
+        nBlock.leaf = true
+        setInternalBlock({ ...nBlock })
+    }, [leafMenuUpdate])
+
+    useEffect(() => {
         if(block === undefined)
             return
         if(leaf === true)
             return
 
         setInternalBlock({ ...block })
-    }, [block])
+    }, [block, block?.type, block?.order])
+
+    //helper functions
+    function resetInternalBlock() {
+        setInternalBlock(LEAF_BLOCK)
+    }
 
     return (
         <div>
-            {internalBlock?.type === "paragraph" && (
+            {(internalBlock?.type === "paragraph" || internalBlock?.type === "title") && (
                 <TextBlock
                     block={internalBlock}
                     index={index}
@@ -79,6 +112,10 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
                     inputActiveState={inputActive}
                     inputValueState={inputValue}
                     menuPosState={menuPosState}
+                    closeMenuState={closeMenuState}
+                    inputIdState={inputIdState}
+                    resetInternalBlock={resetInternalBlock}
+                    moveFocus={moveFocus}
                 />
             )}
         </div>

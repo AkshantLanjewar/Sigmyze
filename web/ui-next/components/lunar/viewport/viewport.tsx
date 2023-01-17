@@ -1,16 +1,18 @@
-import { Tabs } from '@mantine/core'
-import { useContext, useEffect, useState } from 'react'
+import { ActionIcon, Tabs } from '@mantine/core'
+import { useContext } from 'react'
 import { LunarContextData } from '../../data/lunar/context/context'
-import { ILunarState, IProjectNodeData } from '../../data/lunar/types'
+import { ILunarState } from '../../data/lunar/types'
 import { icon_table } from '../../tree/node'
 import ChartView from '../chart-view/chart-view'
 import DocumentEditor from '../document-editor/document-editor'
 import styles from './viewport.module.scss'
+import { RxCross2 } from 'react-icons/rx'
 
 const Viewport: React.FC = ({ }) => {
     const { 
         ui,
-        changeTab 
+        changeTab,
+        closeTab 
     } = useContext(LunarContextData) as ILunarState
 
     let tabHeaders = null
@@ -20,8 +22,20 @@ const Viewport: React.FC = ({ }) => {
             <Tabs.Tab
                 value={step.tab_id}
                 icon={icon_table[step.tab_type]}
+                className={styles.tabWrapper}
             >
-                {step.tab_name}
+                <div className={styles.content}>
+                    {step.tab_name}
+
+                    <ActionIcon 
+                        size={"sm"} 
+                        className={styles.icon}
+                        variant={"transparent"}
+                        onClick={() => { closeTab(step.tab_id) }}
+                    >
+                        <RxCross2 size={14} />
+                    </ActionIcon>
+                </div>
             </Tabs.Tab>
         ))
 

@@ -120,13 +120,38 @@ function getCaretCoordinates() {
         const delta = (lineHeight - fontSize) / 2
         return { x: rect.left, y: (rect.top + delta) }
     }
+}
 
-    return { x: 0, y: 0}
+function SanitizeHTML(html: string) {
+    html = html.replace("<br>", "")
+    return html
+}
+
+type elTypes = HTMLDivElement
+
+function ExtractSaved() {
+    let selection = document.getSelection()
+    if(selection === null)
+        return
+
+    let saved = [ selection.focusNode, selection.focusOffset ]
+    return saved
+}
+
+function SafeReplaceHTML(el: elTypes, value: string) {
+    let selection = document.getSelection()
+    if(selection === null)
+        return
+
+    el.innerHTML = value
 }
 
 export { 
     ParseContentInput,
     ConvertToInput,
     placeCaretAtEnd,
-    getCaretCoordinates 
+    getCaretCoordinates,
+    SanitizeHTML,
+    SafeReplaceHTML,
+    ExtractSaved 
 }

@@ -33,7 +33,8 @@ interface ILunarState {
     setChartTitle: Function,
     getNode: Function,
     setDataNodes: Function,
-    setNode: Function
+    setNode: Function,
+    closeTab: idVoid
 }
 
 //ui

@@ -9,3 +9,19 @@
 
     border-top-left-radius: 8px;
 }
+
+.tabWrapper {
+    .content {
+        margin-left: 5px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .icon { opacity: 0; }
+    &:hover {
+        .icon { opacity: 1; }
+    }
+}

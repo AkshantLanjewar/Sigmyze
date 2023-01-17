@@ -1,11 +1,47 @@
 .slashMenu {
     position: absolute;
-    width: 100px;
-    height: 100px;
-    background-color: black;
+    padding: 4px;
+    background-color: #1A1B1E;
     pointer-events: all;
+    border-radius: 8px;
+    min-width: 100px;
+    overflow: visible;
 
     z-index: 99;
+
+    .inner {
+        position: relative;
+        overflow: visible;
+
+        .arrow {
+            width: 7px;
+            height: 7px;
+            transform: rotate(45deg);
+            position: absolute;
+            left: 5px;
+            top: -5px;
+
+            z-index: 99;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            .item {
+                border-radius: 8px;
+
+                &:hover {
+                    background-color: #25262b;
+                }
+
+                &.active {
+                    background-color: #25262b;
+                }
+            }
+        }
+    }
 }
 
 .slash-wrapper {

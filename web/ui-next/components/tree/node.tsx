@@ -10,7 +10,6 @@ import {
 } from 'react-contexify'
 
 import { 
-    IconFolders,
     IconChevronDown,
     IconChevronRight,
 } from '@tabler/icons'
@@ -18,7 +17,8 @@ import {
 import { 
     FcFolder, 
     FcComboChart,
-    FcDocument 
+    FcDocument,
+    FcOpenedFolder 
 } from 'react-icons/fc'
 
 import { useHover, usePrevious } from '@mantine/hooks'
@@ -29,7 +29,9 @@ import "react-contexify/dist/ReactContexify.css"
 
 const icon_table = {
     "chart": <FcComboChart size={18} stroke={"2"} />,
-    "project": <IconFolders size={18} stroke={2} />,
+    "project": <FcFolder size={18} stroke={"2"} />,
+    "project_opened": <FcOpenedFolder size={18} stroke={"2"} />,
+    "folder_opened": <FcOpenedFolder size={18} stroke={"2"} />,
     "folder": <FcFolder size={18} stroke={"2"} />,
     "document": <FcDocument size={18} stroke={"2"} />
 }
@@ -87,6 +89,10 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
     let box = ( <div className={styles.box}></div> )
     if(node.node_type === "chart" && node.children.length > 0)
         box = ( <div className={`${styles.box} ${styles.show}`}></div> )
+    
+    let nodeIcon = icon_table[`${node.node_type}` as keyof typeof icon_table]
+    if((node.node_type === "project" || node.node_type === "folder") && active)
+        nodeIcon = icon_table['folder_opened']
 
     return (
         <div>
@@ -136,7 +142,7 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive 
                     {box}
 
                     <div className={`${styles.icon}`}>
-                        {icon_table[node.node_type as keyof typeof icon_table]}
+                        {nodeIcon}
                     </div>
 
                     <Text

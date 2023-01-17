@@ -1,6 +1,6 @@
 import { SetStateAction } from "react"
-import { ITreeNode } from "../../../tree/tree"
-import { ILunarProjectData, ILunarUIData, IProjectNode } from "../types"
+import { ITreeNode } from "../../../../tree/tree"
+import { ILunarProjectData, ILunarUIData, IProjectNode } from "../../types"
 
 function GetItem(id: string, splits: Array<IProjectNode>): IProjectNode | null {
     let item: IProjectNode | null = null
@@ -85,11 +85,28 @@ function GetNodeIdFromTab(ui: ILunarUIData, tabId: string): string | null {
     return nodeId
 }
 
+function IdExists(splits: Array<IProjectNode>, id: string): boolean {
+    if(splits === undefined)
+        return false
+
+    let exists = false
+    for(let i = 0; i < splits.length; i++) {
+        let split = splits[i]
+        if(split.node_id === id)
+            return true
+
+        exists = IdExists(split.children, id)
+    }
+
+    return exists
+}
+
 export {
     GetItem,
     SetItem,
     GetNodeIdFromTab,
     GetTreeItem,
     SetDataNodes,
-    SetItemWrapper
+    SetItemWrapper,
+    IdExists
 }
