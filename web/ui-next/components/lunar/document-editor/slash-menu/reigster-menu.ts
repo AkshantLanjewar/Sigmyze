@@ -1,10 +1,16 @@
 import { IDocumentMenuItem } from "../../../data/lunar/document-types"
-import RegisterTextBlocks from "../blocks/register-text"
+import RegisterMediaBlocks from "../blocks/media/register-media"
+import RegisterTextBlocks from "../blocks/text/register-text"
 
 function RegisterMenu() {
     let menuItems = [] as IDocumentMenuItem[]
 
-    menuItems = [...menuItems, ...RegisterTextBlocks()]
+    menuItems = [
+        ...menuItems, 
+        ...RegisterTextBlocks(),
+        ...RegisterMediaBlocks()
+    ]
+
     return menuItems
 }
 

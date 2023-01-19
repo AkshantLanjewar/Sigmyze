@@ -10,6 +10,7 @@ import styles from './document-editor.module.scss'
 import SlashMenu from "./slash-menu/slash-menu"
 import { ChartDims } from "../chart-view/engine/types"
 import RegisterMenu from "./slash-menu/reigster-menu"
+import { ChangeBlockType, CreateBlock, DeleteBlock, GetImage, LoadImage, MoveFocus, SetLastActive, UnfocusBlocks, UpdateBlock } from "./functions/functions"
 
 const DEFAULT_DOCUMENT = {
     pages: [{
@@ -88,195 +89,29 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
         setMenuItems([ ...nMenuItems ])
     }, [])
 
+    //create the functions from the definitions
+    
     //block functions
+    const createBlock = (block: IDocumentBlock, index: number, focus?: boolean) =>
+        CreateBlock(block, index, internalData, unfocusBlocks, setInternalData, focus)
+    const deleteBlock = (id: string) => 
+        DeleteBlock(id, internalData, unfocusBlocks, setInternalData)
+    const updateBlock = (block: IDocumentBlock) =>
+        UpdateBlock(block, internalData, setInternalData)
+    const changeBlockType = (type: IDocumentMenuItem) =>
+        ChangeBlockType(type, inputId, internalData, unfocusBlocks, setInternalData)
 
-    function UnfocusBlocks() {
-        let nData = internalData
-        let nBlocks = []
+    //data functions
+    const loadImage = (imageData: string) => LoadImage(imageData, internalData, setInternalData)
+    const getImage = (id: string) => GetImage(id, internalData)
 
-        for(let i = 0; i < nData.pages[0].blocks.length; i++) {
-            let block = nData.pages[0].blocks[i]
-            block.autoFocus = false
-            block.created = false
-            nBlocks.push(block)
-        }
-
-        nData.pages[0].blocks = nBlocks
-        setInternalData({ ...nData })
-    }
-
-    function CreateBlock(block: IDocumentBlock, index: number, focus?: boolean) {
-        UnfocusBlocks()
-
-        let pages = internalData.pages
-        if(focus !== undefined)
-            block.autoFocus = focus
-        block.created = true
-
-        if(pages[0].blocks.length === index)
-            pages[pages.length - 1].blocks.push(block)
-        else
-            pages[0].blocks.splice(index, 0, block)
-
-        let nData = internalData
-        nData.pages = pages
-        setInternalData({ ...nData })
-    }
-
-    function ChangeBlockType(type: IDocumentMenuItem) {
-        let nData = internalData
-        let blocks = nData.pages[0].blocks
-        let nBlocks = []
-        let blockId = null
-
-        for(let i = 0; i < blocks.length; i++) {
-            let block = blocks[i]
-            if(block.id !== inputId) {
-                nBlocks.push(block)
-                continue
-            }
-
-            let nBlock = type.config
-            nBlock.id = block.id
-            nBlock.textNodes = block.textNodes
-            nBlock.autoFocus = false
-            nBlocks.push(nBlock)
-
-            blockId = block.id
-        }
-
-        nData.pages[0].blocks = nBlocks
-        setInternalData({ ...nData })
-
-        if(blockId !== null)
-            FocusId(blockId)
-    }
-
-    function UpdateBlock(block: IDocumentBlock) {
-        let nData = internalData
-        let pages = nData.pages
-        for(let i = 0; i < pages.length; i++) {
-            let page = pages[i]
-            let nBlocks = []
-            for(let x = 0; x < page.blocks.length; x++) {
-                let block_ = page.blocks[x]
-                
-                if(block.id === block_.id)
-                    nBlocks.push(block)
-                else
-                    nBlocks.push(block_)
-            }
-
-            page.blocks = nBlocks
-            pages[i] = page
-        }
-
-        nData.pages = pages
-        setInternalData({ ...nData })
-    }
-
-    function SetLastActive() {
-        UnfocusBlocks()
-        
-        let nData = internalData
-        let blocks = nData.pages[0].blocks
-        if(blocks.length > 0)
-            blocks[blocks.length - 1].autoFocus = true
-
-        nData.pages[0].blocks = blocks
-
-        setInternalData({ ...nData })
-    }
-
-    function FocusId(id: string) {
-        UnfocusBlocks()
-
-        let nData = internalData
-        let blocks = nData.pages[0].blocks
-        let nBlocks = []
-        for(let i = 0; i < blocks.length; i++) {
-            let block = blocks[i]
-            block.autoFocus = false
-            if(block.id === id)
-                block.autoFocus = true
-
-            nBlocks.push(block)
-        }
-
-        nData.pages[0].blocks = nBlocks
-        setInternalData({ ...nData })
-    }
-
-    function MoveFocus(id: string, direction: "up" | "down") {
-        UnfocusBlocks()
-
-        let nData = internalData
-        let blocks = nData.pages[0].blocks
-        let direction_id = null
-        for(let i = 0; i < blocks.length; i++) {
-            let block = blocks[i]
-            if(block.id !== id)
-                continue
-
-            switch(direction) {
-                case "up":
-                    if(i === 0)
-                        direction_id = blocks[blocks.length - 1].id
-                    else
-                        direction_id = blocks[i - 1].id
-                    break
-                case "down":
-                    if(i === blocks.length - 1)
-                        direction_id = blocks[0].id
-                    else
-                        direction_id = blocks[i + 1].id
-                    break
-                default:
-                    break
-            }
-        }
-
-        if(direction_id === null && id === "leaf-block") {
-            switch(direction) {
-                case "up":
-                    direction_id = blocks[blocks.length - 1].id
-                    break
-                case "down":
-                    direction_id = blocks[0].id
-                    break
-                default:
-                    break
-            }
-        }
-
-        if(direction_id !== null)
-            FocusId(direction_id)
-    }
-
-    function DeleteBlock(id: string) {
-        UnfocusBlocks()
-
-        let nData = internalData
-        let nBlocks = [] as IDocumentBlock[]
-        let prevId = null
-
-        for(let i = 0; i < nData.pages[0].blocks.length; i++) {
-            let block = nData.pages[0].blocks[i]
-            if(block.id === id) {
-                if(i > 0)
-                    prevId = nBlocks[i - 1].id
-                continue
-            }
-
-            nBlocks.push(block)
-        }
-
-        nData.pages[0].blocks = nBlocks
-        setInternalData({ ...nData })
-
-        if(prevId !== null)
-            FocusId(prevId)
-    }
+    //focus functions
+    const moveFocus = (id: string, direction: "up" | "down") =>
+        MoveFocus(id, direction, internalData, unfocusBlocks, setInternalData)
+    const unfocusBlocks = () =>
+        UnfocusBlocks(internalData, setInternalData)
+    const setLastActive = () =>
+        SetLastActive(internalData, setInternalData)
 
     return (
         <div className={styles['document-editor-wrapper']}>
@@ -287,7 +122,7 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
                 inputId={inputId}
                 menuItems={menuItems}
                 closeMenu={closeMenu}
-                changeBlockType={ChangeBlockType}
+                changeBlockType={changeBlockType}
                 setLeafMenuItm={setLeafMenuItm}
             />
 
@@ -301,10 +136,10 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
                                         leaf={false}
                                         leafMenuItem={leafMenuItem}
                                         leafMenuUpdate={leafMenuUpdate}
-                                        createBlock={CreateBlock}
-                                        updateBlock={UpdateBlock}
-                                        deleteBlock={DeleteBlock}
-                                        moveFocus={MoveFocus}
+                                        createBlock={createBlock}
+                                        updateBlock={updateBlock}
+                                        deleteBlock={deleteBlock}
+                                        moveFocus={moveFocus}
                                         block={step}
                                         index={index}
                                         autoFocus={step.autoFocus}
@@ -314,6 +149,8 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
                                         menuPosState={{ menuPos, setMenuPos }}
                                         closeMenuState={{ closeMenuFlag, setCloseMenuFlag }}
                                         inputIdState={{ inputId, setInputId }}
+                                        loadImage={loadImage}
+                                        getImage={getImage}
                                     />
                                 ))}
 
@@ -321,11 +158,11 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
                                     leaf={true}
                                     leafMenuItem={leafMenuItem}
                                     leafMenuUpdate={leafMenuUpdate}
-                                    createBlock={CreateBlock}
-                                    updateBlock={UpdateBlock}
-                                    moveFocus={MoveFocus}
-                                    deleteBlock={DeleteBlock}
-                                    setLastActive={SetLastActive}
+                                    createBlock={createBlock}
+                                    updateBlock={updateBlock}
+                                    moveFocus={moveFocus}
+                                    deleteBlock={deleteBlock}
+                                    setLastActive={setLastActive}
                                     index={internalData.pages[0].blocks.length}
                                     oldInput={{ oldInputValue, setOldInputValue }}
                                     inputActive={{ inputActive, setInputActive }}
@@ -333,6 +170,8 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
                                     menuPosState={{ menuPos, setMenuPos }}
                                     closeMenuState={{ closeMenuFlag, setCloseMenuFlag }}
                                     inputIdState={{ inputId, setInputId }}
+                                    loadImage={loadImage}
+                                    getImage={getImage}
                                 />
                             </div>
                         )

@@ -153,7 +153,7 @@ const SlashMenu: React.FC<ISlashMenuProps> =
                             opacity: inputActive ? 1 : 0,
                             pointerEvents: inputActive ? 'auto' : 'none'
                         }}
-                        ref={ref}
+                        ref={inputActive ? ref : null}
                     >
                         <div className={styles.inner}>
                             <ScrollArea 

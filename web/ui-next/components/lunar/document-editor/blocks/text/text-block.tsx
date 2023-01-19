@@ -1,4 +1,4 @@
-import { IDocumentBlock } from "../../../data/lunar/document-types"
+import { IDocumentBlock } from "../../../../data/lunar/document-types"
 import { Text, Group, ActionIcon, Title } from '@mantine/core'
 import { IconGripVertical } from "@tabler/icons"
 import styles from './text-block.module.scss'
@@ -14,7 +14,7 @@ import {
     SanitizeHTML, 
     SafeReplaceHTML, 
     ExtractSaved
-} from "./utils"
+} from "../utils"
 
 import { 
     createBlock, 
@@ -27,7 +27,7 @@ import {
     updateBlock,
     closeMenuState, 
     inputIdState
-} from "../document-editor"
+} from "../../document-editor"
 import { TitleOrder } from "@mantine/core/lib/Title"
 
 interface IParagraphBlockProps {
@@ -275,13 +275,15 @@ const TextBlock: React.FC<IParagraphBlockProps> =
 
             if(createBlock === undefined)
                 return
-            if(textTest.length === 0)
+            if(resetInternalBlock === undefined)
                 return
+            if(textTest.length === 0) {
+                resetInternalBlock()
+                return
+            }
 
             if(inputActive === false)
                 createBlock(nBlock, index)
-            if(resetInternalBlock === undefined)
-                return
             resetInternalBlock()
         } else {
             //update the block

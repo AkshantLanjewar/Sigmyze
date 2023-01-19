@@ -48,6 +48,7 @@
     "memory-cache": "^0.2.0",
     "moize": "^6.1.5",
     "next": "13.1.1",
+    "re-resizable": "^6.9.9",
     "react": "18.2.0",
     "react-chartjs-2": "^5.1.0",
     "react-contexify": "^6.0.0",

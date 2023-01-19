@@ -65,7 +65,7 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globa
 
         let resp = processCharts(charts, dims)
         setScales({ ...resp })
-    }, [charts])
+    }, [charts, width, height])
 
     useEffect(() => {
         const calcWidth = width - margin.left - margin.right

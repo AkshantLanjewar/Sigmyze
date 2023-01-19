@@ -21,7 +21,11 @@
             .page {
                 margin: 18px auto;
                 width: 612pt;
-                height: 792pt;
+                min-height: 792pt;
+
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
     
                 //padding
                 padding: 36pt;
