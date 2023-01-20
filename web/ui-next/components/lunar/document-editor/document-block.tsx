@@ -161,14 +161,10 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
             nBlock.height = data.height
         }
         
-        let indexAddition = 0
         if(leaf === true) {
             nBlock.id = v4()
-            indexAddition = 1
+            createBlock(nBlock, index, false)
         }
-        
-        if(leaf === true)
-            createBlock(nBlock, index + indexAddition, false)
         else
             updateBlock(nBlock)
     }
@@ -198,7 +194,11 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
             {internalBlock?.type === "image" && (
                 <ImageBlock 
                     block={internalBlock}
+                    index={index}
                     getImage={getImage}
+                    createBlock={createBlock}
+                    deleteBlock={deleteBlock}
+                    setActiveModal={setActiveModal}
                 />
             )}
 

@@ -32,6 +32,12 @@ interface IDocumentBlock {
     height?: number
 }
 
+interface IActionMenuItem {
+    icon: JSX.Element,
+    label: string,
+    cb: () => void
+}
+
 interface IDocumentMenuItem {
     id: string,
     type: TextTypes | MediaTypes,
@@ -49,5 +55,6 @@ export type {
     IDocumentMenuItem,
     TextTypes,
     MediaTypes,
-    IDocumentData 
+    IDocumentData,
+    IActionMenuItem 
 }
