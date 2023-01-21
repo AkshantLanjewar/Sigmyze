@@ -9,8 +9,9 @@ import { processCharts } from "./utils"
 import D3Chart from "../d3-chart/d3-chart"
 import D3Tooltip from "../d3-chart/d3-tooltip"
 import D3TooltipBox from "../d3-chart/d3-tooltip-box"
-import D3ChartTitle from "../d3-chart/d3-chart-title"
+import D3ChartTitle from "../d3-chart/title/d3-chart-title"
 import { IGlobalChartSettings } from "../../../data/lunar/types"
+import D3RenderTitle from "../d3-chart/title/d3-render-title"
 
 const AxisBottom = dynamic(() => import('@visx/axis').then(({ AxisBottom }) => AxisBottom),
     { ssr: false }
@@ -20,7 +21,8 @@ interface IChartEngineProps {
     width: number,
     height: number,
     charts?: ILunarChart[],
-    globals?: IGlobalChartSettings
+    globals?: IGlobalChartSettings,
+    display?: boolean
 }
 
 interface ITooltipState {
@@ -42,7 +44,7 @@ const defaultTooltipState = {
     longestIndex: 0
 } as ITooltipState
 
-const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globals }) => {
+const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globals, display }) => {
     const ref = useRef<HTMLDivElement>(null)
     const svgRef = useRef<SVGSVGElement>(null)
     const tooltipRef = useRef<HTMLDivElement>(null)
@@ -52,7 +54,7 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globa
     const [pathRefs, setPathRefs] = useState<any | null>({})
     const [tooltipData, setTooltipData] = useState<ITooltipState>(defaultTooltipState)
 
-    const margin = { top: 40, right: 50, bottom: 40, left: 30 } as IChartMargin
+    const margin = { top: 20, right: 50, bottom: 30, left: 30 } as IChartMargin
 
     useEffect(() => {
         if(charts === undefined)
@@ -60,7 +62,7 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globa
 
         let dims = { 
             x: width - margin.left - margin.right, 
-            y: height - margin.left - margin.right 
+            y: height - margin.top - margin.bottom 
         } as ChartDims
 
         let resp = processCharts(charts, dims)
@@ -92,16 +94,26 @@ const ChartEngine: React.FC<IChartEngineProps> = ({ width, height, charts, globa
     }
 
     return (
-        <div ref={ref} style={{ width: "100%", height: "100%", position: 'relative' }}>
-            {scales.d3Charts && scales.d3Charts.length > 0 && (
-                <D3ChartTitle
-                    margin={margin}
-                    globals={globals}
-                    indicators={scales.d3Charts}
-                    tooltipData={tooltipData}
-                    charts={charts}
-                />
-            )}
+        <div ref={ref} style={{ width: width, height: height, position: 'relative' }}>
+            {display
+                ? (
+                    <D3RenderTitle 
+                        margin={margin}
+                        indicators={scales.d3Charts}
+                        tooltipData={tooltipData}
+                        charts={charts}
+                    />
+                )
+                : scales.d3Charts && scales.d3Charts.length > 0 && (
+                    <D3ChartTitle
+                        margin={margin}
+                        globals={globals}
+                        indicators={scales.d3Charts}
+                        tooltipData={tooltipData}
+                        charts={charts}
+                    />
+                )
+            }
 
             <svg className={styles.svg} ref={svgRef}>
                 <Group left={margin.left} top={margin.top}>

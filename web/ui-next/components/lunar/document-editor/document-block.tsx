@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { v4 } from "uuid"
-import { IDocumentBlock, IDocumentMenuItem, MediaTypes, TextTypes } from '../../data/lunar/document-types'
+import { IChartBlockData, IDocumentBlock, IDocumentMenuItem, MediaTypes, TextTypes } from '../../data/lunar/document-types'
+import ChartBlock from "./blocks/data/chart-block"
 import ImageBlock from "./blocks/media/image-block"
 import TextBlock from "./blocks/text/text-block"
 import { 
@@ -15,12 +16,14 @@ import {
     closeMenuState, 
     inputIdState
 } from "./document-editor"
+import CreateChartModal from "./modals/create-chart-modal"
 import CreateImageModal from "./modals/create-image-modal"
 
 interface ICreateMediaBlockData {
     imageData?: string,
     width?: string | number,
-    height?: number
+    height?: number,
+    chartData?: IChartBlockData
 }
 
 interface IDocumentBlockProps {
@@ -77,11 +80,13 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
     const [internalBlock, setInternalBlock] = useState<IDocumentBlock | null>(null)
     const [activeModal, setActiveModal] = useState<string | null>(null)
     
+    //set the block to be a leaf block if this is a leaf block
     useEffect(() => {
         if(leaf === true)
             setInternalBlock(LEAF_BLOCK)
     }, [])
 
+    //if the leaf menu has updated
     useEffect(() => {
         if(leafMenuItem === null)
             return
@@ -102,6 +107,7 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
         }
     }, [leafMenuUpdate])
 
+    //update the block state based on the external value
     useEffect(() => {
         if(block === undefined)
             return
@@ -117,8 +123,11 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
     function MediaSwitch(block_: IDocumentBlock) {
         if(block_.imageData !== undefined)
             return true
+        if(block_.chartData !== undefined)
+            return true
 
         let blockType = block_.type
+        //actoin to take based on the block type
         switch(blockType) {
             case "paragraph":
                 return true
@@ -127,6 +136,10 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
             case "image":
                 if(block_.imageData === undefined)
                     setActiveModal("create_image")    
+                break
+            case "chart":
+                if(block_.chartId === undefined)
+                    setActiveModal("create_chart")
                 break
             default:
                 break
@@ -140,10 +153,12 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
         setInternalBlock(LEAF_BLOCK)
     }
 
+    //closes the modal
     function closeModal() {
         setActiveModal(null)
     }
 
+    //creates a media oriented block such as charts and images
     function createMediaBlock(type: TextTypes | MediaTypes, data: ICreateMediaBlockData) {
         if(internalBlock === null)
             return
@@ -157,6 +172,10 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
         nBlock.id = internalBlock.id
         if(type === "image") {
             nBlock.imageData = data.imageData
+            nBlock.width = data.width
+            nBlock.height = data.height
+        } else if (type === "chart") {
+            nBlock.chartData = data.chartData
             nBlock.width = data.width
             nBlock.height = data.height
         }
@@ -202,12 +221,24 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
                 />
             )}
 
+            {internalBlock?.type === "chart" && (
+                <ChartBlock
+                    block={internalBlock}
+                />
+            )}
+
             <CreateImageModal 
                 active={activeModal === "create_image"}
                 close={closeModal}
                 createBlock={createMediaBlock}
                 loadImage={loadImage}
             />
+
+            <CreateChartModal
+                active={activeModal === "create_chart"}
+                close={closeModal}
+                createBlock={createMediaBlock}
+            /> 
         </div>
     )
 }

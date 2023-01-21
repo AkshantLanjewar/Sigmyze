@@ -1,5 +1,5 @@
 import { TitleOrder } from "@mantine/core/lib/Title"
-import { ITextNode } from "../../lunar/document-editor/blocks/types"
+import { IPresentationChart, ITextNode } from "../../lunar/document-editor/blocks/types"
 
 interface IDocument {
     pages: IDocumentPage[],
@@ -29,7 +29,15 @@ interface IDocumentBlock {
     textNodes?: ITextNode[],
     imageData?: string,
     width?: string | number,
-    height?: number
+    height?: number,
+    chartId?: string,
+    chartData?: IChartBlockData
+}
+
+interface IChartBlockData {
+    presentationData: IPresentationChart,
+    title: string,
+    caption: string
 }
 
 interface IActionMenuItem {
@@ -56,5 +64,6 @@ export type {
     TextTypes,
     MediaTypes,
     IDocumentData,
-    IActionMenuItem 
+    IActionMenuItem, 
+    IChartBlockData
 }

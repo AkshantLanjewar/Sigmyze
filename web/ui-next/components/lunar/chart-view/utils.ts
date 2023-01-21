@@ -2,8 +2,9 @@ import { GetIndicator } from "../../data/datasets/DatasetsAPI";
 import { IDatasetIndicator, IIndicator } from "../../data/datasets/DatasetsTypes";
 import { IChartData, ILunarChart } from "./engine/types";
 import { v4 as uuid } from 'uuid'
-import { getIndicatorSetting, IIndicatorSetting } from "../../data/lunar/types";
+import { getIndicatorSetting, IChartSettings, IIndicatorSetting } from "../../data/lunar/types";
 import { colorTsar } from "./engine/utils";
+import { CompareIndicators } from "../../data/lunar/context/functions";
 
 function ParseSettings(
     nodeId: string, 
@@ -26,6 +27,24 @@ function ParseSettings(
         }
 
         chart.setting = chart_settings
+        nCharts.push(chart)
+    }
+
+    return nCharts
+}
+
+function ParsePresentationSettings(charts: ILunarChart[], settings: IChartSettings) {
+    let indicatorSettings = settings.indicatorSettings
+    let nCharts = []
+    for(let i = 0; i < charts.length; i++) {
+        let chart = charts[i]
+
+        for(let x = 0; x < indicatorSettings.length; x++) {
+            let setting = indicatorSettings[x]
+            if(CompareIndicators(chart.indicator, setting.indicator))
+                chart.setting = setting
+        }
+
         nCharts.push(chart)
     }
 
@@ -73,4 +92,8 @@ async function FetchIndicators(indicators: IIndicator[]): Promise<ILunarChart[]>
     return charts
 }
 
-export { FetchIndicators, ParseSettings }
+export { 
+    FetchIndicators, 
+    ParseSettings,
+    ParsePresentationSettings 
+}

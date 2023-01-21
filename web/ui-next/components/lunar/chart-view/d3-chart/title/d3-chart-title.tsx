@@ -1,22 +1,23 @@
 import styles from './d3-chart-title.module.scss'
 import { FocusTrap, Group, Indicator, MantineNumberSize, Text, TextInput } from "@mantine/core"
 import { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { IGlobalChartSettings, IIndicatorSetting, ILunarState, ILunarUIData, IProjectNode } from "../../../data/lunar/types"
-import { ChartDims, IChartMargin, ID3Chart, ILunarChart } from "../engine/types"
+import { IGlobalChartSettings, IIndicatorSetting, ILunarState, ILunarUIData, IProjectNode } from "../../../../data/lunar/types"
+import { ChartDims, IChartMargin, ID3Chart, ILunarChart } from "../../engine/types"
 import { useClickOutside } from '@mantine/hooks'
-import { LunarContextData } from '../../../data/lunar/context/context'
-import { ITooltipState } from './d3-tooltip'
-import { CompareIndicators } from '../../../data/lunar/context/functions/chart-functions'
+import { LunarContextData } from '../../../../data/lunar/context/context'
+import { ITooltipState } from '../d3-tooltip'
+import { CompareIndicators } from '../../../../data/lunar/context/functions/chart-functions'
 
 interface ID3ChartTitleProps {
     margin: IChartMargin,
     globals?: IGlobalChartSettings,
     indicators?: ID3Chart[],
     tooltipData: ITooltipState,
-    charts?: ILunarChart[]
+    charts?: ILunarChart[],
+    mutable?: boolean
 }
 
-const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicators, tooltipData, charts }) => {
+const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicators, tooltipData, charts, mutable }) => {
     const innerMargin = {
         left: 0,
         top: 20
@@ -24,13 +25,11 @@ const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicator
 
     const [chartTitle, setChartTitleLocal] = useState<string>("")
     const [nodeId, setNodeId] = useState<string | null>(null)
-    const [indicatorsData, setIndicators] = useState<IIndicatorSetting[]>([])
 
     const { 
         ui, 
         setChartTitle,
         getNodeIdTab,
-        getNode 
     } = useContext(LunarContextData) as ILunarState
 
     useEffect(() => {
@@ -49,20 +48,6 @@ const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicator
         let nodeId_ = getNodeIdTab(activeTab)
         setNodeId(nodeId_)
     }, [])
-
-    useEffect(() => {
-        if(nodeId === null)
-            return
-        if(indicators === undefined)
-            return
-
-        let node = getNode(nodeId) as IProjectNode | null
-        let indicatorSettings = node?.data?.chartSettings?.indicatorSettings
-        if(indicatorSettings === undefined)
-            return
-        
-        setIndicators([ ...indicatorSettings ])
-    }, [indicators])
 
     return (
         <div
@@ -87,18 +72,7 @@ const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicator
             />
 
             {indicators?.map((step, index) => {
-                let indicator = step.setting?.indicator
-                let setting = null
-                if(indicator === undefined)
-                    return null
-
-                for(let i = 0; i < indicatorsData.length; i++) {
-                    let indicator_setting = indicatorsData[i]
-                    let indicator_i = indicator_setting.indicator
-
-                    if(CompareIndicators(indicator, indicator_i) === true)
-                        setting = indicator_setting
-                }
+                let setting = step.setting ? step.setting : null
                 if(setting === null)
                     return null
 
@@ -166,7 +140,7 @@ const IndicatorTitleItem: React.FC<IIndicatorTitleItemProps> = ({ setting, index
                         size={"sm"}
                         weight={"bold"}
                     >
-                        DEU:NGDP_R
+                        {`${setting.indicator.object.object_id}:${setting.indicator.indicator.indicator_id}`}
                     </Text>
                 </Group>
 
@@ -272,4 +246,5 @@ const ClickItem: React.FC<IClickItemProps> =
     )
 }
 
+export { IndicatorTitleItem }
 export default D3ChartTitle

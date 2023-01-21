@@ -138,6 +138,7 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
             onClose={() => { close() }}
             overlayOpacity={0.55}
             overlayBlur={3}
+            exitTransitionDuration={200}
             size={"lg"}
             withCloseButton={false}
             sx={(theme) => ({

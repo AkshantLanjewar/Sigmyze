@@ -1,4 +1,4 @@
-import styles from './create-image.module.scss'
+import styles from './create-modal.module.scss'
 import { ActionIcon, Button, Group, Image, Modal, Popover, Progress, Text, ThemeIcon } from "@mantine/core"
 import { useEffect, useRef, useState } from 'react'
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone'
@@ -225,6 +225,7 @@ const CreateImageModal: React.FC<ICreateImageModalProps> = ({ active, close, cre
                 size={"lg"}
                 withCloseButton={false}
                 title={"Upload Image"}
+                exitTransitionDuration={200}
                 centered
             >
                 {loadedImage === null

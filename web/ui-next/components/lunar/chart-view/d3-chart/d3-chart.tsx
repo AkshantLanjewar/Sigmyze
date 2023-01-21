@@ -55,7 +55,7 @@ const D3Chart: React.FC<ID3ChartProps> = ({ chart, dims, showAxis, timescale, in
                     <GridRows
                         scale={chart.rdScale}
                         width={dims.x}
-                        height={dims.y - 200}
+                        height={dims.y}
                         stroke='#EDF2F7' 
                         strokeOpacity={0.05} 
                     />
@@ -63,7 +63,9 @@ const D3Chart: React.FC<ID3ChartProps> = ({ chart, dims, showAxis, timescale, in
                     <AxisRight
                         scale={chart.rdScale}
                         left={dims.x}
-                        stroke={'#141517'}
+                        stroke={'#373A40'}
+                        hideAxisLine
+                        hideTicks
                         tickStroke={'#141517'}
                         strokeWidth={2}
                         tickLabelProps={() => ({

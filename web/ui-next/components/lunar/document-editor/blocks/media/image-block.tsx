@@ -5,9 +5,11 @@ import { ActionIcon, Group, Image, Tooltip, UnstyledButton } from '@mantine/core
 import { IconEdit, IconGripVertical, IconPlus, IconTrash } from "@tabler/icons"
 import { useClickOutside, useHover } from "@mantine/hooks"
 import { Resizable } from "re-resizable"
-import styles from './image-block.module.scss'
+import styles from '../action-menu.module.scss'
 import { createBlock, deleteBlock } from "../../document-editor"
 import { v4 } from "uuid"
+import ResizableWrapper from "../resizable-wrapper"
+import ActionMenu from "../action-menu"
 
 interface IImageBlockProps {
     block: IDocumentBlock,
@@ -93,6 +95,7 @@ const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, 
         setActiveModal("create_image")
     }
 
+    //update when the block updates
     useEffect(() => {
         if(block.width === undefined || block.height === undefined)
             return
@@ -142,23 +145,13 @@ const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, 
                     <IconGripVertical />
                 </ActionIcon>
 
+
                 {dims && (
-                    <Resizable
-                        className={styles.resizeableWrapper}
-                        maxWidth={664}
-                        lockAspectRatio={maintainAspect}
-                        size={{ width: dims.x, height: dims.y }}
-                        enable={{
-                            right: true,
-                            left: true
-                        }}
-                        handleComponent={{
-                            right: <Handle dir={'right'} active={hovered} />,
-                            left: <Handle dir={'left'} active={hovered} />
-                        }}
-                        onResizeStop={(e, direction, ref, d) => {
-                            setDims({ x: dims.x + d.width, y: dims.y + d.height })
-                        }}
+                    <ResizableWrapper
+                        dims={dims}
+                        setDims={setDims}
+                        maintainAspectRatio={maintainAspect}
+                        hovered={hovered}
                     >
                         <UnstyledButton
                             onClick={() => { setActive(true) }}
@@ -172,31 +165,12 @@ const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, 
                             />
                         </UnstyledButton>
 
-                        <div className={`${styles.actionMenu} ${active && styles.show}`} ref={active ? clickRef : null}>
-                            {ImageActionMenu.map((step) => (
-                                <UnstyledButton 
-                                    className={styles.action}
-                                    onClick={step.cb}
-                                >
-                                    <Tooltip
-                                        label={step.label}
-                                        withArrow
-                                        position={'bottom'}
-                                        color={"black"}
-                                        offset={10}
-                                    >
-                                        <Group 
-                                            position="center" 
-                                            align={"center"}
-                                            sx={{ width: '100%', height: '100%' }}
-                                        >
-                                            {step.icon}
-                                        </Group>
-                                    </Tooltip>
-                                </UnstyledButton>
-                            ))}
-                        </div>
-                    </Resizable>
+                        <ActionMenu
+                            active={active}
+                            items={ImageActionMenu}
+                            ref={clickRef}
+                        />
+                    </ResizableWrapper>
                 )}
 
                 <ActionIcon

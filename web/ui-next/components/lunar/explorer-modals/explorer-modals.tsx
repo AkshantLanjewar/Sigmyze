@@ -33,6 +33,7 @@ const ModalTemplate: React.FC<IModalTemplateProps>
             onClose={() => { close() }}
             overlayOpacity={0.55}
             overlayBlur={3}
+            exitTransitionDuration={200}
             sx={(theme) => ({ 
                 body: {
                     backgroundColor: theme.colors.dark[8]

@@ -17,6 +17,15 @@
     }
 }
 
+.chartModalWrapper {
+    display: block;
+    
+
+    .mantine-Modal-modal {
+        background-color: black;
+    }
+}
+
 .loadingPanel {
     display: flex;
     gap: 10px;

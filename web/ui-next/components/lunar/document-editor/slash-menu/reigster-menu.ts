@@ -1,4 +1,5 @@
 import { IDocumentMenuItem } from "../../../data/lunar/document-types"
+import { RegisterData } from "../blocks/data/register-data"
 import RegisterMediaBlocks from "../blocks/media/register-media"
 import RegisterTextBlocks from "../blocks/text/register-text"
 
@@ -8,7 +9,8 @@ function RegisterMenu() {
     menuItems = [
         ...menuItems, 
         ...RegisterTextBlocks(),
-        ...RegisterMediaBlocks()
+        ...RegisterMediaBlocks(),
+        ...RegisterData()
     ]
 
     return menuItems

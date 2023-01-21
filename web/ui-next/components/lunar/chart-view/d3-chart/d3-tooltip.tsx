@@ -7,7 +7,7 @@ import moize from 'moize'
 import { Motion, spring, presets } from "react-motion"
 import { Line } from "@visx/shape"
 import { v4 } from "uuid"
-import D3Balls from "./d3-balls"
+import D3Balls from "./title/d3-balls"
 import { ITooltipState } from "../engine/chart-engine"
 
 interface ID3TooltipProps {

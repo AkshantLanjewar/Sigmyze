@@ -1,7 +1,7 @@
 import { Motion, spring } from "react-motion"
-import { ID3Chart } from "../engine/types"
-import { getPathYFromX } from "../engine/utils"
-import { ITooltipState } from "./d3-tooltip"
+import { ID3Chart } from "../../engine/types"
+import { getPathYFromX } from "../../engine/utils"
+import { ITooltipState } from "../d3-tooltip"
 
 interface ID3BallsProps {
     tooltipState: ITooltipState,

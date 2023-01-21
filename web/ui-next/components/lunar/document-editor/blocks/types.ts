@@ -1,7 +1,20 @@
+import { IIndicator } from "../../../data/datasets/DatasetsTypes"
+import { IChartSettings, IGlobalChartSettings } from "../../../data/lunar/chart-types"
+
 interface ITextNode {
     type: string,
     value: string,
     id: string
 }
 
-export type { ITextNode }
+interface IPresentationChart {
+    node_id: string,
+    indicators: IIndicator[],
+    chartSettings: IChartSettings,
+    chartGlobals: IGlobalChartSettings
+}
+
+export type { 
+    ITextNode,
+    IPresentationChart 
+}
