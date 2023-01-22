@@ -15,9 +15,10 @@ interface IImageBlockProps {
     block: IDocumentBlock,
     index: number,
     getImage: (id: string) => string | null,
-    createBlock?: createBlock,
-    deleteBlock?: deleteBlock,
-    setActiveModal: Dispatch<SetStateAction<string | null>>
+    setActiveModal: Dispatch<SetStateAction<string | null>>,
+    createBlockWrapper: (callback: () => void) => void,
+    deleteBlockWrapper: () => void,
+    updateSizeWrapper: (dims: ChartDims | null) => void
 }
 
 const Handle = (props: any) => (
@@ -31,7 +32,8 @@ const Handle = (props: any) => (
     </div>
 )
 
-const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, deleteBlock, setActiveModal, index }) => {
+const ImageBlock: React.FC<IImageBlockProps> = 
+    ({ block, getImage, setActiveModal, deleteBlockWrapper, createBlockWrapper, updateSizeWrapper }) => {
     const [active, setActive] = useState(false)
     const [maintainAspect, setMaintainAspect] = useState(true)
     const [dims, setDims] = useState<ChartDims | null>(null)
@@ -45,7 +47,7 @@ const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, 
         {
             icon: <IconPlus size={20} />,
             label: "Add Block",
-            cb: () => { createBlockWrapper() }
+            cb: () => { createBlockWrapper(closeActionMenu) }
         },
         {
             icon: <IconEdit size={20} />,
@@ -64,30 +66,6 @@ const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, 
     //close the action item menu
     function closeActionMenu() {
         setActive(false)
-    }
-
-    //create a new block function
-    function createBlockWrapper() {
-        if(createBlock === undefined)
-            return
-
-        let nBlock = {
-            type: "paragraph",
-            textNodes: [],
-            id: v4(),
-            leaf: false
-        } as IDocumentBlock
-
-        createBlock(nBlock, index + 1, true)
-        closeActionMenu()
-    }
-
-    //delete the current image block
-    function deleteBlockWrapper() {
-        if(deleteBlock === undefined)
-            return
-
-        deleteBlock(block.id)
     }
 
     //edit the image modal
@@ -126,6 +104,11 @@ const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, 
         setImageData(imageData_)
     }, [block])
 
+    function setDims_(value: ChartDims) {
+        setDims(value)
+        updateSizeWrapper(value)
+    }
+
     return (
         <div>
             <Group
@@ -149,7 +132,7 @@ const ImageBlock: React.FC<IImageBlockProps> = ({ block, getImage, createBlock, 
                 {dims && (
                     <ResizableWrapper
                         dims={dims}
-                        setDims={setDims}
+                        setDims={setDims_}
                         maintainAspectRatio={maintainAspect}
                         hovered={hovered}
                     >

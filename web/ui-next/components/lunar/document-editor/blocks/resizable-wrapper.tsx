@@ -16,7 +16,7 @@ const Handle = (props: any) => (
 
 interface IResizeableWrapperProps {
     dims: ChartDims,
-    setDims: (value: SetStateAction<ChartDims | null>) => void
+    setDims: (value: ChartDims) => void
     maintainAspectRatio: boolean,
     hovered: boolean,
     children: React.ReactNode

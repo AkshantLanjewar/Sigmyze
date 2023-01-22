@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { v4 } from "uuid"
 import { IChartBlockData, IDocumentBlock, IDocumentMenuItem, MediaTypes, TextTypes } from '../../data/lunar/document-types'
+import { ChartDims } from "../chart-view/engine/types"
 import ChartBlock from "./blocks/data/chart-block"
 import ImageBlock from "./blocks/media/image-block"
 import TextBlock from "./blocks/text/text-block"
@@ -188,6 +189,53 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
             updateBlock(nBlock)
     }
 
+    //default create new block
+    function createBlockWrapper(callback: () => void) {
+        if(createBlock === undefined)
+            return
+
+        let nBlock = {
+            type: "paragraph",
+            textNodes: [],
+            id: v4(),
+            leaf: false
+        } as IDocumentBlock
+
+        createBlock(nBlock, index + 1, true)
+        callback()
+    }
+
+    //default delete block
+    function deleteBlockWrapper() {
+        if(deleteBlock === undefined)
+            return
+        if(block === undefined)
+            return
+        
+        deleteBlock(block.id)
+    }
+
+    //updates block size based on resize wrapper
+    function updateSizeWrapper(dims: ChartDims | null) {
+        if(internalBlock === null)
+            return
+        if(updateBlock === undefined)
+            return
+
+        let width = 0
+        let height = 0
+        if(dims !== null) {
+            width = dims.x
+            height = dims.y
+        }
+        
+        let nBlock = internalBlock
+        nBlock.width = width
+        nBlock.height = height
+
+        updateBlock(nBlock)
+    }
+
     return (
         <div>
             {(internalBlock?.type === "paragraph" || internalBlock?.type === "title") && (
@@ -215,15 +263,20 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
                     block={internalBlock}
                     index={index}
                     getImage={getImage}
-                    createBlock={createBlock}
-                    deleteBlock={deleteBlock}
                     setActiveModal={setActiveModal}
+                    createBlockWrapper={createBlockWrapper}
+                    deleteBlockWrapper={deleteBlockWrapper}
+                    updateSizeWrapper={updateSizeWrapper}
                 />
             )}
 
             {internalBlock?.type === "chart" && (
                 <ChartBlock
                     block={internalBlock}
+                    createBlockWrapper={createBlockWrapper}
+                    deleteBlockWrapper={deleteBlockWrapper}
+                    setActiveModal={setActiveModal}
+                    updateSizeWrapper={updateSizeWrapper}
                 />
             )}
 

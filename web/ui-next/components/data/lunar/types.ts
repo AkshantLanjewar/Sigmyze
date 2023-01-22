@@ -62,7 +62,13 @@ interface ILunarProjectData {
     project_name: string,
 
     splits: Array<IProjectNode>,
-    nodes?: Array<ITreeNode>
+    nodes?: Array<ITreeNode>,
+    documents?: IProjectDocument[]
+}
+
+interface IProjectDocument {
+    document_id: string,
+    data: IDocument
 }
 
 interface IProjectNode {

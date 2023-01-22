@@ -1,7 +1,7 @@
 import { ActionIcon, Group, UnstyledButton } from "@mantine/core"
 import { useClickOutside, useHover } from "@mantine/hooks"
-import { IconGripVertical, IconPlus, IconTrash } from "@tabler/icons"
-import { useEffect, useState } from "react"
+import { IconEdit, IconGripVertical, IconPlus, IconTrash } from "@tabler/icons"
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { IActionMenuItem, IDocumentBlock } from "../../../../data/lunar/document-types"
 import { ChartDims } from "../../../chart-view/engine/types"
 import ActionMenu from "../action-menu"
@@ -9,10 +9,15 @@ import ResizableWrapper from "../resizable-wrapper"
 import DocumentChart from "./document-chart"
 
 interface IChartBlockProps {
-    block: IDocumentBlock
+    block: IDocumentBlock,
+    createBlockWrapper: (callback: () => void) => void,
+    deleteBlockWrapper: () => void,
+    setActiveModal: Dispatch<SetStateAction<string | null>>,
+    updateSizeWrapper: (dims: ChartDims | null) => void,
 }
 
-const ChartBlock: React.FC<IChartBlockProps> = ({ block }) => {
+const ChartBlock: React.FC<IChartBlockProps> = 
+    ({ block, createBlockWrapper, deleteBlockWrapper, updateSizeWrapper, setActiveModal }) => {
     const [active, setActive] = useState(false)
     const [dims, setDims] = useState<ChartDims | null>(null)
 
@@ -24,12 +29,17 @@ const ChartBlock: React.FC<IChartBlockProps> = ({ block }) => {
         {
             icon: <IconPlus size={20} />,
             label: "Add Block",
-            cb: () => {  }
+            cb: () => { createBlockWrapper(() => setActive(false)) }
+        },
+        {
+            icon: <IconEdit size={20} />,
+            label: "Edit Image",
+            cb: () => { editChartWrapper() }
         },
         {
             icon: <IconTrash color={'#fa5252'} size={20} />,
             label: "Delete Chart",
-            cb: () => {  }
+            cb: () => { deleteBlockWrapper() }
         }
     ] as IActionMenuItem[]
 
@@ -40,6 +50,16 @@ const ChartBlock: React.FC<IChartBlockProps> = ({ block }) => {
         let nDims = { x: block.width, y: block.height } as ChartDims
         setDims({ ...nDims })
     }, [block])
+
+    function setDims_(value: ChartDims) {
+        setDims(value)
+        updateSizeWrapper(value)
+    }
+
+    //wrapper function to edit the image
+    function editChartWrapper() {
+        setActiveModal("create_chart")
+    }
 
     return (
         <div>
@@ -64,7 +84,7 @@ const ChartBlock: React.FC<IChartBlockProps> = ({ block }) => {
                 {dims && (
                     <ResizableWrapper
                         dims={dims}
-                        setDims={setDims}
+                        setDims={setDims_}
                         maintainAspectRatio={true}
                         hovered={hovered}
                     >

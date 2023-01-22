@@ -89,6 +89,10 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
         setMenuItems([ ...nMenuItems ])
     }, [])
 
+    useEffect(() => {
+        
+    }, [internalData])
+
     //create the functions from the definitions
     
     //block functions

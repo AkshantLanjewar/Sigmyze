@@ -4,14 +4,14 @@ import { IPresentationChart } from '../types'
 import DocumentChartView from '../../../chart-view/document-chart-view'
 import { ParentSize } from '@visx/responsive'
 import { ChartDims } from '../../../chart-view/engine/types'
-import { CSSProperties, useEffect, useState } from 'react'
+import { CSSProperties, Dispatch, SetStateAction, useEffect, useState } from 'react'
 
 interface IDocumentChartProps {
     data?: IPresentationChart,
     title?: string,
     caption?: string,
     display?: boolean,
-    dims?: ChartDims
+    dims?: ChartDims,
 }
 
 const DocumentChart: React.FC<IDocumentChartProps> = ({ data, title, caption, display, dims }) => {
@@ -28,7 +28,7 @@ const DocumentChart: React.FC<IDocumentChartProps> = ({ data, title, caption, di
         height -= 64
         height -= 44
         setChartHeight(height)
-    }, [dims])
+    }, [dims])  
 
     //additional styles for the chartstyles div
     let chartStyles = {} as CSSProperties
@@ -59,7 +59,7 @@ const DocumentChart: React.FC<IDocumentChartProps> = ({ data, title, caption, di
                 )}
             </div>
             
-            {caption && caption.length > 0 && (
+            {caption && caption.trim().length > 0 && (
                 <div className={styles.chartCaption}>
                     <Text size={'xs'} color={'dimmed'}>
                         {caption}
