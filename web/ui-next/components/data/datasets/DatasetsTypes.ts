@@ -105,5 +105,6 @@ export type {
     IUnparsedIndicator,
     IIndicatorData,
     IDatasetObjects,
-    IDatasetIndicator 
+    IDatasetIndicator,
+    IStatus 
 }

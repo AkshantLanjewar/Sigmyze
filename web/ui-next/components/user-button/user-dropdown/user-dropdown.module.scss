@@ -1,0 +1,21 @@
+.avatarButton {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+}
+
+.userGroup {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menuItem {
+    overflow: hidden;
+}
+
+.customLabel {
+    margin-top: 1px;
+    margin-bottom: 1px;
+}

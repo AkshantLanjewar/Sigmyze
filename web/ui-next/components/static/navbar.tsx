@@ -28,7 +28,7 @@ interface NavbarProps {
     location: string
 }
 
-const NavbarS: React.FC<NavbarProps> = ({ location  }) : JSX.Element => {
+const NavbarS: React.FC<NavbarProps> = ({ location }) : JSX.Element => {
     const links = routes.map((link, index) => (
         <Tooltip 
             label={link.label} 

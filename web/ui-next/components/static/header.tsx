@@ -7,6 +7,7 @@ import {
 
 import Image from 'next/image'
 import logo  from '../../public/logo.svg'
+import UserButton from '../user-button'
 
 const HeaderS: React.FC<{}> = () : JSX.Element => {
     return (
@@ -33,7 +34,6 @@ const HeaderS: React.FC<{}> = () : JSX.Element => {
 
                     <Box 
                         sx={{
-                            height: 35,
                             fontSize: 26,
                             fontWeight: 700,
                             textAlign: 'center',
@@ -47,8 +47,7 @@ const HeaderS: React.FC<{}> = () : JSX.Element => {
                 </Box>
                 
                 <Group>
-                    
-                    <Burger opened={false} />
+                    <UserButton />
                 </Group>
             </Group>
         </Header>
