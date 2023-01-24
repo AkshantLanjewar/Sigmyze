@@ -13,7 +13,7 @@
                 }
             ],
             "links": ["dotnet"],
-            "memory": 200
+            "memory": 512
         },
         {
             "name": "dotnet",
@@ -24,7 +24,8 @@
                     "hostPort": 8013,
                     "containerPort": 80
                 }
-            ]
+            ],
+            "memory": 512
         }
     ]
 }
