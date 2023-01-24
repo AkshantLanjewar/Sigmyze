@@ -3,7 +3,7 @@ phases:
   install:
     runtime_versions:
       docker: 18
-  prebuild:
+  pre_build:
     commands:
       - echo Logging into ecr
       - aws --version
