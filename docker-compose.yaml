@@ -6,21 +6,12 @@ services:
             context: .
             dockerfile: ./Server.Dockerfile
         ports:
-            - "80:80"
-        expose:
-            - 80
+            - "8013:80"
         restart: always
     nginx:
         build: 
             context: .
             dockerfile: ./NginX.Dockerfile
         ports:
-            - "8080:80"
+            - "80:80"
         restart: always
-        image: akshantlanjewar/sigmyze-prod
-    certbot:
-        image: certbot/certbot
-        container_name: certbot
-        volumes: 
-            - ./certbot/www/:/var/www/certbot/:rw
-            - ./certbot/conf/:/etc/letsencrypt/:rw

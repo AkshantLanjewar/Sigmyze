@@ -1,0 +1,30 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "nginx",
+            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/nginx:latest",
+            "hostname": "nginx",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": ["dotnet"],
+            "memory": 200
+        },
+        {
+            "name": "dotnet",
+            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/dotnet:latest",
+            "hostname": "dotnet",
+            "portMappings": [
+                {
+                    "hostPort": 8013,
+                    "containerPort": 80
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+version: 0.2
+phases:
+  install:
+    runtime_versions:
+      docker: 18
+  prebuild:
+    commands:
+      - echo Logging into ecr
+      - aws --version
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - REPOSITORY_URL=581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers
+      - echo Logged into ECR!
+  build:
+    commands:
+      #build the docker images
+      - echo Building the docker images
+      - docker build -t $REPOSITORY_URL/dotnet:latest ./Server.Dockerfile
+      - echo Built the DOTNET docker layer
+      - docker build -t $REPOSITORY_URL/nginx-ui:latest ./NginX.Dockerfile
+      - echo Built the NGINX docker layer
+  post_build:
+    commands:
+      - echo Pushing the docker images
+      - docker push $REPOSITORY_URL/dotnet:latest
+      - echo Pushed the DOTNET docker layer
+      - docker push $REPOSITORY_URL/nginx-ui:latest
+      - echo Pushed the NGINX docker layer
