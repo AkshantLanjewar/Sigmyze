@@ -14,9 +14,9 @@ phases:
     commands:
       #build the docker images
       - echo Building the docker images
-      - docker build -t $REPOSITORY_URL/dotnet:latest ./Server.Dockerfile
+      - docker build -t $REPOSITORY_URL/dotnet:latest -f Server.Dockerfile
       - echo Built the DOTNET docker layer
-      - docker build -t $REPOSITORY_URL/nginx-ui:latest ./NginX.Dockerfile
+      - docker build -t $REPOSITORY_URL/nginx-ui:latest -f NginX.Dockerfile
       - echo Built the NGINX docker layer
   post_build:
     commands:
