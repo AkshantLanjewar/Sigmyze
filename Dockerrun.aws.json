@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "nginx",
-            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/nginx:latest",
+            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/nginx-ui:latest",
             "hostname": "nginx",
             "essential": true,
             "portMappings": [
