@@ -1,0 +1,27 @@
+$mdRadius: var(--mantine-radius-md);
+$dark0: var(--mantine-color-dark-0);
+$dark5: var(--mantine-color-dark-5);
+$indigo6: var(--mantine-color-indigo-6);
+
+.actionButton {
+    width: 50px;
+    height: 50px;
+    border-radius: $mdRadius;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $dark0;
+
+    &:hover {
+        background-color: $indigo6;
+
+        &.active {
+            background-color: $dark5;
+        }
+    }
+
+    &.active {
+        background-color: $indigo6;
+    }
+}

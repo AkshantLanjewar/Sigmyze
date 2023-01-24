@@ -6,14 +6,19 @@ async function GET_Cache<Type>(url: string, init?: RequestInit): Promise<Type> {
         return value
     
     const hours = 72
-    const res = await fetch(url, init)
-    const data = await res.json()
+    const data = await GET_Cacheless<Type>(url, init)
     cacheData.put(url, data, hours * 1000 * 60 * 60)
     return data
 }
 
 async function GET<Type>(url: string, init?: RequestInit): Promise<Type> {
     return await GET_Cache(url, init)
+}
+
+async function GET_Cacheless<Type>(url: string, init?: RequestInit): Promise<Type> {
+    const res = await fetch(url, init)
+    const data = await res.json()
+    return data
 }
 
 function GenerateOptions(method: string, token: string | null, data?: any): RequestInit {
@@ -28,15 +33,15 @@ function GenerateOptions(method: string, token: string | null, data?: any): Requ
         options.headers['Content-Type'] = 'application/json'
     }
 
-    console.log(options)
     return options
 }
 
 const dev = process.env.NODE_ENV !== 'production';
-const server = dev ? 'http://localhost:3000' : 'https://your_deployment.server.com'
+const server = dev ? 'http://localhost:3000' : 'http://127.0.0.1'
 
 export { 
     GET,
     server,
-    GenerateOptions
+    GenerateOptions,
+    GET_Cacheless
 }

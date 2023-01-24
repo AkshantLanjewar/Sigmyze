@@ -13,10 +13,16 @@ import {
     IconDatabase,
     IconGlobe,
     IconZoomQuestion,
-    IconNews 
+    IconNews, 
+    IconDeviceFloppy
 } from '@tabler/icons'
 
-const routes = [
+import { useContext, useEffect, useState } from 'react'
+import { UserContextData } from '../data/user/context'
+import { IUserContext } from '../data/user/types'
+import styles from './navbar.module.scss'
+
+const defaultRoutes = [
     { icon: IconHome2, label: 'Home', path: '/' },
     { icon: IconDatabase, label: 'Datasets', path: '/datasets' },
     { icon: IconGlobe, label: 'Lunar', path: '/lunar' },
@@ -29,6 +35,19 @@ interface NavbarProps {
 }
 
 const NavbarS: React.FC<NavbarProps> = ({ location }) : JSX.Element => {
+    const { loggedIn } = useContext(UserContextData) as IUserContext
+    const [routes, setRoutes] = useState(defaultRoutes)
+
+    useEffect(() => {
+        if(loggedIn === undefined)
+            return
+
+        let nRoutes = defaultRoutes
+        if(loggedIn === true)
+            nRoutes[0] = { icon: IconDeviceFloppy, label: "Drive", path: '/' }
+        setRoutes([ ...nRoutes ])
+    }, [loggedIn])
+
     const links = routes.map((link, index) => (
         <Tooltip 
             label={link.label} 
@@ -37,22 +56,7 @@ const NavbarS: React.FC<NavbarProps> = ({ location }) : JSX.Element => {
         >
             <UnstyledButton
                 onClick={() => { window.location.assign(link.path) }}
-                sx={(theme: MantineTheme) => ({
-                    width: 50,
-                    height: 50,
-                    borderRadius: theme.radius.md,
-
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: theme.colors.dark[0],
-
-                    '&:hover': {
-                        backgroundColor: link.path === location ? theme.colors.indigo[6] : theme.colors.dark[5]
-                    },
-
-                    backgroundColor: link.path === location ? theme.colors.indigo[6] : 'transparent'
-                })}
+                className={`${styles.actionButton} ${link.path === location ? styles.active : null}`}
             >
                 <link.icon stroke={2} />
             </UnstyledButton>

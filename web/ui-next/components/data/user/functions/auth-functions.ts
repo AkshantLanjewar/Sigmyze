@@ -132,7 +132,11 @@ async function Logout(
     setAuthData: (value: SetStateAction<IAuthenticationData | undefined>) => void,
     setUserData: (value: SetStateAction<IUserData | undefined>) => void
 ) {
-    let resp = await UserRevokeToken(token)
+    try {
+        let resp = await UserRevokeToken(token)
+    } catch {
+        console.log('[Notice, Already Logged Out]')
+    }
 
     setAuthData(undefined)
     setUserData(undefined)

@@ -1,8 +1,68 @@
 import { Avatar, Group, Menu, UnstyledButton, Text } from "@mantine/core"
 import { IconLogout } from "@tabler/icons"
+import { useContext, useEffect, useState } from "react"
+import { UserContextData } from "../../data/user/context"
+import { IUserContext } from "../../data/user/types"
 import styles from './user-dropdown.module.scss'
 
 const UserDropdown: React.FC = ({ }) => {
+    const { 
+        authData, 
+        userData,
+        verified,
+        loggedIn, 
+        logout,
+        fetchUserData 
+    } = useContext(UserContextData) as IUserContext
+
+    const [email, setEmail] = useState("")
+    const [name, setName] = useState("")
+    const [initials, setInitials] = useState("")
+
+    function logoutWrapper() {
+        let token = authData?.token
+        if(token === undefined)
+            return
+        if(logout === undefined)
+            return
+        
+        logout(token)
+    }
+
+    //actual fetch of the user data
+    async function fetchUData() {
+        let token = authData?.token
+        if(token === undefined)
+            return
+        if(fetchUserData === undefined)
+            return
+
+        await fetchUserData(token)
+    }
+
+    //hook that handles the grabbing of the userData
+    useEffect(() => {
+        if(loggedIn !== true)
+            return
+        if(userData === undefined)
+            fetchUData()
+    }, [loggedIn])
+
+    //hook that handles the userData
+    useEffect(() => {
+        if(userData === undefined) {
+            setInitials("")
+            setName("")
+            setEmail("")
+            
+            return
+        }
+
+        setInitials(userData.username.split(" ").map((n)=>n[0]).join("").toUpperCase())
+        setName(userData.username)
+        setEmail(userData.email)
+    }, [userData])
+    
     return (
         <div>
             <Menu
@@ -20,7 +80,7 @@ const UserDropdown: React.FC = ({ }) => {
                             radius={"sm"}
                             color={'blue'}
                         >
-                            AL
+                            {initials}
                         </Avatar>
                     </UnstyledButton>
                 </Menu.Target>
@@ -32,7 +92,7 @@ const UserDropdown: React.FC = ({ }) => {
                                 radius={"sm"}
                                 color={'blue'}
                             >
-                                AL
+                                {initials}
                             </Avatar>
 
                             <div style={{ overflow: 'hidden', textOverflow: "ellipsis" }}>
@@ -40,7 +100,7 @@ const UserDropdown: React.FC = ({ }) => {
                                     style={{ overflow: 'hidden', textOverflow: "ellipsis" }}
                                     weight={500}
                                 >
-                                    Akshant Lanjewar
+                                    {name}
                                 </Text>
 
                                 <Text
@@ -48,7 +108,7 @@ const UserDropdown: React.FC = ({ }) => {
                                     size={'xs'}
                                     style={{ overflow: 'hidden', textOverflow: "ellipsis" }}
                                 >
-                                    akshant.lanjewar@gmail.com 
+                                    {email} 
                                 </Text>
                             </div>
                         </Group>
@@ -58,10 +118,10 @@ const UserDropdown: React.FC = ({ }) => {
 
                     <Menu.Label>Settings</Menu.Label>
 
-                    <Menu.Item icon={<IconLogout size={14} stroke={1.5} />} >
-                        <div className={styles.customLabel}>
+                    <Menu.Item icon={<IconLogout size={14} stroke={1.5} />} onClick={() => { logoutWrapper() }} >
+                        <UnstyledButton className={styles.customLabel}>
                             Logout
-                        </div>
+                        </UnstyledButton>
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>

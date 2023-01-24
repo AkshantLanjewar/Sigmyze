@@ -1,4 +1,5 @@
 import DefaultLayout from "../components/default-layout"
+import IndexPage from "../components/index"
 
 export default function Home() {
 	return (
@@ -8,8 +9,8 @@ export default function Home() {
 				description=""
 				location="/"
 			>
-				<div>
-					Swag
+				<div style={{ width: '100%', height: '100%' }}>
+					<IndexPage />
 				</div>
 			</DefaultLayout>
 		</>
