@@ -1,4 +1,4 @@
-FROM node:16-alpine3.14 as builder
+FROM public.ecr.aws/docker/library/node:16-alpine3.14 as builder
 
 WORKDIR /ui
 COPY web/ui ./
@@ -14,7 +14,7 @@ WORKDIR /ui
 RUN yarn link sigmyze-charting
 RUN yarn install && yarn build
 
-FROM nginx:alpine
+FROM public.ecr.aws/nginx/nginx:1.23-alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
