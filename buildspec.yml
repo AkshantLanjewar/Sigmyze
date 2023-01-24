@@ -7,7 +7,7 @@ phases:
     commands:
       - echo Logging into ecr
       - aws --version
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin
       - REPOSITORY_URL=581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers
       - echo Logged into ECR!
   build:
