@@ -20,5 +20,9 @@ namespace SigmyzeServer.Models.ApplicationServices
 
         [BsonElement("organization_name")]
         public string? OrganizationName { get; set; } 
+
+        [BsonElement("users")]
+        [JsonIgnore]
+        public List<string>? Users { get; set; }
     }
 }

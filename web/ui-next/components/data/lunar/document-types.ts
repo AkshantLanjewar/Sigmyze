@@ -28,7 +28,7 @@ interface IDocumentBlock {
 
     textNodes?: ITextNode[],
     imageData?: string,
-    width?: string | number,
+    width?: number,
     height?: number,
     chartId?: string,
     chartData?: IChartBlockData

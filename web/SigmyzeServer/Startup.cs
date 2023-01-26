@@ -7,6 +7,9 @@ using System.Text;
 using SigmyzeServer.Models.User;
 using SigmyzeServer.Services.Auth;
 using SigmyzeServer.Services.DatabaseServices;
+using MongoDB.Driver;
+using Microsoft.Extensions.Options;
+using SigmyzeServer.Services.OrganizationServices;
 
 namespace SigmyzeServer
 {
@@ -45,12 +48,25 @@ namespace SigmyzeServer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sigmyze API", Version = "v1" });
             });
 
+            //add the database
+            services.AddSingleton<IMongoClient>(options => {
+                var authDatabaseSettings = Configuration.GetSection("UserDatabase").Get<AuthDatabaseSettings>();
+                var mongoClient = new MongoClient(authDatabaseSettings.ConnectionString);
+                return mongoClient;
+            });
+
             //add authentication
             services.AddSingleton<IUserAuth, AuthService>();
             services.AddSingleton<IDatasetMongoOrm, DatasetMongoOrm>(); // dataset service for hosted datasets
             services.AddTransient<IHashService, HashService>();
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<ITokenDataService, TokenDataService>();
+
+            //organization services
+            services.AddSingleton<IOrganizationRepository, OrganizationRepository>();
+            services.AddSingleton<IDriveRepository, DriveRepository>();
+            services.AddSingleton<IProjectRepository, ProjectRepository>();
+            services.AddSingleton<IUserServiceRepository, UserServiceRepository>();
 
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

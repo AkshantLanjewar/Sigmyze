@@ -1,0 +1,37 @@
+using System.Text.Json.Serialization;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace SigmyzeServer.Models.ApplicationServices
+{
+    public class ProjectView
+    {
+        [BsonElement("project_id")]
+        public string? ProjectId { get; set; }
+
+        [BsonElement("project_name")]
+        public string? ProjectName { get; set; }
+    }
+
+    public class ProjectData
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        [JsonIgnore]
+        public string? Id { get; set; }
+        
+        [BsonElement("project_id")]
+        public string? ProjectId { get; set; }
+
+        //NOTE: This field is used for user authentication, the backend has to verify whether or not 
+        //the requested user can actually acesss this project
+        [BsonElement("organization_id")]
+        public string? OrganizationId { get; set; }
+        
+        [BsonElement("nodes")]
+        public List<Node>? Nodes { get; set; }
+        
+        [BsonElement("documents")]
+        public List<Document>? Documents { get; set; }
+    }
+}
