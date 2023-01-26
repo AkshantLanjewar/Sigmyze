@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Mail;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -44,7 +45,7 @@ namespace SigmyzeServer.Services
             string username = "AKIAYO437S56M4E6BAGL";
             string password = "BACLLPTVGF1EaHA1X/fPLbQwljV+okbIKptug6tOnQRG";
             string host = "email-smtp.us-east-1.amazonaws.com";
-            int port = 25;
+            int port = 587;
 
             string htmlContent = "";
 
@@ -53,20 +54,27 @@ namespace SigmyzeServer.Services
             htmlContent +=      $"<h3>Here is your verification token {token} </h3>";
             htmlContent +=  "</div>";
 
-            using(var client = new System.Net.Mail.SmtpClient(host, port))
-            {
-                client.Credentials = new System.Net.NetworkCredential(username, password);
-                client.EnableSsl = true;
-                
-                MailMessage msg = new MailMessage(
-                    "info@sigmyze.com",
-                    address,
-                    "Verification Email",
-                    htmlContent
-                );
+            MailMessage message = new MailMessage();
+            message.IsBodyHtml = true;
+            message.From = new MailAddress("info@sigmyze.com", "Sigmyze Application");
+            message.To.Add(new MailAddress(address));
+            message.Subject = "Verification Token";
+            message.Body = htmlContent;
 
-                msg.IsBodyHtml = true;
-                client.Send(msg);
+            using (var smtpClient = new SmtpClient(host, port))
+            {
+                smtpClient.Credentials = new NetworkCredential(username, password);
+                smtpClient.EnableSsl = true;
+
+                try
+                {
+                    smtpClient.Send(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("The email was not sent.");
+                    Console.WriteLine("Error message: " + ex.Message);
+                }
             }
         }
     }

@@ -127,7 +127,7 @@ namespace SigmyzeServer.Controllers
             resp.Token      = token;
             resp.Registered = true;
             setTokenCookie(aUser.RefreshToken.Token);
-            await _emailService.SendVerificationEmail(aUser.VerificationToken, aUser.EMail, aUser.Username);            
+            _emailService.SendVerificationEmailSES(aUser.VerificationToken!, aUser.EMail!, aUser.Username);            
 
             return await SerializeJSON(resp);
         }
