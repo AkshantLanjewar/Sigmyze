@@ -208,7 +208,7 @@ namespace SigmyzeServer.Controllers
             string code  = pUser.VerificationToken;
             string? name  = pUser.Username;
 
-            await _emailService.SendVerificationEmail(code, email, name);
+            _emailService.SendVerificationEmailSES(code!, email!, name);
             resp.Resent = true;
 
             return await SerializeJSON(resp);
