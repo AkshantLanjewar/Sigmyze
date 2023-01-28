@@ -6,11 +6,14 @@ $dark3: var(--mantine-color-dark-3);
 .toolbarWrapper {
     padding: $sMd;
     padding-bottom: $sXs;
-    margin-bottom: $sXl;
     border-bottom: 1px solid $dark3;
 
     .breadcrumbWrapper {
         flex-grow: 1;
-        overflow-x: auto;
+
+    }
+
+    .actionMenu {
+        
     }
 }

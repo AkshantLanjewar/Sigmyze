@@ -37,6 +37,8 @@ public class UserServiceRepository : IUserServiceRepository
     public async Task InsertUserService(UserServiceIndex nUserService) =>
         await _userServiceCollection.InsertOneAsync(nUserService);
 
+    //FEATURE: This purges a 
+
     //FEATURE: This deletes the user index and removes it from all linked organizations
     public async Task DeleteUserService(string user_id)
     {

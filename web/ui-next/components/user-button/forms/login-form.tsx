@@ -12,7 +12,7 @@ interface ILoginFormProps {
 const LoginForm: React.FC<ILoginFormProps> = ({ switchModal, closeModal }) => {
     const [loading, setLoading] = useState(false)
 
-    const form  = useForm({
+    const form = useForm({
         initialValues: {
             email: '',
             password: ''

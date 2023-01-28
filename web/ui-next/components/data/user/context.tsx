@@ -3,7 +3,7 @@ import { FetchUserData, Login, Logout, RefreshToken, Register, ResendVerificatio
 import { IUserContext, IAuthenticationData, IUserData } from "./types"
 
 interface IUserContextProps {
-    children: React.ReactNode[]
+    children: React.ReactNode
 }
 
 const UserContextData = createContext<IUserContext | null>(null)
@@ -50,6 +50,21 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
         await RefreshToken(token, setAuthData, setUserData)
     contextValue.fetchUserData = async (token: string) =>
         await FetchUserData(token, setUserData)
+
+    //FEATURE: Theese effects auto renew the token
+    async function TokenRefresh() {
+        if(contextValue.loggedIn !== true)
+            return
+
+        //refresh the token
+        let token = authData?.token
+        if(token === undefined)
+            return
+
+        await contextValue.refreshToken!(token)
+    }
+
+    setInterval(() => { TokenRefresh() }, 1000 * 60 * 10)
 
     return (
         <>

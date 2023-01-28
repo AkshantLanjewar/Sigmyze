@@ -37,7 +37,7 @@ function GenerateOptions(method: string, token: string | null, data?: any): Requ
 }
 
 const dev = process.env.NODE_ENV !== 'production';
-const server = dev ? 'http://localhost:3000' : 'http://127.0.0.1'
+const server = dev ? 'http://localhost:3000' : 'https://sigmyze.com'
 
 export { 
     GET,

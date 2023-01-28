@@ -1,5 +1,8 @@
-import { createContext } from "react"
-import { IOrganizationController } from "./types"
+import { createContext, useContext, useEffect, useState } from "react"
+import { UserContextData } from "../user/context"
+import { IUserContext } from "../user/types"
+import { GetOrganizations } from "./functions"
+import { IOrganization, IOrganizationController } from "./types"
 
 const OrganizationContextData = createContext<IOrganizationController | null>(null)
 
@@ -8,8 +11,79 @@ interface IOrganizationContextProps {
 }
 
 const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) => {
+    //NOTE: Theese are the useState's in relation to the organization
+    const [organizations, setOrganizations] = useState<IOrganization[]>([])
+    const [selectedOrganization, setSelectedOrganization] = useState<string | null>(null)
+    const [activeDirectory, setActiveDirectory] = useState("root")
+    const [updateDrive, setUpdateDrive] = useState(false)
+
+    //NOTE: this handles the managment of the file-explorer ui
+    const [selectedDriveId, setSelectedDriveId] = useState<string | null>(null)
+
+    const { loggedIn, authData } = useContext(UserContextData) as IUserContext
+
+    //FEATURE: Reset the state options
+    function reset() {
+        var newURL = location.href.split("?")[0]
+        window.history.pushState('object', document.title, newURL)
+
+        setActiveDirectory("root")
+        setOrganizations([])
+        setSelectedOrganization(null)
+    }
+
+    //NOTE: Effect hooks
+
+    //FEATURE: This hook grabs data relating to the users organizations when they become logged in
+    useEffect(() => {
+        if(loggedIn === false)
+            reset()
+        if(loggedIn !== true)
+            return
+        let token = authData?.token
+        if(token === undefined)
+            return
+
+        GetOrganizations(token, setOrganizations)
+    }, [authData])
+
+    useEffect(() => {
+        if(organizations.length === 0)
+            return
+        
+        setOrganization(organizations[0].organization_id)
+    }, [organizations])
+
+    //FEATURE: Function to set an active organization
+    function setOrganization(id: string) {
+        const nextUrl = '/?id=' + id
+        const nextTitle = 'Sigmyze Drive'
+        const nextState = {}
+
+        window.history.pushState(nextState, nextTitle, nextUrl)
+        setSelectedOrganization(id)
+    }
+
+    //FEATURE: Toggle a drive update
+    function toggleDriveUpdate() {
+        setUpdateDrive(!updateDrive)
+    }
+
     //build the context
     let contextValue = {} as IOrganizationController
+    //NOTE: Theese are the data values within the context
+    contextValue.organizations = organizations
+    contextValue.selectedOrganization = selectedOrganization
+    contextValue.activeDirectory = activeDirectory
+    contextValue.updateDrive = updateDrive
+
+    //NOTE: drive ui state
+    contextValue.selectedDriveId = selectedDriveId
+    contextValue.setActiveDirectory = setActiveDirectory
+
+    contextValue.setOrganization = setOrganization
+    contextValue.toggleDrive = toggleDriveUpdate
+    contextValue.setSelectedDriveId = setSelectedDriveId
 
     return (
         <>
@@ -22,4 +96,5 @@ const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) 
     )
 }
 
+export { OrganizationContextData }
 export default OrganizationContext

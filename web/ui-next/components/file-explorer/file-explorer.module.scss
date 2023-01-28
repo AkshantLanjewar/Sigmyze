@@ -1,0 +1,99 @@
+$radius-sm: var(--mantine-radius-sm);
+$radius-md: var(--mantine-radius-md);
+$dark-4: var(--mantine-color-dark-4);
+$dark-6: var(--mantine-color-dark-6);
+$dark-0: var(--mantine-color-dark-0);
+$dark-9: var(--mantine-color-dark-9);
+$indigo-5: var(--mantine-color-indigo-5);
+$indigo-1: var(--mantine-color-indigo-1);
+$spacing-md: var(--mantine-spacing-md);
+
+.fileWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    padding-left: 32px;
+    padding-right: 32px;
+    pointer-events: none;
+
+    .folder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        pointer-events: auto;
+
+        width: 250px;
+
+        border-radius: $radius-sm;
+        border: 1px solid $dark-4;
+        padding: $spacing-md;
+        user-select: none;
+
+        //NOTE: for smoothness
+        transition: background-color 150ms ease, border-color 150ms ease;
+
+        &:hover {
+            cursor: pointer;
+            background-color: $dark-6;
+            color: $dark-0;
+        }
+
+        &.active {
+            color: $indigo-5;
+            background-color: $indigo-1;
+            border-color: $indigo-1;
+        }
+
+        .title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .file {
+        &:hover {
+            .inner { transform: scale(1.2); }
+        }
+
+        width: 250px;
+        pointer-events: auto;
+
+        .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            height: 150px;
+            background-color: $dark-9;
+            border-top-right-radius: $radius-md;
+            border-top-left-radius: $radius-md;
+
+            .inner {
+                transition: transform 200ms ease;
+                svg {
+                    width: 88px;
+                    height: 88px;
+                }
+            }
+        }
+
+        .title {
+            padding: $spacing-md;
+            background-color: $dark-6;
+            border-bottom-left-radius: $radius-md;
+            border-bottom-right-radius: $radius-md;
+
+            transition: background-color 150ms ease, color 150ms ease;
+
+            &.active {
+                background-color: $indigo-1;
+                color: $indigo-5;
+
+                .subtitle { color: $indigo-5; }
+            }
+        }
+    }
+}

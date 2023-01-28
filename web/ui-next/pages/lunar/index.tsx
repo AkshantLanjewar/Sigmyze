@@ -25,30 +25,30 @@ interface ILunarProps {
 const Lunar: React.FC<ILunarProps> = ({ pkg }) => {
     return (
         <div>
-                <DefaultLayout
-                    title="Sigmyze: Lunar Editor"
-                    description=""
-                    location="/lunar"
-                >
-                    <LunarContext pkg={pkg}>
-                        <div style={{ height: '100%' }}>
-                            <Group
-                                spacing={"xs"}
-                                position={"apart"}
-                                sx={{ height: '100%' }}
-                                noWrap
-                            >
-                                <div className={styles.toolbar}>
-                                    <Toolbar />
-                                </div>
+            <DefaultLayout
+                title="Sigmyze: Lunar Editor"
+                description=""
+                location="/lunar"
+            >
+                <LunarContext pkg={pkg}>
+                    <div style={{ height: '100%' }}>
+                        <Group
+                            spacing={"xs"}
+                            position={"apart"}
+                            sx={{ height: '100%' }}
+                            noWrap
+                        >
+                            <div className={styles.toolbar}>
+                                <Toolbar />
+                            </div>
 
-                                <div className={styles.viewport}>
-                                    <Viewport />
-                                </div>
-                            </Group>
-                        </div>
-                    </LunarContext>
-                </DefaultLayout>
+                            <div className={styles.viewport}>
+                                <Viewport />
+                            </div>
+                        </Group>
+                    </div>
+                </LunarContext>
+            </DefaultLayout>
         </div>
     )
 }

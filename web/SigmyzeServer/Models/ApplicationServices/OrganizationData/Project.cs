@@ -1,14 +1,16 @@
-using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace SigmyzeServer.Models.ApplicationServices
 {
     public class ProjectView
     {
+        [JsonProperty("project_id")]
         [BsonElement("project_id")]
         public string? ProjectId { get; set; }
 
+        [JsonProperty("project_name")]
         [BsonElement("project_name")]
         public string? ProjectName { get; set; }
     }

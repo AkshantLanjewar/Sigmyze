@@ -13,13 +13,13 @@ import {
     IconDatabase,
     IconGlobe,
     IconZoomQuestion,
-    IconNews, 
-    IconDeviceFloppy
+    IconNews
 } from '@tabler/icons'
 
 import { useContext, useEffect, useState } from 'react'
 import { UserContextData } from '../data/user/context'
 import { IUserContext } from '../data/user/types'
+import DriveNavbar from './drive-navbar/drive-navbar'
 import styles from './navbar.module.scss'
 
 const defaultRoutes = [
@@ -39,13 +39,20 @@ const NavbarS: React.FC<NavbarProps> = ({ location }) : JSX.Element => {
     const [routes, setRoutes] = useState(defaultRoutes)
 
     useEffect(() => {
-        if(loggedIn === undefined)
-            return
-
-        let nRoutes = defaultRoutes
         if(loggedIn === true)
-            nRoutes[0] = { icon: IconDeviceFloppy, label: "Drive", path: '/' }
-        setRoutes([ ...nRoutes ])
+        {  
+            let nRoutes = []
+            for(let i = 0; i < defaultRoutes.length; i++)
+            {
+                let route = defaultRoutes[i]
+                if(route.label === "Home")
+                    continue
+                nRoutes.push(route)
+            }
+            setRoutes([ ...nRoutes ])
+        }
+        else
+            setRoutes([ ...defaultRoutes ])
     }, [loggedIn])
 
     const links = routes.map((link, index) => (
@@ -71,6 +78,8 @@ const NavbarS: React.FC<NavbarProps> = ({ location }) : JSX.Element => {
                     sx={(theme) => ({ width: 80, backgroundColor: theme.colors.dark[9], height: '100%' })}
                 >
                     <Navbar.Section grow mt={15}>
+                        <DriveNavbar />
+
                         <Stack justify={"center"} spacing={10}>
                             {links}
                         </Stack>
