@@ -1,4 +1,4 @@
-import { IDocumentBlock } from "../../../../data/lunar/document-types"
+import { IDocumentBlock } from "../../../../data/lunar/types/document-types"
 import { Text, Group, ActionIcon, Title } from '@mantine/core'
 import { IconGripVertical } from "@tabler/icons"
 import styles from './text-block.module.scss'

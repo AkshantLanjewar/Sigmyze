@@ -1,5 +1,5 @@
 import { TitleOrder } from "@mantine/core/lib/Title"
-import { IPresentationChart, ITextNode } from "../../lunar/document-editor/blocks/types"
+import { IPresentationChart, ITextNode } from "../../../lunar/document-editor/blocks/types"
 
 interface IDocument {
     pages: IDocumentPage[],

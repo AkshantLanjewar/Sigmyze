@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 import { v4 } from "uuid"
-import { ITreeNode } from "../../../../tree/tree"
-import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode } from "../../types"
+import { ITreeNode } from "../../../tree/tree"
+import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode } from "../types/types"
 import { CreateTab, CreateTabFromNode, SwitchTab, TabOpen } from "./tab-functions"
 
 function GetItem(id: string, splits: Array<IProjectNode>): IProjectNode | null {

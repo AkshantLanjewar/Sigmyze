@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { OrganizationContextData } from "../../../data/organization/context"
 import { OrganizationDrive } from "../../../data/organization/organization-api"
@@ -24,6 +25,7 @@ const DriveData: React.FC<IDriveDataProps> = ({ setModalState, setDriveData }) =
     } = useContext(OrganizationContextData) as IOrganizationController
 
     const { authData } = useContext(UserContextData) as IUserContext
+    const router = useRouter()
 
     //NOTE: State for the drive data
     const [respData, setRespData] = useState<IDriveResp | null>(null)
@@ -58,6 +60,10 @@ const DriveData: React.FC<IDriveDataProps> = ({ setModalState, setDriveData }) =
         setItems([ ...data.items ])
     }, [respData, activeDirectory])
 
+    function openProject(id: string) {
+        window.open(`/lunar/${selectedOrganization}/${id}`, "_blank")
+    }
+
     return (
         <div
             id="drive-background"
@@ -74,6 +80,7 @@ const DriveData: React.FC<IDriveDataProps> = ({ setModalState, setDriveData }) =
                 setModalState={setModalState}
                 setActiveItem={setSelectedDriveId}
                 setActiveDirectory={setActiveDirectory}
+                openItem={openProject}
             />
         </div>
     )

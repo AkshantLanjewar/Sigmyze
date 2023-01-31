@@ -6,10 +6,13 @@ import {
 } from '@mantine/core'
 
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import logo  from '../../public/logo.svg'
 import UserButton from '../user-button'
 
 const HeaderS: React.FC<{}> = () : JSX.Element => {
+    const router = useRouter()
+
     return (
         <Header height={60} px={'md'}>
             <Group position={'apart'}>
@@ -23,7 +26,7 @@ const HeaderS: React.FC<{}> = () : JSX.Element => {
                         width: 'min-content' 
                     }}
 
-                    onClick={() => { window.location.replace('/') }}
+                    onClick={() => { router.push('/') }}
                 >
                     <Image 
                         src={logo} 

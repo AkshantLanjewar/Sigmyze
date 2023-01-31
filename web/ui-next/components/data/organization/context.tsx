@@ -24,9 +24,6 @@ const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) 
 
     //FEATURE: Reset the state options
     function reset() {
-        var newURL = location.href.split("?")[0]
-        window.history.pushState('object', document.title, newURL)
-
         setActiveDirectory("root")
         setOrganizations([])
         setSelectedOrganization(null)
@@ -56,11 +53,6 @@ const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) 
 
     //FEATURE: Function to set an active organization
     function setOrganization(id: string) {
-        const nextUrl = '/?id=' + id
-        const nextTitle = 'Sigmyze Drive'
-        const nextState = {}
-
-        window.history.pushState(nextState, nextTitle, nextUrl)
         setSelectedOrganization(id)
     }
 

@@ -1,6 +1,6 @@
 import { SetStateAction } from "react"
 import { v4 } from "uuid"
-import { ILunarProjectData, ILunarUIData, IProjectNode } from "../../types"
+import { ILunarProjectData, ILunarUIData, IProjectNode } from "../types/types"
 import { CreateTab, CreateTabFromNode, SwitchTab } from "./tab-functions"
 
 function DeleteProjectItem(splits: Array<IProjectNode>, id: string, type: string) {

@@ -1,6 +1,6 @@
 import { SetStateAction } from "react";
 import { v4 } from "uuid";
-import { IDocument, IDocumentData } from "../../../data/lunar/document-types";
+import { IDocument, IDocumentData } from "../../../data/lunar/types/document-types";
 
 function LoadImage(
     imageData: string,

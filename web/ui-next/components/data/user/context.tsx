@@ -1,3 +1,4 @@
+import { useLocalStorage } from "@mantine/hooks"
 import { createContext, useEffect, useState } from "react"
 import { FetchUserData, Login, Logout, RefreshToken, Register, ResendVerificationEmail, Verify } from "./functions"
 import { IUserContext, IAuthenticationData, IUserData } from "./types"
@@ -10,8 +11,11 @@ const UserContextData = createContext<IUserContext | null>(null)
 
 const UserContext: React.FC<IUserContextProps> = ({ children }) => {
     //setup the context state
-    const [authData, setAuthData] = useState<IAuthenticationData | undefined>(undefined)
-    const [userData, setUserData] = useState<IUserData | undefined>(undefined)
+    const [userData, setUserData] = useLocalStorage<IUserData | undefined>({ key: 'userData', defaultValue: undefined })
+    const [authData, setAuthData] = useLocalStorage<IAuthenticationData | undefined | null>({ 
+        key: 'authData', 
+        defaultValue: null 
+    })
 
     //setup the context value
     let contextValue = {} as IUserContext

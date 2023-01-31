@@ -1,5 +1,5 @@
 import { IIndicator } from "../../../data/datasets/DatasetsTypes"
-import { IChartSettings, IGlobalChartSettings } from "../../../data/lunar/chart-types"
+import { IChartSettings, IGlobalChartSettings } from "../../../data/lunar/types/chart-types"
 
 interface ITextNode {
     type: string,

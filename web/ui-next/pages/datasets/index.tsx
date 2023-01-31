@@ -19,12 +19,15 @@ import {
     GetDatasets,
     IDatasetsTable 
 } from "../../components/data/datasets/DatasetsAPI"
+import { useRouter } from "next/router"
 
 interface IDatasetProps {
     datasets?: Array<IDataset>;
 }
 
 const DatasetsPage: React.FC<IDatasetProps> = ({ datasets }) : JSX.Element => {
+    const router = useRouter()
+
     return (
         <>
             <DefaultLayout
@@ -86,7 +89,7 @@ const DatasetsPage: React.FC<IDatasetProps> = ({ datasets }) : JSX.Element => {
                                                 <Card
                                                     radius={"md"}
                                                     className={styles.card}
-                                                    onClick={() => { window.location.assign(`/datasets/dataset/${step.name}`) }}
+                                                    onClick={() => { router.push(`/datasets/dataset/${step.name}`) }}
                                                 >
                                                     <CardSection className={styles.imageWrapper}>
                                                         <Image

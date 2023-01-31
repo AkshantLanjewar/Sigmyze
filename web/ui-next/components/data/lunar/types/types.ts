@@ -1,5 +1,5 @@
-import { ITreeNode } from "../../tree/tree"
-import { IIndicator } from "../datasets/DatasetsTypes"
+import { ITreeNode } from "../../../tree/tree"
+import { IIndicator } from "../../datasets/DatasetsTypes"
 import { IChartSettings, IGlobalChartSettings, IIndicatorSetting } from "./chart-types"
 import { IDocument } from "./document-types"
 
@@ -34,7 +34,8 @@ interface ILunarState {
     getNode: Function,
     setDataNodes: Function,
     setNode: Function,
-    closeTab: idVoid
+    closeTab: idVoid,
+    toggleDriveUpdate: () => void
 }
 
 //ui

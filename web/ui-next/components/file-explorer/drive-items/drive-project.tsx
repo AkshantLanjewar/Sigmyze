@@ -17,10 +17,11 @@ interface IDriveProjectProps {
     item: IExplorerItem,
     activeItem: string | null,
     setActiveItem: (id: string | null) => void,
-    setModalState: (id: string | null) => void
+    setModalState: (id: string | null) => void,
+    openItem: (id: string) => void
 }
 
-const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiveItem, setModalState }) => {
+const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiveItem, setModalState, openItem }) => {
     const [menuId, setMenuId] = useState("")
 
     useEffect(() => {
@@ -36,6 +37,7 @@ const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiv
             <div 
                 className={styles.file}
                 onClick={() => { setActiveItem(item.item_id) }}
+                onDoubleClick={() => { openItem(item.item_id) }}
                 onContextMenu={(e) => {
                     setActiveItem(item.item_id)
                     show({ event: e })

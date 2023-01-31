@@ -1,5 +1,5 @@
 import { SetStateAction } from "react"
-import { IDocument } from "../../../data/lunar/document-types"
+import { IDocument } from "../../../data/lunar/types/document-types"
 
 function FocusId(
     id: string,

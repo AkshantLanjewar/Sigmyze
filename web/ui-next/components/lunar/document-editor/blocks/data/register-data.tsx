@@ -1,6 +1,6 @@
 import { IconChartBar } from "@tabler/icons"
 import { v4 } from "uuid"
-import { IDocumentBlock, IDocumentMenuItem } from "../../../../data/lunar/document-types"
+import { IDocumentBlock, IDocumentMenuItem } from "../../../../data/lunar/types/document-types"
 
 function RegisterData() {
     let dataBlocks = [] as IDocumentMenuItem[]

@@ -1,4 +1,4 @@
-import { IContextMenuItem } from "../../tree/tree"
+import { IContextMenuItem } from "../../../tree/tree"
 import { VscNewFolder, VscNewFile } from 'react-icons/vsc'
 import { BiChart } from 'react-icons/bi'
 import { TbTrash, TbLayoutGridAdd } from 'react-icons/tb'

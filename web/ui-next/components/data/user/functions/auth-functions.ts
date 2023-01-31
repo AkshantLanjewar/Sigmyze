@@ -6,7 +6,7 @@ import { UserLogin, UserRegister, UserRevokeToken, UserVerify } from "../user-ap
 async function Login(
     email: string, 
     password: string,
-    setAuthData: (value: SetStateAction<IAuthenticationData | undefined>) => void
+    setAuthData: (value: SetStateAction<IAuthenticationData | undefined | null>) => void
 ) {
     let loginPost = {
         Email: email,
@@ -47,7 +47,7 @@ async function Register(
     email: string, 
     username: string, 
     password: string,
-    setAuthData: (value: SetStateAction<IAuthenticationData | undefined>) => void,
+    setAuthData: (value: SetStateAction<IAuthenticationData | undefined | null>) => void,
     setUserData: (value: SetStateAction<IUserData | undefined>) => void
 ) {
     let registerPost = {
@@ -85,7 +85,7 @@ async function Register(
 async function Verify(
     token: string, 
     code: string,
-    setAuthData: (value: SetStateAction<IAuthenticationData | undefined>) => void
+    setAuthData: (value: SetStateAction<IAuthenticationData | undefined | null>) => void
 ) {
     let verifyPost = {
         Token: token,
@@ -129,7 +129,7 @@ async function Verify(
 
 async function Logout(
     token: string,
-    setAuthData: (value: SetStateAction<IAuthenticationData | undefined>) => void,
+    setAuthData: (value: SetStateAction<IAuthenticationData | undefined | null>) => void,
     setUserData: (value: SetStateAction<IUserData | undefined>) => void
 ) {
     try {

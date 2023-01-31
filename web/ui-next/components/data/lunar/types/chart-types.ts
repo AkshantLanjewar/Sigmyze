@@ -1,4 +1,4 @@
-import { IIndicator } from "../datasets/DatasetsTypes"
+import { IIndicator } from "../../datasets/DatasetsTypes"
 
 interface IGlobalChartSettings {
     chartTitle: string

@@ -1,4 +1,4 @@
-import { IDocumentMenuItem } from "../../../data/lunar/document-types"
+import { IDocumentMenuItem } from "../../../data/lunar/types/document-types"
 import { ChartDims } from "../../chart-view/engine/types"
 import { ScrollArea } from '@mantine/core'
 import styles from './slash-menu.module.scss'

@@ -15,6 +15,7 @@ import {
     IconZoomQuestion,
     IconNews
 } from '@tabler/icons'
+import { useRouter } from 'next/router'
 
 import { useContext, useEffect, useState } from 'react'
 import { UserContextData } from '../data/user/context'
@@ -37,6 +38,7 @@ interface NavbarProps {
 const NavbarS: React.FC<NavbarProps> = ({ location }) : JSX.Element => {
     const { loggedIn } = useContext(UserContextData) as IUserContext
     const [routes, setRoutes] = useState(defaultRoutes)
+    const router = useRouter()
 
     useEffect(() => {
         if(loggedIn === true)
@@ -62,7 +64,7 @@ const NavbarS: React.FC<NavbarProps> = ({ location }) : JSX.Element => {
             withArrow
         >
             <UnstyledButton
-                onClick={() => { window.location.assign(link.path) }}
+                onClick={() => { router.push(link.path) }}
                 className={`${styles.actionButton} ${link.path === location ? styles.active : null}`}
             >
                 <link.icon stroke={2} />

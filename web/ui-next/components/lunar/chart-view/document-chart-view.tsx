@@ -1,6 +1,6 @@
 import { ParentSize } from "@visx/responsive"
 import { useEffect, useState } from "react"
-import { IGlobalChartSettings } from "../../data/lunar/chart-types"
+import { IGlobalChartSettings } from "../../data/lunar/types/chart-types"
 import { IPresentationChart } from "../document-editor/blocks/types"
 import styles from './chart-view.module.scss'
 import ChartEngine from "./engine/chart-engine"

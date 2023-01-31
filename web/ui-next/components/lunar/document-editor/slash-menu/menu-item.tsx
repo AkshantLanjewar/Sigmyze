@@ -1,6 +1,6 @@
 import styles from './slash-menu.module.scss'
 import { UnstyledButton, Group, Text } from '@mantine/core'
-import { IDocumentMenuItem } from '../../../data/lunar/document-types'
+import { IDocumentMenuItem } from '../../../data/lunar/types/document-types'
 import { useEffect } from 'react'
 import React from 'react'
 

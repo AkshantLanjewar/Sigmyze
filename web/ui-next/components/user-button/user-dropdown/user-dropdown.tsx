@@ -44,13 +44,14 @@ const UserDropdown: React.FC = ({ }) => {
     useEffect(() => {
         if(loggedIn !== true)
             return
+
         if(userData === undefined)
-            fetchUData()
+            fetchUData() 
     }, [loggedIn])
 
     //hook that handles the userData
     useEffect(() => {
-        if(userData === undefined) {
+        if(userData === undefined || userData.username === undefined) {
             setInitials("")
             setName("")
             setEmail("")

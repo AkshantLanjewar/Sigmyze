@@ -1,5 +1,5 @@
 import { v4 } from "uuid"
-import { IDocumentBlock, IDocumentMenuItem } from "../../../../data/lunar/document-types"
+import { IDocumentBlock, IDocumentMenuItem } from "../../../../data/lunar/types/document-types"
 import { FaParagraph} from 'react-icons/fa'
 import { IconH1, IconH2, IconH3, IconH4, IconH5, IconH6 } from "@tabler/icons"
 

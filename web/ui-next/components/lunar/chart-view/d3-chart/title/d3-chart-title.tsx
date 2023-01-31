@@ -1,12 +1,12 @@
 import styles from './d3-chart-title.module.scss'
 import { FocusTrap, Group, Indicator, MantineNumberSize, Text, TextInput } from "@mantine/core"
 import { ChangeEvent, Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { IGlobalChartSettings, IIndicatorSetting, ILunarState, ILunarUIData, IProjectNode } from "../../../../data/lunar/types"
+import { IGlobalChartSettings, IIndicatorSetting, ILunarState, ILunarUIData, IProjectNode } from "../../../../data/lunar/types/types"
 import { ChartDims, IChartMargin, ID3Chart, ILunarChart } from "../../engine/types"
 import { useClickOutside } from '@mantine/hooks'
-import { LunarContextData } from '../../../../data/lunar/context/context'
+import { LunarContextData } from '../../../../data/lunar/context'
 import { ITooltipState } from '../d3-tooltip'
-import { CompareIndicators } from '../../../../data/lunar/context/functions/chart-functions'
+import { CompareIndicators } from '../../../../data/lunar/functions/chart-functions'
 
 interface ID3ChartTitleProps {
     margin: IChartMargin,

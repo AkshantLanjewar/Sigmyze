@@ -17,7 +17,7 @@ async function ResendVerificationEmail(token: string) {
 
 async function RefreshToken(
     token: string,
-    setAuthData: (value: SetStateAction<IAuthenticationData | undefined>) => void,
+    setAuthData: (value: SetStateAction<IAuthenticationData | undefined | null>) => void,
     setUserData: (value: SetStateAction<IUserData | undefined>) => void
 ) {
     try {

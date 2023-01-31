@@ -1,12 +1,12 @@
 import { Button, Group, Modal } from '@mantine/core'
 import ObjectSearch, { SelectedState } from '../../object-search/object-search'
 
-import { ILunarState, ILunarUIData } from "../../data/lunar/types"
+import { ILunarState, ILunarUIData } from "../../data/lunar/types/types"
 import { DatasetsTable } from '../../data/datasets/DatasetsAPI'
 import { IDataset, IDatasetObject, IIndicator, IDatasetObjects, IObjectIndicator } from '../../data/datasets/DatasetsTypes'
 import { useContext, useEffect, useState } from 'react'
 import ModalChips from './modal-chips'
-import { LunarContextData } from '../../data/lunar/context/context'
+import { LunarContextData } from '../../data/lunar/context'
 
 interface RawIndicator {
     dataset: string,
@@ -35,7 +35,11 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
 
     const [dataPacket, setData] = useState<IIndicator>({} as IIndicator)
 
-    const { ui, addIndicator } = useContext(LunarContextData) as ILunarState
+    const { 
+        ui, 
+        addIndicator, 
+        toggleDriveUpdate 
+    } = useContext(LunarContextData) as ILunarState
 
     useEffect(() => {
         let datasetObjects = [] as IDatasetObject[]
@@ -236,6 +240,7 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
 
                             addIndicator(ui.visual_id, indicator)
                             close()
+                            toggleDriveUpdate()
                         }}
                     >
                         Add Indicator

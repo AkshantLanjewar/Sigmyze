@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { IActionMenuItem, IDocumentBlock } from "../../../../data/lunar/document-types"
+import { IActionMenuItem, IDocumentBlock } from "../../../../data/lunar/types/document-types"
 import { ChartDims } from "../../../chart-view/engine/types"
 import { ActionIcon, Group, Image, Tooltip, UnstyledButton } from '@mantine/core'
 import { IconEdit, IconGripVertical, IconPlus, IconTrash } from "@tabler/icons"

@@ -2,9 +2,9 @@ import { GetIndicator } from "../../data/datasets/DatasetsAPI";
 import { IDatasetIndicator, IIndicator } from "../../data/datasets/DatasetsTypes";
 import { IChartData, ILunarChart } from "./engine/types";
 import { v4 as uuid } from 'uuid'
-import { getIndicatorSetting, IChartSettings, IIndicatorSetting } from "../../data/lunar/types";
+import { getIndicatorSetting, IChartSettings, IIndicatorSetting } from "../../data/lunar/types/types";
 import { colorTsar } from "./engine/utils";
-import { CompareIndicators } from "../../data/lunar/context/functions";
+import { CompareIndicators } from "../../data/lunar/functions/functions";
 
 function ParseSettings(
     nodeId: string, 

@@ -1,5 +1,5 @@
 import { SetStateAction } from "react"
-import { ILunarProjectData } from "../../lunar/types"
+import { ILunarProjectData } from "../../lunar/types/types"
 
 interface IOrganizationController {
     //NOTE: State relating to the current organization

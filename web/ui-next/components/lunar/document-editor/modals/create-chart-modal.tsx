@@ -2,15 +2,15 @@ import styles from './create-modal.module.scss'
 import { Avatar, Box, Button, Checkbox, Group, Input, Modal, Select, Stack, Text } from "@mantine/core"
 import DocumentChart from "../blocks/data/document-chart"
 import { forwardRef, useContext, useEffect, useRef, useState } from 'react'
-import { LunarContextData } from '../../../data/lunar/context/context'
-import { ILunarProjectData, ILunarState, IProjectNode } from '../../../data/lunar/types'
+import { LunarContextData } from '../../../data/lunar/context'
+import { ILunarProjectData, ILunarState, IProjectNode } from '../../../data/lunar/types/types'
 import { IPresentationChart } from '../blocks/types'
 import { IconGraph } from '@tabler/icons'
 import { SelectItem } from '@mantine/core/lib/Select'
 import { useForm } from '@mantine/form'
 import { usePrevious } from '@mantine/hooks'
 import { ICreateMediaBlockData } from '../document-block'
-import { IChartBlockData, MediaTypes, TextTypes } from '../../../data/lunar/document-types'
+import { IChartBlockData, MediaTypes, TextTypes } from '../../../data/lunar/types/document-types'
 
 interface ISelectItem extends React.ComponentPropsWithoutRef<'div'> {
     value: string,

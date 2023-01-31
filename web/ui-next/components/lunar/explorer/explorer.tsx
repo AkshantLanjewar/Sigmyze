@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import styles from './explorer.module.scss'
-import { LunarContextData } from '../../data/lunar/context/context'
-import { ILunarState } from '../../data/lunar/types'
+import { LunarContextData } from '../../data/lunar/context'
+import { ILunarState } from '../../data/lunar/types/types'
 import { ConvertToTree } from '../../data/lunar/utils'
 
 import Tree, { ITreeNode } from '../../tree/tree'

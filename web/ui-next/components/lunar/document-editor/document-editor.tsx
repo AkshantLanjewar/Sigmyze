@@ -1,8 +1,8 @@
 import { ScrollArea } from "@mantine/core"
 import { useContext, useEffect, Dispatch, useState, SetStateAction } from "react"
-import { LunarContextData } from "../../data/lunar/context/context"
-import { IDocument, IDocumentBlock, IDocumentMenuItem, IDocumentPage } from "../../data/lunar/document-types"
-import { ILunarState, IProjectNode, IProjectNodeData } from "../../data/lunar/types"
+import { LunarContextData } from "../../data/lunar/context"
+import { IDocument, IDocumentBlock, IDocumentMenuItem, IDocumentPage } from "../../data/lunar/types/document-types"
+import { ILunarState, IProjectNode, IProjectNodeData } from "../../data/lunar/types/types"
 import { v4 } from "uuid"
 import DocumentBlock from "./document-block"
 
@@ -40,6 +40,7 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
         getNodeIdTab,
         getNode,
         setNode,
+        toggleDriveUpdate,
         data 
     } = useContext(LunarContextData) as ILunarState
 

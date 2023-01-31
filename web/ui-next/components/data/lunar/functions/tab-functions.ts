@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import { v4 } from "uuid"
-import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode } from "../../types"
+import { ILunarProjectData, ILunarTab, ILunarUIData, IProjectNode } from "../types/types"
 import { GetItem } from "./util-functions"
 
 function TabOpen(id: string, tabs: ILunarTab[]): ILunarTab | null {

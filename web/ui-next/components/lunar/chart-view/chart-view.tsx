@@ -1,8 +1,8 @@
 import { ParentSize } from '@visx/responsive';
 import { useContext, useEffect, useState } from 'react';
-import { LunarContextData } from '../../data/lunar/context/context';
-import { GetItem } from '../../data/lunar/context/functions';
-import { DEFAULT_SETTINGS, IChartSettings, ILunarState, IProjectNodeData } from '../../data/lunar/types';
+import { LunarContextData } from '../../data/lunar/context';
+import { GetItem } from '../../data/lunar/functions/functions';
+import { DEFAULT_SETTINGS, IChartSettings, ILunarState, IProjectNodeData } from '../../data/lunar/types/types';
 import styles from './chart-view.module.scss'
 import ChartEngine from './engine/chart-engine';
 import { ILunarChart } from './engine/types';

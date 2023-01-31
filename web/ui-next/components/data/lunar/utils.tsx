@@ -10,9 +10,9 @@ import {
     createProject,
     idVoid,
     addIndicator
-} from "./types"
+} from "./types/types"
 
-import { chartMenu, documentMenu, folderMenu, indicatorMenu } from './menu-templates'
+import { chartMenu, documentMenu, folderMenu, indicatorMenu } from './types/menu-templates'
 
 let project_actions = [
     {

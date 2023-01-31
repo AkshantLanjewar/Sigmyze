@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from "react"
 import { v4 } from "uuid"
-import { IChartBlockData, IDocumentBlock, IDocumentMenuItem, MediaTypes, TextTypes } from '../../data/lunar/document-types'
+import { IChartBlockData, IDocumentBlock, IDocumentMenuItem, MediaTypes, TextTypes } from '../../data/lunar/types/document-types'
 import { ChartDims } from "../chart-view/engine/types"
 import ChartBlock from "./blocks/data/chart-block"
 import ImageBlock from "./blocks/media/image-block"

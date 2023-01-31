@@ -1,6 +1,6 @@
 import { UnstyledButton, Group, Tooltip } from '@mantine/core'
 import { forwardRef } from 'react'
-import { IActionMenuItem } from '../../../data/lunar/document-types'
+import { IActionMenuItem } from '../../../data/lunar/types/document-types'
 import styles from './action-menu.module.scss'
 
 interface IActionMenuProps {

@@ -10,11 +10,12 @@ interface IFileExplorerProps {
     activeItem: string | null,
     setActiveItem: (id: string | null) => void,
     setActiveDirectory: (id: string) => void,
-    setModalState: (id: string | null) => void
+    setModalState: (id: string | null) => void,
+    openItem: (id: string) => void
 }
 
 const FileExplorer: React.FC<IFileExplorerProps> = 
-    ({ folders, items, activeItem, setActiveItem, setActiveDirectory, setModalState }) => {
+    ({ folders, items, activeItem, setActiveItem, setActiveDirectory, setModalState, openItem }) => {
     return (
         <div className={styles.fileWrapper}>
             {folders.length > 0 && (
@@ -64,6 +65,7 @@ const FileExplorer: React.FC<IFileExplorerProps> =
                                 setModalState={setModalState}
                                 activeItem={activeItem}
                                 setActiveItem={setActiveItem} 
+                                openItem={openItem}
                             />
                         ))}
                     </Group>

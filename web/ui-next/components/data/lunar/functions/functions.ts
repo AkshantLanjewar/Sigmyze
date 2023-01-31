@@ -6,7 +6,7 @@ export {
     SetItemWrapper,
     IdExists,
     SetActiveItem 
-} from "./functions/util-functions"
+} from "./util-functions"
 
 export { 
     AddIndicator, 
@@ -17,20 +17,20 @@ export {
     CreateGlobals,
     SetChartTitle,
     CompareIndicators 
-} from "./functions/chart-functions"
+} from "./chart-functions"
 
 export {
     DeleteProjectItemWrapper,
     CreateProjectItemWrapper,
-} from './functions/project-functions'
+} from './project-functions'
 
 export {
     CreateBlock
-} from './functions/document-functions'
+} from './document-functions'
 
 export { 
     TabOpen,
     CloseTab,
     SwitchTab,
     CreateTabFromNode
-} from './functions/tab-functions'
+} from './tab-functions'

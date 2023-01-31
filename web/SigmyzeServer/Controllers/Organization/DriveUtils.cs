@@ -249,6 +249,40 @@ public class DriveUtils
         return nDrive;
     }
 
+    private bool validateProject(List<Folder> folders, string projectId)
+    {
+        for(int i = 0; i < folders.Count; i++)
+        {
+            Folder folder = folders[i];
+            List<ProjectView> projects = folder.Projects!;
+
+            for(int x = 0; x < projects.Count; x++)
+            {
+                ProjectView project = projects[i];
+                if(project.ProjectId == projectId)
+                    return true;
+            }
+
+            bool resp = validateProject(folder.Folders!, projectId);
+            if(resp == true)
+                return true;
+        }
+
+        return false;
+    }
+    
+    public bool ValidateProject(Drive drive, string projectId)
+    {
+        for(int i = 0; i < drive.Projects!.Count; i++)
+        {
+            ProjectView project = drive.Projects![i];
+            if(project.ProjectId == projectId)
+                return true;
+        }
+
+        return validateProject(drive.Folders!, projectId);
+    }
+    
     public Drive DeleteProject(Drive drive, string parentId, string projectId)
     {
         ProjectView view = new ProjectView();

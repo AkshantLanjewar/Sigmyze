@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Dropzone, FileWithPath, MIME_TYPES } from '@mantine/dropzone'
 import { IconCloudDownload, IconWorldUpload, IconX, IconPhoto } from '@tabler/icons'
 import { useDisclosure } from '@mantine/hooks'
-import { MediaTypes, TextTypes } from '../../../data/lunar/document-types'
+import { MediaTypes, TextTypes } from '../../../data/lunar/types/document-types'
 import { ICreateMediaBlockData } from '../document-block'
 import { ChartDims } from '../../chart-view/engine/types'
 

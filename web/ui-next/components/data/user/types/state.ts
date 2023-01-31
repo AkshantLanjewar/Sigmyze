@@ -1,5 +1,5 @@
 interface IUserContext {
-    authData?: IAuthenticationData,
+    authData?: IAuthenticationData | null,
     userData?: IUserData,
 
     //easy check to see if loggedIn or not

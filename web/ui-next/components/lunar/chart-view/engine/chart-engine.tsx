@@ -10,7 +10,7 @@ import D3Chart from "../d3-chart/d3-chart"
 import D3Tooltip from "../d3-chart/d3-tooltip"
 import D3TooltipBox from "../d3-chart/d3-tooltip-box"
 import D3ChartTitle from "../d3-chart/title/d3-chart-title"
-import { IGlobalChartSettings } from "../../../data/lunar/types"
+import { IGlobalChartSettings } from "../../../data/lunar/types/types"
 import D3RenderTitle from "../d3-chart/title/d3-render-title"
 
 const AxisBottom = dynamic(() => import('@visx/axis').then(({ AxisBottom }) => AxisBottom),

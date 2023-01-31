@@ -1,5 +1,5 @@
 import { IIndicator } from "../../../data/datasets/DatasetsTypes"
-import { IIndicatorSetting } from "../../../data/lunar/types"
+import { IIndicatorSetting } from "../../../data/lunar/types/types"
 
 interface IChartRender {
     labels: Date[]

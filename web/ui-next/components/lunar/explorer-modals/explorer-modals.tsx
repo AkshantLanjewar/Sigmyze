@@ -1,6 +1,6 @@
 import { Button, Group, Modal, TextInput, Alert, Switch } from "@mantine/core"
 import { FormEvent, useContext, useRef, useState } from "react"
-import { ILunarState } from "../../data/lunar/types"
+import { ILunarState } from "../../data/lunar/types/types"
 
 import { AiOutlineWarning } from 'react-icons/ai'
 import { 
@@ -9,7 +9,7 @@ import {
     FcComboChart 
 } from 'react-icons/fc'
 import AddIndicatorModal, { IAddIndicatorData } from "./add-indicator"
-import { LunarContextData } from "../../data/lunar/context/context"
+import { LunarContextData } from "../../data/lunar/context"
 
 interface IModalTemplateProps {
     id: string,
@@ -108,6 +108,7 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }
         createProject, 
         deleteProject,
         setActiveItem,
+        toggleDriveUpdate,
         ui,
         idExists,
         data
@@ -145,6 +146,7 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }
 
         createProject(ui_id, value, type)
         close()
+        toggleDriveUpdate()
     }
 
     function onSubmitDelete(e: FormEvent<HTMLFormElement>, type: string) {
@@ -154,6 +156,7 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }
 
         deleteProject(ui.visual_id, ui.visual_type)
         close()
+        toggleDriveUpdate()
     }
 
     return (

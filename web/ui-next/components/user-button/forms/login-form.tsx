@@ -1,5 +1,6 @@
 import { Anchor, Button, Group, LoadingOverlay, PasswordInput, Stack, TextInput } from "@mantine/core"
 import { useForm } from "@mantine/form"
+import { useRouter } from "next/router"
 import { FormEvent, useContext, useState } from "react"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
@@ -24,6 +25,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ switchModal, closeModal }) => {
     })
 
     const { login } = useContext(UserContextData) as IUserContext
+    const router = useRouter()
 
     //TODO implement
     function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -37,6 +39,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ switchModal, closeModal }) => {
             setLoading(false)
             
             closeModal()
+            router.push('/')
         }
 
         main()

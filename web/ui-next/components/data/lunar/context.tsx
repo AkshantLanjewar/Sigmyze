@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react"
+import { createContext, useState, useEffect, useContext } from "react"
 import { 
     ILunarState, 
     ILunarProjectData, 
@@ -6,15 +6,15 @@ import {
     ILunarUIData, 
     ILunarTab,
     IIndicatorSetting
-} from "../types"
+} from "./types/types"
 
 import { v4 as uuidv4 } from 'uuid'
-import { DEFAULT_PROJECT } from "../types"
-import { EnumerateNodes } from "../utils"
+import { DEFAULT_PROJECT } from "./types/types"
+import { EnumerateNodes } from "./utils"
 
-import ExplorerModal from "../../../lunar/explorer-modals/explorer-modals"
-import { IAddIndicatorData } from "../../../lunar/explorer-modals/add-indicator"
-import { IIndicator } from "../../datasets/DatasetsTypes"
+import ExplorerModal from "../../lunar/explorer-modals/explorer-modals"
+import { IAddIndicatorData } from "../../lunar/explorer-modals/add-indicator"
+import { IIndicator } from "../datasets/DatasetsTypes"
 import { 
     AddIndicator,  
     CreateGlobals, 
@@ -33,9 +33,14 @@ import {
     SetItemWrapper,
     SetActiveItem,
     SwitchTab
-} from "./functions"
+} from "./functions/functions"
 
-import { ITreeNode } from "../../../tree/tree"
+import { ITreeNode } from "../../tree/tree"
+import { useRouter } from "next/router"
+import { GetProject, UpdateProject } from "./lunar-api"
+import { UserContextData } from "../user/context"
+import { IUserContext } from "../user/types"
+import { usePrevious } from "@mantine/hooks"
 
 interface ILunarContextProps {
     pkg: IAddIndicatorData
@@ -48,23 +53,100 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const [data, setData] = useState<ILunarProjectData | null>(null)
     const [ui, setUI]     = useState<ILunarUIData | null>(null)
 
-    //sets the context's default state
+    const [toggleUpdate, setToggleUpdate] = useState(false)
+    const [loaded, setLoaded] = useState(false)
+
+    const { loggedIn, authData } = useContext(UserContextData) as IUserContext
+    const router = useRouter()
+
     useEffect(() => {
+        //save the project
+        if(data === null)
+            return
+        if(loaded === false)
+            return
+
+        async function update() {
+            let token = authData?.token
+            if(token === undefined)
+                return
+
+            let ids = router.query.ids as string[] | undefined
+            if(ids === undefined || ids.length === 0)
+                return
+
+            let organizationId = ids[0]
+            let projectId = ids[1]
+            await UpdateProject(token, organizationId, projectId, data!)
+        }
+
+        update()
+    }, [toggleUpdate])
+
+    //sets the context's default state
+    function defaultProject() {
         let default_project    = DEFAULT_PROJECT
         default_project.splits = EnumerateNodes(default_project.splits) 
+        let defaultUi = buildUi(default_project)
 
+        setData({ ...default_project })
+        setUI({ ...defaultUi })
+        setLoaded(true)
+    }
+
+    function buildUi(project: ILunarProjectData) {
         let defaultUi = {} as ILunarUIData
-        defaultUi.active_id = default_project.splits[0].node_id
-        defaultUi.active_type = default_project.splits[0].node_type
-        defaultUi.visual_id = default_project.splits[0].node_id
-        defaultUi.visual_type = default_project.splits[0].node_type
+        defaultUi.active_id = project.splits[0].node_id
+        defaultUi.active_type = project.splits[0].node_type
+        defaultUi.visual_id = project.splits[0].node_id
+        defaultUi.visual_type = project.splits[0].node_type
         defaultUi.explorer_modal = null
         defaultUi.tabs = []
         defaultUi.activeTab = null
 
-        setData({ ...default_project })
-        setUI({ ...defaultUi })
-    }, [])
+        return defaultUi
+    }
+
+    async function loadProject() {
+        if(loaded)
+            return
+
+        let ids = router.query.ids as string[] | undefined
+        if(ids === undefined) {
+            defaultProject()
+            return
+        }
+
+        let token = authData?.token
+        if(token === undefined) {
+            router.push('/lunar')
+            return
+        }
+
+        let organizationId = ids[0]
+        let projectId = ids[1]
+        
+        let project = await GetProject(token, organizationId, projectId)
+        if(project !== undefined) {
+            project.splits = EnumerateNodes(project.splits)
+            let ui = buildUi(project)
+
+            setData({ ...project })
+            setUI({ ...ui })
+            setLoaded(true)
+        }
+    }
+
+    useEffect(() => {
+        if(authData === null)
+            return
+        if(authData === undefined) {
+            router.push('/lunar')
+            return
+        }
+
+        loadProject()
+    }, [authData])
 
     //sets the active item based on the id and type
 
@@ -162,7 +244,8 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 getNode,
                 setDataNodes,
                 setNode,
-                closeTab
+                closeTab,
+                toggleDriveUpdate: () => { setToggleUpdate(!toggleUpdate) }
             }}>
                 <div style={{ width: "100%", height: "100%" }}>
                     {ui !== null && (

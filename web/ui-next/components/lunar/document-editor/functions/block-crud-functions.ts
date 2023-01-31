@@ -1,5 +1,5 @@
 import { SetStateAction } from "react";
-import { IDocument, IDocumentBlock, IDocumentMenuItem } from "../../../data/lunar/document-types";
+import { IDocument, IDocumentBlock, IDocumentMenuItem } from "../../../data/lunar/types/document-types";
 import { FocusId } from "./functions";
 
 function CreateBlock(
