@@ -9,10 +9,12 @@ interface IFileExplorerProps {
     items: IExplorerItem[],
     activeItem: string | null,
     setActiveItem: (id: string | null) => void,
-    setActiveDirectory: (id: string) => void
+    setActiveDirectory: (id: string) => void,
+    setModalState: (id: string | null) => void
 }
 
-const FileExplorer: React.FC<IFileExplorerProps> = ({ folders, items, activeItem, setActiveItem, setActiveDirectory }) => {
+const FileExplorer: React.FC<IFileExplorerProps> = 
+    ({ folders, items, activeItem, setActiveItem, setActiveDirectory, setModalState }) => {
     return (
         <div className={styles.fileWrapper}>
             {folders.length > 0 && (
@@ -35,6 +37,7 @@ const FileExplorer: React.FC<IFileExplorerProps> = ({ folders, items, activeItem
                                 activeItem={activeItem}
                                 setActiveItem={setActiveItem}
                                 setActiveDirectory={setActiveDirectory}
+                                setModalState={setModalState}
                             />
                         ))}
                     </Group>
@@ -58,6 +61,7 @@ const FileExplorer: React.FC<IFileExplorerProps> = ({ folders, items, activeItem
                         {items.map((step) => (
                             <DriveProject 
                                 item={step}
+                                setModalState={setModalState}
                                 activeItem={activeItem}
                                 setActiveItem={setActiveItem} 
                             />

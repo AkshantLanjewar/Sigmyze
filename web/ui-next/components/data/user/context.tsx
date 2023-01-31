@@ -53,7 +53,7 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
 
     //FEATURE: Theese effects auto renew the token
     async function TokenRefresh() {
-        if(contextValue.loggedIn !== true)
+        if(contextValue.loggedIn === false)
             return
 
         //refresh the token
@@ -64,7 +64,13 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
         await contextValue.refreshToken!(token)
     }
 
-    setInterval(() => { TokenRefresh() }, 1000 * 60 * 10)
+    useEffect(() => {
+        const interval = setInterval(() => { 
+            TokenRefresh() 
+        }, 1000 * 60 * 10)
+
+        return () => clearInterval(interval)
+    }, [authData, contextValue.loggedIn])    
 
     return (
         <>

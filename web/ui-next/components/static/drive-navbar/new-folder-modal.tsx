@@ -64,7 +64,7 @@ const NewFolderModal: React.FC<INewFolderModalProps> = ({ close }) => {
                     <LoadingOverlay 
                         visible={loading}
                         overlayBlur={2}
-                        transitionDuration={0} 
+                        transitionDuration={150} 
                     />
 
                     <form onSubmit={createFolder}>

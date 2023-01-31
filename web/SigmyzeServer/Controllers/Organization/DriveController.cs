@@ -69,15 +69,85 @@ namespace SigmyzeServer.Controllers
             {
                 msg.Error = true;
                 msg.MSG = "bad_config";
+                return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils();
+            DriveUtils utils = new DriveUtils(_projectRepository);
             drive = utils.InsertFolder(drive!, body.ParentFolder, body.FolderName);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
             return await SerializeJSON(msg);
         }
     
+        //FEATURE: This deletes a folder and all its recursive children
+        [HttpPost("delete-folder")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> DeleteFolder([FromBody]DeleteFolderBody body)
+        {
+            APIStatusMsg msg = new APIStatusMsg();
+            msg.Error = false;
+            msg.MSG = "folder-deleted";
+            
+            if(body.OrganizationId == null || body.FolderId == null || body.ParentFolder == null)
+            {
+                msg.MSG = "bad_req";
+                msg.Error = true;
+                return await SerializeJSON(msg);
+            }
+
+            string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
+            string lunarId = GetLunarID(accessToken);
+            //NOTE: This error occurs when there is an error with thje body config
+            //If this error occurs, double check your props whether it is a valid organization id or not
+            Drive? drive = await GetDrive(lunarId, body.OrganizationId);
+            if(drive == null)
+            {
+                msg.Error = true;
+                msg.MSG = "bad_config";
+                return await SerializeJSON(msg);
+            }
+
+            DriveUtils utils = new DriveUtils(_projectRepository);
+            drive = utils.DeleteFolder(drive!, body.ParentFolder, body.FolderId);
+            await _driveRepository.UpdateDrive(drive.DriveId!, drive);
+
+            return await SerializeJSON(msg);
+        }
+
+        [HttpPost("update-folder")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> UpdateFolder([FromBody]UpdateFolderBody body)
+        {
+            APIStatusMsg msg = new APIStatusMsg();
+            msg.Error = false;
+            msg.MSG = "folder-updated";
+
+            if(body.OrganizationId == null || body.FolderId == null || body.ParentFolder == null)
+            {
+                msg.MSG = "bad_req";
+                msg.Error = true;
+                return await SerializeJSON(msg);
+            }
+
+            string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
+            string lunarId = GetLunarID(accessToken);
+            //NOTE: This error occurs when there is an error with thje body config
+            //If this error occurs, double check your props whether it is a valid organization id or not
+            Drive? drive = await GetDrive(lunarId, body.OrganizationId);
+            if(drive == null)
+            {
+                msg.Error = true;
+                msg.MSG = "bad_config";
+                return await SerializeJSON(msg);
+            }
+
+            DriveUtils utils = new DriveUtils(_projectRepository);
+            drive = utils.UpdateFolder(drive!, body.ParentFolder, body.FolderId, body.FolderName);
+            await _driveRepository.UpdateDrive(drive.DriveId!, drive);
+
+            return await SerializeJSON(msg);
+        }
+
         [HttpPost("create-project")]
         [MapToApiVersion("2.0")]
         public async Task<IActionResult> CreateProject([FromBody]CreateProjectBody body)
@@ -102,10 +172,79 @@ namespace SigmyzeServer.Controllers
             {
                 msg.Error = true;
                 msg.MSG = "bad_config";
+                return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils();
-            drive = utils.InsertProject(_projectRepository, drive!, body.OrganizationId, body.ParentFolder, body.ProjectName);
+            DriveUtils utils = new DriveUtils(_projectRepository);
+            drive = utils.InsertProject(drive!, body.OrganizationId, body.ParentFolder, body.ProjectName);
+            await _driveRepository.UpdateDrive(drive.DriveId!, drive);
+
+            return await SerializeJSON(msg);
+        }
+
+        [HttpPost("delete-project")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> DeleteProject([FromBody]DeleteProjectBody body)
+        {
+            APIStatusMsg msg = new APIStatusMsg();
+            msg.Error = false;
+            msg.MSG = "delete_project";
+
+            if(body.OrganizationId == null || body.ProjectId == null || body.ParentFolder == null)
+            {
+                msg.MSG = "bad_req";
+                msg.Error = true;
+                return await SerializeJSON(msg);
+            }
+
+            string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
+            string lunarId = GetLunarID(accessToken);
+            //NOTE: This error occurs when there is an error with thje body config
+            //If this error occurs, double check your props whether it is a valid organization id or not
+            Drive? drive = await GetDrive(lunarId, body.OrganizationId);
+            if(drive == null)
+            {
+                msg.Error = true;
+                msg.MSG = "bad_config";
+                return await SerializeJSON(msg);
+            }
+
+            DriveUtils utils = new DriveUtils(_projectRepository);
+            drive = utils.DeleteProject(drive!, body.ParentFolder, body.ProjectId);
+            await _driveRepository.UpdateDrive(drive.DriveId!, drive);
+
+            return await SerializeJSON(msg);
+        }
+    
+        [HttpPost("update-project")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> UpdateProject([FromBody]UpdateProjectBody body)
+        {
+            APIStatusMsg msg = new APIStatusMsg();
+            msg.Error = false;
+            msg.MSG = "project-updated";
+
+            if(body.OrganizationId == null || body.ProjectId == null || body.ParentFolder == null)
+            {
+                msg.MSG = "bad_req";
+                msg.Error = true;
+                return await SerializeJSON(msg);
+            }
+
+            string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
+            string lunarId = GetLunarID(accessToken);
+            //NOTE: This error occurs when there is an error with thje body config
+            //If this error occurs, double check your props whether it is a valid organization id or not
+            Drive? drive = await GetDrive(lunarId, body.OrganizationId);
+            if(drive == null)
+            {
+                msg.Error = true;
+                msg.MSG = "bad_config";
+                return await SerializeJSON(msg);
+            }
+
+            DriveUtils utils = new DriveUtils(_projectRepository);
+            drive = await utils.UpdateProject(drive!, body.ParentFolder, body.ProjectId, body.ProjectName);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
             return await SerializeJSON(msg);

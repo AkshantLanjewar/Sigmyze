@@ -1,12 +1,13 @@
 import { Breadcrumbs, Button, Group, UnstyledButton } from '@mantine/core'
-import { useContext, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import { OrganizationContextData } from '../../../data/organization/context'
-import { IDriveResp, IOrganization, IOrganizationController } from '../../../data/organization/types'
+import { IDriveFolder, IDriveProject, IDriveResp, IOrganization, IOrganizationController } from '../../../data/organization/types'
 import DriveSelector from '../drive-selector/drive-selector'
 import styles from './drive-toolbar.module.scss'
 import selectorStyles from '../drive-selector/drive-selector.module.scss'
-import { GetWorkingPaths } from './functions'
+import { GetProjectElement, GetWorkingPaths } from './functions'
 import { IconChevronRight, IconFileShredder } from '@tabler/icons'
+import DriveActionMenu from '../drive-action-menu/drive-action-menu'
 
 interface IToolbarBreadcrumb {
     directory_name: string,
@@ -14,19 +15,27 @@ interface IToolbarBreadcrumb {
 }
 
 interface IDriveToolbarProps {
-    driveData: IDriveResp | null
+    driveData: IDriveResp | null,
+    modalState: string | null,
+    setModalState: Dispatch<SetStateAction<string | null>>
 }
 
-const DriveToolbar: React.FC<IDriveToolbarProps> = ({ driveData }) => {
+const DriveToolbar: React.FC<IDriveToolbarProps> = ({ driveData, modalState, setModalState }) => {
     const { 
         activeDirectory, 
         setActiveDirectory,
         organizations,
-        selectedOrganization, 
+        selectedOrganization,
+        selectedDriveId 
     } = useContext(OrganizationContextData) as IOrganizationController
 
     const [breadcrumbs, setBreadcrumbs] = useState<IToolbarBreadcrumb[]>([])
     const [organizationBlock, setOrganizationBlock] = useState<IOrganization>({} as IOrganization)
+    const [actionMenu, setActionMenu] = useState<string | null>(null)
+
+    //NOTE: data for the action menu
+    const [selectedFolder, setSelectedFolder] = useState<IDriveFolder | null>(null)
+    const [selectedProject, setSelectedProject] = useState<IDriveProject | null>(null)
 
     useEffect(() => {
         if(driveData === null)
@@ -51,6 +60,34 @@ const DriveToolbar: React.FC<IDriveToolbarProps> = ({ driveData }) => {
 
         setOrganizationBlock({ ...selectedOrganizationBlock })
     }, [selectedOrganization])
+
+    useEffect(() => {
+        if(driveData === null)
+            return
+        if(selectedDriveId === null) {
+            setActionMenu(null)
+            return
+        }
+
+        let selectedElement = GetProjectElement(driveData, selectedDriveId)
+        if(selectedElement === null)
+            return
+        
+        setSelectedFolder(null)
+        setSelectedProject(null)
+
+        let pFolder = selectedElement as IDriveFolder
+        if(pFolder.folder_id !== undefined) {
+            setActionMenu("folder")
+            setSelectedFolder({ ...pFolder })
+        }
+
+        let pProject = selectedElement as IDriveProject
+        if(pProject.project_id !== undefined) {
+            setActionMenu("project")
+            setSelectedProject({ ...pProject })
+        }
+    }, [selectedDriveId])
 
     return (
         <div className={styles.toolbarWrapper}>
@@ -99,7 +136,13 @@ const DriveToolbar: React.FC<IDriveToolbarProps> = ({ driveData }) => {
                 </div>
 
                 <div className={styles.actionMenu}>
-                        
+                    <DriveActionMenu 
+                        actionMenu={actionMenu}
+                        selectedFolder={selectedFolder} 
+                        selectedProject={selectedProject}
+                        modalState={modalState}
+                        setModalState={setModalState}
+                    />
                 </div>
             </Group>
         </div>

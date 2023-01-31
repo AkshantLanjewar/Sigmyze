@@ -1,4 +1,4 @@
-import { SetStateAction, useContext, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
 import { OrganizationContextData } from "../../../data/organization/context"
 import { OrganizationDrive } from "../../../data/organization/organization-api"
 import { IDriveResp, IOrganizationController } from "../../../data/organization/types"
@@ -9,10 +9,11 @@ import { ConvertToFileExplorerData } from "../../../file-explorer/functions"
 import { IExplorerFolder, IExplorerItem } from "../../../file-explorer/types"
 
 interface IDriveDataProps {
+    setModalState: Dispatch<SetStateAction<string | null>>,
     setDriveData: (value: SetStateAction<IDriveResp | null>) => void
 }
 
-const DriveData: React.FC<IDriveDataProps> = ({ setDriveData }) => {
+const DriveData: React.FC<IDriveDataProps> = ({ setModalState, setDriveData }) => {
     const { 
         selectedOrganization,
         activeDirectory,
@@ -70,6 +71,7 @@ const DriveData: React.FC<IDriveDataProps> = ({ setDriveData }) => {
                 folders={folders}
                 items={items}
                 activeItem={selectedDriveId}
+                setModalState={setModalState}
                 setActiveItem={setSelectedDriveId}
                 setActiveDirectory={setActiveDirectory}
             />

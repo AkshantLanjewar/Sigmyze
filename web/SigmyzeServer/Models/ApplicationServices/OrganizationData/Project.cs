@@ -25,6 +25,9 @@ namespace SigmyzeServer.Models.ApplicationServices
         [BsonElement("project_id")]
         public string? ProjectId { get; set; }
 
+        [BsonElement("project_name")]
+        public string? ProjectName { get; set; }
+
         //NOTE: This field is used for user authentication, the backend has to verify whether or not 
         //the requested user can actually acesss this project
         [BsonElement("organization_id")]

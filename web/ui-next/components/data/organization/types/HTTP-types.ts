@@ -32,10 +32,36 @@ interface IDriveCreateFolder {
     organization_id: string
 }
 
+interface IDriveDeleteFolder {
+    folder_id: string,
+    parent_folder: string,
+    organization_id: string
+}
+
+interface IDriveUpdateFolder {
+    folder_id: string,
+    parent_folder: string,
+    organization_id: string,
+    folder_name?: string
+}
+
 interface IDriveCreateProject {
     project_name: string,
     parent_folder: string,
     organization_id: string
+}
+
+interface IDriveDeleteProject {
+    project_id: string,
+    parent_folder: string,
+    organization_id: string
+}
+
+interface IDriveUpdateProject {
+    project_id: string,
+    parent_folder: string,
+    organization_id: string,
+    project_name?: string
 }
 
 export type { 
@@ -44,5 +70,9 @@ export type {
     IDriveFolder,
     IDriveProject,
     IDriveCreateFolder,
-    IDriveCreateProject 
+    IDriveDeleteFolder,
+    IDriveUpdateFolder,
+    IDriveCreateProject,
+    IDriveDeleteProject,
+    IDriveUpdateProject 
 }
