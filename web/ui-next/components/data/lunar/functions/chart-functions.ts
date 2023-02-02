@@ -7,7 +7,8 @@ function AddIndicator(
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
     id: string,
-    indicator: IIndicator
+    indicator: IIndicator,
+    toggleDriveUpdate: () => void,
 ) {
     if(data === null)
         return
@@ -41,7 +42,8 @@ function DeleteIndicator(
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
     id: string,
-    indicator: IIndicator
+    indicator: IIndicator,
+    toggleDriveUpdate: () => void,
 ) {
     if(data === null)
         return
@@ -67,12 +69,14 @@ function DeleteIndicator(
     nData.splits = nSplits
 
     setData({ ...nData })
+    toggleDriveUpdate()
 }
 
 function CreateSettings(
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
-    id: string
+    id: string,
+    toggleDriveUpdate: () => void,
 ) {
     if(data === null)
         return
@@ -93,12 +97,14 @@ function CreateSettings(
     nData.splits = nSplits
 
     setData({ ...nData })
+    toggleDriveUpdate()
 }
 
 function CreateGlobals(
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
-    id: string
+    id: string,
+    toggleDriveUpdate: () => void,
 ) {
     if(data === null)
         return
@@ -117,13 +123,15 @@ function CreateGlobals(
     nData.splits = nSplits
 
     setData({ ...nData })
+    toggleDriveUpdate()
 }
 
 function SetChartTitle(
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
     id: string,
-    name: string
+    name: string,
+    toggleDriveUpdate: () => void,
 ) {
     if(data === null)
         return
@@ -136,12 +144,12 @@ function SetChartTitle(
         return
 
     node.data.chartGlobals.chartTitle = name
-    console.log(node)
     let nSplits = SetItem(node, data.splits)
     let nData = data
     nData.splits = nSplits
 
     setData({ ...nData })
+    toggleDriveUpdate()
 }
 
 function CompareIndicators(indicatorA: IIndicator, indicatorB: IIndicator) {
@@ -184,6 +192,7 @@ function GetIndicatorSetting(
 function CreateIndicatorSetting(
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
+    toggleDriveUpdate: () => void,
     id: string,
     setting: IIndicatorSetting
 ) {
@@ -206,6 +215,7 @@ function CreateIndicatorSetting(
     let nData = data
     nData.splits = nSplits
     setData({ ...nData })
+    toggleDriveUpdate()
 }
 
 export { 

@@ -16,13 +16,15 @@ const stacks = [
         name: "Project Explorer",
         icon: IconStack2
     },
-    {
-        id: 'publish',
-        name: "Publishing",
-        icon: IconStackPop
-    }
 ]
 
+/**
+ * @description
+ *  this is the toolbar for the lunar editor.
+ *  when in the lunar editor, its the container on the left side of the space,
+ *  next to the display viewport.
+ * @returns Lunar Editor Toolbar 
+ */
 const Toolbar: React.FC = ({ }): JSX.Element => {
     const [stack, setStack]   = useState<any>(stacks[0])
     

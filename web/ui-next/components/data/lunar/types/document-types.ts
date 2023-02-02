@@ -2,8 +2,23 @@ import { TitleOrder } from "@mantine/core/lib/Title"
 import { IPresentationChart, ITextNode } from "../../../lunar/document-editor/blocks/types"
 
 interface IDocument {
+    /**
+     * @description
+     *  theese are the pages within the document.
+     *  TODO: implement automatic page breaks.
+     */
     pages: IDocumentPage[],
+
+    /**
+     * @deprecated
+     */
     document_id: string,
+
+    /**
+     * @description
+     *  contains central data for the document so expensive items dont have to be reused.
+     *  E.X images, etc...
+     */
     data?: IDocumentData
 }
 

@@ -54,6 +54,11 @@ namespace SigmyzeServer.Models.ApplicationServices
         [JsonProperty("order")]
         [JsonPropertyName("order")]
         public int? Order { get; set; }
+
+        [BsonElement("textNodes")]
+        [JsonProperty("textNodes")]
+        [JsonPropertyName("textNodes")]
+        public List<TextNode>? TextNodes { get; set; }
         
         [BsonElement("imageData")]
         [JsonProperty("imageData")]
@@ -79,6 +84,24 @@ namespace SigmyzeServer.Models.ApplicationServices
         [JsonProperty("chartData")]
         [JsonPropertyName("chartData")]
         public ChartBlockData? ChartData { get; set; }
+    }
+
+    public class TextNode
+    {
+        [BsonElement("type")]
+        [JsonProperty("type")]
+        [JsonPropertyName("type")]
+        public string? Type { get; set; }
+
+        [BsonElement("value")]
+        [JsonProperty("value")]
+        [JsonPropertyName("value")]
+        public string? Value { get; set; }
+
+        [BsonElement("id")]
+        [JsonProperty("id")]
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
     }
 
     public class ChartBlockData

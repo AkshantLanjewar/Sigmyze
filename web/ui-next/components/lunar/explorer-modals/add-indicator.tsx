@@ -35,11 +35,8 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
 
     const [dataPacket, setData] = useState<IIndicator>({} as IIndicator)
 
-    const { 
-        ui, 
-        addIndicator, 
-        toggleDriveUpdate 
-    } = useContext(LunarContextData) as ILunarState
+    const lunarContext = useContext(LunarContextData) as ILunarState
+    const { ui } = lunarContext
 
     useEffect(() => {
         let datasetObjects = [] as IDatasetObject[]
@@ -238,9 +235,8 @@ const AddIndicatorModal: React.FC<IAddIndicatorProps> = ({ modalState, close, da
                             if(ui === null || ui === undefined)
                                 return
 
-                            addIndicator(ui.visual_id, indicator)
+                            lunarContext.addIndicator(ui.visual_id, indicator)
                             close()
-                            toggleDriveUpdate()
                         }}
                     >
                         Add Indicator

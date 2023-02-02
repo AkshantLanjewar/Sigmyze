@@ -26,11 +26,8 @@ const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicator
     const [chartTitle, setChartTitleLocal] = useState<string>("")
     const [nodeId, setNodeId] = useState<string | null>(null)
 
-    const { 
-        ui, 
-        setChartTitle,
-        getNodeIdTab,
-    } = useContext(LunarContextData) as ILunarState
+    const lunarContext = useContext(LunarContextData) as ILunarState
+    const { ui } = useContext(LunarContextData) as ILunarState
 
     useEffect(() => {
         if(globals === undefined)
@@ -45,7 +42,7 @@ const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicator
             return
 
         //get the nodeId
-        let nodeId_ = getNodeIdTab(activeTab)
+        let nodeId_ = lunarContext.getNodeIdTab(activeTab)
         setNodeId(nodeId_)
     }, [])
 
@@ -67,7 +64,7 @@ const D3ChartTitle: React.FC<ID3ChartTitleProps> = ({ margin, globals, indicator
                 size={"lg"}
                 weight={"bold"}
                 type={"chart-title"}
-                setChartTitle={setChartTitle}
+                setChartTitle={lunarContext.setChartTitle}
                 nodeId={nodeId}
             />
 

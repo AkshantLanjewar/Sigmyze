@@ -17,15 +17,8 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
     const [chart, setChart] = useState([] as ILunarChart[])
     const [nodeId, setNodeId] = useState<string | null>(null)
 
-    const { 
-        ui, 
-        data,
-        createSettings,
-        getNodeIdTab,
-        getIndicatorSetting,
-        createIndicatorSetting,
-        createGlobals 
-    } = useContext(LunarContextData) as ILunarState
+    const lunarContext = useContext(LunarContextData) as ILunarState
+    const { ui, data } = lunarContext
 
     function FetchData() {
         if(ui === null || ui === undefined)
@@ -43,22 +36,23 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
         let node = null
         if(tab !== null)
             node = GetItem(tab.linked_node_id, data.splits)
+
         if(node !== null && node.data !== undefined) 
             setNodeData({ ...node.data })  
 
         let globals = node!.data!.chartGlobals
-        let nodeId = getNodeIdTab(tabId)
+        let nodeId = lunarContext.getNodeIdTab(tabId)
         if(globals === undefined)
-            createGlobals(nodeId)
+            lunarContext.createGlobals(nodeId)
     }
 
     useEffect(() => {
-        let nodeId = getNodeIdTab(tabId)
+        let nodeId = lunarContext.getNodeIdTab(tabId)
         setNodeId(nodeId)
     }, [])
 
     useEffect(() => {
-          FetchData()
+        FetchData()
     }, [tabId])
 
     useEffect(() => {
@@ -72,7 +66,7 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
             return
 
         let charts = await FetchIndicators(indicators)
-        charts = ParseSettings(nodeId!, charts, getIndicatorSetting, createIndicatorSetting) 
+        charts = ParseSettings(nodeId!, charts, lunarContext.getIndicatorSetting, lunarContext.createIndicatorSetting) 
         setChart([ ...charts ]) 
     }
 
@@ -82,7 +76,7 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
 
         let settings = nodeData.chartSettings
         if(settings === undefined) {
-            createSettings(nodeId)
+            lunarContext.createSettings(nodeId)
             return
         }
 

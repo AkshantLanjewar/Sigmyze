@@ -56,6 +56,46 @@ const LEAF_BLOCK = {
     id: "leaf-block"
 } as IDocumentBlock
 
+/**
+ * @param leaf
+ *  this is a boolean flag to determine whether or not the block is a leaf
+ * @param createBlock
+ *  this is the function that creates a new block, 
+ *  located in document-editor.tsx
+ * @param updateBlock
+ *  this is the function that updates an existing block, 
+ *  located in document-editor.tsx
+ * @param deleteBlock
+ *  this function deletes the block from the editor,
+ *  located in document-editor.tsx
+ * @param setLastActive
+ *  this function sets the last block in the editor to be active,
+ *  located in document-editor.tsx
+ * @param block
+ *  this is the actual data for the block
+ * @param autoFocus
+ *  whether or not to focus on the block or not
+ * @param index
+ *  this is the current index of the block within the editor
+ * @param oldInput
+ *  this is the input of the block before slash was pressed
+ * @param inputActive
+ *  whether or not the block menu is opened
+ * @param inputValue
+ *  this is the current search query for the search menu
+ * @param menuPosState
+ *  this is both the getter and setter for the slash menu position
+ * @param closeMenuState
+ *  this is the flag whether or not to close the slash menu
+ * @param inputIdState
+ *  this is the id of the block where the menu is currently selected
+ * @param leafMenuUpdate
+ *  this is the toggle to update the type of the leaf menu
+ * @param leafMenuItem
+ *  this is the new type of block for the leaf menu
+ * 
+ * @returns a document block within the editor
+ */
 const DocumentBlock: React.FC<IDocumentBlockProps> = 
 ({ 
     leaf, 
@@ -173,11 +213,11 @@ const DocumentBlock: React.FC<IDocumentBlockProps> =
         nBlock.id = internalBlock.id
         if(type === "image") {
             nBlock.imageData = data.imageData
-            nBlock.width = data.width
+            nBlock.width = data.width as number
             nBlock.height = data.height
         } else if (type === "chart") {
             nBlock.chartData = data.chartData
-            nBlock.width = data.width
+            nBlock.width = data.width as number
             nBlock.height = data.height
         }
         

@@ -32,7 +32,9 @@ import {
     CloseTab,
     SetItemWrapper,
     SetActiveItem,
-    SwitchTab
+    SwitchTab,
+    GrabDocument,
+    SetDocument
 } from "./functions/functions"
 
 import { ITreeNode } from "../../tree/tree"
@@ -41,6 +43,7 @@ import { GetProject, UpdateProject } from "./lunar-api"
 import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"
 import { usePrevious } from "@mantine/hooks"
+import { IDocument } from "./types/document-types"
 
 interface ILunarContextProps {
     pkg: IAddIndicatorData
@@ -55,15 +58,37 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
 
     const [toggleUpdate, setToggleUpdate] = useState(false)
     const [loaded, setLoaded] = useState(false)
+    const [custom, setCustom] = useState(false)
+
+    /**
+     * @description
+     *  this function toggles the drive update switch
+     *  updating the data on the server if the user 
+     *  is logged in. 
+     * @returns void
+     */
+    const updateDrive = () => setToggleUpdate(!toggleUpdate)
 
     const { loggedIn, authData } = useContext(UserContextData) as IUserContext
     const router = useRouter()
 
+    /**
+     * @async
+     * @listens toggleUpdate
+     * @description
+     *  This is the effect that listens and updates when it is toggled.
+     *  It only sends a request to the database if the user is logged in
+     *  and the inital data has already been loaded.
+     */
     useEffect(() => {
         //save the project
         if(data === null)
             return
         if(loaded === false)
+            return
+        if(loggedIn !== true && router.query.ids?.length && router.query.ids.length > 0)
+            window.location.replace('/lunar')
+        if(loggedIn !== true)
             return
 
         async function update() {
@@ -83,7 +108,10 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         update()
     }, [toggleUpdate])
 
-    //sets the context's default state
+    /**
+     * @description
+     *  This function creates the default project from the types file.
+     */
     function defaultProject() {
         let default_project    = DEFAULT_PROJECT
         default_project.splits = EnumerateNodes(default_project.splits) 
@@ -94,6 +122,12 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         setLoaded(true)
     }
 
+    /**
+     * @description
+     *  this function builds the ui object based off of the project given to it
+     * @param {ILunarProjectData} project This is the project the default ui needs to build around
+     * @returns {ILunarUIData} ILunarUIData
+     */
     function buildUi(project: ILunarProjectData) {
         let defaultUi = {} as ILunarUIData
         defaultUi.active_id = project.splits[0].node_id
@@ -107,19 +141,28 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
         return defaultUi
     }
 
+    /**
+     * @async
+     * @borrows token(UserContext)
+     * @description 
+     *  this function loads the project into the context memory.
+     *  If it is unable to find the url paramters, then it loads the default
+     *  project into memory. Otherwise it requests that the project be loaded
+     *  from the database.
+     * @returns void
+     */
     async function loadProject() {
         if(loaded)
             return
 
         let ids = router.query.ids as string[] | undefined
-        if(ids === undefined) {
+        if(ids === undefined || ids.length !== 2) {
             defaultProject()
             return
         }
 
         let token = authData?.token
         if(token === undefined) {
-            router.push('/lunar')
             return
         }
 
@@ -134,14 +177,23 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
             setData({ ...project })
             setUI({ ...ui })
             setLoaded(true)
+            setCustom(true)
         }
     }
 
+    /**
+     * @description
+     *  this is the effect that loads the data into the context.
+     *  If the authentication data has not been loaded from localstate
+     *  @listens authData
+     */
     useEffect(() => {
-        if(authData === null)
+        if(authData === null) {
+            loadProject()
             return
-        if(authData === undefined) {
-            router.push('/lunar')
+        }
+        if(authData === undefined && router.query.ids !== undefined) {
+            window.location.replace('/lunar')
             return
         }
 
@@ -150,14 +202,16 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
 
     //sets the active item based on the id and type
 
-    //opens a modal based on the modals id
+    /**
+     * @implements {ILunarState.setExplorerModal}
+     */
     function OpenModal(id: string) {
         let n_ui = ui as ILunarUIData
         n_ui.explorer_modal = id
         setUI({ ...n_ui })
     }
 
-    //univsersal close function for modal
+    
     function CloseModal() {
         let n_ui = ui as ILunarUIData
         n_ui.explorer_modal = undefined
@@ -190,18 +244,15 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
 
     //project functions
     const deleteProject = (id: string, type: string) => 
-        DeleteProjectItemWrapper(data, ui, setData, setUI, id, type)
+        DeleteProjectItemWrapper(data, ui, updateDrive, setData, setUI, id, type)
     const createProject = ( pId: string, name: string, type: string ) => 
-        CreateProjectItemWrapper(ui, data, setData, setUI, pId, name, type)
+        CreateProjectItemWrapper(ui, data, setData, setUI, pId, name, type, updateDrive)
 
     //sidebar node functions
     const idExists = ( id: string ) => data ? IdExists(data.splits, id) : false
-    const createSettings = (id: string) => CreateSettings(data, setData, id)
     const getNodeIdTab = (id: string) => GetNodeIdFromTab(ui!, id)
     const getNode = (id: string) => data ? GetItem(id, data.splits) : null
     const setNode = (node: IProjectNode) => SetItemWrapper(data, setData, node)
-    const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
-        CreateIndicatorSetting(data, setData, id, setting)
     const setDataNodes = (nodes: ITreeNode[]) => SetDataNodes(data, setData, nodes)
     const setActiveItem = (id: string, type: string) =>
         SetActiveItem(ui, data, setUI, id, type)
@@ -211,22 +262,31 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const closeTab = (tabId: string) => CloseTab(ui!, data, setUI, tabId)
 
     //chart functions
-    const createGlobals = (id: string) => CreateGlobals(data, setData, id)
+    const createSettings = (id: string) => CreateSettings(data, setData, id, updateDrive)
+    const createGlobals = (id: string) => CreateGlobals(data, setData, id, updateDrive)
     const getIndicatorSetting = (id: string, indicator: IIndicator) => GetIndicatorSetting(data, id, indicator)
     const setChartTitle = (id: string, name: string) =>
-        SetChartTitle(data, setData, id, name)
+        SetChartTitle(data, setData, id, name, updateDrive)
     const addIndicator = ( id: string, indicator: IIndicator ) =>
-        AddIndicator(data, setData, id, indicator)
+        AddIndicator(data, setData, id, indicator, updateDrive)
     const deleteIndicator = (id: string, indicator: IIndicator) =>
-        DeleteIndicator(data, setData, id, indicator)
+        DeleteIndicator(data, setData, id, indicator, updateDrive)
+    const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
+        CreateIndicatorSetting(data, setData, updateDrive, id, setting)
 
     //document functions
+    const grabDocument = (documentId: string) =>
+        GrabDocument(JSON.parse(JSON.stringify(data)), setData, updateDrive, documentId)
+    const setDocument = (documentId: string, documentData: IDocument) =>
+        SetDocument(data, setData, updateDrive, documentId, documentData)
 
     return (
         <>
             <LunarContextData.Provider value={{ 
                 data, 
                 ui,
+                loaded,
+                custom,
                 deleteProject: deleteProject, 
                 createProject: createProject,
                 setActiveItem: setActiveItem,
@@ -245,7 +305,9 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 setDataNodes,
                 setNode,
                 closeTab,
-                toggleDriveUpdate: () => { setToggleUpdate(!toggleUpdate) }
+                toggleDriveUpdate: updateDrive,
+                grabDocument,
+                setDocument
             }}>
                 <div style={{ width: "100%", height: "100%" }}>
                     {ui !== null && (

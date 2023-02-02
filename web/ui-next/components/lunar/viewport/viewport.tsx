@@ -8,12 +8,15 @@ import DocumentEditor from '../document-editor/document-editor'
 import styles from './viewport.module.scss'
 import { RxCross2 } from 'react-icons/rx'
 
+/**
+ * @description
+ *  This is the viewport for the editor.
+ *  basically a wrapper around a tabs based component.
+ * @returns 
+ */
 const Viewport: React.FC = ({ }) => {
-    const { 
-        ui,
-        changeTab,
-        closeTab 
-    } = useContext(LunarContextData) as ILunarState
+    const lunarContext = useContext(LunarContextData) as ILunarState
+    const { ui } = lunarContext
 
     let tabHeaders = null
     let tabBodies  = null
@@ -31,7 +34,7 @@ const Viewport: React.FC = ({ }) => {
                         size={"sm"} 
                         className={styles.icon}
                         variant={"transparent"}
-                        onClick={() => { closeTab(step.tab_id) }}
+                        onClick={() => { lunarContext.closeTab(step.tab_id) }}
                     >
                         <RxCross2 size={14} />
                     </ActionIcon>
@@ -51,7 +54,7 @@ const Viewport: React.FC = ({ }) => {
                     value={step.tab_id}
                     sx={{ flexGrow: 1 }}
                 >
-                    {panelBody}
+                    {step.tab_id === ui.activeTab && panelBody}
                 </Tabs.Panel>
             )
         }))
@@ -67,7 +70,7 @@ const Viewport: React.FC = ({ }) => {
                             color={"indigo"}
                             radius={"sm"}
                             value={ui!.activeTab}
-                            onTabChange={(val) => { changeTab(val!) }}
+                            onTabChange={(val) => { lunarContext.changeTab(val!) }}
                             sx={{ 
                                 height: '100%',
                                 display: 'flex',

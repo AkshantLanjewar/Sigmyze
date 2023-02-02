@@ -13,6 +13,16 @@ interface ILunarPageProps {
     pkg: IAddIndicatorData
 }
 
+/**
+ * @description
+ *  this is the page layout for the lunar page
+ *  this handles both when the user is accessing a protected project
+ *  and a public one.
+ * @param pkg
+ *  this is the prefetched data from the server.
+ *  it contains lists of datasets and their component indicators.
+ * @returns 
+ */
 const LunarPage: React.FC<ILunarPageProps> = ({ pkg }) => {
     return (
         <div>

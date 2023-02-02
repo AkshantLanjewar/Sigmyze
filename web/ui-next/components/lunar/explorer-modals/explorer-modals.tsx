@@ -104,15 +104,8 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }
     const documentRef = useRef<HTMLInputElement>(null)
     const chartRef    = useRef<HTMLInputElement>(null)
 
-    const { 
-        createProject, 
-        deleteProject,
-        setActiveItem,
-        toggleDriveUpdate,
-        ui,
-        idExists,
-        data
-    } = useContext(LunarContextData) as ILunarState 
+    const lunarContext = useContext(LunarContextData) as ILunarState 
+    const { ui, data } = lunarContext
 
     function onSubmit(e: FormEvent<HTMLFormElement>, type: string) {
         e.preventDefault()
@@ -138,15 +131,14 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }
 
         let ui_id = ui.active_id
         //check if the id exists
-        let exists = idExists(ui_id)
+        let exists = lunarContext.idExists(ui_id)
         if(exists === false) {
             ui_id = data.splits[0].node_id
-            setActiveItem(ui_id, data.splits[0].node_type)
+            lunarContext.setActiveItem(ui_id, data.splits[0].node_type)
         }
 
-        createProject(ui_id, value, type)
+        lunarContext.createProject(ui_id, value, type)
         close()
-        toggleDriveUpdate()
     }
 
     function onSubmitDelete(e: FormEvent<HTMLFormElement>, type: string) {
@@ -154,9 +146,8 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }
         if(ui === null || ui === undefined)
             return
 
-        deleteProject(ui.visual_id, ui.visual_type)
+        lunarContext.deleteProject(ui.visual_id, ui.visual_type)
         close()
-        toggleDriveUpdate()
     }
 
     return (

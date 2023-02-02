@@ -11,16 +11,8 @@ const Explorer: React.FC = ({ }) => {
     const [nodes, setNodes] = useState<Array<ITreeNode>>([])
     const prevNodes = usePrevious(nodes)
 
-    const { 
-        data,
-        ui,
-        deleteProject,
-        createProject,
-        setActiveItem,
-        setExplorerModal,
-        deleteIndicator,
-        setDataNodes 
-    } = useContext(LunarContextData) as ILunarState 
+    const lunarContext = useContext(LunarContextData) as ILunarState 
+    const { data, ui } = lunarContext
 
     function SetActive(oNodes: Array<ITreeNode>, id: string) {
         let nNodes = []
@@ -42,7 +34,7 @@ const Explorer: React.FC = ({ }) => {
     }
 
     function SetActiveWrapper(id: string, type: string) {
-        setActiveItem(id, type)
+        lunarContext.setActiveItem(id, type)
         let nNodes = SetActive(nodes, id)       
         setNodes([ ...nNodes ])
     }
@@ -53,7 +45,13 @@ const Explorer: React.FC = ({ }) => {
         if(ui == null)
             return
 
-        let nNodes = ConvertToTree(data.splits, { deleteProject, createProject, setExplorerModal, deleteIndicator }) 
+        let nNodes = ConvertToTree(data.splits, { 
+            deleteProject: lunarContext.deleteProject, 
+            createProject: lunarContext.createProject, 
+            setExplorerModal: lunarContext.setExplorerModal, 
+            deleteIndicator: lunarContext.deleteIndicator 
+        }) 
+
         if(nNodes === undefined)
             return
         //set the active from the ui
@@ -67,7 +65,7 @@ const Explorer: React.FC = ({ }) => {
         if(ui?.active_id === null || ui?.active_id === undefined)
             return
         
-        setDataNodes([ ...nodes ])
+        lunarContext.setDataNodes([ ...nodes ])
     }, [ui?.active_id])
 
     return (

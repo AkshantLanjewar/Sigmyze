@@ -45,6 +45,7 @@ let chart_actions = [
     } as IProjectNodeAction
 ]
 
+//TODO: Fix so that it may incorporate teh data
 function EnumerateNodes(splits: Array<IProjectNode>): Array<IProjectNode> {
     let nSplits: Array<IProjectNode> = []
     for(let i = 0; i < splits.length; i++) {
@@ -56,7 +57,7 @@ function EnumerateNodes(splits: Array<IProjectNode>): Array<IProjectNode> {
                 split['actions'] = project_actions
                 break
             case "chart":
-                split['data']    = {}
+                split['data']    = split.data ? split.data : {}
                 split['actions'] = chart_actions
                 break
         }
@@ -193,7 +194,7 @@ function ConvertToTree(splits: Array<IProjectNode>, actions: IActionFunctions): 
         node['children'] = ConvertToTree(split.children, actions)
         if(split.node_type === "chart") {
             node['useActive'] = true
-            let indicators = split.data!.indicators
+            let indicators = split.data?.indicators
             if(indicators !== undefined) {
                 for(let i = 0; i < indicators.length; i++) {
                     let indicator = indicators[i]

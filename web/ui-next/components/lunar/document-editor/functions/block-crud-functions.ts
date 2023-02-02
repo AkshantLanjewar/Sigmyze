@@ -8,6 +8,7 @@ function CreateBlock(
     internalData: IDocument,
     unfocusBlocks: () => void,
     setInternalData: (value: SetStateAction<IDocument>) => void,
+    toggleUpdateProject: () => void,
     focus?: boolean,
 ) {
     unfocusBlocks()
@@ -25,6 +26,7 @@ function CreateBlock(
     let nData = internalData
     nData.pages = pages
     setInternalData({ ...nData })
+    toggleUpdateProject()
 }
 
 function DeleteBlock(
@@ -32,6 +34,7 @@ function DeleteBlock(
     internalData: IDocument,
     unfocusBlocks: () => void,
     setInternalData: (value: SetStateAction<IDocument>) => void,
+    toggleUpdateProject: () => void,
 ) {
     unfocusBlocks()
 
@@ -62,6 +65,7 @@ function UpdateBlock(
     block: IDocumentBlock,
     internalData: IDocument,
     setInternalData: (value: SetStateAction<IDocument>) => void,
+    toggleUpdateProject: () => void,
 ) {
     let nData = internalData
     let pages = nData.pages
@@ -83,6 +87,7 @@ function UpdateBlock(
 
     nData.pages = pages
     setInternalData({ ...nData })
+    toggleUpdateProject()
 }
 
 function ChangeBlockType(
@@ -91,6 +96,7 @@ function ChangeBlockType(
     internalData: IDocument,
     unfocusBlocks: () => void,
     setInternalData: (value: SetStateAction<IDocument>) => void,
+    toggleUpdateProject: () => void,
 ) {
     let nData = internalData
     let blocks = nData.pages[0].blocks
@@ -115,6 +121,7 @@ function ChangeBlockType(
 
     nData.pages[0].blocks = nBlocks
     setInternalData({ ...nData })
+    toggleUpdateProject()
 
     if(blockId !== null)
         FocusId(blockId, internalData, unfocusBlocks, setInternalData)

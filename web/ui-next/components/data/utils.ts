@@ -36,6 +36,15 @@ function GenerateOptions(method: string, token: string | null, data?: any): Requ
     return options
 }
 
+const removeEmpty = (obj: any) => {
+    Object.keys(obj).forEach(key => 
+        (obj[key] && typeof obj[key] === 'object') && removeEmpty(obj[key]) ||
+        (!obj[key] && obj[key] !== undefined) && delete obj[key]
+    )
+
+    return obj
+}
+
 const dev = process.env.NODE_ENV !== 'production';
 const server = dev ? 'http://localhost:3000' : 'https://sigmyze.com'
 
@@ -43,5 +52,6 @@ export {
     GET,
     server,
     GenerateOptions,
-    GET_Cacheless
+    GET_Cacheless,
+    removeEmpty
 }

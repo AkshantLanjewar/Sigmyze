@@ -1,6 +1,6 @@
 import { showNotification } from "@mantine/notifications"
 import { IStatus } from "../datasets/DatasetsTypes"
-import { GenerateOptions, GET_Cacheless, server } from "../utils"
+import { GenerateOptions, GET_Cacheless, removeEmpty, server } from "../utils"
 import { ILunarProjectData } from "./types/types"
 
 interface GetProjectResponse {
@@ -27,13 +27,15 @@ async function GetProject(token: string, organization_id: string, project_id: st
         return
     }
 
-    return resp.project_data
+    return removeEmpty(resp.project_data)
 }
 
 async function UpdateProject(token: string, organization_id: string, project_id: string, data: ILunarProjectData) {
     let body = {
         data: data
     }
+
+    console.log(data.documents)
 
     let url = `${server}/api/v2/projects/${organization_id}/${project_id}`
     let options = GenerateOptions("POST", token, body)
