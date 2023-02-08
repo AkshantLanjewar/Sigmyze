@@ -1,6 +1,6 @@
 import IndexPage from "../components/index"
 import ApplicationLayout from "../components/nav-elements/application-layout"
-import Footer from "../components/nav-elements/footer"
+import Footer from "../components/nav-elements/footer/footer"
 
 export default function Home() {
 	return (

@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core'
 import Link from 'next/link'
 import styles from './footer.module.scss'
-import Logo from './logo'
+import Logo from '../logo/logo'
 
 /**
  * @figma Container: Navbar Component Component: Footer

@@ -1,6 +1,6 @@
 import styles from './logo.module.scss'
 import Image from 'next/image'
-import logo  from '../../public/logo.svg'
+import logo  from '../../../public/logo.svg'
 
 const Logo: React.FC = ({ }) => {
     return (

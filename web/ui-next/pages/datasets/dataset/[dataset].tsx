@@ -47,7 +47,7 @@ import {
     IconCash,
     IconShip 
 } from "@tabler/icons"
-import Footer from "../../../components/nav-elements/footer"
+import Footer from "../../../components/nav-elements/footer/footer"
 
 interface IDatasetPageProps {
     objects?: Array<IDatasetObject>,

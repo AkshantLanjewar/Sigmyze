@@ -20,7 +20,7 @@ import {
     IDatasetsTable 
 } from "../../components/data/datasets/DatasetsAPI"
 import { useRouter } from "next/router"
-import Footer from "../../components/nav-elements/footer"
+import Footer from "../../components/nav-elements/footer/footer"
 
 interface IDatasetProps {
     datasets?: Array<IDataset>;
