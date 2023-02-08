@@ -17,7 +17,7 @@ const Footer: React.FC = ({ }) => {
             <div className={styles.actionBanner}>
                 <h2 className={styles.title}>Save Time Now</h2>
 
-                <Link href={"/signup"}>
+                <Link href={"/auth/signup"}>
                     <Button
                         radius={"xl"}
                         size={"lg"}
