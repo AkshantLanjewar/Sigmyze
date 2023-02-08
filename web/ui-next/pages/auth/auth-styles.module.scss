@@ -71,6 +71,27 @@ $dark-5: #2C2E33;
         align-items: center;
         gap: 20px;
 
+        .loginWrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            width: 375px;
+
+            .title {
+                font-weight: 700;
+                font-size: 28px;
+                line-height: 42px;
+                color: #FFFFFF;
+            }
+
+            .form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
         .actionText {
             font-weight: 400;
             font-size: 14px;
