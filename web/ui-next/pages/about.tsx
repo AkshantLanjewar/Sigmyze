@@ -104,6 +104,45 @@ const AboutPage: React.FC = ({ }) => {
                     </div>
                 </div>
 
+                <div className={styles.roadmap}>
+                    <div className={styles.sectionTitle}>Product Roadmap</div>
+
+                    <div className={styles.roadmapWrapper}>
+                        <div className={styles.roadmapItem}>
+                            <div className={styles.styleRect}></div>
+                            <div className={styles.sectionTitle}>Coming Soon</div>
+                            <div className={styles.itemTitle}>A Blog!</div>
+                            <div className={styles.itemDescription}>
+                                With the addition of the blog, communication between us and you will become much 
+                                more easier and frequent, giving you a more accurate peek of what's happening 
+                                behind the scenes
+                            </div>
+                        </div>
+
+                        <div className={styles.roadmapItem}>
+                            <div className={styles.styleRect}></div>
+                            <div className={styles.sectionTitle}>Coming Soon</div>
+                            <div className={styles.itemTitle}>More Data!</div>
+                            <div className={styles.itemDescription}>
+                                We plan on rapidly expanding the number of datasets that we host. 
+                                First by introducing more dynamic economic indicators, along with the stock and 
+                                commodities markets.
+                            </div>
+                        </div>
+                        
+                        <div className={styles.roadmapItem}>
+                            <div className={styles.styleRect}></div>
+                            <div className={styles.sectionTitle}>Coming Soon</div>
+                            <div className={styles.itemTitle}>More Integrations!</div>
+                            <div className={styles.itemDescription}>
+                                Making sure that our services can integrate with apps already in your workflow is key, 
+                                and we plan on adding integrations for all major platforms to make adding visualizations 
+                                as painless as possible
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <Footer />
             </ApplicationLayout>
         </div>
