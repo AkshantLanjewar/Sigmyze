@@ -1,5 +1,6 @@
 import { Navbar } from '@mantine/core'
 import { IconDatabase, IconDeviceFloppy, IconGlobe } from '@tabler/icons'
+import Link from 'next/link'
 import styles from './sidebar.module.scss'
 
 interface ISidebarProps {
@@ -19,17 +20,23 @@ const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
         <Navbar width={{ base: 80 }}>
             <div className={styles.sidebarWrapper}>
                 <div className={styles.elements}>
-                    <div className={`${styles.element} ${location === '/drive' && styles.active}`}>
-                        <IconDeviceFloppy />
-                    </div>
+                    <Link href={"/drive"}>
+                        <div className={`${styles.element} ${location === '/drive' && styles.active}`}>
+                            <IconDeviceFloppy />
+                        </div>
+                    </Link>
 
-                    <div className={`${styles.element} ${location === '/lunar' && styles.active}`}>
-                        <IconGlobe />
-                    </div>
+                    <Link href={"/lunar"}>
+                        <div className={`${styles.element} ${location === '/lunar' && styles.active}`}>
+                            <IconGlobe />
+                        </div>
+                    </Link>
 
-                    <div className={`${styles.element}`}>
-                        <IconDatabase />
-                    </div>
+                    <Link href={"/datasets"}>
+                        <div className={`${styles.element}`}>
+                            <IconDatabase />
+                        </div>
+                    </Link>
                 </div>
             </div>
         </Navbar>
