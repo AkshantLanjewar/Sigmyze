@@ -2,11 +2,11 @@ import { Button, FocusTrap, Group, Input, LoadingOverlay } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { IconFolder } from "@tabler/icons"
 import { FormEvent, useContext, useState } from "react"
-import { OrganizationContextData } from "../../data/organization/context"
-import { CreateFolder } from "../../data/organization/drive-api"
-import { IOrganizationController } from "../../data/organization/types"
-import { UserContextData } from "../../data/user/context"
-import { IUserContext } from "../../data/user/types"
+import { OrganizationContextData } from "../../../data/organization/context"
+import { CreateFolder } from "../../../data/organization/drive-api"
+import { IOrganizationController } from "../../../data/organization/types"
+import { UserContextData } from "../../../data/user/context"
+import { IUserContext } from "../../../data/user/types"
 
 interface INewFolderModalProps {
     close: () => void

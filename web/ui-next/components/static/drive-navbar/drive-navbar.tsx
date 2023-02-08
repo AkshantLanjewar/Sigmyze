@@ -6,8 +6,8 @@ import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import ModalManager from "../../modal-manager"
 import nav_styles from '../navbar.module.scss'
-import NewFolderModal from "./new-folder-modal"
-import NewProjectModal from "./new-project-modal"
+import NewFolderModal from "../../nav-elements/sidebar/modal-views/new-folder-modal"
+import NewProjectModal from "../../nav-elements/sidebar/modal-views/new-project-modal"
 
 const driveViews = [
     { icon: IconDeviceFloppy, label: "Drive", url: '/' }
