@@ -25,5 +25,77 @@
 }
 
 .chooseWrapper {
-    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 110px 0px 100px;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        width: 1150px;
+
+        .cardWrapper {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+
+            width: 100%;
+            padding-top: 43px;
+            gap: 20px;
+
+            .card {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                width: 30%;
+
+                padding: 15px;
+                background-color: #0C0D0F;
+                border-radius: 8px;
+
+                .cardTitle {
+                    font-weight: 700;
+                    font-size: 18px;
+                    line-height: 1.2;
+                    color: #FFFFFF;
+                }
+
+                .description {
+                    font-size: 14px;
+                    line-height: 1.2;
+                    color: #909296;
+                }
+            }
+        }
+    }
+
+    .focusText {
+        font-size: 42px;
+        line-height: 1.2;
+        font-weight: 700;
+        text-align: center;
+        color: #FFFFFF;
+        letter-spacing: -0.004em;
+    }
+}
+
+.sectionTitle {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: 0.016em;
+    text-transform: uppercase;
+    color: #C1C2C5;
+}
+
+.styleRect {
+    width: 45px;
+    height: 2px;
+
+    background-color: #A5D8FF;
 }
