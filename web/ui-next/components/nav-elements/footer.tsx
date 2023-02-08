@@ -22,6 +22,39 @@ const Footer: React.FC = ({ }) => {
 
             <div className={styles.links}>
                 <Logo />
+
+                <div className={styles.wrapper}>
+                    <div className={styles.col}>
+                        <div className={styles.title}>Information</div>
+
+                        <div className={styles.links_footer}>
+                            <Link href={"/features"}>
+                                <div className={styles.link}>Features</div>
+                            </Link>
+
+                            <Link href={"/datasets"}>
+                                <div className={styles.link}>Datasets</div>
+                            </Link>
+
+                            <Link href={"/about"}>
+                                <div className={styles.link}>Additional Info</div>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div className={styles.col}>
+                        <div className={styles.title}>Social Media</div>
+
+                        <div className={styles.links_footer}>
+                            <Link 
+                                href={"https://twitter.com/sigmyze"} 
+                                target={"_blank"}
+                            >
+                                <div className={styles.link}>Twitter</div>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
