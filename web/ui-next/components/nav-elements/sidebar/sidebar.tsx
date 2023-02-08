@@ -1,5 +1,5 @@
-import { Navbar } from '@mantine/core'
-import { IconDatabase, IconDeviceFloppy, IconGlobe } from '@tabler/icons'
+import { Navbar, Tooltip } from '@mantine/core'
+import { IconDatabase, IconDeviceFloppy, IconGlobe, IconStack2 } from '@tabler/icons'
 import Link from 'next/link'
 import DriveCreateItem from './drive-create-item'
 import styles from './sidebar.module.scss'
@@ -20,7 +20,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
     return (
         <Navbar width={{ base: 80 }}>
             <div className={styles.sidebarWrapper}>
-                <div className={styles.elements}>
+                <div className={`${styles.elements} ${location === '/lunar' && styles.border}`}>
                     {location === '/drive' && (
                         <>
                             <DriveCreateItem />
@@ -28,23 +28,59 @@ const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
                     )}
 
                     <Link href={"/drive"}>
-                        <div className={`${styles.element} ${location === '/drive' && styles.active}`}>
-                            <IconDeviceFloppy />
-                        </div>
+                        <Tooltip
+                            label={"Drive"}
+                            position={"right"}
+                            withArrow
+                            styles={{ tooltip: { backgroundColor: "#08090A" } }}
+                        >
+                            <div className={`${styles.element} ${location === '/drive' && styles.active}`}>
+                                <IconDeviceFloppy />
+                            </div>
+                        </Tooltip>
                     </Link>
 
                     <Link href={"/lunar"}>
-                        <div className={`${styles.element} ${location === '/lunar' && styles.active}`}>
-                            <IconGlobe />
-                        </div>
+                        <Tooltip
+                            label={"Lunar Editor"}
+                            position={"right"}
+                            withArrow
+                            styles={{ tooltip: { backgroundColor: "#08090A" } }}
+                        >
+                            <div className={`${styles.element} ${location === '/lunar' && styles.active}`}>
+                                <IconGlobe />
+                            </div>
+                        </Tooltip>
                     </Link>
 
                     <Link href={"/datasets"}>
-                        <div className={`${styles.element}`}>
-                            <IconDatabase />
-                        </div>
+                        <Tooltip
+                            label={"Datasets"}
+                            position={"right"}
+                            withArrow
+                            styles={{ tooltip: { backgroundColor: "#08090A" } }}
+                        >
+                            <div className={`${styles.element}`}>
+                                <IconDatabase />
+                            </div>
+                        </Tooltip>
                     </Link>
                 </div>
+
+                {location === '/lunar' && (
+                    <div className={`${styles.elements} ${styles.stacks}`}>
+                        <Tooltip
+                            label={"Explorer"}
+                            position={"right"}
+                            withArrow
+                            styles={{ tooltip: { backgroundColor: "#08090A" } }}
+                        >
+                            <div className={`${styles.element} ${styles.active}`}>
+                                <IconStack2 />
+                            </div>
+                        </Tooltip>
+                    </div>
+                )}
             </div>
         </Navbar>
     )
