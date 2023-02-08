@@ -2,11 +2,11 @@ import { Button, FocusTrap, Group, Input, LoadingOverlay } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { IconBox } from "@tabler/icons"
 import { FormEvent, useContext, useState } from "react"
-import { OrganizationContextData } from "../../data/organization/context"
-import { CreateProject } from "../../data/organization/drive-api"
-import { IOrganizationController } from "../../data/organization/types"
-import { UserContextData } from "../../data/user/context"
-import { IUserContext } from "../../data/user/types"
+import { OrganizationContextData } from "../../../data/organization/context"
+import { CreateProject } from "../../../data/organization/drive-api"
+import { IOrganizationController } from "../../../data/organization/types"
+import { UserContextData } from "../../../data/user/context"
+import { IUserContext } from "../../../data/user/types"
 
 interface INewProjectModalProps {
     close: () => void

@@ -3,7 +3,6 @@ import { DefaultIndicatorTable } from "../../pages/lunar"
 import { GetDatasets, GetObjects, GetIndicators } from "../data/datasets/DatasetsAPI"
 import { IDatasetObjects } from "../data/datasets/DatasetsTypes"
 import LunarContext from "../data/lunar/context"
-import DefaultLayout from "../default-layout"
 import { RawIndicator, IAddIndicatorData } from "./explorer-modals/add-indicator"
 import styles from '../../pages/lunar/lunar.module.scss'
 import Toolbar from "./toolbar/toolbar"

@@ -1,4 +1,3 @@
-import DefaultLayout from "../../components/default-layout"
 import styles        from  './datasets.module.scss'
 
 import { 
