@@ -22,17 +22,17 @@ const LoggedOutView: React.FC = ({ }) => {
                         color={"gray"}
                         radius={"xl"}
                     >
-                        Login
+                        Log in
                     </Button>
                 </Link>
 
-                <Link href={"/auth/register"}>
+                <Link href={"/auth/signup"}>
                     <Button
                         variant={"filled"}
                         color={"indigo"}
                         radius={"xl"}
                     >
-                        Register
+                        Sign up
                     </Button>
                 </Link>
             </div>
