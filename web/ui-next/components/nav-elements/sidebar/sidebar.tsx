@@ -1,6 +1,7 @@
 import { Navbar } from '@mantine/core'
 import { IconDatabase, IconDeviceFloppy, IconGlobe } from '@tabler/icons'
 import Link from 'next/link'
+import DriveCreateItem from './drive-create-item'
 import styles from './sidebar.module.scss'
 
 interface ISidebarProps {
@@ -20,6 +21,12 @@ const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
         <Navbar width={{ base: 80 }}>
             <div className={styles.sidebarWrapper}>
                 <div className={styles.elements}>
+                    {location === '/drive' && (
+                        <>
+                            <DriveCreateItem />
+                        </>
+                    )}
+
                     <Link href={"/drive"}>
                         <div className={`${styles.element} ${location === '/drive' && styles.active}`}>
                             <IconDeviceFloppy />
