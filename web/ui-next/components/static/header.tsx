@@ -8,7 +8,6 @@ import {
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import logo  from '../../public/logo.svg'
-import UserButton from '../user-button'
 
 const HeaderS: React.FC<{}> = () : JSX.Element => {
     const router = useRouter()
@@ -50,7 +49,6 @@ const HeaderS: React.FC<{}> = () : JSX.Element => {
                 </Box>
                 
                 <Group>
-                    <UserButton />
                 </Group>
             </Group>
         </Header>

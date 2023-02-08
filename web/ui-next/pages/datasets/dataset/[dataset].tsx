@@ -1,4 +1,3 @@
-import DefaultLayout from "../../../components/default-layout"
 import { 
     useEffect,
     useState 

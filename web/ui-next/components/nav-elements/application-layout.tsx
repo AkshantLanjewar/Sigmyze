@@ -4,9 +4,8 @@ import Head from "next/head"
 import OrganizationContext from "../data/organization/context"
 import UserContext from "../data/user/context"
 import { theme } from "../default-theme"
-import HeaderS from "../static/header"
-import NavbarS from "../static/navbar"
 import Header from "./header"
+import Sidebar from "./sidebar/sidebar"
 
 enum ApplicationNavbar {
     logged_out,
@@ -43,7 +42,7 @@ const ApplicationLayout: React.FC<IApplicationLayoutProps> =
 ({ title, description, location, protectedView, darken, children }) => {
     let sidebar = undefined
     if(protectedView)
-        sidebar = <NavbarS location={location} />
+        sidebar = <Sidebar location={location} />
 
     return (
         <>
