@@ -1,0 +1,16 @@
+.logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    cursor: pointer;
+    width: min-content;
+
+    .text {
+        font-size: 26px;
+        font-weight: 700;
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
