@@ -1,8 +1,7 @@
 const ApplicationLayout: React.FC = ({ }) => {
     return (
-        <div>
-
-        </div>
+        <>
+        </>
     )
 }
 
