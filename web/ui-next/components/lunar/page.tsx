@@ -8,6 +8,7 @@ import { RawIndicator, IAddIndicatorData } from "./explorer-modals/add-indicator
 import styles from '../../pages/lunar/lunar.module.scss'
 import Toolbar from "./toolbar/toolbar"
 import Viewport from "./viewport/viewport"
+import ApplicationLayout from "../nav-elements/application-layout"
 
 interface ILunarPageProps {
     pkg: IAddIndicatorData
@@ -26,10 +27,11 @@ interface ILunarPageProps {
 const LunarPage: React.FC<ILunarPageProps> = ({ pkg }) => {
     return (
         <div>
-            <DefaultLayout
+            <ApplicationLayout
                 title="Sigmyze: Lunar Editor"
                 description=""
                 location="/lunar"
+                protectedView={true}
             >
                 <LunarContext pkg={pkg}>
                     <div style={{ height: '100%' }}>
@@ -49,7 +51,7 @@ const LunarPage: React.FC<ILunarPageProps> = ({ pkg }) => {
                         </Group>
                     </div>
                 </LunarContext>
-            </DefaultLayout>
+            </ApplicationLayout>
         </div>
     )
 }

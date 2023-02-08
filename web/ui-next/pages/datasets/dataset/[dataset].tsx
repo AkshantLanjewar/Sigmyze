@@ -48,6 +48,7 @@ import {
     IconShip 
 } from "@tabler/icons"
 import Footer from "../../../components/nav-elements/footer/footer"
+import ApplicationLayout from "../../../components/nav-elements/application-layout"
 
 interface IDatasetPageProps {
     objects?: Array<IDatasetObject>,
@@ -152,10 +153,11 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
 
     return (
         <>
-            <DefaultLayout
+            <ApplicationLayout
                 title="Sigmyze Dataset"
                 description=""
                 location="/datasets"
+                protectedView={false}
             >
                 <div>
                     <Container mt={"xl"} pt={"xl"}>
@@ -249,7 +251,7 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
 
                     <Footer />
                 </div>
-            </DefaultLayout>
+            </ApplicationLayout>
         </>
     )
 }
