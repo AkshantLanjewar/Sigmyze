@@ -16,7 +16,7 @@ const LoggedOutView: React.FC = ({ }) => {
             <MenuItems />
 
             <div className={styles.authControls}>
-                <Link href={"/login"}>
+                <Link href={"/auth/login"}>
                     <Button
                         variant={"subtle"}
                         color={"gray"}
@@ -26,7 +26,7 @@ const LoggedOutView: React.FC = ({ }) => {
                     </Button>
                 </Link>
 
-                <Link href={"/register"}>
+                <Link href={"/auth/register"}>
                     <Button
                         variant={"filled"}
                         color={"indigo"}
