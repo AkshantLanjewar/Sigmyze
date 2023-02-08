@@ -20,6 +20,7 @@ import {
     IDatasetsTable 
 } from "../../components/data/datasets/DatasetsAPI"
 import { useRouter } from "next/router"
+import Footer from "../../components/nav-elements/footer"
 
 interface IDatasetProps {
     datasets?: Array<IDataset>;
@@ -62,7 +63,8 @@ const DatasetsPage: React.FC<IDatasetProps> = ({ datasets }) : JSX.Element => {
                     <main>
                         <Container
                             size={"lg"}
-                            mb={"xl"}
+                            mb={32}
+                            pb={"xl"}
                             px={"md"}
                             className={styles.wrapper}
                         >
@@ -113,6 +115,8 @@ const DatasetsPage: React.FC<IDatasetProps> = ({ datasets }) : JSX.Element => {
                             </div>
                         </Container>
                     </main>
+
+                    <Footer />
                 </div>
             </DefaultLayout>
         </>
