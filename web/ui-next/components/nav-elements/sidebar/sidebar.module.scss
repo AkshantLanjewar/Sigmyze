@@ -19,6 +19,20 @@ $indigo-6: var(--mantine-color-indigo-6);
         align-items: center;
         gap: 10px;
 
+        &.border {
+            padding: 0 0 32px;
+            border-bottom: 2px solid $dark-5;
+        }
+
+        &.stacks {
+            padding: 32px 0;
+
+            .element.active {
+                background-color: #7048E8;
+                color: #FFFFFF;
+            }
+        }
+
         .element {
             display: flex;
             justify-content: center;
