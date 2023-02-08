@@ -45,8 +45,7 @@ $dark-5: #2C2E33;
             }
         }
 
-        .screenshotChart {
-            background: url(../../public/screenshots/chart-editor.png);
+        .screenshot {
             background-size: 1121px 739px;
             object-fit: fill;
             border: 1px solid $dark-5;
@@ -57,6 +56,15 @@ $dark-5: #2C2E33;
             height: 739px;
             top: 306px;
             left: 40px;
+
+            &.chart {
+                background: url(../../public/screenshots/chart-editor.png);
+            }
+
+            &.document {
+                background: url(../../public/screenshots/document-editor.png);
+                top: 339px;
+            }
         }
     }
 
