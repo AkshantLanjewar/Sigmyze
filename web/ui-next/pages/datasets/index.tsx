@@ -20,7 +20,8 @@ import {
     IDatasetsTable 
 } from "../../components/data/datasets/DatasetsAPI"
 import { useRouter } from "next/router"
-import Footer from "../../components/nav-elements/footer"
+import Footer from "../../components/nav-elements/footer/footer"
+import ApplicationLayout from "../../components/nav-elements/application-layout"
 
 interface IDatasetProps {
     datasets?: Array<IDataset>;
@@ -31,10 +32,12 @@ const DatasetsPage: React.FC<IDatasetProps> = ({ datasets }) : JSX.Element => {
 
     return (
         <>
-            <DefaultLayout
+            <ApplicationLayout
                 title="Sigmyze Datasets"
                 description=""
                 location="/datasets"
+                protectedView={false}
+                darken={true}
             >
                 <div>
                     <header className={styles.header}>
@@ -118,7 +121,7 @@ const DatasetsPage: React.FC<IDatasetProps> = ({ datasets }) : JSX.Element => {
 
                     <Footer />
                 </div>
-            </DefaultLayout>
+            </ApplicationLayout>
         </>
     )
 }

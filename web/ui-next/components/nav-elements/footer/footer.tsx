@@ -1,8 +1,16 @@
 import { Button } from '@mantine/core'
 import Link from 'next/link'
 import styles from './footer.module.scss'
-import Logo from './logo'
+import Logo from '../logo/logo'
 
+/**
+ * @figma Container: Navbar Component Component: Footer
+ * @description
+ *  this is the footer at the bottom of most unauthorized pages
+ *  it contains links to important pages on the site, along with 
+ *  a banner to drive user account creation.
+ * @returns Footer
+ */
 const Footer: React.FC = ({ }) => {
     return (
         <div className={styles.footer}>
