@@ -6,9 +6,27 @@ import NewFolderModal from "./modal-views/new-folder-modal"
 import NewProjectModal from "./modal-views/new-project-modal"
 import styles from './sidebar.module.scss'
 
+/**
+ * @description
+ *  this is the menu that handles the creation of new
+ *  items in the drive such as folders and projects.
+ * @returns create menu
+ */
 const DriveCreateItem: React.FC = ({ }) => {
-    //NOTE: This handles the openning and closing of the modal
+    /**
+     * @description
+     *  handles the state of the modal manager
+     * @state create-folder
+     *  this opens the create-folder modal
+     * @state create-lunar-project
+     *  this opens the create lunar project modal
+     */
     const [modalState, setModalState] = useState<string | null>(null)
+
+    /**
+     * @function
+     *  this function closes the modal
+     */
     const closeModal = () => setModalState(null)
     
     return (
