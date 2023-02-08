@@ -45,12 +45,6 @@ const Toolbar: React.FC = ({ }): JSX.Element => {
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.stackExplorer}>
-                <div className={styles.stack}>
-                    {explorerIcons}
-                </div>
-            </div>
-
             <div className={styles.stackViewport}>
                 <div className={styles.title}>
                     <Text 
