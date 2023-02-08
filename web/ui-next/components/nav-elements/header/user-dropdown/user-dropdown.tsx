@@ -20,10 +20,32 @@ const UserDropdown: React.FC = ({ }) => {
         fetchUserData 
     } = useContext(UserContextData) as IUserContext
 
+    /**
+     * @state
+     * @description
+     *  this is the email for the user, collected in fetchUData
+     */
     const [email, setEmail] = useState("")
+
+    /**
+     * @state
+     * @description
+     *  this is the name for the user, collected in fetchUData
+     */
     const [name, setName] = useState("")
+
+    /**
+     * @state
+     * @description
+     *  this is the initials after the name is collected
+     */
     const [initials, setInitials] = useState("")
 
+    /**
+     * @function
+     * @description
+     *  this is the function that logs the user out
+     */
     function logoutWrapper() {
         let token = authData?.token
         if(token === undefined)
@@ -34,7 +56,11 @@ const UserDropdown: React.FC = ({ }) => {
         logout(token)
     }
 
-    //actual fetch of the user data
+    /**
+     * @function
+     * @description
+     *  this is the function that fetches the user data
+     */
     async function fetchUData() {
         let token = authData?.token
         if(token === undefined)
@@ -45,16 +71,27 @@ const UserDropdown: React.FC = ({ }) => {
         await fetchUserData(token)
     }
 
-    //hook that handles the grabbing of the userData
+    /**
+     * @effect
+     * @description
+     *  this effect fetches the user data
+     * @params
+     *  function executes when loggedIn and authData change
+     */
     useEffect(() => {
         if(loggedIn !== true)
             return
 
         if(userData === undefined)
             fetchUData() 
-    }, [loggedIn])
+    }, [loggedIn, authData])
 
-    //hook that handles the userData
+    /**
+     * @effect
+     * @description
+     *  this is the function that updates the internal state,
+     *  whenever the userdata updates
+     */
     useEffect(() => {
         if(userData === undefined || userData.username === undefined) {
             setInitials("")
