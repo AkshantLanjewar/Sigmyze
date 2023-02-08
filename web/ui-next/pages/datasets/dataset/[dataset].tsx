@@ -47,6 +47,7 @@ import {
     IconCash,
     IconShip 
 } from "@tabler/icons"
+import Footer from "../../../components/nav-elements/footer"
 
 interface IDatasetPageProps {
     objects?: Array<IDatasetObject>,
@@ -245,6 +246,8 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
                             </Tabs>
                         </Stack>
                     </Container>
+
+                    <Footer />
                 </div>
             </DefaultLayout>
         </>
