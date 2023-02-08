@@ -1,21 +1,19 @@
-import Logo from '../../components/nav-elements/logo/logo'
-import Link from 'next/link'
+import { Button, Checkbox, MantineProvider, PasswordInput, TextInput } from "@mantine/core"
+import { useForm } from "@mantine/form"
+import Link from "next/link"
+import { FormEvent } from "react"
+import { theme } from "../../components/default-theme"
+import Logo from "../../components/nav-elements/logo/logo"
 import styles from './auth-styles.module.scss'
-import chartEditorScreenshot from '../../public/screenshots/chart-editor.png'
-import { useForm } from '@mantine/form'
-import { Button, MantineProvider, PasswordInput, TextInput } from '@mantine/core'
-import { theme } from '../../components/default-theme'
-import { FormEvent } from 'react'
 
-/**
- * @description
- *  this is the login form for the website
- */
-const LoginPage: React.FC = ({ }) => {
+const Signup: React.FC = ({ }) => {
     const form = useForm({
         initialValues: {
             email: '',
-            password: ''
+            username: '',
+            password: '',
+            passwordConf: '',
+            terms: false
         },
 
         validate: {
@@ -39,18 +37,35 @@ const LoginPage: React.FC = ({ }) => {
                     <Logo />
 
                     <div className={styles.subtext}>
-                        <div className={styles.focus}>Analyze Everything</div>
-                        <div className={styles.shadow}>Check out our new document and chart editors</div>
+                        <div className={styles.focus}>Built to Save Time</div>
+                        <div className={styles.shadow}>
+                            Create an Account and start discovering insights that make a difference.
+                        </div>
                     </div>
 
-                    <div className={`${styles.screenshot} ${styles.chart}`}></div>
+                    <div className={`${styles.screenshot} ${styles.document}`}></div>
                 </div>
 
                 <div className={styles.content}>
                     <div className={styles.loginWrapper}>
-                        <div className={styles.title}>Welcome Back!</div>
+                        <div className={styles.title}>Get Started!</div>
 
                         <form className={styles.form} onSubmit={onSubmit}>
+                            <input type="text" style={{ display: "none" }} />
+                            <input type="password" style={{ display: "none" }} />
+
+                            <TextInput 
+                                required
+                                withAsterisk
+                                label={"Username"}
+                                size={"md"}
+                                variant={"filled"}
+                                type={"text"}
+                                placeholder={"Your Username"}
+                                styles={{ input: { height: 40 } }}
+                                {...form.getInputProps('username')}
+                            />
+
                             <TextInput 
                                 required
                                 withAsterisk
@@ -74,23 +89,41 @@ const LoginPage: React.FC = ({ }) => {
                                 {...form.getInputProps('password')}
                             />
 
+                            <PasswordInput 
+                                required
+                                withAsterisk
+                                placeholder={"Password Confirmation"}
+                                label={"Your Password Again"}
+                                size={"md"}
+                                variant={"filled"}
+                                styles={{ input: { height: 40 } }}
+                                {...form.getInputProps('passwordConf')}
+                            />
+
+                            <Checkbox
+                                required
+                                style={{ display: "flex", alignItems: "center" }}
+                                label={"I accept the Terms of Service (TOS)"}
+                                {...form.getInputProps('terms')}
+                            />
+
                             <Button
                                 type={'submit'}
                                 size={'md'}
                                 mt={20}
                                 radius={"xl"}
                             >
-                                Log in
+                                Sign up
                             </Button>
                         </form>
                     </div>
 
                     <div className={styles.actionText}>
-                        Don't have an account?{' '}
+                        Already have an account?{' '}
                         
-                        <Link href={"/auth/signup"}>
+                        <Link href={"/auth/login"}>
                             <span className={styles.link}>
-                                Sign Up
+                                Log in
                             </span>
                         </Link>
                     </div>
@@ -108,4 +141,4 @@ const LoginPage: React.FC = ({ }) => {
     )
 }
 
-export default LoginPage
+export default Signup
