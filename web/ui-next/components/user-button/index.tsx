@@ -1,6 +1,6 @@
 import { UserContextData } from "../data/user/context"
 import { IUserContext } from "../data/user/types"
-import UserDropdown from "./user-dropdown/user-dropdown"
+import UserDropdown from "../nav-elements/header/user-dropdown/user-dropdown"
 import { useContext, useState } from 'react'
 import { Button } from "@mantine/core"
 import ModalManager from "../modal-manager"

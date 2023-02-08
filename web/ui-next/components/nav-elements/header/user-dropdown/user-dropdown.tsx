@@ -1,10 +1,15 @@
 import { Avatar, Group, Menu, UnstyledButton, Text } from "@mantine/core"
 import { IconLogout } from "@tabler/icons"
 import { useContext, useEffect, useState } from "react"
-import { UserContextData } from "../../data/user/context"
-import { IUserContext } from "../../data/user/types"
+import { UserContextData } from "../../../data/user/context"
+import { IUserContext } from "../../../data/user/types"
 import styles from './user-dropdown.module.scss'
 
+/**
+ * @description
+ *  this is the user dropdown for when the user is logged in 
+ * @returns user dropdown
+ */
 const UserDropdown: React.FC = ({ }) => {
     const { 
         authData, 
