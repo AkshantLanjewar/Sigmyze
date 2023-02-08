@@ -12,6 +12,7 @@ import HeaderS from './static/header'
 import UserContext from './data/user/context'
 import { NotificationsProvider } from '@mantine/notifications'
 import OrganizationContext from './data/organization/context'
+import { theme } from './default-theme'
 
 interface LayoutProps {
     title: string,
@@ -35,24 +36,7 @@ const DefaultLayout: React.FC<LayoutProps> = ({ title, description, location, ch
                         withGlobalStyles
                         withNormalizeCSS
                         withCSSVariables 
-                        theme={{ 
-                            colorScheme: 'dark',
-                            colors: {
-                                light: [
-                                    "#C1C2C5",
-                                    "#A6A7AB",
-                                    "#909296",
-                                    "#5c5f66",
-                                    "#373A40",
-                                    "#2C2E33",
-                                    "#25262b",
-                                    "#1A1B1E",
-                                    "#141517",
-                                    "#101113"
-                                ]
-                            },
-                            fontFamily: 'Poppins'
-                        }}
+                        theme={theme}
                     >
                         <NotificationsProvider>
                             <AppShell
