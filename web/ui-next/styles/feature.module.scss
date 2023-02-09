@@ -1,4 +1,6 @@
 $dark-9: #0C0D0F;
+$dark-7: var(--mantine-color-dark-7);
+$r-dark-9: var(--mantine-color-dark-9);
 
 .section {
     display: flex;
@@ -9,6 +11,14 @@ $dark-9: #0C0D0F;
     width: 100%;
     height: 800px;
     background-color: $dark-9;
+
+    &.alt {
+        background-color: $dark-7;
+    }
+
+    &.tri {
+        background-color: $r-dark-9;
+    }
 
     .emphasize {
         color: #339AF0;
@@ -51,6 +61,16 @@ $dark-9: #0C0D0F;
 
         &.chartEditor {
             background: url(../public/screenshots/chart-editor.png);
+            background-size: 1175px 708px;
+        }
+
+        &.documentEditor {
+            background: url(../public/screenshots/document-editor.png);
+            background-size: 1175px 708px;
+        }
+
+        &.driveSs {
+            background: url(../public/screenshots/drive-ss.png);
             background-size: 1175px 708px;
         }
     }
