@@ -3,13 +3,18 @@ import { IconChevronRight } from "@tabler/icons"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useContext, useEffect } from "react"
+import { IIndicator } from "../data/datasets/DatasetsTypes"
 import { UserContextData } from "../data/user/context"
 import { IUserContext } from "../data/user/types"
 import Footer from "../nav-elements/footer/footer"
 import styles from './home.module.scss'
 import DataTicker from "./ticker"
 
-const IndexPage: React.FC = ({ }) => {
+interface IIndexPageProps {
+    indicators: IIndicator[]
+}
+
+const IndexPage: React.FC<IIndexPageProps> = ({ indicators }) => {
     const { loggedIn } = useContext(UserContextData) as IUserContext
     const router = useRouter()
 
@@ -122,7 +127,7 @@ const IndexPage: React.FC = ({ }) => {
                 </div>
             </div>
 
-            <DataTicker />
+            <DataTicker indicators={indicators} />
 
             <div className={`${styles.section} ${styles.faq}`}>
                 <div className={styles.title}>Questions?</div>
