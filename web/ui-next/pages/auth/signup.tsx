@@ -4,7 +4,7 @@ import Link from "next/link"
 import { FormEvent } from "react"
 import { theme } from "../../components/default-theme"
 import Logo from "../../components/nav-elements/logo/logo"
-import styles from './auth-styles.module.scss'
+import styles from '../../components/pages/auth/auth-styles.module.scss'
 
 const Signup: React.FC = ({ }) => {
     const form = useForm({

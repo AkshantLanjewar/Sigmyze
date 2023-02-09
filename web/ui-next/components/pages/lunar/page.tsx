@@ -4,7 +4,7 @@ import { GetDatasets, GetObjects, GetIndicators } from "../../data/datasets/Data
 import { IDatasetObjects } from "../../data/datasets/DatasetsTypes"
 import LunarContext from "../../data/lunar/context"
 import { RawIndicator, IAddIndicatorData } from "../../lunar/explorer-modals/add-indicator"
-import styles from '../../pages/lunar/lunar.module.scss'
+import styles from '../../../pages/lunar/lunar.module.scss'
 import Toolbar from "../../lunar/toolbar/toolbar"
 import Viewport from "../../lunar/viewport/viewport"
 import ApplicationLayout from "../../nav-elements/application-layout"

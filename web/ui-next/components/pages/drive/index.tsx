@@ -11,13 +11,15 @@ const DriveController: React.FC = ({ }) => {
     const [driveData, setDriveData] = useState<IDriveResp | null>(null)
     const [modalState, setModalState] = useState<string | null>(null)
     
-    const { loggedIn } = useContext(UserContextData) as IUserContext
+    const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
     const router = useRouter()
 
     useEffect(() => {
+        if(loaded === false)
+            return
         if(loggedIn === false)
-            router.replace('/')
-    }, [])
+            router.push('/')
+    }, [loggedIn, loaded])
 
     return (
         <div style={{ width: '100%', height: '100%' }}>

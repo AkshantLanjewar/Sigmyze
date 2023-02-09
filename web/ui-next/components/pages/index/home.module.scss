@@ -54,7 +54,7 @@ $dark-0: var(--mantine-color-dark-0);
             aspect-ratio: 500 / 337;
             border-radius: 8px;
 
-            background: url(../../public/screenshots/drive-homepage-ss.png);
+            background: url(../../../public/screenshots/drive-homepage-ss.png);
             background-repeat: no-repeat;
             background-size: 100% 100%;
             object-fit: fill;
@@ -94,19 +94,19 @@ $dark-0: var(--mantine-color-dark-0);
             border-radius: 8px;
 
             &.documentEditor {
-                background: url(../../public/screenshots/document-editor.png);
+                background: url(../../../public/screenshots/document-editor.png);
                 background-repeat: no-repeat;
                 background-size: 150% 150%;
             }
 
             &.chartEditor {
-                background: url(../../public/screenshots/chart-editor.png);
+                background: url(../../../public/screenshots/chart-editor.png);
                 background-repeat: no-repeat;
                 background-size: 125% 125%;
             }
 
             &.drive {
-                background: url(../../public/screenshots/drive-ss.png);
+                background: url(../../../public/screenshots/drive-ss.png);
                 background-repeat: no-repeat;
                 background-size: 150% 150%;
             }

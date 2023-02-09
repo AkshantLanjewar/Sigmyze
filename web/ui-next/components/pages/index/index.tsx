@@ -22,6 +22,11 @@ const IndexPage: React.FC<IIndexPageProps> = ({ indicators }) => {
         if(loggedIn === true)
             router.replace('/drive')
     }, [])
+
+    useEffect(() => {
+        if(loggedIn === true)
+            router.replace('/drive')
+    }, [loggedIn])
     
     return (
         <div style={{ width: '100%', height: '100%' }}>

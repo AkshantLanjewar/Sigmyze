@@ -18,6 +18,7 @@ async function Login(
         //successs iwth the server authentication
         let nAuthenticationData = {} as IAuthenticationData
         nAuthenticationData.token = resp.token
+        nAuthenticationData.logged_in = true
         nAuthenticationData.verified_state = "verify"
         if(resp.verified === "yes")
             nAuthenticationData.verified_state = "logged_in"
@@ -62,6 +63,7 @@ async function Register(
         let nAuthenticationData = {} as IAuthenticationData
         nAuthenticationData.token = resp.token
         nAuthenticationData.verified_state = "verify"
+        nAuthenticationData.logged_in = true
 
         let nUserData = {} as IUserData
         nUserData.email = email
@@ -129,6 +131,7 @@ async function Verify(
 
 async function Logout(
     token: string,
+    authData: IAuthenticationData | null | undefined,
     setAuthData: (value: SetStateAction<IAuthenticationData | undefined | null>) => void,
     setUserData: (value: SetStateAction<IUserData | undefined>) => void
 ) {
@@ -138,7 +141,13 @@ async function Logout(
         console.log('[Notice, Already Logged Out]')
     }
 
-    setAuthData(undefined)
+    if(authData === null || authData === undefined)
+        return
+
+    let nData = authData
+    nData.logged_in = false
+
+    setAuthData({ ...nData })
     setUserData(undefined)
 }
 
