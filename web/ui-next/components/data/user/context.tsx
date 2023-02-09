@@ -26,7 +26,7 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
 
     //check whether logged in
     contextValue.loggedIn = false
-    contextValue.verified = false
+    contextValue.verified = true
     let verifiedState = contextValue.authData?.verified_state
 
     if(contextValue.authData !== undefined && (verifiedState === "logged_in" || verifiedState === "verify")) {
