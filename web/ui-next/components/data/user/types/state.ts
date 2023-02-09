@@ -4,7 +4,8 @@ interface IUserContext {
 
     //easy check to see if loggedIn or not
     loggedIn?: boolean,
-    verified?: boolean
+    verified?: boolean,
+    loaded?: boolean,
 
     //authentication functions
     login?: (email: string, password: string) => Promise<void>,
@@ -22,7 +23,9 @@ type VerifiedStates = "signedout" | "verify" | "logged_in"
 
 interface IAuthenticationData {
     token?: string,
-    verified_state?: VerifiedStates
+    verified_state?: VerifiedStates,
+    logged_in?: boolean,
+    loaded?: boolean
 }
 
 interface IUserData {

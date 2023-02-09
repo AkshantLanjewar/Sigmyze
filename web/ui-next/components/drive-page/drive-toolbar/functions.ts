@@ -1,4 +1,4 @@
-import { IDriveFolder, IDriveProject, IDriveResp } from "../../../data/organization/types";
+import { IDriveFolder, IDriveProject, IDriveResp } from "../../data/organization/types";
 import { IToolbarBreadcrumb } from "./drive-toolbar";
 
 function hasChild(folders: IDriveFolder[], activeId: string) : boolean {

@@ -1,7 +1,7 @@
 import { Group } from '@mantine/core'
 import { HorizontalTicker } from 'react-infinite-ticker'
-import { IIndicator } from '../data/datasets/DatasetsTypes'
-import IndicatorCard from '../visualization/indicator-card'
+import { IIndicator } from '../../data/datasets/DatasetsTypes'
+import IndicatorCard from '../../visualization/indicator-card'
 import styles from './home.module.scss'
 
 interface IDataTickerProps {

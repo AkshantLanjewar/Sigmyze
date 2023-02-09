@@ -3,10 +3,10 @@ import { IconChevronRight } from "@tabler/icons"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useContext, useEffect } from "react"
-import { IIndicator } from "../data/datasets/DatasetsTypes"
-import { UserContextData } from "../data/user/context"
-import { IUserContext } from "../data/user/types"
-import Footer from "../nav-elements/footer/footer"
+import { IIndicator } from "../../data/datasets/DatasetsTypes"
+import { UserContextData } from "../../data/user/context"
+import { IUserContext } from "../../data/user/types"
+import Footer from "../../nav-elements/footer/footer"
 import styles from './home.module.scss'
 import DataTicker from "./ticker"
 
@@ -22,6 +22,11 @@ const IndexPage: React.FC<IIndexPageProps> = ({ indicators }) => {
         if(loggedIn === true)
             router.replace('/drive')
     }, [])
+
+    useEffect(() => {
+        if(loggedIn === true)
+            router.replace('/drive')
+    }, [loggedIn])
     
     return (
         <div style={{ width: '100%', height: '100%' }}>

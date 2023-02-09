@@ -1,13 +1,13 @@
 import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react"
-import { OrganizationContextData } from "../../../data/organization/context"
-import { OrganizationDrive } from "../../../data/organization/organization-api"
-import { IDriveResp, IOrganizationController } from "../../../data/organization/types"
-import { UserContextData } from "../../../data/user/context"
-import { IUserContext } from "../../../data/user/types"
-import FileExplorer from "../../../file-explorer/file-explorer"
-import { ConvertToFileExplorerData } from "../../../file-explorer/functions"
-import { IExplorerFolder, IExplorerItem } from "../../../file-explorer/types"
+import { OrganizationContextData } from "../../data/organization/context"
+import { OrganizationDrive } from "../../data/organization/organization-api"
+import { IDriveResp, IOrganizationController } from "../../data/organization/types"
+import { UserContextData } from "../../data/user/context"
+import { IUserContext } from "../../data/user/types"
+import FileExplorer from "../../file-explorer/file-explorer"
+import { ConvertToFileExplorerData } from "../../file-explorer/functions"
+import { IExplorerFolder, IExplorerItem } from "../../file-explorer/types"
 
 interface IDriveDataProps {
     setModalState: Dispatch<SetStateAction<string | null>>,

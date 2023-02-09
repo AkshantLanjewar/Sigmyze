@@ -1,8 +1,8 @@
 import { Group, Menu, UnstyledButton } from "@mantine/core"
 import { IconChevronDown, IconFileShredder } from "@tabler/icons"
 import { useContext, useState } from "react"
-import { OrganizationContextData } from "../../../data/organization/context"
-import { IOrganization, IOrganizationController } from "../../../data/organization/types"
+import { OrganizationContextData } from "../../data/organization/context"
+import { IOrganization, IOrganizationController } from "../../data/organization/types"
 import styles from './drive-selector.module.scss'
 
 interface IDriveSelectorProps {

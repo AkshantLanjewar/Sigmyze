@@ -1,4 +1,4 @@
-import DriveController from "../components/drive-page"
+import DriveController from "../components/pages/drive"
 import ApplicationLayout from "../components/nav-elements/application-layout"
 
 const DrivePage: React.FC = ({ }) => {

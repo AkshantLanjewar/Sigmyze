@@ -1,25 +1,25 @@
-import { Alert, Button, FocusTrap, Group, Input, LoadingOverlay } from "@mantine/core"
+import { Button, FocusTrap, Group, LoadingOverlay, TextInput } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import { showNotification } from "@mantine/notifications"
-import { IconAlertCircle, IconBox, IconFolder } from "@tabler/icons"
+import { IconFolder, IconBox } from "@tabler/icons"
 import { FormEvent, useContext, useState } from "react"
-import { OrganizationContextData } from "../../../data/organization/context"
-import { DeleteFolder, DeleteProject } from "../../../data/organization/drive-api"
-import { IOrganizationController } from "../../../data/organization/types"
-import { UserContextData } from "../../../data/user/context"
-import { IUserContext } from "../../../data/user/types"
+import { OrganizationContextData } from "../../data/organization/context"
+import { UpdateFolder, UpdateProject } from "../../data/organization/drive-api"
+import { IOrganizationController } from "../../data/organization/types"
+import { UserContextData } from "../../data/user/context"
+import { IUserContext } from "../../data/user/types"
 
-interface IDeleteFormProps {
+interface IUpdateFormProps {
     type: string,
     name: string,
     itemId: string | null,
     close: () => void
 }
 
-const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) => {
+const UpdateForm: React.FC<IUpdateFormProps> = ({ type, name, itemId, close }) => {
     const form = useForm({
         initialValues: {
-            name: ''
+            name: name
         },
     })
 
@@ -32,10 +32,22 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
         toggleDrive 
     } = useContext(OrganizationContextData) as IOrganizationController
 
-    function deleteForm(e: FormEvent<HTMLFormElement>) {
+    let icon = <IconFolder style={{ paddingLeft: 6 }} />
+    if(type === "Project")
+        icon = <IconBox style={{ paddingLeft: 6 }} />
+
+    function updateForm(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        if(form.values.name !== name)
+        let name = form.values.name.trim()
+        if(name.length === 0) {
+            showNotification({
+                title: "Drive Error",
+                message: `The name of your ${type.toLowerCase()} cannot be empty`,
+                color: 'red',
+                autoClose: 1000 * 10
+            })
             return
+        }
 
         async function main() {
             let token = authData?.token
@@ -46,22 +58,9 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
             if(itemId === null)
                 return
 
-            let formName = form.values.name.trim()
-            if(formName !== name)
-            {
-                showNotification({
-                    title: "Drive Error",
-                    message: `The name you typed does not match the ${type.toLowerCase()}'s name. Please retype the projects name exactly`,
-                    color: 'red',
-                    autoClose: 1000 * 10
-                })
-                
-                return
-            }
-
             if(type === "Project") {
                 setLoading(true)
-                await DeleteProject(token, selectedOrganization, activeDirectory, itemId)
+                await UpdateProject(token, selectedOrganization, activeDirectory, itemId, name)
                 toggleDrive()
                 setLoading(false)
                 close()
@@ -71,7 +70,7 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
 
             if(type === "Folder") {
                 setLoading(true)
-                await DeleteFolder(token, selectedOrganization, activeDirectory, itemId)
+                await UpdateFolder(token, selectedOrganization, activeDirectory, itemId, name)
                 toggleDrive()
                 setLoading(false)
                 close()
@@ -83,10 +82,6 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
         main()
     }
     
-    let icon = <IconFolder style={{ paddingLeft: 6 }} />
-    if(type === "Project")
-        icon = <IconBox style={{ paddingLeft: 6 }} />
-
     return (
         <div>
             <FocusTrap>
@@ -97,25 +92,15 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
                         transitionDuration={150}
                     />
 
-                    <form onSubmit={deleteForm}>
-                        <Alert 
-                            icon={<IconAlertCircle size={16} />}
-                            title={"Important!"}
-                            color={"red"}
-                        >
-                            You are attempting to delete the {type.toLowerCase()} <b>{name}</b>
-                            , which is a <b>permanent</b> action. Please type out the name
-                            below to delete the {type.toLowerCase()}.
-                        </Alert>
-
-                        <Input
+                    <form onSubmit={updateForm}>
+                        <TextInput
                             icon={icon}
                             radius={"xl"}
                             variant={"filled"}
+                            label={`${type} Name`}
                             placeholder={`${type} Name`}
                             {...form.getInputProps('name')}
                             data-autofocus 
-                            mt={'md'}
                         />
 
                         <Group position={'right'} mt={'md'}>
@@ -135,9 +120,9 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
                                 size={'xs'}
                                 px={'xs'}
                                 type={'submit'}
-                                disabled={form.values.name !== name}
+                                disabled={form.values.name.trim().length === 0}
                             >
-                                Delete
+                                Update
                             </Button>
                         </Group>
                     </form>
@@ -147,4 +132,4 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
     )
 }
 
-export default DeleteForm
+export default UpdateForm

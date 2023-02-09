@@ -1,23 +1,25 @@
 import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
-import { IDriveResp } from "../data/organization/types"
-import { UserContextData } from "../data/user/context"
-import { IUserContext } from "../data/user/types"
-import DriveData from "./drive/drive-data/drive-data"
-import DriveToolbar from "./drive/drive-toolbar/drive-toolbar"
+import { IDriveResp } from "../../data/organization/types"
+import { UserContextData } from "../../data/user/context"
+import { IUserContext } from "../../data/user/types"
+import DriveData from "../../drive-page/drive-data/drive-data"
+import DriveToolbar from "../../drive-page/drive-toolbar/drive-toolbar"
 import styles from './driveView.module.scss'
 
 const DriveController: React.FC = ({ }) => {
     const [driveData, setDriveData] = useState<IDriveResp | null>(null)
     const [modalState, setModalState] = useState<string | null>(null)
     
-    const { loggedIn } = useContext(UserContextData) as IUserContext
+    const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
     const router = useRouter()
 
     useEffect(() => {
+        if(loaded === false)
+            return
         if(loggedIn === false)
-            router.replace('/')
-    }, [])
+            router.push('/')
+    }, [loggedIn, loaded])
 
     return (
         <div style={{ width: '100%', height: '100%' }}>

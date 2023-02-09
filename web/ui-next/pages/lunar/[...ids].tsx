@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next"
 import { ILunarProps } from "."
-import LunarPage, { pageStaticProps } from "../../components/lunar/page"
+import LunarPage, { pageStaticProps } from "../../components/pages/lunar/page"
 
 const Lunar: React.FC<ILunarProps> = ({ pkg }) => {
     return (

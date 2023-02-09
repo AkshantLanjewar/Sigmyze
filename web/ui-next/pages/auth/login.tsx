@@ -1,11 +1,11 @@
-import Logo from '../../components/nav-elements/logo/logo'
-import Link from 'next/link'
-import styles from './auth-styles.module.scss'
-import chartEditorScreenshot from '../../public/screenshots/chart-editor.png'
+import styles from '../../components/pages/auth/auth-styles.module.scss'
 import { useForm } from '@mantine/form'
-import { Button, MantineProvider, PasswordInput, TextInput } from '@mantine/core'
+import { MantineProvider } from '@mantine/core'
 import { theme } from '../../components/default-theme'
 import { FormEvent } from 'react'
+import LoginPageComponent from '../../components/pages/auth/login-page'
+import UserContext from '../../components/data/user/context'
+import { NotificationsProvider } from '@mantine/notifications'
 
 /**
  * @description
@@ -35,74 +35,13 @@ const LoginPage: React.FC = ({ }) => {
                 withCSSVariables 
                 theme={theme}
             >
-                <div className={styles.panel}>
-                    <Logo />
-
-                    <div className={styles.subtext}>
-                        <div className={styles.focus}>Analyze Everything</div>
-                        <div className={styles.shadow}>Check out our new document and chart editors</div>
-                    </div>
-
-                    <div className={`${styles.screenshot} ${styles.chart}`}></div>
-                </div>
-
-                <div className={styles.content}>
-                    <div className={styles.loginWrapper}>
-                        <div className={styles.title}>Welcome Back!</div>
-
-                        <form className={styles.form} onSubmit={onSubmit}>
-                            <TextInput 
-                                required
-                                withAsterisk
-                                label={"E-Mail"}
-                                size={"md"}
-                                variant={"filled"}
-                                type={"email"}
-                                placeholder={"example@gmail.com"}
-                                styles={{ input: { height: 40 } }}
-                                {...form.getInputProps('email')}
-                            />
-
-                            <PasswordInput 
-                                required
-                                withAsterisk
-                                placeholder={"Your Password"}
-                                label={"Password"}
-                                size={"md"}
-                                variant={"filled"}
-                                styles={{ input: { height: 40 } }}
-                                {...form.getInputProps('password')}
-                            />
-
-                            <Button
-                                type={'submit'}
-                                size={'md'}
-                                mt={20}
-                                radius={"xl"}
-                            >
-                                Log in
-                            </Button>
-                        </form>
-                    </div>
-
-                    <div className={styles.actionText}>
-                        Don't have an account?{' '}
-                        
-                        <Link href={"/auth/signup"}>
-                            <span className={styles.link}>
-                                Sign Up
-                            </span>
-                        </Link>
-                    </div>
-
-                    <Link href={"/"}>
-                        <div className={styles.actionText}>
-                            <span className={styles.link}>
-                                Back Home
-                            </span>
+                <NotificationsProvider>
+                    <UserContext>
+                        <div className={styles.wrapper}>
+                            <LoginPageComponent />
                         </div>
-                    </Link>
-                </div>
+                    </UserContext>
+                </NotificationsProvider>
             </MantineProvider>
         </div>
     )
