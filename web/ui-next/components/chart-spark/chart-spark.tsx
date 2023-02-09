@@ -21,7 +21,7 @@ interface IChartSparkIndicator {
     deleteEntry?: (id: string) => void
 }
 
-const data = [1, 2, 3,4, 5]
+const data = [1, 2, 3, 4, 5]
 
 const ChartSpark: React.FC<IChartSparkIndicator> = ({ indicator, id, checks, deleteEntry }): JSX.Element => {
     const [loading, setLoading] = useState(false)

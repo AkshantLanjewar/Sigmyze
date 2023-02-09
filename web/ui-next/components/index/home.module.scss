@@ -1,0 +1,240 @@
+$dark-10: #0C0D0F;
+$dark-5: var(--mantine-color-dark-5);
+$dark-0: var(--mantine-color-dark-0);
+
+.hero {
+    display: flex;
+    
+    width: 100%;
+    background-color: $dark-10;
+
+    .textContainer {
+        display: flex;
+        flex-direction: column;
+        padding: 120px 100px;
+        gap: 5px;
+
+        .small {
+            font-weight: 700;
+            font-size: 12px;
+            line-height: 18px;
+        }
+
+        .bold {
+            font-weight: 700;
+            font-size: 70px;
+            line-height: 105px;
+            width: 740px;
+
+            .focus { color: #339AF0; }
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 25px 0px;
+            gap: 35px;
+        }
+    }
+
+    .imageContainer {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding-top: 50px;
+        padding-bottom: 50px;
+        padding-left: 100px;
+        padding-right: 25px;
+
+        .image {
+            flex-grow: 1;
+            aspect-ratio: 500 / 337;
+            border-radius: 8px;
+
+            background: url(../../public/screenshots/drive-homepage-ss.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            object-fit: fill;
+        }
+    }
+}
+
+.emphasize {
+    color: #339AF0;
+}
+
+.featureCards {
+    width: 1100px;
+    height: 425.5px;
+    padding: 10px 0px 0px;
+
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    .card {
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+
+        padding: 30px 35px;
+        border: 1px solid $dark-5;
+        border-radius: 8px;
+
+        .image {
+            width: 241px;
+            aspect-ratio: 500 / 337;
+
+            border-radius: 8px;
+
+            &.documentEditor {
+                background: url(../../public/screenshots/document-editor.png);
+                background-repeat: no-repeat;
+                background-size: 150% 150%;
+            }
+
+            &.chartEditor {
+                background: url(../../public/screenshots/chart-editor.png);
+                background-repeat: no-repeat;
+                background-size: 125% 125%;
+            }
+
+            &.drive {
+                background: url(../../public/screenshots/drive-ss.png);
+                background-repeat: no-repeat;
+                background-size: 150% 150%;
+            }
+
+            object-fit: fill;
+            border: 1px solid $dark-5;
+        }
+
+        .text {
+            display: flex;
+            flex-direction: column;
+            gap: 7.5px;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+
+            .title {
+                text-transform: initial;
+                font-size: 22px;
+            }
+
+            .description {
+                width: 241px;
+                font-size: 16px;
+                font-weight: 700;
+                flex-grow: 1;
+            }
+        }
+
+        .learn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            width: 100%;
+            flex-grow: 1;
+            gap: 10px;
+
+            .content {
+                font-weight: 700;
+                font-size: 16px;
+                line-height: 24px;
+                color: #FFFFFF;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+$duration: 15s;
+
+@keyframes ticker-kf {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-108rem, 0, 0);
+    }
+}
+
+.ticker {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 150px;
+    gap: 20px;
+
+    background-color: $dark-10;
+
+    .small {
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 18px;
+        text-transform: uppercase;
+    }
+
+    .ticker__container {
+        display: flex;
+        gap: 20px;
+        animation: ticker-kf 18s linear infinite;
+        animation-delay: -18s;
+
+        .ticker__item {
+            width: 640px;
+        }
+    }
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 70px 0px;
+    gap: 25px;
+
+    &.faq {
+        gap: 15px;
+        padding: 75px 10px;
+
+        .title {
+            color: $dark-0;
+        }
+    }
+
+    .title {
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 18px;
+        text-transform: uppercase;
+        color: #FFFFFF;
+    }
+
+    .semiFocus {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 48px;
+        width: 500px;
+        text-align: center;
+        color: #FFFFFF;
+    }
+
+    .focus {
+        width: 450px;
+        font-weight: 700;
+        font-size: 40px;
+        text-align: center;
+    }
+}
