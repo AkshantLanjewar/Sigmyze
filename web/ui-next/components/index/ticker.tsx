@@ -1,3 +1,4 @@
+import { Group } from '@mantine/core'
 import { useState } from 'react'
 import { HorizontalTicker } from 'react-infinite-ticker'
 import IndicatorCard from '../visualization/indicator-card'
@@ -10,9 +11,11 @@ const DataTicker: React.FC = ({ }) => {
         <div className={styles.ticker}>
             <div className={styles.small}>Get Started</div>
 
-            <HorizontalTicker duration={10000} easing={"linear"}>
-                <IndicatorCard />
-                <IndicatorCard />
+            <HorizontalTicker duration={15000} easing={"linear"} delay={0}>
+                <Group spacing={25} pt={10} mr={25} noWrap>
+                    <IndicatorCard />
+                    <IndicatorCard />
+                </Group>
             </HorizontalTicker>
         </div>
     )
