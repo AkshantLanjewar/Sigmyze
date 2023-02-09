@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next"
 import { IAddIndicatorData } from "../../components/lunar/explorer-modals/add-indicator"
-import LunarPage, { pageStaticProps } from "../../components/lunar/page"
+import LunarPage, { pageStaticProps } from "../../components/pages/lunar/page"
 
 export const DefaultIndicatorTable = {
     weo: "USA"

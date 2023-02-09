@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next/types"
 import { GetDatasets, GetIndicators, GetObjects } from "../components/data/datasets/DatasetsAPI"
 import { IIndicator } from "../components/data/datasets/DatasetsTypes"
-import IndexPage from "../components/index"
+import IndexPage from "../components/pages/index/index"
 import ApplicationLayout from "../components/nav-elements/application-layout"
 import { DefaultIndicatorTable } from "./lunar"
 

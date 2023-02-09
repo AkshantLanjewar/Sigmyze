@@ -1,13 +1,13 @@
 import { Group } from "@mantine/core"
-import { DefaultIndicatorTable } from "../../pages/lunar"
-import { GetDatasets, GetObjects, GetIndicators } from "../data/datasets/DatasetsAPI"
-import { IDatasetObjects } from "../data/datasets/DatasetsTypes"
-import LunarContext from "../data/lunar/context"
-import { RawIndicator, IAddIndicatorData } from "./explorer-modals/add-indicator"
+import { DefaultIndicatorTable } from "../../../pages/lunar"
+import { GetDatasets, GetObjects, GetIndicators } from "../../data/datasets/DatasetsAPI"
+import { IDatasetObjects } from "../../data/datasets/DatasetsTypes"
+import LunarContext from "../../data/lunar/context"
+import { RawIndicator, IAddIndicatorData } from "../../lunar/explorer-modals/add-indicator"
 import styles from '../../pages/lunar/lunar.module.scss'
-import Toolbar from "./toolbar/toolbar"
-import Viewport from "./viewport/viewport"
-import ApplicationLayout from "../nav-elements/application-layout"
+import Toolbar from "../../lunar/toolbar/toolbar"
+import Viewport from "../../lunar/viewport/viewport"
+import ApplicationLayout from "../../nav-elements/application-layout"
 
 interface ILunarPageProps {
     pkg: IAddIndicatorData
