@@ -1,0 +1,57 @@
+$dark-9: #0C0D0F;
+
+.section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0px 20px 0px 55px;
+
+    width: 100%;
+    height: 800px;
+    background-color: $dark-9;
+
+    .emphasize {
+        color: #339AF0;
+    }
+
+    .titleWrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 0px 16px;
+
+        .sigmyze {
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .title {
+            font-weight: 900;
+            font-size: 44px;
+            line-height: 53px;
+            color: #FFFFFF;
+        }
+
+        .descriptionWrapper {
+            width: 580px;
+            padding: 16px 0px 0px;
+
+            .description {
+                color: #909296;
+                font-size: 16px;
+                line-height: 24px;
+            }
+        }
+    }
+
+    .image {
+        width: 1175px;
+        height: 708px;
+        border-radius: 8px;
+
+        &.chartEditor {
+            background: url(../public/screenshots/chart-editor.png);
+            background-size: 1175px 708px;
+        }
+    }
+}
