@@ -1,5 +1,6 @@
 $dark-10: #0C0D0F;
 $dark-5: var(--mantine-color-dark-5);
+$dark-0: var(--mantine-color-dark-0);
 
 .hero {
     display: flex;
@@ -204,6 +205,15 @@ $duration: 15s;
     padding: 70px 0px;
     gap: 25px;
 
+    &.faq {
+        gap: 15px;
+        padding: 75px 10px;
+
+        .title {
+            color: $dark-0;
+        }
+    }
+
     .title {
         font-weight: 700;
         font-size: 12px;
@@ -219,5 +229,12 @@ $duration: 15s;
         width: 500px;
         text-align: center;
         color: #FFFFFF;
+    }
+
+    .focus {
+        width: 450px;
+        font-weight: 700;
+        font-size: 40px;
+        text-align: center;
     }
 }

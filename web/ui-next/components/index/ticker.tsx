@@ -9,7 +9,7 @@ const DataTicker: React.FC = ({ }) => {
 
     return (
         <div className={styles.ticker}>
-            <div className={styles.small}>Get Started</div>
+            <div className={styles.small}>Data we Host</div>
 
             <HorizontalTicker duration={15000} easing={"linear"} delay={0}>
                 <Group spacing={25} pt={10} mr={25} noWrap>

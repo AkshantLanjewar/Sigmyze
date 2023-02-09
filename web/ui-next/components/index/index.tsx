@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core"
+import { Accordion, Button, Title } from "@mantine/core"
 import { IconChevronRight } from "@tabler/icons"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -123,6 +123,55 @@ const IndexPage: React.FC = ({ }) => {
             </div>
 
             <DataTicker />
+
+            <div className={`${styles.section} ${styles.faq}`}>
+                <div className={styles.title}>Questions?</div>
+                <div className={styles.focus}>
+                    <span className={styles.emphasize}>Questions </span> you may have before 
+                    <span className={styles.emphasize}> Creating</span> an 
+                    <span className={styles.emphasize}> Account</span>
+                </div>
+
+                <Accordion
+                    variant={"separated"}
+                    defaultValue={"datasets"}
+                    radius={"md"}
+                    mt={60}
+                    sx={{ width: 730 }}
+                >
+                    <Accordion.Item value="datasets">
+                        <Accordion.Control>
+                            <Title order={3}>How many Datasets are hosted by Sigmyze</Title>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                            Currently we only host the World Economic Outlook dataset. 
+                            In the future, we plan to incorporate more datasets, including datasets that 
+                            refresh daily such as the stock market and commodities market.
+                        </Accordion.Panel>
+                    </Accordion.Item>
+
+                    <Accordion.Item value="formats">
+                        <Accordion.Control>
+                            <Title order={3}>What formats can I export</Title>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                            Currently there is no way to export content outside of Sigmyze. 
+                            We are working on adding more editor content so that more people 
+                            can use it in their daily activities.
+                        </Accordion.Panel>
+                    </Accordion.Item>
+
+                    <Accordion.Item value="data">
+                        <Accordion.Control>
+                            <Title order={3}>Can I bring my own Data?</Title>
+                        </Accordion.Control>
+                        <Accordion.Panel>
+                            Currently we are in the planning stages for implementing this feature. 
+                            While we are working on implementing this, we plan to add many hosted datasets in the meantime.
+                        </Accordion.Panel>
+                    </Accordion.Item>
+                </Accordion>
+            </div>
 
             <Footer />
         </div>
