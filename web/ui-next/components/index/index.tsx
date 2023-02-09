@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { UserContextData } from "../data/user/context"
 import { IUserContext } from "../data/user/types"
+import Footer from "../nav-elements/footer/footer"
 import DriveView from "./views/driveView"
 import PublicView from "./views/publicView"
 
@@ -13,6 +14,8 @@ const IndexPage: React.FC = ({ }) => {
                 ? <DriveView />
                 : <PublicView />
             }
+
+            <Footer />
         </div>
     )
 }

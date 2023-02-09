@@ -1,0 +1,219 @@
+$dark-8: var(--mantine-color-dark-8);
+$dark-0: var(--mantine-color-dark-0);
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    height: 500px;
+    gap: 20px;
+    background-color: #0C0D0F;
+
+    .title {
+        font-weight: 700;
+        font-size: 64px;
+        line-height: 1.2;
+        color: #FFFFFF;
+        width: 600px;
+    }
+
+    .mission {
+        width: 600px;
+        font-size: 18px;
+        line-height: 1.2;
+        color: #FFFFFF;
+    }
+}
+
+.contactSection {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0px;
+
+    .contact {
+        display: flex;
+        padding: 4px;
+        background-color: $dark-8;
+        border-radius: 8px;
+
+        .sectionTitle {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-transform: initial;
+            text-align: left;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            padding: 24px;
+
+            .contactItems {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+
+                .item {
+                    display: flex;
+                    gap: 16px;
+                    align-items: center;
+
+                    .text {
+                        display: flex;
+                        flex-direction: column;
+
+                        .title {
+                            font-weight: 700;
+                            font-size: 12px;
+                            color: $dark-0;
+                            text-transform: uppercase;
+                        }
+
+                        .value {
+                            font-weight: 700;
+                            color: #FFFFFF;
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .contactForm {
+            display: flex;
+            flex-direction: column;
+            padding: 24px 24px 24px 48px;
+            gap: 36px;
+
+            .form {
+                display: flex;
+                flex-direction: column;
+                width: 750px;
+                gap: 16px;
+            }
+        }
+    }
+}
+
+.roadmap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0;
+    gap: 25px;
+
+    background: #0C0D0F;
+
+    .roadmapWrapper {
+        display: flex;
+        justify-content: center;
+        padding: 20px 85px;
+        gap: 20px;
+
+        .roadmapItem {
+            width: 270px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .sectionTitle {
+                font-size: 14px;
+                text-align: left;
+            }
+
+            .itemTitle {
+                font-weight: 700;
+                font-size: 28px;
+                line-height: 1.2;
+                color: #FFFFFF;
+            }
+
+            .itemDescription {
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 1.2;
+            }
+        }
+    }
+}
+
+.chooseWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 110px 0px 100px;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        width: 1150px;
+
+        .cardWrapper {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+
+            width: 100%;
+            padding-top: 43px;
+            gap: 20px;
+
+            .card {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                width: 30%;
+
+                padding: 15px;
+                background-color: #0C0D0F;
+                border-radius: 8px;
+
+                .cardTitle {
+                    font-weight: 700;
+                    font-size: 18px;
+                    line-height: 1.2;
+                    color: #FFFFFF;
+                }
+
+                .description {
+                    font-size: 14px;
+                    line-height: 1.2;
+                    color: #909296;
+                }
+            }
+        }
+    }
+
+    .focusText {
+        font-size: 42px;
+        line-height: 1.2;
+        font-weight: 700;
+        text-align: center;
+        color: #FFFFFF;
+        letter-spacing: -0.004em;
+    }
+}
+
+.sectionTitle {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: 0.016em;
+    text-transform: uppercase;
+    color: #C1C2C5;
+}
+
+.styleRect {
+    width: 45px;
+    height: 2px;
+
+    background-color: #A5D8FF;
+}

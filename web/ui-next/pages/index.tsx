@@ -14,7 +14,6 @@ export default function Home() {
 			>
 				<div style={{ width: '100%', height: '100%' }}>
 					<IndexPage />
-					<Footer />
 				</div>
 			</ApplicationLayout>
 		</>
