@@ -24,5 +24,5 @@ export const config = {
     },
 
     type: 'areaStyle',
-    padding: [10, -13, -5, -13]
+    padding: [10, -13, -1, -13]
 } as any
