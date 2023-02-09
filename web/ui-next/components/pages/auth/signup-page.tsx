@@ -20,7 +20,7 @@ const SignupPageComponent: React.FC = ({ }) => {
         },
 
         validate: {
-            email: (val) => /^\S+@\S+$/.test(val) ? "Please enter a valid email" : null,
+            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
         }
     })
 
