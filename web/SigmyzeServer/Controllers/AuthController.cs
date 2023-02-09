@@ -78,6 +78,19 @@ namespace SigmyzeServer.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("send-about-message")]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> SendAboutMessage([FromBody]MessagePost data)
+        {
+            APIStatusMsg status = new APIStatusMsg();
+            status.Error = false;
+            status.MSG = "sent";
+
+            _emailService.SendContactEmailSES(data.Name, data.EMail, data.Subject, data.Message);
+            return await SerializeJSON(status);
+        }
+
+        [AllowAnonymous]
         [HttpPost("login")]
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> AuthLogin([FromBody]LoginPost data)

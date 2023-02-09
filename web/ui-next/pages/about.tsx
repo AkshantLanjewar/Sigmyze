@@ -55,7 +55,7 @@ const AboutPage: React.FC = ({ }) => {
                 return
             }
 
-            
+
         }
 
         main()
@@ -279,7 +279,7 @@ const AboutPage: React.FC = ({ }) => {
                                 <Textarea 
                                     required
                                     withAsterisk
-                                    label={"Subject"}
+                                    label={"Message"}
                                     size={"md"}
                                     variant={"filled"}
                                     styles={{ input: { height: 104 } }}
