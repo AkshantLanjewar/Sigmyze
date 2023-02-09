@@ -1,3 +1,4 @@
+import DriveController from "../components/drive-page"
 import ApplicationLayout from "../components/nav-elements/application-layout"
 
 const DrivePage: React.FC = ({ }) => {
@@ -9,7 +10,7 @@ const DrivePage: React.FC = ({ }) => {
 				location="/drive"
 				protectedView={true}
 			>
-                
+                <DriveController />
             </ApplicationLayout>
         </div>
     )
