@@ -59,7 +59,8 @@ namespace SigmyzeServer.Services
             message.IsBodyHtml = true;
             message.From = new MailAddress("info@sigmyze.com", "Sigmyze Application");
             message.To.Add(new MailAddress("sigmyze@gmail.com"));
-            message.Subject = "Verification Token";
+            message.Subject = "Contact Message";
+
             message.Body = htmlContent;
 
             using (var smtpClient = new SmtpClient(host, port))

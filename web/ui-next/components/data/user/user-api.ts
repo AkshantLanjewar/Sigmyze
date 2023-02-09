@@ -8,6 +8,7 @@ import {
     IRegisterResp, 
     IResendPost, 
     IResendResp, 
+    ISendAboutMessage, 
     IUserDataResp, 
     IVerifyPost, 
     IVerifyResp 
@@ -17,6 +18,19 @@ import {
 
 async function UserApi() : Promise<IStatus> {
     return await GET_Cacheless<IStatus>(`${server}/api/v1/auth`)
+}
+
+async function SendAboutMessage(name: string, email: string, subject: string, message: string) {
+    let body = {
+        name,
+        email,
+        subject,
+        message
+    } as ISendAboutMessage
+
+    let url = `${server}/api/v2/auth/send-about-message`
+    let options = GenerateOptions("POST", null, body as any)
+    await GET_Cacheless<IStatus>(url, options)
 }
 
 async function UserLogin(data: ILoginPost) : Promise<IAuthResp> {
@@ -84,5 +98,6 @@ export {
     UserRefreshToken,
     UserRevokeToken,
     UserVerify,
-    UserResendVerification 
+    UserResendVerification,
+    SendAboutMessage 
 }

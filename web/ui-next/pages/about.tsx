@@ -6,6 +6,7 @@ import { FormEvent } from "react"
 import ApplicationLayout from "../components/nav-elements/application-layout"
 import Footer from "../components/nav-elements/footer/footer"
 import styles from '../styles/info.module.scss'
+import SendMessageCard from '../components/pages/about/send-message-card'
 
 const AboutPage: React.FC = ({ }) => {
     const form = useForm({
@@ -234,71 +235,7 @@ const AboutPage: React.FC = ({ }) => {
                             </div>
                         </div>
 
-                        <div className={styles.contactForm}>
-                            <div className={styles.sectionTitle}>Get In Touch</div>
-
-                            <form className={styles.form} onSubmit={onSubmit}>
-                                <Group spacing={16} grow>
-                                    <TextInput 
-                                        required
-                                        withAsterisk
-                                        label={"Your Name"}
-                                        size={"md"}
-                                        variant={"filled"}
-                                        type={"text"}
-                                        placeholder={"Your Name"}
-                                        styles={{ input: { height: 40 } }}
-                                        {...form.getInputProps('name')}
-                                    />
-
-                                    <TextInput 
-                                        required
-                                        withAsterisk
-                                        label={"Your E-Mail"}
-                                        size={"md"}
-                                        variant={"filled"}
-                                        type={"email"}
-                                        placeholder={"Your Email"}
-                                        styles={{ input: { height: 40 } }}
-                                        {...form.getInputProps('email')}
-                                    />
-                                </Group>
-
-                                <TextInput 
-                                    required
-                                    withAsterisk
-                                    label={"Subject"}
-                                    size={"md"}
-                                    variant={"filled"}
-                                    type={"text"}
-                                    placeholder={"Subject of the message"}
-                                    styles={{ input: { height: 40 } }}
-                                    {...form.getInputProps('subject')}
-                                />
-
-                                <Textarea 
-                                    required
-                                    withAsterisk
-                                    label={"Message"}
-                                    size={"md"}
-                                    variant={"filled"}
-                                    styles={{ input: { height: 104 } }}
-                                    placeholder={"Subject of the message"}
-                                    {...form.getInputProps('message')}
-                                />
-
-                                <Group position={"right"}>
-                                    <Button
-                                        type="submit"
-                                        variant={"filled"}
-                                        color={"indigo"}
-                                        radius={"xl"}
-                                    >
-                                        Send
-                                    </Button>
-                                </Group>
-                            </form>
-                        </div>
+                        <SendMessageCard />
                     </div>
                 </div>
 

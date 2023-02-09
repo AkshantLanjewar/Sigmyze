@@ -58,6 +58,13 @@ interface IResendPost {
     Token: string
 }
 
+interface ISendAboutMessage {
+    name: string,
+    email: string,
+    subject: string,
+    message: string
+}
+
 export type { 
     IUserDataResp,
     IResendResp,
@@ -68,5 +75,6 @@ export type {
     ILoginPost,
     IRegisterPost,
     IVerifyPost,
-    IResendPost 
+    IResendPost,
+    ISendAboutMessage 
 }
