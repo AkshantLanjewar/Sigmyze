@@ -1,5 +1,4 @@
 import { Group } from '@mantine/core'
-import { useState } from 'react'
 import { HorizontalTicker } from 'react-infinite-ticker'
 import { IIndicator } from '../data/datasets/DatasetsTypes'
 import IndicatorCard from '../visualization/indicator-card'
@@ -14,10 +13,10 @@ const DataTicker: React.FC<IDataTickerProps> = ({ indicators }) => {
         <div className={styles.ticker}>
             <div className={styles.small}>Data we Host</div>
 
-            <HorizontalTicker duration={80000} easing={"linear"} delay={0}>
+            <HorizontalTicker duration={100000} easing={"linear"} delay={0}>
                 <Group spacing={25} pt={10} mr={25} noWrap>
                     {indicators.map((step) => (
-                        <IndicatorCard />
+                        <IndicatorCard indicator={step} />
                     ))}
                 </Group>
             </HorizontalTicker>
