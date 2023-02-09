@@ -7,6 +7,7 @@ import { UserContextData } from "../data/user/context"
 import { IUserContext } from "../data/user/types"
 import Footer from "../nav-elements/footer/footer"
 import styles from './home.module.scss'
+import DataTicker from "./ticker"
 
 const IndexPage: React.FC = ({ }) => {
     const { loggedIn } = useContext(UserContextData) as IUserContext
@@ -74,7 +75,7 @@ const IndexPage: React.FC = ({ }) => {
                         <div className={styles.text}>
                             <div className={styles.title}>Data Presentation</div>
                             <div className={styles.description}>
-                                Integrate live interactive visualizations into your documents
+                                Integrate live visualizations into your documents
                             </div>
                         </div>
 
@@ -120,6 +121,8 @@ const IndexPage: React.FC = ({ }) => {
                     </div>
                 </div>
             </div>
+
+            <DataTicker />
 
             <Footer />
         </div>

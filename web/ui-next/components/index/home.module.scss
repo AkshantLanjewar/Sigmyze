@@ -120,6 +120,7 @@ $dark-5: var(--mantine-color-dark-5);
             gap: 7.5px;
             align-items: center;
             text-align: center;
+            flex-grow: 1;
 
             .title {
                 text-transform: initial;
@@ -130,6 +131,7 @@ $dark-5: var(--mantine-color-dark-5);
                 width: 241px;
                 font-size: 16px;
                 font-weight: 700;
+                flex-grow: 1;
             }
         }
 
@@ -150,6 +152,47 @@ $dark-5: var(--mantine-color-dark-5);
                 color: #FFFFFF;
                 cursor: pointer;
             }
+        }
+    }
+}
+
+$duration: 15s;
+
+@keyframes ticker-kf {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-108rem, 0, 0);
+    }
+}
+
+.ticker {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 150px;
+    gap: 20px;
+
+    background-color: $dark-10;
+
+    .small {
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 18px;
+        text-transform: uppercase;
+    }
+
+    .ticker__container {
+        display: flex;
+        gap: 20px;
+        animation: ticker-kf 18s linear infinite;
+        animation-delay: -18s;
+
+        .ticker__item {
+            width: 640px;
         }
     }
 }
@@ -175,5 +218,6 @@ $dark-5: var(--mantine-color-dark-5);
         line-height: 48px;
         width: 500px;
         text-align: center;
+        color: #FFFFFF;
     }
 }
