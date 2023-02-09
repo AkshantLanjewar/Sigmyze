@@ -1,10 +1,20 @@
-import { Box, Stack } from "@mantine/core"
-import { IconCloudComputing, IconDeviceDesktopAnalytics, IconFileAnalytics } from "@tabler/icons"
+import { Box, Button, Group, Stack, Textarea, TextInput } from "@mantine/core"
+import { useForm } from "@mantine/form"
+import { IconAt, IconCloudComputing, IconDeviceDesktopAnalytics, IconFileAnalytics, IconMapPin, IconSun } from "@tabler/icons"
 import ApplicationLayout from "../components/nav-elements/application-layout"
 import Footer from "../components/nav-elements/footer/footer"
 import styles from '../styles/info.module.scss'
 
 const AboutPage: React.FC = ({ }) => {
+    const form = useForm({
+        initialValues: {
+            name: '',
+            email: '',
+            subject: '',
+            message: ''
+        },
+    })
+
     return (
         <div>
             <ApplicationLayout
@@ -139,6 +149,109 @@ const AboutPage: React.FC = ({ }) => {
                                 and we plan on adding integrations for all major platforms to make adding visualizations 
                                 as painless as possible
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.contactSection}>
+                    <div className={styles.contact}>
+                        <div className={styles.info}>
+                            <div className={styles.sectionTitle}>Contact Information</div>
+
+                            <div className={styles.contactItems}>
+                                <div className={styles.item}>
+                                    <IconAt />
+
+                                    <div className={styles.text}>
+                                        <div className={styles.title}>E-mail</div>
+                                        <div className={styles.value}>sigmyze@gmail.com</div>
+                                    </div>
+                                </div>
+
+                                <div className={styles.item}>
+                                    <IconMapPin />
+
+                                    <div className={styles.text}>
+                                        <div className={styles.title}>Location</div>
+                                        <div className={styles.value}>Fremont, CA</div>
+                                    </div>
+                                </div>
+
+                                <div className={styles.item}>
+                                    <IconSun />
+
+                                    <div className={styles.text}>
+                                        <div className={styles.title}>Working Hours</div>
+                                        <div className={styles.value}>4pm - 8pm (PST)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={styles.contactForm}>
+                            <div className={styles.sectionTitle}>Get In Touch</div>
+
+                            <form className={styles.form}>
+                                <Group spacing={16} grow>
+                                    <TextInput 
+                                        required
+                                        withAsterisk
+                                        label={"Your Name"}
+                                        size={"md"}
+                                        variant={"filled"}
+                                        type={"text"}
+                                        placeholder={"Your Name"}
+                                        styles={{ input: { height: 40 } }}
+                                        {...form.getInputProps('name')}
+                                    />
+
+                                    <TextInput 
+                                        required
+                                        withAsterisk
+                                        label={"Your E-Mail"}
+                                        size={"md"}
+                                        variant={"filled"}
+                                        type={"email"}
+                                        placeholder={"Your Email"}
+                                        styles={{ input: { height: 40 } }}
+                                        {...form.getInputProps('email')}
+                                    />
+                                </Group>
+
+                                <TextInput 
+                                    required
+                                    withAsterisk
+                                    label={"Subject"}
+                                    size={"md"}
+                                    variant={"filled"}
+                                    type={"text"}
+                                    placeholder={"Subject of the message"}
+                                    styles={{ input: { height: 40 } }}
+                                    {...form.getInputProps('subject')}
+                                />
+
+                                <Textarea 
+                                    required
+                                    withAsterisk
+                                    label={"Subject"}
+                                    size={"md"}
+                                    variant={"filled"}
+                                    styles={{ input: { height: 104 } }}
+                                    placeholder={"Subject of the message"}
+                                    {...form.getInputProps('message')}
+                                />
+
+                                <Group position={"right"}>
+                                    <Button
+                                        type="submit"
+                                        variant={"filled"}
+                                        color={"indigo"}
+                                        radius={"xl"}
+                                    >
+                                        Send
+                                    </Button>
+                                </Group>
+                            </form>
                         </div>
                     </div>
                 </div>
