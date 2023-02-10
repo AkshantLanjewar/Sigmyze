@@ -1,10 +1,12 @@
 import { TextInput, Button } from "@mantine/core"
 import { useForm } from "@mantine/form"
+import { showNotification } from "@mantine/notifications"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { FormEvent, useContext, useEffect } from "react"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
+import { UserResendVerification } from "../../data/user/user-api"
 import Logo from "../../nav-elements/logo/logo"
 import styles from './auth-styles.module.scss'
 
@@ -29,6 +31,24 @@ const VerifyPageComponent: React.FC = ({ }) => {
 
             let code = form.values.token
             await userContext.verify(userContext.authData.token, code)
+        }
+
+        main()
+    }
+
+    function resendToken() {
+        async function main() {
+            let token = userContext.authData?.token
+            if(token === undefined)
+                return
+
+            await UserResendVerification(token)
+            showNotification({
+                title: "Resent Email",
+                message: "Successfully resent the email",
+                color: 'green',
+                autoClose: 1000 * 10
+            })
         }
 
         main()
@@ -87,7 +107,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
                 <div className={styles.actionText}>
                     Didn't Receive an E-Mail?{' '}
                     
-                    <Link href={"#"}>
+                    <Link href={"#"} onClick={resendToken}>
                         <span className={styles.link}>
                             Resend E-Mail
                         </span>
