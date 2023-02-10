@@ -5,18 +5,18 @@ ENV PORT 3000
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package*.json /usr/src/app/
-RUN npm install --global pm2
-RUN npm install
+COPY package.json yarn.lock /usr/src/app/
+RUN npm install pm2 -g
+RUN yarn
 
 # Copying source files
 COPY . /usr/src/app
 
 # start app
-RUN npm run build
+RUN yarn build
 EXPOSE 3000
 
 USER node
 
 # Launch app with PM2
-CMD ["/bin/bash", "-c", "echo pm2-runtime start npm --start"]
+CMD ["pm2-runtime", "start", "npm", "--", "start"]

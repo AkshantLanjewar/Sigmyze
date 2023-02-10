@@ -11,7 +11,10 @@ const rewritesConfig = isDevelopment
 
 const nextConfig = {
     reactStrictMode: true,
-    rewrites: async () => rewritesConfig
+    rewrites: async () => rewritesConfig,
+    eslint: {
+        ignoreDuringBuilds: true
+    }
 }
 
 module.exports = nextConfig

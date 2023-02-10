@@ -17,6 +17,7 @@ async function ResendVerificationEmail(token: string) {
 
 async function RefreshToken(
     token: string,
+    authData: IAuthenticationData | null | undefined,
     setAuthData: (value: SetStateAction<IAuthenticationData | undefined | null>) => void,
     setUserData: (value: SetStateAction<IUserData | undefined>) => void
 ) {
@@ -34,7 +35,7 @@ async function RefreshToken(
         }
     } catch (error) {
         //failure
-        await Logout(token, setAuthData, setUserData)
+        await Logout(token, authData, setAuthData, setUserData)
         showNotification({
             title: "Auth Error",
             message: "We logged you out after a while for your own security",

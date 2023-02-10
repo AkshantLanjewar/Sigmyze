@@ -85,7 +85,7 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
     contextValue.resendVerificationEmail = async (token: string) =>
         await ResendVerificationEmail(token)
     contextValue.refreshToken = async (token: string) =>
-        await RefreshToken(token, setAuthData, setUserData)
+        await RefreshToken(token, authData, setAuthData, setUserData)
     contextValue.fetchUserData = async (token: string) =>
         await FetchUserData(token, setUserData)
 
