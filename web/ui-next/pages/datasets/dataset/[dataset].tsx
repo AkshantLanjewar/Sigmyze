@@ -28,7 +28,6 @@ import {
 
 import { SelectedState }  from "../../../components/object-search/object-search"
 import ObjectSearch       from "../../../components/object-search/object-search"
-import ChartCard          from "../../../components/chart-card/chart-card"
 import { IDatasetObject } from "../../../components/data/datasets/DatasetsTypes"
 
 import { 
@@ -48,6 +47,7 @@ import {
 } from "@tabler/icons"
 import Footer from "../../../components/nav-elements/footer/footer"
 import ApplicationLayout from "../../../components/nav-elements/application-layout"
+import IndicatorCard from '../../../components/visualization/indicator-card'
 
 interface IDatasetPageProps {
     objects?: Array<IDatasetObject>,
@@ -166,9 +166,8 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
                         </Stack>
 
                         <Carousel
-                            withIndicators
                             height={275}
-                            slideSize={"33.333333333%"}
+                            slideSize={250}
                             slideGap={"md"}
                             breakpoints={[
                                 { maxWidth: 'md', slideSize: '50%' },
@@ -176,7 +175,7 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
                             ]}
                             loop
                             align={"start"}
-                            slidesToScroll={3}
+                            
                             mt={"lg"}
                         >
                             {carousel.length === 0 && ( <Carousel.Slide /> )}
@@ -184,7 +183,7 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
                                 return (
                                     <Carousel.Slide>
                                         <div>
-                                            <ChartCard indicator={step} />
+                                            <IndicatorCard indicator={step} lighten={true} />
                                         </div>
                                     </Carousel.Slide>
                                 )
@@ -237,7 +236,7 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
                                                 if(step.category === "All" || pStep.indicator.category === step.category)
                                                     return (
                                                         <div>
-                                                            <ChartCard indicator={pStep} />
+                                                            <IndicatorCard indicator={pStep} lighten={true} />
                                                         </div>
                                                     )
                                             })}
@@ -255,20 +254,7 @@ const DatasetPage: React.FC<IDatasetPageProps> = ({ objects, categories, indicat
     )
 }
 
-export async function getStaticPaths() {
-    const data     = await GetDatasets()
-    const datasets = data.datasets
-
-    let paths = []
-    for(let i = 0; i < datasets.length; i++)
-        paths.push({ params: { dataset: datasets[i].name } })
-    return {
-        paths: paths,
-        fallback: false
-    }
-}
-
-export async function getStaticProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
     const dataset = context.params!.dataset as string
 
     const objects    = await GetObjects(dataset)

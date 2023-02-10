@@ -10,10 +10,11 @@ const TinyArea = dynamic(() => import('@ant-design/plots').then(({ TinyArea }) =
 );
 
 interface IIndicatorCardProps {
-    indicator: IIndicator
+    indicator: IIndicator,
+    lighten?: boolean
 }
 
-const IndicatorCard: React.FC<IIndicatorCardProps> = ({ indicator }) => {
+const IndicatorCard: React.FC<IIndicatorCardProps> = ({ indicator, lighten }) => {
     const [loading, setLoading] = useState(false)
     const [settings, setSettings] = useState(config)
 
@@ -50,7 +51,7 @@ const IndicatorCard: React.FC<IIndicatorCardProps> = ({ indicator }) => {
                 <TinyArea { ...settings } />
             </div>
 
-            <div className={styles.indicator__title}>
+            <div className={`${styles.indicator__title} ${lighten && styles.lighted}`}>
                 <div className={styles.name}>
                     {indicator.object.object_id} {indicator.indicator.indicator_fullname}
                 </div>

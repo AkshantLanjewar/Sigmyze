@@ -1,5 +1,6 @@
 $dark-9: var(--mantine-color-dark-9);
 $dark-7: var(--mantine-color-dark-7);
+$dark-6: var(--mantine-color-dark-6);
 $dark-2: var(--mantine-color-dark-2);
 
 .indicator__card {
@@ -30,6 +31,10 @@ $dark-2: var(--mantine-color-dark-2);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
+        &.lighted {
+            background-color: $dark-6;
+        }
 
         .name {
             font-weight: 700;
