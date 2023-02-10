@@ -1,4 +1,4 @@
-from node:16.14.2-alpine
+FROM node:16.14.2-alpine
 
 ENV PORT 3000
 
@@ -19,4 +19,4 @@ EXPOSE 3000
 USER node
 
 # Launch app with PM2
-CMD ["/bin/bash", "-c", "echo npm run build;echo pm2-runtime start npm --start"]
+CMD ["/bin/bash", "-c", "echo pm2-runtime start npm --start"]
