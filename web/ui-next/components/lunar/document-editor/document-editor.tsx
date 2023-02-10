@@ -229,6 +229,8 @@ const DocumentEditor: React.FC<IDocumentEditorProps> = ({ tabId }): JSX.Element 
     }, [documentId])
 
     /**
+     * @effect
+     * @description
      * effect that updates the server with the project data when toggled
      */
     useEffect(() => {
