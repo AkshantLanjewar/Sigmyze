@@ -27,5 +27,5 @@ phases:
       - echo Pushed the DOTNET docker layer
       - docker push $REPOSITORY_URL/application
       - echo Pushed the NextJS layer
-      - docker push $REPOSITORY_url/nginx
+      - docker push $REPOSITORY_URL/nginx
       - echo Pushed the nginx layer
