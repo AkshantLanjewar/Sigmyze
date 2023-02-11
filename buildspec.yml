@@ -14,11 +14,11 @@ phases:
     commands:
       #build the docker images
       - echo Building the docker images
-      - docker build -t $REPOSITORY_URL/dotnet -f web/SigmyzeServer/Dockerfile .
+      - docker build -t $REPOSITORY_URL/dotnet -f web/SigmyzeServer/Dockerfile web/SigmyzeServer
       - echo Built the DOTNET docker layer
-      - docker build -t $REPOSITORY_URL/application -f web/ui-next/Dockerfile .
+      - docker build -t $REPOSITORY_URL/application -f web/ui-next/Dockerfile web/ui-next
       - echo Built the NextJS layer
-      - docker build -t $REPOSITORY_URL/nginx-ui -f web/nginx/Dockerfile .
+      - docker build -t $REPOSITORY_URL/nginx-ui -f web/nginx/Dockerfile web/nginx
       - echo build the nginx layer
   post_build:
     commands:
