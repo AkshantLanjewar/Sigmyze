@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM public.ecr.aws/docker/library/nginx/nginx:alpine
 
 # Remove any existing config files
 RUN rm /etc/nginx/conf.d/*

@@ -1,4 +1,4 @@
-FROM node:16.14.2-alpine
+FROM public.ecr.aws/docker/library/node:16.14.2-alpine
 
 ENV PORT 3000
 
