@@ -1,67 +1,11 @@
-import { Box, Button, Group, Stack, Textarea, TextInput } from "@mantine/core"
-import { useForm } from "@mantine/form"
-import { showNotification } from "@mantine/notifications"
+import { Box, Stack } from "@mantine/core"
 import { IconAt, IconCloudComputing, IconDeviceDesktopAnalytics, IconFileAnalytics, IconMapPin, IconSun } from "@tabler/icons"
-import { FormEvent } from "react"
 import ApplicationLayout from "../components/nav-elements/application-layout"
 import Footer from "../components/nav-elements/footer/footer"
 import styles from '../styles/info.module.scss'
 import SendMessageCard from '../components/pages/about/send-message-card'
 
 const AboutPage: React.FC = ({ }) => {
-    const form = useForm({
-        initialValues: {
-            name: '',
-            email: '',
-            subject: '',
-            message: ''
-        },
-
-        validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-        }
-    })
-
-    function errorMessage(msg: string) {
-        showNotification({
-            title: "Message Error",
-            message: msg,
-            color: 'red',
-            autoClose: 1000 * 10
-        })
-    }
-
-    function onSubmit(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        form.validate()
-
-        async function main() {
-            let name = form.values.name
-            let email = form.values.email 
-            let subject = form.values.subject
-            let message = form.values.message 
-
-            if(name.length === 0) {
-                errorMessage("You need to type a name first")
-                return
-            }
-
-            if(subject.length === 0) {
-                errorMessage("Please type the subject of your message")
-                return
-            }
-
-            if(message.length === 0) {
-                errorMessage("Please type a message")
-                return
-            }
-
-
-        }
-
-        main()
-    }
-
     return (
         <div>
             <ApplicationLayout

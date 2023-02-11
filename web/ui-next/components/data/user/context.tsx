@@ -115,6 +115,8 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
             let token = authData?.token
             if(token === undefined)
                 return
+            if(authData?.logged_in !== true)
+                return
 
             await FetchUserData(token, setUserData)
         }
