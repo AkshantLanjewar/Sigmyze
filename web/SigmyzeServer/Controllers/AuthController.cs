@@ -140,7 +140,7 @@ namespace SigmyzeServer.Controllers
             resp.Token      = token;
             resp.Registered = true;
             setTokenCookie(aUser.RefreshToken.Token);
-            await _emailService.SendVerificationEmail(aUser.VerificationToken, aUser.EMail, aUser.Username);            
+            _emailService.SendVerificationEmailSES(aUser.VerificationToken!, aUser.EMail!, aUser.Username);            
 
             return await SerializeJSON(resp);
         }
@@ -221,7 +221,7 @@ namespace SigmyzeServer.Controllers
             string code  = pUser.VerificationToken;
             string? name  = pUser.Username;
 
-            await _emailService.SendVerificationEmail(code, email, name);
+            _emailService.SendVerificationEmailSES(code, email, name);  
             resp.Resent = true;
 
             return await SerializeJSON(resp);
