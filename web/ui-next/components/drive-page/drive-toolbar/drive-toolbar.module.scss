@@ -1,0 +1,19 @@
+$sMd: var(--mantine-spacing-md);
+$sXs: var(--mantine-spacing-xs);
+$sXl: var(--mantine-spacing-xl);
+$dark3: var(--mantine-color-dark-3);
+
+.toolbarWrapper {
+    padding: $sMd;
+    padding-bottom: $sXs;
+    border-bottom: 1px solid $dark3;
+
+    .breadcrumbWrapper {
+        flex-grow: 1;
+
+    }
+
+    .actionMenu {
+        
+    }
+}

@@ -1,0 +1,29 @@
+$sXl: var(--mantine-spacing-xl);
+
+.driveWrapper {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    .driveContainer {
+        padding-top: $sXl;
+        flex-grow: 1;
+        position: relative;
+
+        .scrollWrapper {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: $sXl;
+            bottom: 0;
+
+            overflow: auto;
+
+            .content {
+                height: 100%;
+            }
+        }
+    }
+}

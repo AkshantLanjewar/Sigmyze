@@ -1,0 +1,39 @@
+.actionMenu {
+    position: absolute;
+    bottom: -40px;
+    background-color: #000000;
+    z-index: 10;
+
+    min-height: 30px;
+    
+    border-radius: 18px;
+    display: none;
+
+    &.show {
+        display: flex;
+    }
+
+    .action {
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:first-child {
+            border-top-left-radius: 18px;
+            border-bottom-left-radius: 18px;
+        }
+
+        &:last-child {
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
+        }
+
+        &:hover {
+            background-color: #141517;
+        }
+    }
+}

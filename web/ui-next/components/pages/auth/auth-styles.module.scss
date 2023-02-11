@@ -1,0 +1,119 @@
+$dark-7: #1A1B1E;
+$dark-9: #0C0D0F;
+$dark-5: #2C2E33;
+
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    .panel {
+        width: 50%;
+        height: 100%;
+        background-color: $dark-7;
+        overflow: hidden;
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+        padding: 30px 40px;
+        gap: 60px;
+
+        align-self: stretch;
+
+        .subtext {
+            display: flex;
+            flex-direction: column;
+            padding: 0 40px;
+            gap: 5px;
+            width: 520px;
+
+            .focus {
+                font-weight: 600;
+                font-size: 32px;
+                line-height: 48px;
+                color: #FFFFFF;
+            }
+
+            .shadow {
+                font-weight: 400;
+                font-size: 22px;
+                line-height: 33px;
+            }
+        }
+
+        .screenshot {
+            background-size: 1121px 739px;
+            object-fit: fill;
+            border: 1px solid $dark-5;
+            border-radius: 8px;
+            position: absolute;
+
+            width: 1121px;
+            height: 739px;
+            top: 306px;
+            left: 40px;
+
+            &.chart {
+                background: url(../../../public/screenshots/chart-editor.png);
+            }
+
+            &.document {
+                background: url(../../../public/screenshots/document-editor.png);
+                top: 339px;
+            }
+
+            &.email {
+                background: url(../../../public/screenshots/email-ss.png);
+            }
+        }
+    }
+
+    .content {
+        width: 50%;
+        height: 100%;
+        background-color: $dark-9;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+
+        .loginWrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+            width: 375px;
+
+            .title {
+                font-weight: 700;
+                font-size: 28px;
+                line-height: 42px;
+                color: #FFFFFF;
+            }
+
+            .form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .actionText {
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 21px;
+            color: #C1C2C5;
+
+            .link {
+                color: #339AF0;
+                text-decoration-line: underline;
+            }
+        }
+    }
+}

@@ -1,1 +1,5 @@
 certbot
+.vscode
+.vs
+.idea
+obj

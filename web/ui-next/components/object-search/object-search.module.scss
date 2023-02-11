@@ -1,0 +1,55 @@
+.search {
+    font-size: 16px;
+    height: 45px;
+    border-radius: 4px;
+    color: #909296;
+    background-color: #141517;
+    padding-left: 24px;
+    padding-right: 24px;
+
+    display: flex;
+    justify-content: center;
+    width: 300px;
+    max-width: 300px;
+    align-items: center;
+}
+
+.input {
+    input {
+        height: 50px;
+        line-height: 48;
+        padding-right: 16.6px;
+        padding-left: 50px;
+        font-size: 18px;
+        background-color: #1A1B1E;
+
+        border-radius: 4px 4px 0px 0px;
+        outline: none!important;
+        border: none!important;
+    }
+
+    .mantine-TextInput-icon {
+        width: 50px;
+    }
+}
+
+.object {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    &:hover {
+        background-color: #2C2E33;
+    }
+
+    &.active {
+        background-color: #2C2E33;
+    }
+
+    .textWrapper {
+        width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
