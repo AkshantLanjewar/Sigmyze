@@ -18,7 +18,7 @@ phases:
       - echo Built the DOTNET docker layer
       - docker build -t $REPOSITORY_URL/application -f web/ui-next/Dockerfile web/ui-next
       - echo Built the NextJS layer
-      - docker build -t $REPOSITORY_URL/nginx-ui -f web/nginx/Dockerfile web/nginx
+      - docker build -t $REPOSITORY_URL/nginx -f web/nginx/Dockerfile web/nginx
       - echo build the nginx layer
   post_build:
     commands:
@@ -27,5 +27,5 @@ phases:
       - echo Pushed the DOTNET docker layer
       - docker push $REPOSITORY_URL/application
       - echo Pushed the NextJS layer
-      - docker push $REPOSITORY_url/nginx-ui
+      - docker push $REPOSITORY_url/nginx
       - echo Pushed the nginx layer
