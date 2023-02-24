@@ -1,3 +1,4 @@
+import QuantaContext from "../../data/quanta/context"
 import ApplicationLayout from "../../nav-elements/application-layout"
 
 const QuantaPage: React.FC = ({ }) => {
@@ -9,9 +10,11 @@ const QuantaPage: React.FC = ({ }) => {
                 location="/quanta"
                 protectedView={true}
             >
-                <div>
+                <QuantaContext>
+                    <div style={{ height: '100%' }}> 
                     
-                </div>
+                    </div>
+                </QuantaContext>
             </ApplicationLayout>
         </div>
     )
