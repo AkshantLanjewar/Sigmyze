@@ -1,0 +1,5 @@
+function DefaultQuantaProject() {
+
+}
+
+export { DefaultQuantaProject }

@@ -1,5 +1,6 @@
-import { createContext } from "react"
+import { createContext, useState } from "react"
 import { IQuantaState } from "./types"
+import { IQuantaProjectData } from "./types/project"
 
 interface IQuantaContextProps {
     children?: JSX.Element | never[]
@@ -8,7 +9,10 @@ interface IQuantaContextProps {
 const QuantaContextData = createContext<IQuantaState | null>(null)
 
 const QuantaContext: React.FC<IQuantaContextProps> = ({ children }) => {
+    const [projectData, setProjectData] = useState<IQuantaProjectData | undefined>(undefined)
+
     let value: IQuantaState = {} as IQuantaState
+    value.project_data = projectData
 
     return (
         <>
