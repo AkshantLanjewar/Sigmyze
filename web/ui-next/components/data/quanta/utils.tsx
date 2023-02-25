@@ -14,6 +14,12 @@ function DefaultQuantaStore(): IQuantaDataStore {
     let store = {} as IQuantaDataStore
     store.selectors = []
 
+    store.selectors.push({
+        selectorId: v4(),
+        selectorName: "Demo Selector",
+        selectorDescription: "This is the description for the demo selector lol"
+    })
+
     return store
 }
 

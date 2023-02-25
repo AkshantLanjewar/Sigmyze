@@ -11,6 +11,10 @@
     border: 2px solid transparent;
     background-color: #08090A;
 
+    &.active {
+        border-color: #909296;
+    }
+
     .content {
         display: flex;
         flex-direction: column;

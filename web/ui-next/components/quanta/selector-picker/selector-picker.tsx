@@ -1,10 +1,20 @@
 import { Button } from '@mantine/core'
 import { IconAdjustments } from '@tabler/icons'
+import { IQuantaSelector } from '../../data/quanta/types/project'
 import styles from './selector-picker.module.scss'
 
-const SelectorPicker: React.FC = ({ }) => {
+interface ISelectorPickerProps {
+    activeSelector: string | null,
+    selector: IQuantaSelector,
+    setActiveSelector: (selectorId: string) => void
+}
+
+const SelectorPicker: React.FC<ISelectorPickerProps> = ({ activeSelector, selector, setActiveSelector }) => {
     return (
-        <div className={styles.selector__picker}>
+        <div 
+            className={`${styles.selector__picker} ${activeSelector === selector.selectorId && styles.active}`} 
+            onClick={() => setActiveSelector(selector.selectorId!)}
+        >
             <IconAdjustments 
                 size={24} 
                 stroke={"2"} 
@@ -13,11 +23,11 @@ const SelectorPicker: React.FC = ({ }) => {
 
             <div className={styles.content}>
                 <div className={styles.title__row}>
-                    <div className={styles.title}>Selector Title</div>
+                    <div className={styles.title}>{selector.selectorName}</div>
                 </div>
 
                 <div className={styles.description}>
-                    This is the description for the selector, type anything in here
+                    {selector.selectorDescription}
                 </div>
             </div>
         </div>

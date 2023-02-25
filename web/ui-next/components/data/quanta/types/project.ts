@@ -36,11 +36,14 @@ interface IQuantaDataStore {
 }
 
 interface IQuantaSelector {
-
+    selectorId?: string,
+    selectorName?: string,
+    selectorDescription?: string
 }
 
 export type { 
     IQuantaProjectData,
     IQuantaFile,
-    IQuantaDataStore 
+    IQuantaDataStore,
+    IQuantaSelector 
 }
