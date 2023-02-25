@@ -5,6 +5,7 @@ import { ActionIcon, Tabs } from '@mantine/core'
 import styles from './viewport.module.scss'
 import { icon_table } from '../../tree/node'
 import { RxCross2 } from 'react-icons/rx'
+import QuantaOverviewView from '../../quanta/overview/overview-view'
 
 const QuantaViewport: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
@@ -37,12 +38,16 @@ const QuantaViewport: React.FC = ({ }) => {
         ))
 
         tabBody = quantaTabs.map((step) => {
+            let viewPanel = null
+            if(step.tabType === "overview")
+                viewPanel = <QuantaOverviewView />
+
             return (
                 <Tabs.Panel
                     value={step.tabId!}
                     sx={{ flexGrow: 1 }}
                 >
-
+                    {viewPanel}
                 </Tabs.Panel>
             )
         })
@@ -68,6 +73,8 @@ const QuantaViewport: React.FC = ({ }) => {
                         >
                             {tabHeaders}
                         </Tabs.List>
+
+                        {tabBody}
                     </Tabs>
                 )}
             </div>
