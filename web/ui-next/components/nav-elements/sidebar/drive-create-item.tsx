@@ -1,7 +1,7 @@
 import { Menu, Tooltip } from "@mantine/core"
 import { IconBox, IconFolderPlus, IconPlus } from "@tabler/icons"
 import { useState } from "react"
-import ModalManager from "../../modal-manager"
+import ModalManager from "../../ui/modal-manager"
 import NewFolderModal from "./modal-views/new-folder-modal"
 import NewProjectModal from "./modal-views/new-project-modal"
 import styles from './sidebar.module.scss'

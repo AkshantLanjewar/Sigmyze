@@ -5,6 +5,16 @@ interface IQuantaProjectData {
     dataset_name?: string,
 
     /**
+     * This is the id for the dataset
+     */
+    dataset_id?: string,
+
+    /**
+     * this is the description for the dataset
+     */
+    dataset_description?: string,
+
+    /**
      * Different file components in the dataset
      */
     files?: IQuantaFile[],
@@ -22,6 +32,10 @@ interface IQuantaFile {
 }
 
 interface IQuantaDataStore {
+    selectors: IQuantaSelector[]
+}
+
+interface IQuantaSelector {
 
 }
 

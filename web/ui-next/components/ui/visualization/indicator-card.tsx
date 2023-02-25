@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { PrepareData } from '../chart/utils';
-import { GetIndicator } from '../data/datasets/DatasetsAPI';
-import { IIndicator, IUnparsedIndicator } from '../data/datasets/DatasetsTypes';
+import { PrepareData } from '../../chart/utils';
+import { GetIndicator } from '../../data/datasets/DatasetsAPI';
+import { IIndicator, IUnparsedIndicator } from '../../data/datasets/DatasetsTypes';
 import styles from './indicator-card.module.scss'
 import { config } from './static-chart-config'
 const TinyArea = dynamic(() => import('@ant-design/plots').then(({ TinyArea }) => TinyArea),

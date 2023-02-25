@@ -1,0 +1,92 @@
+import { ActionIcon, Button } from '@mantine/core'
+import { IconPhotoPlus, IconPlayerPlay } from '@tabler/icons'
+import { useContext } from 'react'
+import { QuantaContextData } from '../../data/quanta/context'
+import { IQuantaState } from '../../data/quanta/types'
+import EditableText from '../../ui/editable-text/editable-text'
+import OverviewSelectors from '../overview-selectors/overview-selectors'
+import OverviewTabs from '../overview-tabs/overview-tabs'
+import styles from './overview-view.module.scss'
+
+const QuantaOverviewView: React.FC = ({ }) => {
+    const quantaContext = useContext(QuantaContextData) as IQuantaState
+    const quantaProject = quantaContext.project_data
+
+    return (
+        <div className={styles.overviewWrapper}>
+            <div className={styles.overview__content}>
+                <div className={styles.overview__title__row}>
+                    <div className={styles.text}>
+                        <ActionIcon
+                            variant={'filled'}
+                            color={"blue"}
+                            size={"xl"}
+                            radius={"md"}
+                            sx={{ width: 60, height: 60 }}
+                        >
+                            <IconPhotoPlus size={32} stroke={"2"} />
+                        </ActionIcon>
+
+                        <div className={styles.content}>
+                            <EditableText 
+                                className={styles.overview__title} 
+                                value={quantaProject?.dataset_name} 
+                                setValue={(val: string) => quantaContext.changeText(val, "title")}
+                            />
+
+                            <EditableText 
+                                className={styles.overview__id} 
+                                value={quantaProject?.dataset_id} 
+                                setValue={(val: string) => quantaContext.changeText(val, "id")}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.actions}>
+                        <Button
+                            radius={"xl"}
+                            color={"indigo"}
+                            disabled
+                        >
+                            <IconPlayerPlay size={14} style={{ marginRight: 2.5 }} />
+
+                            Update
+                        </Button>
+
+                        <Button
+                            radius={"xl"}
+                            color={"indigo"}
+                            disabled
+                        >
+                            <IconPlayerPlay  size={14} style={{ marginRight: 2.5 }} />
+
+                            Create
+                        </Button>
+                    </div>
+                </div>
+
+                <EditableText 
+                    className={styles.overview__description} 
+                    inputType={"textarea"}
+                    value={quantaProject?.dataset_description} 
+                    setValue={(val: string) => quantaContext.changeText(val, "desc")}
+                />
+
+                <div className={styles.overview__selectors__row}>
+                    <div className={styles.selector__title}>
+                        <div className={styles.title}>Selectors</div>
+                        <div className={styles.desc}>This is how users query your Dataset</div>
+                    </div>
+
+                    <div>
+                        <OverviewSelectors />
+                    </div>
+                </div>
+            </div>
+
+            <OverviewTabs />
+        </div>
+    )
+}
+
+export default QuantaOverviewView

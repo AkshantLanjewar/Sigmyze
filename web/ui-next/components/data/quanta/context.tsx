@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react"
 import { v4 } from "uuid"
+import ModalManager from "../../ui/modal-manager"
 import { IQuantaState } from "./types"
 import { IQuantaFile, IQuantaProjectData } from "./types/project"
 import { IQuantaTab } from "./types/ui"
@@ -18,6 +19,10 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     //state relating to the tabs
     const [activeTab, setActiveTab] = useState<string | undefined>(undefined)
     const [tabs, setTabs] = useState<IQuantaTab[]>([] as IQuantaTab[])
+
+    //state for the modal managaer
+    const [modalState, setModalState] = useState<string | null>(null)
+    const closeModal = () => setModalState(null)
 
     useEffect(() => {
         loadQuanta()
@@ -93,6 +98,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
         setActiveTab(relatedTab)
     }
 
+    //this function closes a tab and context switches appropriately
     value.closeTab = (tabId: string) => {
         let nTabs = []
         for(let i = 0; i < tabs.length; i++) {
@@ -122,10 +128,43 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
         }
     }
 
+    //this function handles changing a text field
+    value.changeText = (text: string, field: "title" | "id" | "desc") => {
+        let nData = projectData
+        if(nData === undefined)
+            return
+
+        if(field === "title")
+            nData.dataset_name = text
+        if(field === "id")
+            nData.dataset_id = text
+        if(field === "desc")
+            nData.dataset_description = text
+        
+        setProjectData({ ...nData })
+    }
+
+    //this function opens a modal
+    value.openModal = (modalId: string) => {
+        setModalState(modalId)
+    }
+
     return (
         <>
             <QuantaContextData.Provider value={value}>
                 <div style={{ width: "100%", height: "100%" }}>
+                    <ModalManager
+                        modalState={modalState}
+                        close={closeModal}
+                    >
+                        <ModalManager.Modal
+                            id="new_selector"
+                            title="Create Selector"
+                        >
+
+                        </ModalManager.Modal>
+                    </ModalManager>
+
                     {children}
                 </div>
             </QuantaContextData.Provider>

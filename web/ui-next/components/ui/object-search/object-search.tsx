@@ -23,8 +23,8 @@ import {
 import styles from './object-search.module.scss'
 import { IconSearch } from "@tabler/icons"
 
-import { IDatasetObject } from "../data/datasets/DatasetsTypes"
-import ChartSpark from "../chart-spark/chart-spark"
+import { IDatasetObject } from "../../data/datasets/DatasetsTypes"
+import ChartSpark from "../../chart-spark/chart-spark"
 
 interface IObjectSearchProps {
     objects?: Array<IDatasetObject>,

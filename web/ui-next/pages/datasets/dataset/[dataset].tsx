@@ -26,8 +26,8 @@ import {
     IIndicator 
 } from "../../../components/data/datasets/DatasetsTypes"
 
-import { SelectedState }  from "../../../components/object-search/object-search"
-import ObjectSearch       from "../../../components/object-search/object-search"
+import { SelectedState }  from "../../../components/ui/object-search/object-search"
+import ObjectSearch       from "../../../components/ui/object-search/object-search"
 import { IDatasetObject } from "../../../components/data/datasets/DatasetsTypes"
 
 import { 
@@ -47,7 +47,7 @@ import {
 } from "@tabler/icons"
 import Footer from "../../../components/nav-elements/footer/footer"
 import ApplicationLayout from "../../../components/nav-elements/application-layout"
-import IndicatorCard from '../../../components/visualization/indicator-card'
+import IndicatorCard from '../../../components/ui/visualization/indicator-card'
 
 interface IDatasetPageProps {
     objects?: Array<IDatasetObject>,
