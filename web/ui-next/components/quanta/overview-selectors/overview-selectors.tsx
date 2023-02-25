@@ -13,7 +13,7 @@ const OverviewSelectors: React.FC = ({ }) => {
     return (
         <div className={styles.selectors__view}>
             {selectors?.map((step) => (
-                <OverviewSelector />
+                <OverviewSelector selector={step} />
             ))}
 
             <div className={styles.selector__item}>

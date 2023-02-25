@@ -24,6 +24,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     const [modalState, setModalState] = useState<string | null>(null)
     const closeModal = () => setModalState(null)
 
+    //state for the selector
+    const [activeSelector, setActiveSelector] = useState<string | null>(null)
+
     useEffect(() => {
         loadQuanta()
     }, [])
@@ -44,6 +47,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     value.project_data = projectData
     value.tabId = activeTab
     value.tabs = tabs
+    value.activeSelectorId = activeSelector
 
     //NOTE: Theese are the functions relating to the context
     
@@ -147,6 +151,32 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     //this function opens a modal
     value.openModal = (modalId: string) => {
         setModalState(modalId)
+    }
+
+    //this function activates a selector
+    value.activateSelector = (selectorId: string) => {
+        setActiveSelector(selectorId)
+    }
+
+    //this function opens a selector in the selector view
+    value.openSelector = (selectorId: string) => {
+        //get thje file
+        let files = projectData?.files
+        if(files === undefined)
+            return
+
+        let file = null
+        for(let i = 0; i < files.length; i++) {
+            let file_ = files[i]
+            if(file_.type === "selectors")
+                file = file_
+        }
+
+        if(file === null)
+            return
+        
+        setActiveSelector(selectorId)
+        value.focusTab(file.id!, file.type!)
     }
 
     return (

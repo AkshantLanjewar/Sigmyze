@@ -4,7 +4,7 @@ import { IQuantaSelector } from '../../data/quanta/types/project'
 import styles from './selector-picker.module.scss'
 
 interface ISelectorPickerProps {
-    activeSelector: string | null,
+    activeSelector: string | null | undefined,
     selector: IQuantaSelector,
     setActiveSelector: (selectorId: string) => void
 }

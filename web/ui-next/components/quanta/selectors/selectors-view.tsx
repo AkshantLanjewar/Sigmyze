@@ -9,9 +9,6 @@ import styles from './selectors-view.module.scss'
 const QuantaSelectorsView: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
     const selectors = quantaContext.project_data?.store?.selectors
-
-    //handles which selector is active
-    const [activeSelector, setActiveSelector] = useState<string | null>(null)
     
     return (
         <div className={styles.selectors__wrapper}>
@@ -20,9 +17,9 @@ const QuantaSelectorsView: React.FC = ({ }) => {
 
                 {selectors?.map((step) => (
                     <SelectorPicker 
-                        activeSelector={activeSelector}
+                        activeSelector={quantaContext.activeSelectorId}
                         selector={step}
-                        setActiveSelector={setActiveSelector} 
+                        setActiveSelector={quantaContext.activateSelector} 
                     />
                 ))}
 

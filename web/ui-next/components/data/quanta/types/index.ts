@@ -18,6 +18,11 @@ interface IQuantaState {
      */
     tabs?: IQuantaTab[],
 
+    /**
+     * this is the active selector_id for the selector view
+     */
+    activeSelectorId?: string | null,
+
     //tab related functions
     changeTab: (tabId: string) => void,
     focusTab: (fileId: string, fileType: string) => void,
@@ -28,6 +33,11 @@ interface IQuantaState {
 
     //opens a context modal
     openModal: (modalId: string) => void
+
+    //opens the specified selector in the selectors view
+    openSelector: (selectorId: string) => void
+    //activeates selector
+    activateSelector: (selectorId: string) => void
 }
 
 export type { IQuantaState }
