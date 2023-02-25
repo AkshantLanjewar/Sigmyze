@@ -25,6 +25,9 @@ interface IQuantaState {
 
     //text changing related functions
     changeText: (text: string, field: "title" | "id" | "desc") => void,
+
+    //opens a context modal
+    openModal: (modalId: string) => void
 }
 
 export type { IQuantaState }

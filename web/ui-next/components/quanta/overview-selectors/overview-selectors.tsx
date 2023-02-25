@@ -23,7 +23,11 @@ const OverviewSelectors: React.FC = ({ }) => {
                     withArrow
                     styles={{ tooltip: { backgroundColor: "#08090A" } }}
                 >
-                    <ActionIcon className={styles.selector__icon} radius={"md"}>
+                    <ActionIcon 
+                        className={styles.selector__icon} 
+                        onClick={() => quantaContext.openModal("new_selector")}
+                        radius={"md"}
+                    >
                         <IconCodePlus size={48} stroke={"2"} />
                     </ActionIcon> 
                 </Tooltip>  
