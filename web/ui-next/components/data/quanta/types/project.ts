@@ -5,11 +5,17 @@ interface IQuantaProjectData {
 }
 
 interface IQuantaFile {
-
+    name?: string,
+    type?: string,
+    id?: string
 }
 
 interface IQuantaDataStore {
 
 }
 
-export type { IQuantaProjectData }
+export type { 
+    IQuantaProjectData,
+    IQuantaFile,
+    IQuantaDataStore 
+}
