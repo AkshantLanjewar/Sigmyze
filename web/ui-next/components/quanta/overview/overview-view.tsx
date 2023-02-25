@@ -1,6 +1,7 @@
 import { ActionIcon, Button } from '@mantine/core'
 import { IconPhotoPlus, IconPlayerPlay } from '@tabler/icons'
 import OverviewSelectors from '../overview-selectors/overview-selectors'
+import OverviewTabs from '../overview-tabs/overview-tabs'
 import styles from './overview-view.module.scss'
 
 const QuantaOverviewView: React.FC = ({ }) => {
@@ -64,6 +65,8 @@ const QuantaOverviewView: React.FC = ({ }) => {
                     </div>
                 </div>
             </div>
+
+            <OverviewTabs />
         </div>
     )
 }
