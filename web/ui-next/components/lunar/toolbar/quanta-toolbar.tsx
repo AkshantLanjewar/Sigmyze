@@ -44,13 +44,50 @@ const QuantaToolbar: React.FC = ({ }) => {
                 node_id: file.id,
                 node_title: file.name,
                 node_type: file.type,
-                children: []
+                children: [],
+                
             } as ITreeNode
 
             nNodes[0].children.push(fileNode)
         }
 
         setNodes([ ...nNodes ])
+    }
+
+    //resets all the nodes to unactive
+    function deactivateNodes(pNodes: ITreeNode[]) {
+        let nNodes = [] as ITreeNode[]
+        for(let i = 0; i < pNodes.length; i++) {
+            let node = pNodes[i]
+            node.active = false
+            node.children = deactivateNodes(node.children)
+
+            nNodes.push(node)
+        }
+
+        return nNodes
+    }
+
+    //function that handles the setActive event from the tree
+    //focuses the tab on the viewport if it is a quanta file
+    function setActive(id: string, type: string) {
+        let nTreeNodes = nodes
+        nTreeNodes = deactivateNodes(nTreeNodes)
+
+        if(type === "dataset")
+            nTreeNodes[0].active = true
+
+        for(let i = 0; i < nTreeNodes[0].children.length; i++) {
+            let node = nTreeNodes[0].children[i]
+            if(node.node_id === id) {
+                quantaContext.focusTab(id, type)
+                node.active = true
+            }
+
+            nTreeNodes[0].children[i] = node
+        }
+
+        setNodes([ ...nTreeNodes ])
     }
 
     return (
@@ -70,7 +107,7 @@ const QuantaToolbar: React.FC = ({ }) => {
                 <div style={{ marginTop: 0, position: 'relative', height: '100%' }}>
                     <div className={dropdownStyles['scroll-wrapper']}>
                         <div className={dropdownStyles.content}>
-                            <Tree nodes={nodes} />
+                            <Tree nodes={nodes} setActive={setActive} />
                         </div>
                     </div>
                 </div>
