@@ -13,6 +13,7 @@ const QuantaToolbar: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
     let quantaData = quantaContext.project_data
     let quantaFiles = quantaData?.files
+    let tabId = quantaContext.tabId
 
     useEffect(() => {
         buildToolbar()
@@ -21,6 +22,29 @@ const QuantaToolbar: React.FC = ({ }) => {
     useEffect(() => {
         buildToolbar()
     }, [quantaFiles])
+
+    useEffect(() => {
+        let tabs = quantaContext.tabs
+        if(tabs === undefined)
+            return
+        if(tabId === undefined) {
+            let nNodes = deactivateNodes(nodes)
+            setNodes([ ...nNodes ])
+
+            return
+        }
+
+        let tab = undefined
+        for(let i = 0; i < tabs.length; i++) {
+            let tab_ = tabs[i]
+            if(tab_.tabId === tabId)
+                tab = tab_
+        }
+
+        if(tab === undefined)
+            return
+        setActive(tab.connected_file!, tab.tabType!)
+    }, [tabId])
 
     //convert projectData to the toolbar
     function buildToolbar() {

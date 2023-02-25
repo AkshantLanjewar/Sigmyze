@@ -45,6 +45,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     //NOTE: This function changes the tab to the specified tabs string
     // meant to be used by the mantine component only
     value.changeTab = ( tabId: string ) => {
+        if(tabId === activeTab)
+            return
+            
         setActiveTab(tabId)
     }
 
@@ -101,6 +104,22 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
         }
 
         setTabs([ ...nTabs ])
+
+        if(tabId === activeTab) {
+            let activeIndex = 0
+            for(let i = 0; i < tabs.length; i++) {
+                if(tabs[i].tabId === activeTab)
+                    activeIndex = i
+            }
+
+            if(activeIndex > 0)
+                activeIndex = activeIndex - 1
+
+            if(nTabs.length > 0)
+                setActiveTab(nTabs[activeIndex].tabId)
+            else
+                setActiveTab(undefined)
+        }
     }
 
     return (
