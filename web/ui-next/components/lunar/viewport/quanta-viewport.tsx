@@ -6,6 +6,7 @@ import styles from './viewport.module.scss'
 import { icon_table } from '../../tree/node'
 import { RxCross2 } from 'react-icons/rx'
 import QuantaOverviewView from '../../quanta/overview/overview-view'
+import QuantaSelectorsView from '../../quanta/selectors/selectors-view'
 
 const QuantaViewport: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
@@ -39,8 +40,11 @@ const QuantaViewport: React.FC = ({ }) => {
 
         tabBody = quantaTabs.map((step) => {
             let viewPanel = null
+
             if(step.tabType === "overview")
                 viewPanel = <QuantaOverviewView />
+            if(step.tabType === "selectors")
+                viewPanel = <QuantaSelectorsView />
 
             return (
                 <Tabs.Panel
