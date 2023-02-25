@@ -2,7 +2,7 @@ import { ActionIcon, Group, Tooltip } from "@mantine/core"
 import { IconDoorEnter, IconSettings, IconTrash } from "@tabler/icons"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { IDriveFolder, IDriveProject } from "../../data/organization/types"
-import ModalManager from "../../modal-manager"
+import ModalManager from "../../ui/modal-manager"
 import DeleteForm from "./delete-form"
 import UpdateForm from "./update-form"
 

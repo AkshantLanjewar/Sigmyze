@@ -1,5 +1,6 @@
 import { ActionIcon, Button } from '@mantine/core'
 import { IconPhotoPlus, IconPlayerPlay } from '@tabler/icons'
+import EditableText from '../../ui/editable-text/editable-text'
 import OverviewSelectors from '../overview-selectors/overview-selectors'
 import OverviewTabs from '../overview-tabs/overview-tabs'
 import styles from './overview-view.module.scss'
@@ -21,8 +22,15 @@ const QuantaOverviewView: React.FC = ({ }) => {
                         </ActionIcon>
 
                         <div className={styles.content}>
-                            <div className={styles.overview__title}>Dataset Title</div>
-                            <div className={styles.overview__id}>dataset_access_id</div>
+                            <EditableText 
+                                className={styles.overview__title} 
+                                value={"Dataset Title"} 
+                            />
+
+                            <EditableText 
+                                className={styles.overview__id} 
+                                value={"dataset_access_id"} 
+                            />
                         </div>
                     </div>
 
@@ -49,10 +57,11 @@ const QuantaOverviewView: React.FC = ({ }) => {
                     </div>
                 </div>
 
-                <div className={styles.overview__description}>
-                    This is the description for the dataset. It is written by the user and it contains important 
-                    info like whyu the dataset is important
-                </div>
+                <EditableText 
+                    className={styles.overview__description} 
+                    inputType={"textarea"}
+                    value={"This is the description for the dataset. It is written by the user and it contains important info like whyu the dataset is important"} 
+                />
 
                 <div className={styles.overview__selectors__row}>
                     <div className={styles.selector__title}>

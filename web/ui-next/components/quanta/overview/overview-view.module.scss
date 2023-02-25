@@ -25,18 +25,22 @@
             .content {
                 display: flex;
                 flex-direction: column;
-                gap: 2.5px;
 
                 .overview__title {
                     font-weight: 700;
                     font-size: 22px;
                     color: #FFFFFF;
+                    height: 34px;
                 }
 
                 .overview__id {
                     font-weight: 700;
                     font-size: 14px;
                     color: #c1c2c5;
+
+                    display: flex;
+                    align-items: center;
+                    height: 28px;
                 }
             }
         }

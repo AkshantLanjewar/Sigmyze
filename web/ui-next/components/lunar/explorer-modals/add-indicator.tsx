@@ -1,5 +1,5 @@
 import { Button, Group, Modal } from '@mantine/core'
-import ObjectSearch, { SelectedState } from '../../object-search/object-search'
+import ObjectSearch, { SelectedState } from '../../ui/object-search/object-search'
 
 import { ILunarState, ILunarUIData } from "../../data/lunar/types/types"
 import { DatasetsTable } from '../../data/datasets/DatasetsAPI'
