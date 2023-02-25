@@ -32,6 +32,10 @@ interface IQuantaFile {
 }
 
 interface IQuantaDataStore {
+    selectors: IQuantaSelector[]
+}
+
+interface IQuantaSelector {
 
 }
 

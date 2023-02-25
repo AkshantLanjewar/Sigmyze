@@ -19,6 +19,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     const [activeTab, setActiveTab] = useState<string | undefined>(undefined)
     const [tabs, setTabs] = useState<IQuantaTab[]>([] as IQuantaTab[])
 
+    //state for the modal managaer
+    const [modalState, setModalState] = useState<string | null>(null)
+
     useEffect(() => {
         loadQuanta()
     }, [])

@@ -10,6 +10,13 @@ function buildQuantaFile(name: string, type: string) : IQuantaFile {
     return file
 }
 
+function DefaultQuantaStore(): IQuantaDataStore {
+    let store = {} as IQuantaDataStore
+    store.selectors = []
+
+    return store
+}
+
 function DefaultQuantaProject() : IQuantaProjectData {
     let defaultProject = {} as IQuantaProjectData
     defaultProject.dataset_name = "Demo Dataset"
@@ -17,7 +24,7 @@ function DefaultQuantaProject() : IQuantaProjectData {
     defaultProject.dataset_description = "This is the description for the dataset. Click to Edit"
 
     defaultProject.files = [] as IQuantaFile[]
-    defaultProject.store = {} as IQuantaDataStore
+    defaultProject.store = DefaultQuantaStore()
 
     //build out the individual pages
     defaultProject.files.push(buildQuantaFile("Overview", "overview"))

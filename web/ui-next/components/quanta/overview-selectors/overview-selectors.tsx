@@ -1,19 +1,20 @@
 import { ActionIcon, Tooltip } from '@mantine/core'
 import { IconCode, IconCodePlus } from '@tabler/icons'
+import { useContext } from 'react'
+import { QuantaContextData } from '../../data/quanta/context'
+import { IQuantaState } from '../../data/quanta/types'
+import OverviewSelector from './overview-selector'
 import styles from './overview-selectors.module.scss'
 
 const OverviewSelectors: React.FC = ({ }) => {
+    const quantaContext = useContext(QuantaContextData) as IQuantaState
+    const selectors = quantaContext.project_data?.store?.selectors
+    
     return (
         <div className={styles.selectors__view}>
-            <div className={styles.selector__item}>
-                <ActionIcon className={styles.selector__icon} radius={"md"}>
-                    <IconCode size={48} stroke={"2"} />
-                </ActionIcon>
-
-                <div className={styles.selector__title}>
-                    Selector Name
-                </div>
-            </div>
+            {selectors?.map((step) => (
+                <OverviewSelector />
+            ))}
 
             <div className={styles.selector__item}>
                 <Tooltip
