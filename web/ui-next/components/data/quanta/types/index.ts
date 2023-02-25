@@ -21,7 +21,10 @@ interface IQuantaState {
     //tab related functions
     changeTab: (tabId: string) => void,
     focusTab: (fileId: string, fileType: string) => void,
-    closeTab: (tabId: string) => void
+    closeTab: (tabId: string) => void,
+
+    //text changing related functions
+    changeText: (text: string, field: "title" | "id" | "desc") => void,
 }
 
 export type { IQuantaState }

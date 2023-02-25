@@ -93,6 +93,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
         setActiveTab(relatedTab)
     }
 
+    //this function closes a tab and context switches appropriately
     value.closeTab = (tabId: string) => {
         let nTabs = []
         for(let i = 0; i < tabs.length; i++) {
@@ -120,6 +121,22 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
             else
                 setActiveTab(undefined)
         }
+    }
+
+    //this function handles changing a text field
+    value.changeText = (text: string, field: "title" | "id" | "desc") => {
+        let nData = projectData
+        if(nData === undefined)
+            return
+
+        if(field === "title")
+            nData.dataset_name = text
+        if(field === "id")
+            nData.dataset_id = text
+        if(field === "desc")
+            nData.dataset_description = text
+        
+        setProjectData({ ...nData })
     }
 
     return (

@@ -1,11 +1,17 @@
 import { ActionIcon, Button } from '@mantine/core'
 import { IconPhotoPlus, IconPlayerPlay } from '@tabler/icons'
+import { useContext } from 'react'
+import { QuantaContextData } from '../../data/quanta/context'
+import { IQuantaState } from '../../data/quanta/types'
 import EditableText from '../../ui/editable-text/editable-text'
 import OverviewSelectors from '../overview-selectors/overview-selectors'
 import OverviewTabs from '../overview-tabs/overview-tabs'
 import styles from './overview-view.module.scss'
 
 const QuantaOverviewView: React.FC = ({ }) => {
+    const quantaContext = useContext(QuantaContextData) as IQuantaState
+    const quantaProject = quantaContext.project_data
+
     return (
         <div className={styles.overviewWrapper}>
             <div className={styles.overview__content}>
@@ -24,12 +30,14 @@ const QuantaOverviewView: React.FC = ({ }) => {
                         <div className={styles.content}>
                             <EditableText 
                                 className={styles.overview__title} 
-                                value={"Dataset Title"} 
+                                value={quantaProject?.dataset_name} 
+                                setValue={(val: string) => quantaContext.changeText(val, "title")}
                             />
 
                             <EditableText 
                                 className={styles.overview__id} 
-                                value={"dataset_access_id"} 
+                                value={quantaProject?.dataset_id} 
+                                setValue={(val: string) => quantaContext.changeText(val, "id")}
                             />
                         </div>
                     </div>
@@ -60,7 +68,8 @@ const QuantaOverviewView: React.FC = ({ }) => {
                 <EditableText 
                     className={styles.overview__description} 
                     inputType={"textarea"}
-                    value={"This is the description for the dataset. It is written by the user and it contains important info like whyu the dataset is important"} 
+                    value={quantaProject?.dataset_description} 
+                    setValue={(val: string) => quantaContext.changeText(val, "desc")}
                 />
 
                 <div className={styles.overview__selectors__row}>
