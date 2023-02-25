@@ -3,6 +3,7 @@ import { IconAdjustments, IconPlus } from '@tabler/icons'
 import { useContext, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
+import SelectorPane from '../selector-pane/selector-pane'
 import SelectorPicker from '../selector-picker/selector-picker'
 import styles from './selectors-view.module.scss'
 
@@ -36,7 +37,7 @@ const QuantaSelectorsView: React.FC = ({ }) => {
             </div>
 
             <div className={styles.selectors__viewport}>
-
+                <SelectorPane />
             </div>
         </div>
     )
