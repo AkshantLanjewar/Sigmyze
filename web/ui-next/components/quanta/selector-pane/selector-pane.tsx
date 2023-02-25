@@ -1,3 +1,5 @@
+import { Button, Group } from '@mantine/core'
+import { IconPlus } from '@tabler/icons'
 import { useContext, useEffect, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
@@ -36,11 +38,36 @@ const SelectorPane: React.FC = ({ }) => {
                 <div className={styles.pane__wrapper}>
                     <div className={styles.title__section}>
                         <div className={styles.title__row}>
+                            <div className={styles.title}>
+                                {selector.selectorName}
+                            </div>
 
+                            <Group spacing={7.5}>
+                                <Button
+                                    variant={'outline'}
+                                    compact
+                                    size={'sm'}
+                                    radius={"xl"}
+                                    color={"teal"}
+                                >
+                                    Linked Selector
+                                </Button>
+
+                                <Button
+                                    variant={'outline'}
+                                    compact
+                                    size={'sm'}
+                                    radius={"xl"}
+                                    color={"gray"}
+                                >
+                                    <IconPlus size={10} stroke={"2"} />
+                                    Add
+                                </Button>
+                            </Group>
                         </div>
 
                         <div className={styles.description}>
-
+                            {selector.selectorDescription}
                         </div>
                     </div>
 
