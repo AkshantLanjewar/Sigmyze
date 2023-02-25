@@ -1,0 +1,29 @@
+.selectors__view {
+    display: flex;
+    gap: 15px;
+
+    .selector__item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        .selector__icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 200px;
+            height: 125px;
+            background-color: #08090A;
+        }
+
+        .selector__title {
+            text-align: center;
+            user-select: none;
+
+            font-weight: 700;
+            font-size: 14px;
+            color: #C1C2C5;
+        }
+    }
+}
