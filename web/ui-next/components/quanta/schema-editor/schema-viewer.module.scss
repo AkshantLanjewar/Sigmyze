@@ -1,0 +1,40 @@
+$dark9: var(--mantine-color-dark-9);
+
+.schema__node {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    padding: 10px;
+    background-color: #25262B;
+    border-radius: 4px;
+
+    &.dark {
+        background-color: $dark9;
+    }
+
+    .name {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .chevron {
+            transform: rotate(-90deg);
+            transition: transform 150ms ease;
+
+            &.active {
+                transform: rotate(0);
+            }
+        }
+
+        .text {
+            font-weight: 700;
+            font-size: 18px;
+        }
+    }
+
+    .flare {
+
+    }
+}

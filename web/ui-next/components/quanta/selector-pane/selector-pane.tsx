@@ -5,6 +5,7 @@ import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import { IQuantaSelector } from '../../data/quanta/types/project'
 import FileInput from '../../ui/file-input/file-input'
+import SchemaEditor from '../schema-editor/schema-editor'
 import styles from './selector-pane.module.scss'
 
 const SelectorPane: React.FC = ({ }) => {
@@ -92,7 +93,26 @@ const SelectorPane: React.FC = ({ }) => {
                     </div>
 
                     <div className={styles.section}>
+                        <div className={styles.title__section}>
+                            <div className={styles.title__row}>
+                                <div className={styles.title}>Selector Schema</div>
+                            </div>
 
+                            <div className={styles.title__description}>
+                                This is the schema for your selector. Define the object that will be returned by your code, 
+                                and link that object to the schema for the dataset.
+                            </div>
+                        </div>
+
+                        <div className={styles.schema__compare}>
+                            <div className={styles.compare}>
+                                <SchemaEditor />
+                            </div>
+
+                            <div className={styles.compare}>
+                                <SchemaEditor />
+                            </div>
+                        </div>
                     </div>
 
                     <div className={styles.preview__section}>

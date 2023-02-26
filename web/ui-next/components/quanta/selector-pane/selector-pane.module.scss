@@ -72,5 +72,13 @@
             gap: 10px;
             width: 700px;
         }
+
+        .schema__compare {
+            width: 100%;
+            display: flex;
+            gap: 5px;
+
+            .compare { flex-grow: 1; }
+        }
     }
 }
