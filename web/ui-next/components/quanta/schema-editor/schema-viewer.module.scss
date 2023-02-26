@@ -1,4 +1,5 @@
 $dark9: var(--mantine-color-dark-9);
+dark6: var(--mantine-col=)
 
 .schema__node {
     display: flex;
@@ -12,6 +13,10 @@ $dark9: var(--mantine-color-dark-9);
 
     &.dark {
         background-color: $dark9;
+    }
+
+    &.light {
+
     }
 
     .name {
