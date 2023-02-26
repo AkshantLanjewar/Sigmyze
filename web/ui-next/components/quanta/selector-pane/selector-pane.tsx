@@ -1,5 +1,5 @@
-import { Button, Group } from '@mantine/core'
-import { IconPlus } from '@tabler/icons'
+import { ActionIcon, Button, Group, Stack } from '@mantine/core'
+import { IconCode, IconPlus, IconSourceCode } from '@tabler/icons'
 import { useContext, useEffect, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
@@ -71,8 +71,43 @@ const SelectorPane: React.FC = ({ }) => {
                         </div>
                     </div>
 
-                    <div className={styles.code__section}>
+                    <div className={styles.section}>
+                        <div className={styles.title__section}>
+                            <div className={styles.title__row}>
+                                <div className={styles.title}>Selector Code</div>
+                            </div>
 
+                            <div className={styles.title__description}>
+                                This is the code for your selector. Either select a prebuilt selector made by us, 
+                                or select the type of code you would like to construct your selector with. 
+                                List of currently supported languages here
+                            </div>
+                        </div>
+
+                        <div className={styles.file__upload}>
+                            <div className={styles.file__item}>
+                                <div className={styles.file__inner}>
+                                    <ActionIcon
+                                        color={'violet'}
+                                        size={'xl'}
+                                        variant={'outline'}
+                                        radius={"md"}
+                                        sx={{ borderWidth: 2 }}
+                                    >
+                                        <IconPlus size={28} stroke={"2"} color={"#d0bfff"} />
+                                    </ActionIcon>
+
+                                    <Stack spacing={0}>
+                                        <div className={styles.file__name}>Source Code</div>
+
+                                        <Group spacing={2.5}>
+                                            <IconCode size={14} color={"#d0bfff"} />
+                                            <div className={styles.file__type}>.ts file</div>
+                                        </Group>
+                                    </Stack>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className={styles.schema__section}>
