@@ -37,7 +37,9 @@ const QuantaSelectorsView: React.FC = ({ }) => {
             </div>
 
             <div className={styles.selectors__viewport}>
-                <SelectorPane />
+                <div className={styles.viewportScroll}>
+                    <SelectorPane />
+                </div>
             </div>
         </div>
     )

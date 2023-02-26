@@ -39,6 +39,8 @@ $dark9: var(--mantine-color-dark-9);
     }
 
     .flare {
-
+        flex-grow: 1;
+        display: flex;
+        justify-content: end;
     }
 }

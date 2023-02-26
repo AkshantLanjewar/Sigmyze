@@ -12,6 +12,7 @@ interface ISchemaViewerProps {
     schemaNode: IQuantaSchema,
     additionalPadding?: number,
     parentId?: string,
+    light?: boolean,
     createItem: (nodeId: string) => void,
     editText: (nodeId: string, text: string) => void,
     unfocusItems: () => void,
@@ -23,7 +24,7 @@ const color_table = {
 }
 
 const SchemaViewer: React.FC<ISchemaViewerProps> = 
-    ({ schemaNode, additionalPadding, parentId, createItem, editText, unfocusItems, editSchema }) => {
+    ({ schemaNode, additionalPadding, parentId, light, createItem, editText, unfocusItems, editSchema }) => {
     const [opened, setOpened] = useState(schemaNode.hasChildren ? true : false)
 
     function handleSchemaClick(e: MouseEvent<HTMLButtonElement>) {
@@ -42,7 +43,7 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
     return (
         <div>
             <UnstyledButton 
-                className={`${styles.schema__node} ${schemaNode.type === "schema" && styles.dark}`}
+                className={`${styles.schema__node} ${light && styles.light}`}
                 onClick={(e) => handleSchemaClick(e)}
             >
                 <div className={styles.name}>
@@ -65,9 +66,7 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                         setValue={(val) => editText(schemaNode.nodeId!, val)}
                     />
                 </div>
-
-                <div className={styles.flare}>
-                    <Group spacing={5}>
+                    <Group spacing={5} className={styles.flare}>
                         {schemaNode.mutableType
                             ? (
                                 <UIDropdown
@@ -112,10 +111,9 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                             />
                         )}
                     </Group>
-                </div>
             </UnstyledButton>
 
-            <Collapse in={opened} >
+            <Collapse in={opened}>
                 <Group position={'right'}>
                     <Box 
                         pt={5}

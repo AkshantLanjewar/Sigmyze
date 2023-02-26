@@ -49,9 +49,11 @@ const QuantaViewport: React.FC = ({ }) => {
             return (
                 <Tabs.Panel
                     value={step.tabId!}
-                    sx={{ flexGrow: 1 }}
+                    sx={{ flexGrow: 1, position: 'relative' }}
                 >
-                    {viewPanel}
+                    <div className={styles.viewportScroll}>
+                        {viewPanel}
+                    </div>
                 </Tabs.Panel>
             )
         })

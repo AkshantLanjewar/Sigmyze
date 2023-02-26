@@ -116,8 +116,20 @@ const SelectorPane: React.FC = ({ }) => {
                         </div>
                     </div>
 
-                    <div className={styles.preview__section}>
+                    <div className={styles.section}>
+                        <div className={styles.title__section}>
+                            <div className={styles.title__row}>
+                                <div className={styles.title}>Selector Preview</div>
+                            </div>
 
+                            <div className={styles.title__description}>
+                                This is a little preview of your selector
+                            </div>
+                        </div>
+
+                        <div className={styles.preview}>
+                            
+                        </div>
                     </div>
                 </div>
             )}
