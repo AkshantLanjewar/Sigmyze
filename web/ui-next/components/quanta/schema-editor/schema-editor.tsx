@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { v4 } from "uuid"
 import SchemaViewer from "./schema-viewer"
-import { IQuantaSchema } from "./types"
+import { IQuantaSchema, IQuantaSchemaType } from "./types"
 
 const DEMO_SCHEMA = {
     name: "demo schema",
@@ -14,10 +14,17 @@ const DEMO_SCHEMA = {
     children: []
 } as IQuantaSchema
 
+type SchemaFunctions = "create" | "delete" | "edit_text" | "edit_type"
+
 const SchemaEditor: React.FC = ({ }) => {
     const [schema, setSchema] = useState(DEMO_SCHEMA)
 
-    function editSchemaNode(nodes: IQuantaSchema[], nodeId: string, method: "create" | "delete", childId?: string) {
+    function editSchemaNode(
+        nodes: IQuantaSchema[], 
+        nodeId: string, 
+        method: SchemaFunctions,
+        additionalText?: string
+    ) {
         let nNodes = [] as IQuantaSchema[]
         for(let i = 0; i < nodes.length; i++) {
             let node = nodes[i]
@@ -29,7 +36,7 @@ const SchemaEditor: React.FC = ({ }) => {
                     let newNode = {
                         name: "field_name",
                         type: "string",
-                        mutableType: false,
+                        mutableType: true,
                         removeableType: true,
                         nodeId: v4(),
                         hasChildren: false,
@@ -39,20 +46,26 @@ const SchemaEditor: React.FC = ({ }) => {
                     node.children.push(newNode)
                 }
 
-                if(method === "delete" && childId !== undefined) {
+                if(method === "delete" && additionalText !== undefined) {
                     let nChilds = []
                     for(let i = 0; i < node.children.length; i++) {
                         let nodeC = node.children[i]
-                        if(nodeC.nodeId !== childId)
+                        if(nodeC.nodeId !== additionalText)
                             nChilds.push(nodeC)
                     }
 
                     node.children = nChilds
                 }
+
+                if(method === "edit_text" && additionalText !== undefined)
+                    node.name = additionalText
+
+                if(method === "edit_type" && additionalText !== undefined)
+                    node.type = additionalText as IQuantaSchemaType
             }
 
             if(node.children !== undefined)
-                node.children = editSchemaNode(node.children, nodeId, method)
+                node.children = editSchemaNode(node.children, nodeId, method, additionalText)
             nNodes.push(node)
         }
 
@@ -64,8 +77,13 @@ const SchemaEditor: React.FC = ({ }) => {
         setSchema({ ...nSchema })
     }
 
-    function deleteItem(parentId: string, childId: string) {
-        let nSchema = editSchemaNode([schema], parentId, "delete", childId)[0]
+    function editText(nodeId: string, text: string) {
+        let nSchema = editSchemaNode([schema], nodeId, "edit_text", text)[0]
+        setSchema({ ...nSchema })
+    }
+
+    function editSchema(nodeId: string, type: SchemaFunctions, text: string) {
+        let nSchema = editSchemaNode([schema], nodeId, type, text)[0]
         setSchema({ ...nSchema })
     }
 
@@ -87,10 +105,12 @@ const SchemaEditor: React.FC = ({ }) => {
                 schemaNode={schema}
                 createItem={createItem} 
                 unfocusItems={unfocusItems}
-                deleteItem={deleteItem}
+                editText={editText}
+                editSchema={editSchema}
             />
         </div>
     )
 }
 
+export type { SchemaFunctions }
 export default SchemaEditor

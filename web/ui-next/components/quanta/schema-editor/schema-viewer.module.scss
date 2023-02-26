@@ -7,7 +7,7 @@ $dark9: var(--mantine-color-dark-9);
 
     width: 100%;
     padding: 10px;
-    background-color: #25262B;
+    background-color: $dark9;
     border-radius: 4px;
 
     &.dark {

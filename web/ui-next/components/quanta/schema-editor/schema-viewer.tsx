@@ -1,17 +1,21 @@
 import { Badge, Box, Button, CloseButton, Collapse, Group, Stack, UnstyledButton } from "@mantine/core"
-import { useState, MouseEvent } from "react"
+import { useState, MouseEvent, useEffect } from "react"
 import { IQuantaSchema, IQuantaSchemaType } from "./types"
 import styles from './schema-viewer.module.scss'
 import { IconChevronDown, IconPlus } from "@tabler/icons"
 import EditableText from "../../ui/editable-text/editable-text"
+import UIDropdown from "../../ui/ui-dropdown/ui-dropdown"
+import { GetPrebuiltDropdown } from "../../ui/ui-dropdown/utils"
+import { SchemaFunctions } from "./schema-editor"
 
 interface ISchemaViewerProps {
     schemaNode: IQuantaSchema,
     additionalPadding?: number,
     parentId?: string,
     createItem: (nodeId: string) => void,
-    deleteItem: (parentId: string, nodeId: string) => void,
-    unfocusItems: () => void
+    editText: (nodeId: string, text: string) => void,
+    unfocusItems: () => void,
+    editSchema?: (nodeId: string, type: SchemaFunctions, text: string) => void
 }
 
 const color_table = {
@@ -19,8 +23,8 @@ const color_table = {
 }
 
 const SchemaViewer: React.FC<ISchemaViewerProps> = 
-    ({ schemaNode, additionalPadding, parentId, createItem, deleteItem, unfocusItems }) => {
-    const [opened, setOpened] = useState(false)
+    ({ schemaNode, additionalPadding, parentId, createItem, editText, unfocusItems, editSchema }) => {
+    const [opened, setOpened] = useState(schemaNode.hasChildren ? true : false)
 
     function handleSchemaClick(e: MouseEvent<HTMLButtonElement>) {
         if(schemaNode.hasChildren === false) {
@@ -58,14 +62,37 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                         value={schemaNode.name}
                         defaultValue={schemaNode.focusNode}
                         emitBlur={unfocusItems}
+                        setValue={(val) => editText(schemaNode.nodeId!, val)}
                     />
                 </div>
 
                 <div className={styles.flare}>
                     <Group spacing={5}>
                         {schemaNode.mutableType
-                            ? null
-                            : <Badge variant="filled" color={color_table[schemaNode.type as keyof typeof color_table]}>{schemaNode.type}</Badge>
+                            ? (
+                                <UIDropdown
+                                    size={"xs"}
+                                    items={GetPrebuiltDropdown("schema")}
+                                    value={schemaNode.type}
+                                    emitChange={(menuId) => {
+                                        if(editSchema === undefined)
+                                            return
+                                        if(schemaNode.nodeId === undefined)
+                                            return
+
+                                        console.log(menuId)
+                                        editSchema(schemaNode.nodeId, "edit_type", menuId)
+                                    }}
+                                />
+                            )
+                            : (
+                                <Badge 
+                                    variant="filled" 
+                                    color={color_table[schemaNode.type as keyof typeof color_table]}
+                                >
+                                    {schemaNode.type}
+                                </Badge>
+                            )
                         }
 
                         {schemaNode.removeableType === true && (
@@ -77,8 +104,10 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                                         return
                                     if(schemaNode.nodeId === undefined)
                                         return
+                                    if(editSchema === undefined)
+                                        return
 
-                                    deleteItem(parentId, schemaNode.nodeId)
+                                    editSchema(parentId, "delete", schemaNode.nodeId)
                                 }}
                             />
                         )}
@@ -89,10 +118,10 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
             <Collapse in={opened} >
                 <Group position={'right'}>
                     <Box 
-                        py={5}
+                        pt={5}
                         sx={{ width: `calc(100% - ${30 + (additionalPadding ? additionalPadding : 0)}px)` }}
                     >
-                        <Stack spacing={5} pb={5}>
+                        <Stack spacing={5}>
                             {schemaNode.children?.map((step) => (
                                 <SchemaViewer
                                     schemaNode={step}
@@ -100,7 +129,8 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                                     additionalPadding={additionalPadding ? additionalPadding + 30 : 30}
                                     unfocusItems={unfocusItems}
                                     parentId={schemaNode.nodeId}
-                                    deleteItem={deleteItem}
+                                    editText={editText}
+                                    editSchema={editSchema}
                                 />
                             ))}
                         </Stack>
@@ -110,6 +140,7 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                                 variant={'subtle'}
                                 color={'gray'}
                                 onClick={() => createItem(schemaNode.nodeId!)}
+                                mt={5}
                             >
                                 <Group spacing={5}>
                                     <IconPlus size={16} stroke={"2"} />

@@ -5,6 +5,7 @@ import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import { IQuantaSelector } from '../../data/quanta/types/project'
 import FileInput from '../../ui/file-input/file-input'
+import UIDropdown from '../../ui/ui-dropdown/ui-dropdown'
 import SchemaEditor from '../schema-editor/schema-editor'
 import styles from './selector-pane.module.scss'
 
