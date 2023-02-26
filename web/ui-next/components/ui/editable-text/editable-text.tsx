@@ -1,4 +1,4 @@
-import { FocusTrap, Input, Textarea, Tooltip } from '@mantine/core'
+import { FocusTrap, Input, Textarea, Tooltip, UnstyledButton } from '@mantine/core'
 import { useState } from 'react'
 import styles from './editable-text.module.scss'
 
@@ -59,6 +59,7 @@ const EditableText: React.FC<IEditableTextProps> = ({ className, value, setValue
                         <div 
                             className={`${className} ${styles.editable__wrapper}`} 
                             onClick={() => { setEdit(true) }}
+                            aria-label={'editable'}
                         >
                             {value}
                         </div>
