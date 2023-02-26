@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import { IQuantaSelector } from '../../data/quanta/types/project'
+import FileInput from '../../ui/file-input/file-input'
 import styles from './selector-pane.module.scss'
 
 const SelectorPane: React.FC = ({ }) => {
@@ -85,32 +86,12 @@ const SelectorPane: React.FC = ({ }) => {
                         </div>
 
                         <div className={styles.file__upload}>
-                            <div className={styles.file__item}>
-                                <div className={styles.file__inner}>
-                                    <ActionIcon
-                                        color={'violet'}
-                                        size={'xl'}
-                                        variant={'outline'}
-                                        radius={"md"}
-                                        sx={{ borderWidth: 2 }}
-                                    >
-                                        <IconPlus size={28} stroke={"2"} color={"#d0bfff"} />
-                                    </ActionIcon>
-
-                                    <Stack spacing={0}>
-                                        <div className={styles.file__name}>Source Code</div>
-
-                                        <Group spacing={2.5}>
-                                            <IconCode size={14} color={"#d0bfff"} />
-                                            <div className={styles.file__type}>.ts file</div>
-                                        </Group>
-                                    </Stack>
-                                </div>
-                            </div>
+                            <FileInput />
+                            <FileInput />
                         </div>
                     </div>
 
-                    <div className={styles.schema__section}>
+                    <div className={styles.section}>
 
                     </div>
 

@@ -1,0 +1,25 @@
+.file__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+    
+    .file__inner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .file__name {
+            color: #d0bfff;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .file__type {
+            color: #d0bfff;
+            font-weight: 700;
+            font-size: 8px;
+        }
+    }
+}
