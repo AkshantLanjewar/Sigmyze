@@ -1,19 +1,29 @@
 import { FocusTrap, Input, Textarea, Tooltip, UnstyledButton } from '@mantine/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './editable-text.module.scss'
 
 interface IEditableTextProps {
     className?: string,
     value?: string,
     setValue?: (value: string) => void,
-    inputType?: string
+    inputType?: string,
+    defaultValue?: boolean,
+    emitBlur?: () => void
 }
 
-const EditableText: React.FC<IEditableTextProps> = ({ className, value, setValue, inputType }) => {
-    const [edit, setEdit] = useState(false)
+const EditableText: React.FC<IEditableTextProps> = ({ className, value, setValue, inputType, defaultValue, emitBlur }) => {
+    const [edit, setEdit] = useState(defaultValue ? defaultValue : false)
     let inputTypeReal = "text"
     if(inputType !== undefined)
         inputTypeReal = inputType
+
+    useEffect(() => {
+        if(emitBlur === undefined)
+            return
+
+        if(edit === false)
+            emitBlur()
+    }, [edit])
     
     return (
         <div>

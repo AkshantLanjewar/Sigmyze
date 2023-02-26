@@ -1,4 +1,4 @@
-type IQuantaSchemaType = "schema"
+type IQuantaSchemaType = "schema" | "string"
 
 interface IQuantaSchema {
     /**
@@ -34,7 +34,9 @@ interface IQuantaSchema {
     /**
      * children of the node
      */
-    children?: IQuantaSchema[]
+    children?: IQuantaSchema[],
+
+    focusNode?: boolean
 }
 
 export type { 
