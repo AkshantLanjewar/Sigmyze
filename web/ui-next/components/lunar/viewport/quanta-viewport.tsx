@@ -7,6 +7,7 @@ import { icon_table } from '../../tree/node'
 import { RxCross2 } from 'react-icons/rx'
 import QuantaOverviewView from '../../quanta/overview/overview-view'
 import QuantaSelectorsView from '../../quanta/selectors/selectors-view'
+import QuantaEditor from '../../quanta/quanta-editor/quanta-editor'
 
 const QuantaViewport: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
@@ -45,6 +46,8 @@ const QuantaViewport: React.FC = ({ }) => {
                 viewPanel = <QuantaOverviewView />
             if(step.tabType === "selectors")
                 viewPanel = <QuantaSelectorsView />
+            if(step.tabType === "node_editor")
+                viewPanel = <QuantaEditor />
 
             return (
                 <Tabs.Panel
