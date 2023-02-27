@@ -5,7 +5,7 @@ import { IQuantaRFEdge, IQuantaRFNode } from "./types"
 import 'reactflow/dist/style.css'
 import { applyNodeChanges, applyEdgeChanges } from "@reactflow/core"
 import { v4 } from "uuid"
-import QuantaNode from "./quanta-node"
+import QuantaNode from "./node/quanta-node"
 import { BuildNode } from "./utils"
 
 const QuantaEditor: React.FC = ({ }) => {

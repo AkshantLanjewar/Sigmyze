@@ -4,14 +4,16 @@ import { useEffect, useRef, useState } from 'react'
 import { Motion, spring } from 'react-motion'
 import { Handle, Position } from 'reactflow'
 import { IQuantaSocket } from '../types'
+import NodeCreateMenu from './node-create-menu'
 import styles from './node-renderer.module.scss'
 
 interface INodeOutputProps {
     output: IQuantaSocket,
-    focused: boolean
+    focused: boolean,
+    unfocus: () => void
 }
 
-const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused }) => {
+const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused, unfocus }) => {
     const ref = useRef<HTMLDivElement>(null)
     const [opened, setOpened] = useState(false)
 
@@ -45,37 +47,18 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused }) => {
                 type='source' 
                 position={Position.Right}
                 className={styles.output}
+                id={output.socketId}
                 ref={ref}
             />
 
             <Motion style={{ x: spring(focused ? -75 : 0) }} >
                 {({ x }) => (
-                    <div className={styles.node__add} style={{ right: x }}>
-                        <div className={styles.stem}></div>
-        
-                        <Menu
-                            width={150}
-                            position={'right-start'}
-                            withArrow
-                            opened={opened}
-                            onClose={() => setOpened(false)}
-                        >
-                            <Menu.Target>
-                                <ActionIcon
-                                    color={"dark"}
-                                    variant={"filled"}
-                                    radius={"md"}
-                                    className={styles.add__button}
-                                    onClick={() => setOpened(true)}
-                                >
-                                    <IconPlus size={14} stroke={"2"} />
-                                </ActionIcon>
-                            </Menu.Target>
-
-                            <Menu.Dropdown>
-
-                            </Menu.Dropdown>
-                        </Menu>
+                    <div className={styles.node__add} style={{ right: x }}>       
+                        <NodeCreateMenu 
+                            focused={focused} 
+                            output={output}
+                            unfocus={unfocus}
+                        />
                     </div>
                 )}
             </Motion>

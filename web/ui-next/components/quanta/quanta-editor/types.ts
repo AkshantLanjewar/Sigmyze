@@ -5,6 +5,13 @@ interface IQuantaRFNode {
     data?: IQuantaRFNodeData
 }
 
+interface IQuantaNodeDetails {
+    instructionId: string,
+    name: string,
+    description: string,
+    icon: JSX.Element
+}
+
 interface IQuantaRFNodeData {
     instructionId?: string,
     instructions?: IQuantaNodeInstructions,
@@ -43,5 +50,6 @@ export type {
     IQuantaXYPos,
     IQuantaRFNodeData,
     IQuantaNodeInstructions,
-    IQuantaSocket
+    IQuantaSocket,
+    IQuantaNodeDetails
 }

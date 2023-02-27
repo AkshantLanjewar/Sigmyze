@@ -1,6 +1,6 @@
 import { v4 } from "uuid"
 import prebuildNodeDict from "./prebuilt_nodes"
-import { IQuantaRFNode } from "./types"
+import { IQuantaNodeDetails, IQuantaRFNode } from "./types"
 
 function BuildNode(type: string) : IQuantaRFNode | undefined {
     if(Object.keys(prebuildNodeDict).includes(type) === false)
@@ -17,6 +17,35 @@ function BuildNode(type: string) : IQuantaRFNode | undefined {
 
 function DetailedCreateList(outputType: string) {
     let keys = Object.keys(prebuildNodeDict)
+    let keysWithMatchingInputType = []
+
+    for(let i = 0; i < keys.length; i++) {
+        let key = keys[i]
+        let inputs = prebuildNodeDict[key].inputs
+        if(inputs === undefined)
+            continue
+
+        for(let x = 0; x < inputs.length; x++) {
+            let input = inputs[x]
+            if(input.type === outputType)
+                keysWithMatchingInputType.push(key)
+        }
+    }
+
+    let detailedNodes = [] as IQuantaNodeDetails[]
+    for(let i = 0; i < keysWithMatchingInputType.length; i++) {
+        let key = keysWithMatchingInputType[i]
+        let obj = prebuildNodeDict[key]
+
+        detailedNodes.push({
+            instructionId: key,
+            name: obj.name!,
+            description: obj.description!,
+            icon: obj.icon! as JSX.Element
+        })
+    }
+
+    return detailedNodes
 }
 
 export { 
