@@ -1,8 +1,9 @@
 import prebuildNodeDict from "../prebuilt_nodes"
-import { IQuantaRFNodeData } from "../types"
+import { IQuantaEditorGlobals, IQuantaRFNodeData } from "../types"
 import styles from './node-renderer.module.scss'
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useContext } from "react"
 import NodeOutput from "./node-output"
+import { QuantaEditorContext } from "../quanta-editor"
 
 interface IQuantaNodeProps {
     data?: IQuantaRFNodeData
@@ -16,6 +17,8 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
     const [focused, setFocused] = useState(false)
     const unfocus = () => setFocused(false)
     const ref = useRef<HTMLDivElement>(null)
+
+    const quantaEditorContext = useContext(QuantaEditorContext) as IQuantaEditorGlobals | null
     
     useEffect(() => {
         function clickListener(e: any) {
@@ -32,6 +35,13 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
         else
             document.addEventListener("click", clickListener)
     }, [focused])
+
+    useEffect(() => {
+        if(quantaEditorContext?.focusToggle === undefined)
+            return
+
+        setFocused(false)
+    }, [quantaEditorContext?.focusToggle])
 
     return (
         <div>
@@ -53,6 +63,7 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
                     {instructions.outputs?.map((step) => (
                         <NodeOutput
                             output={step}
+                            nodeId={data.nodeId}
                             focused={focused}
                             unfocus={unfocus}
                         />

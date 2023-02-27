@@ -1,3 +1,5 @@
+import { RefObject } from "react"
+
 interface IQuantaRFNode {
     id?: string,
     type?: 'quanta_node',
@@ -44,6 +46,13 @@ interface IQuantaRFEdge {
 
 }
 
+interface IQuantaEditorGlobals {
+    focusToggle: boolean,
+
+    createNode: (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) => void,
+    toggleFocus: () => void
+}
+
 export type {
     IQuantaRFNode,
     IQuantaRFEdge,
@@ -51,5 +60,6 @@ export type {
     IQuantaRFNodeData,
     IQuantaNodeInstructions,
     IQuantaSocket,
-    IQuantaNodeDetails
+    IQuantaNodeDetails,
+    IQuantaEditorGlobals
 }

@@ -1,20 +1,25 @@
 import { ActionIcon, Group, Menu, Stack, Text, ThemeIcon } from "@mantine/core"
 import { IconPlus } from "@tabler/icons"
-import React, { cloneElement } from "react"
+import React, { cloneElement, RefObject, useContext } from "react"
 import { useEffect, useState } from "react"
-import { IQuantaNodeDetails, IQuantaSocket } from "../types"
+import { QuantaEditorContext } from "../quanta-editor"
+import { IQuantaEditorGlobals, IQuantaNodeDetails, IQuantaSocket } from "../types"
 import { DetailedCreateList } from "../utils"
 import styles from './node-renderer.module.scss'
 
 interface INodeCreateMenu {
     focused: boolean,
+    nodeId?: string,
+    handleRef: RefObject<HTMLElement>
     output: IQuantaSocket,
     unfocus: () => void
 }
 
-const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, output, unfocus }) => {
+const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, handleRef, unfocus }) => {
     const [opened, setOpened] = useState(false)
     const [menuItems, setMenuItems] = useState<IQuantaNodeDetails[]>([])
+
+    const quantaEditorContext = useContext(QuantaEditorContext) as IQuantaEditorGlobals | null
 
     useEffect(() => {
         if(focused === false)
@@ -28,6 +33,16 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, output, unfocus })
         let nMenuItems = DetailedCreateList(output.type!)
         setMenuItems([ ...nMenuItems ])
     }, [opened])
+
+    function menuClick(type: string) {
+        let createMenuFunc = quantaEditorContext?.createNode
+        if(createMenuFunc === undefined)
+            return
+        if(nodeId === undefined)
+            return
+
+        createMenuFunc(nodeId, output.socketId!, type, handleRef)
+    }
     
     return (
         <>
@@ -38,7 +53,7 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, output, unfocus })
                 opened={opened}
                 onClose={() => setOpened(false)}
             >
-                <Menu.Target>
+                <Menu.Target ref={handleRef}>
                     <ActionIcon
                         color={"dark"}
                         variant={"filled"}
@@ -53,9 +68,7 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, output, unfocus })
                 <Menu.Dropdown>
                     {menuItems.map((step) => (
                         <Menu.Item 
-                            onClick={() => { 
-                                unfocus() 
-                            }}
+                            onClick={() => menuClick(step.instructionId)}
                         >
                             <Group 
                                 spacing={"sm"}

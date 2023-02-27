@@ -9,12 +9,13 @@ import styles from './node-renderer.module.scss'
 
 interface INodeOutputProps {
     output: IQuantaSocket,
+    nodeId?: string,
     focused: boolean,
     unfocus: () => void
 }
 
-const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused, unfocus }) => {
-    const ref = useRef<HTMLDivElement>(null)
+const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus }) => {
+    const ref = useRef<HTMLElement>(null)
     const [opened, setOpened] = useState(false)
 
     useEffect(() => {
@@ -48,7 +49,6 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused, unfocus }) =>
                 position={Position.Right}
                 className={styles.output}
                 id={output.socketId}
-                ref={ref}
             />
 
             <Motion style={{ x: spring(focused ? -75 : 0) }} >
@@ -58,6 +58,8 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused, unfocus }) =>
                             focused={focused} 
                             output={output}
                             unfocus={unfocus}
+                            nodeId={nodeId}
+                            handleRef={ref}
                         />
                     </div>
                 )}
