@@ -7,13 +7,14 @@ interface IQuantaRFNode {
 
 interface IQuantaRFNodeData {
     instructionId?: string,
-    instructions?: IQuantaNodeInstructions
+    instructions?: IQuantaNodeInstructions,
+    nodeId?: string
 }
 
-interface IQuantaNodeOutput {
+interface IQuantaSocket {
     type?: string
-    outputId?: string,
-    outputName?: string,
+    socketId?: string,
+    socketName?: string,
     hideType?: boolean,
     icon?: React.ReactNode
 }
@@ -21,8 +22,10 @@ interface IQuantaNodeOutput {
 interface IQuantaNodeInstructions {
     name?: string,
     icon?: React.ReactNode,
+    description?: string
 
-    outputs?: IQuantaNodeOutput[]
+    outputs?: IQuantaSocket[],
+    inputs?: IQuantaSocket[]
 }
 
 interface IQuantaXYPos {
@@ -40,5 +43,5 @@ export type {
     IQuantaXYPos,
     IQuantaRFNodeData,
     IQuantaNodeInstructions,
-    IQuantaNodeOutput
+    IQuantaSocket
 }

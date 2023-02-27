@@ -6,6 +6,13 @@
     background-color: #08090A;
     min-width: 250px;
     z-index: 5;
+    cursor: pointer;
+
+    border: 2px solid transparent;
+
+    &.active {
+        border-color: #bbb;
+    }
 
     .node__title {
         display: flex;
@@ -38,7 +45,7 @@
 
             .output {
                 position: absolute;
-                right: -24px;
+                right: -25px;
 
                 width: 8px;
                 height: 8px;
@@ -48,7 +55,6 @@
 
             .node__add {
                 position: absolute;
-                right: -100px;
                 z-index: -1;
 
                 display: flex;

@@ -1,18 +1,24 @@
-import { ActionIcon, Group, Text } from '@mantine/core'
+import { ActionIcon, Group, Menu, Text } from '@mantine/core'
 import { IconPlus } from '@tabler/icons'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Motion, spring } from 'react-motion'
 import { Handle, Position } from 'reactflow'
-import { IQuantaNodeOutput } from '../types'
+import { IQuantaSocket } from '../types'
 import styles from './node-renderer.module.scss'
 
 interface INodeOutputProps {
-    output: IQuantaNodeOutput,
+    output: IQuantaSocket,
     focused: boolean
 }
 
 const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused }) => {
     const ref = useRef<HTMLDivElement>(null)
-    
+    const [opened, setOpened] = useState(false)
+
+    useEffect(() => {
+        if(focused === false)
+            setOpened(false)
+    }, [focused])
 
     return (
         <div className={styles.node__socket}>
@@ -29,7 +35,7 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused }) => {
                     color={"dimmed"}
                     size={'sm'}
                 >
-                    {output.outputName}
+                    {output.socketName}
                 </Text>
 
                 {output.icon}
@@ -42,18 +48,37 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, focused }) => {
                 ref={ref}
             />
 
-            <div className={styles.node__add} style={{ opacity: focused ? 1 : 0 }}>
-                <div className={styles.stem}></div>
+            <Motion style={{ x: spring(focused ? -75 : 0) }} >
+                {({ x }) => (
+                    <div className={styles.node__add} style={{ right: x }}>
+                        <div className={styles.stem}></div>
+        
+                        <Menu
+                            width={150}
+                            position={'right-start'}
+                            withArrow
+                            opened={opened}
+                            onClose={() => setOpened(false)}
+                        >
+                            <Menu.Target>
+                                <ActionIcon
+                                    color={"dark"}
+                                    variant={"filled"}
+                                    radius={"md"}
+                                    className={styles.add__button}
+                                    onClick={() => setOpened(true)}
+                                >
+                                    <IconPlus size={14} stroke={"2"} />
+                                </ActionIcon>
+                            </Menu.Target>
 
-                <ActionIcon
-                    color={"dark"}
-                    variant={"filled"}
-                    radius={"md"}
-                    className={styles.add__button}
-                >
-                    <IconPlus size={14} stroke={"2"} />
-                </ActionIcon>
-            </div>
+                            <Menu.Dropdown>
+
+                            </Menu.Dropdown>
+                        </Menu>
+                    </div>
+                )}
+            </Motion>
         </div>
     )
 }

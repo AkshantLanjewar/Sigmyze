@@ -30,8 +30,9 @@ const NodeRenderer: React.FC<INodeRenderer> = ({ instructions }) => {
 
     return (
         <div
-            className={styles.node__wrapper}
+            className={`${styles.node__wrapper} ${focused && styles.active}`}
             onClick={() => setFocused(true)}
+            onDragExitCapture={() => console.log("slatt")}
             ref={ref}
         >
             <div className={styles.node__title}>
