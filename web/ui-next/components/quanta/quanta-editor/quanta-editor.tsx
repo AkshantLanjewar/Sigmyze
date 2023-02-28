@@ -7,24 +7,57 @@ import { applyNodeChanges, applyEdgeChanges } from "@reactflow/core"
 import QuantaNode from "./node/quanta-node"
 import { BuildNode } from "./utils"
 
+/**
+ * This is the context created that stores all the node editor's global values
+ */
 const QuantaEditorContext = createContext<IQuantaEditorGlobals | null>(null)
 
 const QuantaEditor: React.FC = ({  }) => {
+    /**
+     * This is a list of nodes within the editor
+     * State managed by both react flow and component
+     */
     const [nodes, setNodes] = useState<IQuantaRFNode[]>([])
+
+    /**
+     * This handles the list of edges within the react flow component
+     */
     const [edges, setEdges] = useState<IQuantaRFEdge[]>([])
+
+    /**
+     * This is the xy position of the editor
+     * collected on mount
+     */
     const [editorBounds, setEditorBounds] = useState<IQuantaXYPos>({ x: 0, y: 0 })
+    
+    /**
+     * This is the react flow instance provided by the onInit function
+     */
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
 
     //related to nodes within the editor
+    /**
+     * This is a toggle that can unfocus all the nodes within the editor
+     */
     const [focusToggle, setFocusToggle] = useState(false)
     const toggleFocus = () => setFocusToggle(!focusToggle)
 
+    /**
+     * This is the react-flow related variables
+     */
     const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
     const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
     const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode }), [])
 
+    /**
+     * Ref for the react flow element
+     */
     const ref = useRef<HTMLDivElement>(null)
 
+    /**
+     * This is the mount effect.
+     * handles creating the default start node, and getting the xy position of the container
+     */
     useEffect(() => {
         let nNodes = []
         nNodes.push(BuildNode("start")!)
@@ -36,6 +69,7 @@ const QuantaEditor: React.FC = ({  }) => {
         setEditorBounds({ x: boundingBox.x, y: boundingBox.y })
     }, [])
 
+    //definition for the createNode function
     function CreateMenuNode(parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) {
         if(handleRef.current === null)
             return
