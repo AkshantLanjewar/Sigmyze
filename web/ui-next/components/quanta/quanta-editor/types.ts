@@ -309,6 +309,14 @@ interface IQuantaEditorGlobals {
     createStore: (storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) => void,
     
     /**
+     * This function opens the create item form for a specific store
+     * @param modalKey 
+     *  the key for the store we want the modal from
+     * @returns 
+     */
+    createStoreModal: (modalKey: string) => void
+
+    /**
      * This function activates the focusToggle effects
      * unfocusing all the nodes in the editor
      */

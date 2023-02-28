@@ -1,5 +1,6 @@
 import { Button, Group } from "@mantine/core"
-import React from "react"
+import React, { useContext } from "react"
+import { QuantaEditorContext } from "../quanta-editor"
 import { IQuantaControl } from "../types"
 import { buildStoreKey } from '../utils'
 
@@ -9,6 +10,8 @@ interface INodeControlProps {
 }
 
 const NodeControl: React.FC<INodeControlProps> = ({ control, nodeId }) => {
+    const quantaContext = useContext(QuantaEditorContext)
+
     function controlClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault()
         if(nodeId === undefined)
@@ -17,7 +20,7 @@ const NodeControl: React.FC<INodeControlProps> = ({ control, nodeId }) => {
         //backend for the click
         if(control.activates === "store") {
             let key = buildStoreKey(nodeId, control.storeKey!)
-            
+            quantaContext?.createStoreModal(key)
         }
     }
 

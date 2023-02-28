@@ -14,6 +14,7 @@ import 'reactflow/dist/style.css'
 import { applyNodeChanges, applyEdgeChanges } from "@reactflow/core"
 import QuantaNode from "./node/quanta-node"
 import { BuildNode } from "./utils"
+import ModalManager from "../../ui/modal-manager"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -57,6 +58,12 @@ const QuantaEditor: React.FC = ({  }) => {
 
     const [storeToggle, setStoreToggle] = useState(false)
     const toggleUpdateStore = () => setStoreToggle(!storeToggle)
+
+    const [formTitle, setFormTitle] = useState<string | undefined>("")
+    const [formContent, setFormContent] = useState<IQuantaFormField[]>([])
+    const [storeModal, setStoreModal] = useState<string | null>(null)
+    const openStoreModal = () => setStoreModal('open')
+    const closeStoreModal = () => setStoreModal(null)
 
     /**
      * This is the react-flow related variables
@@ -131,6 +138,18 @@ const QuantaEditor: React.FC = ({  }) => {
         setQuantaStore({ ...nStore })
     }
 
+    function createStoreModal(modalKey: string) {
+        let storeKeys = Object.keys(quantaStore)
+        if(storeKeys.includes(modalKey) === false)
+            return
+
+        let store = quantaStore[modalKey]
+
+        setFormTitle(store.formTitle)
+        setFormContent([ ...store.form! ])
+        openStoreModal()
+    }
+
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
     value.storeToggle = storeToggle
@@ -139,6 +158,7 @@ const QuantaEditor: React.FC = ({  }) => {
     value.createNode = CreateMenuNode
     value.toggleFocus = toggleFocus
     value.createStore = createStore
+    value.createStoreModal = createStoreModal
 
     return (
         <div 
@@ -146,17 +166,31 @@ const QuantaEditor: React.FC = ({  }) => {
             style={{ width: "100%", height: "100%", position: 'relative' }}
         >
             <QuantaEditorContext.Provider value={value}>
-                <ReactFlow
-                    nodes={nodes as any}
-                    edges={edges as any}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    nodeTypes={nodeTypes}
-                    onInit={setReactFlowInstance}
-                >
-                    <Background />
-                    <Controls /> 
-                </ReactFlow>
+                <>
+                    <ModalManager
+                        modalState={storeModal}
+                        close={closeStoreModal}
+                    >
+                        <ModalManager.Modal
+                            id="open"
+                            title={formTitle!}
+                        >
+
+                        </ModalManager.Modal>
+                    </ModalManager>
+
+                    <ReactFlow
+                        nodes={nodes as any}
+                        edges={edges as any}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        nodeTypes={nodeTypes}
+                        onInit={setReactFlowInstance}
+                    >
+                        <Background />
+                        <Controls /> 
+                    </ReactFlow>
+                </>
             </QuantaEditorContext.Provider>
         </div>
     )
