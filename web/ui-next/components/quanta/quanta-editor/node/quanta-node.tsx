@@ -47,12 +47,6 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
         setFocused(false)
     }, [quantaEditorContext?.focusToggle])
 
-    let showDivider = true
-    if(instructions.outputs === undefined || instructions.inputs === undefined)
-        showDivider = false
-    if(showDivider && (instructions.outputs!.length === 0 || instructions.inputs!.length === 0))
-        showDivider = false
-
     return (
         <div>
             <div
@@ -74,15 +68,6 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
                             socket={step}
                         />
                     ))}
-
-                    {showDivider && (
-                        <Divider
-                            size={"sm"}
-                            color={"#bbb"}
-                            label={<IconPlus size={18} stroke={"2"} color={"#bbb"} />}
-                            labelPosition={"center"}
-                        />
-                    )}
 
                     {instructions.outputs?.map((step) => (
                         <OutputRenderer

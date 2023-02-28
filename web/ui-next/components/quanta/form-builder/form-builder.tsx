@@ -7,10 +7,11 @@ import TextInputQuanta from "./text-input"
 
 interface IFormBuilderProps {
     forms: IQuantaFormField[],
-    closeModal: () => void
+    closeModal: () => void,
+    submit: (forms: IQuantaFormField[], valStore: {[key: string]: string}) => void
 }
 
-const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal }) => {
+const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit }) => {
     const [valStore, setValStore] = useState<{[key: string]: string}>({})
 
     function getValue(id: string) {
@@ -78,7 +79,7 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal }) => {
                         color={'indigo'}
                         size={'xs'}
                         px={'xs'}
-                        onClick={() => {  }}
+                        onClick={() => { submit(forms, valStore) }}
                     >
                         Create
                     </Button>

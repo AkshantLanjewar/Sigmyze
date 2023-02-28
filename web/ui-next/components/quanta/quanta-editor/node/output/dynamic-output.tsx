@@ -4,13 +4,15 @@ import { QuantaEditorContext } from '../../quanta-editor'
 import { IQuantaSocket, IQuantaStoreData, IQuantaStoreItem } from '../../types'
 import { validateStoreSocket, buildStoreKey } from '../../utils'
 import styles from '../node-renderer.module.scss'
+import NodeOutput from './node-output'
 
 interface IDynamicOutput {
     output: IQuantaSocket,
-    nodeId?: string
+    nodeId?: string,
+    focused: boolean
 }
 
-const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId }) => {
+const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused }) => {
     const [renderedOutputs, setRenderedOutputs] = useState<IQuantaSocket[]>([])
     const quantaEditorContext = useContext(QuantaEditorContext)
 
@@ -23,6 +25,7 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId }) => {
 
             let nOutput = {} as IQuantaSocket
             nOutput.socketId = storeItem.id
+
             nOutput.type = storeItem.data.type
             nOutput.icon = storeItem.data.icon
             nOutput.socketName = storeItem.data.name
@@ -79,6 +82,15 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId }) => {
     return (
         <div className={styles.dynamic__node}>
             <div className={styles.title}>{output.groupTitle}</div>
+
+            {renderedOutputs.map((step) => (
+                <NodeOutput
+                    output={step}
+                    nodeId={nodeId}
+                    focused={focused}
+                    unfocus={() => { }}
+                />
+            ))}
         </div>
     )
 }

@@ -1,5 +1,20 @@
-import { createContext, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { ReactFlow, Background, Controls, ReactFlowInstance } from "reactflow"
+import { 
+    createContext, 
+    RefObject, 
+    useCallback, 
+    useEffect, 
+    useMemo, 
+    useRef, 
+    useState 
+} from "react"
+
+import { 
+    ReactFlow, 
+    Background, 
+    Controls, 
+    ReactFlowInstance 
+} from "reactflow"
+
 import { 
     IQuantaEditorGlobals, 
     IQuantaFormField, 
@@ -7,6 +22,8 @@ import {
     IQuantaRFNode, 
     IQuantaStore, 
     IQuantaStoreData, 
+    IQuantaStoreItem, 
+    IQuantaTypeRef, 
     IQuantaXYPos,
 } from "./types"
 
@@ -16,6 +33,7 @@ import QuantaNode from "./node/quanta-node"
 import { BuildNode } from "./utils"
 import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../form-builder/form-builder"
+import { v4 } from "uuid"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -62,6 +80,7 @@ const QuantaEditor: React.FC = ({  }) => {
 
     const [formTitle, setFormTitle] = useState<string | undefined>("")
     const [formContent, setFormContent] = useState<IQuantaFormField[]>([])
+    const [storeKey, setStoreKey] = useState<string | undefined>(undefined)
     const [storeModal, setStoreModal] = useState<string | null>(null)
     const openStoreModal = () => setStoreModal('open')
     const closeStoreModal = () => setStoreModal(null)
@@ -148,7 +167,75 @@ const QuantaEditor: React.FC = ({  }) => {
 
         setFormTitle(store.formTitle)
         setFormContent([ ...store.form! ])
+        setStoreKey(modalKey)
         openStoreModal()
+    }
+
+    function createStoreItem(storeKey: string, data: any) {
+        let storeKeys = Object.keys(quantaStore)
+        if(storeKeys.includes(storeKey) === undefined)
+            return
+
+        let store = quantaStore[storeKey]
+        let items = store.items
+        if(items === undefined)
+            items = []
+
+        let nItem = {} as IQuantaStoreItem
+        nItem.id = v4()
+        nItem.data = data
+        nItem.addedKeys = Object.keys(data)
+        items.push(nItem)
+
+        let nStore = quantaStore
+        store.items = items
+        nStore[storeKey] = store
+
+        setQuantaStore({ ...nStore })
+    }
+
+    function submitStoreModal(forms: IQuantaFormField[], valStore: {[key: string]: string}) {
+        let data = {} as any
+        if(storeKey === undefined)
+            return
+
+        for(let i = 0; i < forms.length; i++) {
+            let form = forms[i]
+            if(form.type === "text" || form.type === "dropdown") {
+                if(form.linkedKey === undefined)
+                    continue
+                if(form.id === undefined)
+                    continue
+                
+                let val = valStore[form.id]
+                if(val === undefined || val.length === 0)
+                    return
+
+                data[form.linkedKey] = val
+                if(form.type === "dropdown") {
+                    let type = {} as IQuantaTypeRef
+                    type.groupId = form.dropdownField
+                    type.typeId = val
+                    
+                    data[form.linkedKey] = type
+                }
+            }
+
+            if(form.type === "additional") {
+                let additionalAdds = form.additionalFields
+                if(additionalAdds === undefined)
+                    continue
+
+                for(let x = 0; x < additionalAdds.length; x++) {
+                    let field = additionalAdds[x]
+                    data[field.key] = field.value
+                }
+            }
+        }
+        
+        createStoreItem(storeKey, data)
+        closeStoreModal()
+        toggleUpdateStore()
     }
 
     let value = {} as IQuantaEditorGlobals
@@ -179,6 +266,7 @@ const QuantaEditor: React.FC = ({  }) => {
                             <FormBuilder 
                                 forms={formContent} 
                                 closeModal={closeStoreModal}
+                                submit={submitStoreModal}
                             />
                         </ModalManager.Modal>
                     </ModalManager>

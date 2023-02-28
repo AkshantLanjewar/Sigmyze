@@ -17,6 +17,7 @@ const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focuse
                     <DynamicOutput 
                         output={output}
                         nodeId={nodeId}
+                        focused={focused}
                     />
                 )
                 : (

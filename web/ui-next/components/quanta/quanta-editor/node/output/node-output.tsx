@@ -6,6 +6,7 @@ import { Handle, Position } from 'reactflow'
 import { IQuantaSocket } from '../../types'
 import NodeCreateMenu from '../node-create-menu'
 import styles from '../node-renderer.module.scss'
+import NodeType from '../node-type'
 
 interface INodeOutputProps {
     output: IQuantaSocket,
@@ -25,9 +26,14 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
 
     return (
         <div className={styles.node__socket}>
-            <div>
-
-            </div>
+            {output.hideType
+                ? <div />
+                : (
+                    <NodeType 
+                        type={output.type}
+                    />
+                )
+            }
 
             <Group 
                 align={"center"} 

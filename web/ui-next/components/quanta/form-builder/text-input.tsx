@@ -25,6 +25,8 @@ const TextInputQuanta: React.FC<ITextInputQuanta> = ({ name, icon, value, setVal
                     withAsterisk
                     radius={"xl"}
                     variant={'filled'}
+                    value={value}
+                    onChange={(e) => setValue ? setValue(e.target.value) : null}
                     icon={icon}
                     styles={{
                         icon: {
