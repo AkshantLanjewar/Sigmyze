@@ -2,8 +2,12 @@ import prebuildNodeDict from "../prebuilt_nodes"
 import { IQuantaEditorGlobals, IQuantaRFNodeData } from "../types"
 import styles from './node-renderer.module.scss'
 import { useState, useRef, useEffect, useContext } from "react"
-import NodeOutput from "./node-output"
+import NodeOutput from "./output/node-output"
 import { QuantaEditorContext } from "../quanta-editor"
+import NodeInput from "./node-input"
+import OutputRenderer from "./output/OutputRenderer"
+import { Divider } from "@mantine/core"
+import { IconPlus } from "@tabler/icons"
 
 interface IQuantaNodeProps {
     data?: IQuantaRFNodeData
@@ -43,6 +47,12 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
         setFocused(false)
     }, [quantaEditorContext?.focusToggle])
 
+    let showDivider = true
+    if(instructions.outputs === undefined || instructions.inputs === undefined)
+        showDivider = false
+    if(showDivider && (instructions.outputs!.length === 0 || instructions.inputs!.length === 0))
+        showDivider = false
+
     return (
         <div>
             <div
@@ -59,9 +69,23 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
                 </div>
 
                 <div className={styles.node__body}>
+                    {instructions.inputs?.map((step) => (
+                        <NodeInput
+                            socket={step}
+                        />
+                    ))}
+
+                    {showDivider && (
+                        <Divider
+                            size={"sm"}
+                            color={"#bbb"}
+                            label={<IconPlus size={18} stroke={"2"} color={"#bbb"} />}
+                            labelPosition={"center"}
+                        />
+                    )}
 
                     {instructions.outputs?.map((step) => (
-                        <NodeOutput
+                        <OutputRenderer
                             output={step}
                             nodeId={data.nodeId}
                             focused={focused}

@@ -14,6 +14,8 @@ const QuantaEditor: React.FC = ({  }) => {
     const [edges, setEdges] = useState<IQuantaRFEdge[]>([])
     const [editorBounds, setEditorBounds] = useState<IQuantaXYPos>({ x: 0, y: 0 })
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
+
+    //related to nodes within the editor
     const [focusToggle, setFocusToggle] = useState(false)
     const toggleFocus = () => setFocusToggle(!focusToggle)
 
@@ -46,7 +48,7 @@ const QuantaEditor: React.FC = ({  }) => {
 
         const position = reactFlowInstance.project({
             x: handleCoords.x - editorBounds.x,
-            y: handleCoords.y - editorBounds.y
+            y: handleCoords.y - editorBounds.y - 70
         })
 
         newNode.position = position

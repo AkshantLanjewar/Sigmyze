@@ -9,7 +9,10 @@ const prebuildNodeDict = {
         
         outputs: [
             {
-                type: "thread",
+                type: {
+                    groupId: "base",
+                    typeId: "thread"
+                },
                 socketId: "execute_output",
                 socketName: "Execution Thread",
                 icon: <IconEngine />,
@@ -25,11 +28,23 @@ const prebuildNodeDict = {
 
         inputs: [
             {
-                type: "thread",
+                type: {
+                    groupId: "base",
+                    typeId: "thread"
+                },
                 socketId: "execute_input",
                 socketName: "Execution Thread",
                 icon: <IconEngine />,
                 hideType: true
+            }
+        ],
+
+        outputs: [
+            {
+                dynamicSocket: true,
+                groupTitle: "Files",
+                dynamicDepend: "store",
+                dynamicKey: "input_files"
             }
         ]
     }

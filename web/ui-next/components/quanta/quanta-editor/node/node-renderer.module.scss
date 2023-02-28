@@ -1,3 +1,5 @@
+$inputWidth: 10px;
+
 .node__wrapper {
     display: flex;
     flex-direction: column;
@@ -36,6 +38,20 @@
 
         padding: 20px;
 
+        .dynamic__node {
+            padding-top: 10px;
+            
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .title {
+                font-size: 12px;
+                font-weight: 700;
+                color: #FFFFFF;
+            }
+        }
+
         .node__socket {
             display: flex;
             justify-content: space-between;
@@ -45,12 +61,24 @@
 
             .output {
                 position: absolute;
-                right: -25px;
+                right: -27px;
 
-                width: 8px;
-                height: 8px;
+                width: $inputWidth;
+                height: $inputWidth;
                 background-color: black;
                 z-index: 10;
+                border-width: 2px;
+            }
+
+            .input {
+                position: absolute;
+                left: -27px;
+
+                width: $inputWidth;
+                height: $inputWidth;
+                background-color: black;
+                z-index: 10;
+                border-width: 2px;
             }
 
             .node__add {

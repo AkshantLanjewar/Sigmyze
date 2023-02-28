@@ -1,6 +1,6 @@
 import { v4 } from "uuid"
 import prebuildNodeDict from "./prebuilt_nodes"
-import { IQuantaNodeDetails, IQuantaRFNode } from "./types"
+import { IQuantaNodeDetails, IQuantaRFNode, IQuantaTypeRef } from "./types"
 
 function BuildNode(type: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
@@ -15,7 +15,11 @@ function BuildNode(type: string): IQuantaRFNode | undefined {
 	return newNode
 }
 
-function DetailedCreateList(outputType: string) {
+function compareTypes(a: IQuantaTypeRef, b: IQuantaTypeRef) {
+	return (a.groupId === b.groupId) && (a.typeId === b.typeId)
+}
+
+function DetailedCreateList(outputType: IQuantaTypeRef) {
 	let keys = Object.keys(prebuildNodeDict)
 	let keysWithMatchingInputType = []
 
@@ -27,7 +31,7 @@ function DetailedCreateList(outputType: string) {
 
 		for (let x = 0; x < inputs.length; x++) {
 			let input = inputs[x]
-			if (input.type === outputType)
+			if (compareTypes(input.type!, outputType))
 				keysWithMatchingInputType.push(key)
 		}
 	}

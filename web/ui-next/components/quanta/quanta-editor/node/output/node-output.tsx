@@ -3,9 +3,9 @@ import { IconPlus } from '@tabler/icons'
 import { useEffect, useRef, useState } from 'react'
 import { Motion, spring } from 'react-motion'
 import { Handle, Position } from 'reactflow'
-import { IQuantaSocket } from '../types'
-import NodeCreateMenu from './node-create-menu'
-import styles from './node-renderer.module.scss'
+import { IQuantaSocket } from '../../types'
+import NodeCreateMenu from '../node-create-menu'
+import styles from '../node-renderer.module.scss'
 
 interface INodeOutputProps {
     output: IQuantaSocket,
