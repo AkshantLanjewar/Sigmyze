@@ -270,6 +270,11 @@ interface IQuantaEditorGlobals {
     focusToggle: boolean,
 
     /**
+     * This is the toggle to update the dynamic data subscribed to stores
+     */
+    storeToggle: boolean,
+
+    /**
      * Function that creates a new node within the editor
      * 
      * @param parentId
@@ -282,12 +287,32 @@ interface IQuantaEditorGlobals {
      *  this is the ref for the button that spawned the create menu
      */
     createNode: (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) => void,
+
+    /**
+     * This retreives the store value with a given key
+     * @param storeKey 
+     *  This is the store key for the store that we are trying to retreive 
+     * @returns 
+     *  Store data or undefined if it isnt found
+     */
+    getStoreValue: (storeKey: string) => IQuantaStoreData | undefined,
+
+    /**
+     * This function creates a new store in the editor
+     * @param storeKey 
+     *  key for the store
+     * @param storeName 
+     *  name for the store
+     * @param createFields
+     *  the form to create new elements in the store
+     */
+    createStore: (storeKey: string, storeName: string, createFields: IQuantaFormField[]) => void,
     
     /**
      * This function activates the focusToggle effects
      * unfocusing all the nodes in the editor
      */
-    toggleFocus: () => void
+    toggleFocus: () => void,
 }
 
 /**
@@ -313,7 +338,7 @@ interface IQuantaStore {
     /**
      * stores and accesses data based on a store key
      */
-    [key: string]: IQuantaStoreData[]
+    [key: string]: IQuantaStoreData
 }
 
 /**
@@ -397,5 +422,6 @@ export type {
     IQuantaType,
     IQuantaTypeRef,
     IQuantaFormField,
-    IQuantaControl
+    IQuantaControl,
+    IQuantaStoreItem
 }

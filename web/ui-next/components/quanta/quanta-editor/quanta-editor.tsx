@@ -1,6 +1,14 @@
 import { createContext, RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { ReactFlow, Background, Controls, ReactFlowInstance } from "reactflow"
-import { IQuantaEditorGlobals, IQuantaRFEdge, IQuantaRFNode, IQuantaXYPos } from "./types"
+import { 
+    IQuantaEditorGlobals, 
+    IQuantaFormField, 
+    IQuantaRFEdge, 
+    IQuantaRFNode, 
+    IQuantaStore, 
+    IQuantaStoreData, 
+    IQuantaXYPos,
+} from "./types"
 
 import 'reactflow/dist/style.css'
 import { applyNodeChanges, applyEdgeChanges } from "@reactflow/core"
@@ -35,12 +43,20 @@ const QuantaEditor: React.FC = ({  }) => {
      */
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
 
+    /**
+     * State that handles the quanta store
+     */
+    const [quantaStore, setQuantaStore] = useState<IQuantaStore>({})
+
     //related to nodes within the editor
     /**
      * This is a toggle that can unfocus all the nodes within the editor
      */
     const [focusToggle, setFocusToggle] = useState(false)
     const toggleFocus = () => setFocusToggle(!focusToggle)
+
+    const [storeToggle, setStoreToggle] = useState(false)
+    const toggleUpdateStore = () => setStoreToggle(!storeToggle)
 
     /**
      * This is the react-flow related variables
@@ -92,10 +108,36 @@ const QuantaEditor: React.FC = ({  }) => {
         setNodes([ ...nNodes ])
     }
 
+    function getStoreValue(storeKey: string) : IQuantaStoreData | undefined {
+        let storeKeys = Object.keys(quantaStore)
+        if(storeKeys.includes(storeKey) === undefined)
+            return undefined
+
+        let store = quantaStore[storeKey]
+        return store
+    }
+
+    function createStore(storeKey: string, storeName: string, createFields: IQuantaFormField[]) {
+        let newStore = {} as IQuantaStoreData
+        newStore.name = storeName
+        newStore.items = []
+        newStore.form = createFields
+
+        let nStore = quantaStore
+        nStore[storeKey] = newStore
+
+        toggleUpdateStore()
+        setQuantaStore({ ...nStore })
+    }
+
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
+    value.storeToggle = storeToggle
+
+    value.getStoreValue = getStoreValue
     value.createNode = CreateMenuNode
     value.toggleFocus = toggleFocus
+    value.createStore = createStore
 
     return (
         <div 

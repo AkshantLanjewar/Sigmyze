@@ -13,7 +13,12 @@ const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focuse
     return (
         <>
             {output.dynamicSocket
-                ? <DynamicOutput />
+                ? (
+                    <DynamicOutput 
+                        output={output}
+                        nodeId={nodeId}
+                    />
+                )
                 : (
                     <NodeOutput
                         output={output}

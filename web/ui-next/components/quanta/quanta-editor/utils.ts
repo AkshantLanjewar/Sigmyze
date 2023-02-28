@@ -1,6 +1,6 @@
 import { v4 } from "uuid"
 import prebuildNodeDict from "./prebuilt_nodes"
-import { IQuantaNodeDetails, IQuantaRFNode, IQuantaTypeRef } from "./types"
+import { IQuantaNodeDetails, IQuantaRFNode, IQuantaStoreItem, IQuantaTypeRef } from "./types"
 
 function BuildNode(type: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
@@ -52,7 +52,19 @@ function DetailedCreateList(outputType: IQuantaTypeRef) {
 	return detailedNodes
 }
 
+function validateStoreSocket(item: IQuantaStoreItem) : boolean {
+	if(item.addedKeys.includes("name") === false)
+		return false
+	if(item.addedKeys.includes("type") === false)
+		return false
+	if(item.addedKeys.includes("icon") === false)
+		return false
+
+	return true
+}
+
 export {
 	BuildNode,
-	DetailedCreateList
+	DetailedCreateList,
+	validateStoreSocket
 }
