@@ -238,6 +238,33 @@ const QuantaEditor: React.FC = ({  }) => {
         toggleUpdateStore()
     }
 
+    function editStoreValue(storeKey: string, itemId: string, key: string, field: any) {
+        let storeKeys = Object.keys(quantaStore)
+        if(storeKeys.includes(storeKey) === undefined)
+            return
+
+        let store = quantaStore[storeKey]
+        let items = store.items
+        if(items === undefined)
+            return
+
+        let nItems = []
+        for(let i = 0; i < items.length; i++) {
+            let item = items[i]
+            if(item.id === itemId)
+                item.data[key] = field
+
+            nItems.push(item)
+        }
+
+        let nQuantaStore = quantaStore
+        store.items = nItems
+        nQuantaStore[storeKey] = { ...store }
+        
+        setQuantaStore({ ...nQuantaStore })
+        toggleUpdateStore()
+    }
+
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
     value.storeToggle = storeToggle
@@ -247,6 +274,7 @@ const QuantaEditor: React.FC = ({  }) => {
     value.toggleFocus = toggleFocus
     value.createStore = createStore
     value.createStoreModal = createStoreModal
+    value.editStoreValue = editStoreValue
 
     return (
         <div 

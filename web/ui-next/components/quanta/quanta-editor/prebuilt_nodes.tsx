@@ -45,7 +45,8 @@ const prebuildNodeDict = {
                 dynamicSocket: true,
                 groupTitle: "Files",
                 dynamicDepend: "store",
-                storeKey: "file_upload"
+                storeKey: "file_upload",
+                selectableType: true
             }
         ],
 

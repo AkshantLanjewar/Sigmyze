@@ -1,7 +1,7 @@
 import { Button, Group, MantineSize, Menu, Stack, Text, ThemeIcon } from "@mantine/core"
 import { FloatingPosition } from "@mantine/core/lib/Floating"
 import { IconChevronDown } from "@tabler/icons"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IUIDropdownItem } from "./types"
 import styles from './ui-dropdown.module.scss'
 
@@ -38,10 +38,12 @@ interface IUIDropdownProps {
     emitChange?: (id: string) => void,
     expand?: boolean,
     radius?: MantineSize,
-    position?: FloatingPosition
+    position?: FloatingPosition,
+    subscribeClose?: boolean
 }
 
-const UIDropdown: React.FC<IUIDropdownProps> = ({ size, items, value, emitChange, expand, radius, position }) => {
+const UIDropdown: React.FC<IUIDropdownProps> = 
+    ({ size, items, value, emitChange, expand, radius, position, subscribeClose }) => {
     const [opened, setOpened] = useState(false)
 
     function selectItem(id: string) {
@@ -69,8 +71,15 @@ const UIDropdown: React.FC<IUIDropdownProps> = ({ size, items, value, emitChange
     if(position !== undefined)
         positionVal = position
 
+    useEffect(() => {
+        if(subscribeClose === undefined)
+            return
+            
+        setOpened(false)
+    }, [subscribeClose])
+
     return (
-        <div>
+        <>
             <Menu
                 opened={opened}
                 onOpen={() => setOpened(true)}
@@ -113,7 +122,7 @@ const UIDropdown: React.FC<IUIDropdownProps> = ({ size, items, value, emitChange
                     </Stack>
                 </Menu.Dropdown>
             </Menu>
-        </div>
+        </>
     )
 }
 

@@ -1,7 +1,7 @@
 import { Badge, Group } from "@mantine/core"
 import React from "react"
-import { IQuantaTypeRef } from "../types"
-import { getDetailedType } from "../utils"
+import { IQuantaTypeRef } from "../../types"
+import { getDetailedType } from "../../utils"
 
 interface INodeTypeProps {
     type?: IQuantaTypeRef

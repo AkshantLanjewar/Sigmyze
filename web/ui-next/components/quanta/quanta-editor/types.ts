@@ -151,6 +151,11 @@ interface IQuantaSocket {
     icon?: React.ReactNode,
 
     /**
+     * Whether or not the type is changeable for the object
+     */
+    selectableType?: boolean,
+
+    /**
      * Whether or not the socket is a dynamic socket.
      * Dynamic sockets can create outputs based on certain values
      * outside of the Node's control
@@ -314,7 +319,20 @@ interface IQuantaEditorGlobals {
      *  the key for the store we want the modal from
      * @returns 
      */
-    createStoreModal: (modalKey: string) => void
+    createStoreModal: (modalKey: string) => void,
+
+    /**
+     * This is the function that edits a value within the store
+     * @param storeKey 
+     *  key for the store being accessed
+     * @param itemId 
+     *  id of the item we want to edit
+     * @param key 
+     *  key of the field we are trying to edit
+     * @param field 
+     *  value we want to replace the previous field with
+     */
+    editStoreValue: (storeKey: string, itemId: string, key: string, field: any) => void,
 
     /**
      * This function activates the focusToggle effects

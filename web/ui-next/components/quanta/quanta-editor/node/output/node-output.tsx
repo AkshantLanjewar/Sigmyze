@@ -3,19 +3,21 @@ import { IconPlus } from '@tabler/icons'
 import { useEffect, useRef, useState } from 'react'
 import { Motion, spring } from 'react-motion'
 import { Handle, Position } from 'reactflow'
-import { IQuantaSocket } from '../../types'
+import { IQuantaSocket, IQuantaTypeRef } from '../../types'
 import NodeCreateMenu from '../node-create-menu'
 import styles from '../node-renderer.module.scss'
-import NodeType from '../node-type'
+import NodeType from '../type/node-type'
+import NodeTypeSelector from '../type/node-type-selector'
 
 interface INodeOutputProps {
     output: IQuantaSocket,
     nodeId?: string,
     focused: boolean,
-    unfocus: () => void
+    unfocus: () => void,
+    editType?: (itemId: string, newType: IQuantaTypeRef) => void
 }
 
-const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus }) => {
+const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus, editType }) => {
     const ref = useRef<HTMLElement>(null)
     const [opened, setOpened] = useState(false)
 
@@ -29,9 +31,19 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
             {output.hideType
                 ? <div />
                 : (
-                    <NodeType 
-                        type={output.type}
-                    />
+                    <>
+                        {output.selectableType
+                            ? (
+                                <NodeTypeSelector 
+                                    output={output} 
+                                    focused={focused}
+                                    socketId={output.socketId}
+                                    editType={editType}
+                                />
+                            )
+                            : <NodeType type={output.type}/>
+                        }
+                    </>
                 )
             }
 
