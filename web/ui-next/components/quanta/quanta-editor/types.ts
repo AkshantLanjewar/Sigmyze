@@ -349,6 +349,8 @@ interface IQuantaStore {
     [key: string]: IQuantaStoreData
 }
 
+type QuantaFormType = "text" | "dropdown" | "additional"
+
 /**
  * Form field definitions
  */
@@ -356,7 +358,7 @@ interface IQuantaFormField {
     /**
      * input type
      */
-    type?: string,
+    type?: QuantaFormType,
 
     /**
      * input name
@@ -371,7 +373,37 @@ interface IQuantaFormField {
     /**
      * key in the dynamic object where value is stored
      */
-    linkedKey?: string // links to a key within the data element in the store item
+    linkedKey?: string // links to a key within the data element in the store item,
+
+    /**
+     * this is the related dropdown field in the quanta_types file
+     */
+    dropdownField?: string,
+
+    /**
+     * additional fields that need to be added to the dynamic object
+     */
+    additionalFields?: IQuantaAdditionalField[],
+
+    /**
+     * id for the field
+     */
+    id?: string
+}
+
+/**
+ * This is the additional field values
+ */
+interface IQuantaAdditionalField {
+    /**
+     * Key for the field
+     */
+    key: string,
+
+    /**
+     * value for the field
+     */
+    value: any
 }
 
 /**
@@ -436,5 +468,7 @@ export type {
     IQuantaTypeRef,
     IQuantaFormField,
     IQuantaControl,
-    IQuantaStoreItem
+    IQuantaStoreItem,
+    QuantaFormType,
+    IQuantaAdditionalField
 }

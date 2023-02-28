@@ -15,6 +15,7 @@ import { applyNodeChanges, applyEdgeChanges } from "@reactflow/core"
 import QuantaNode from "./node/quanta-node"
 import { BuildNode } from "./utils"
 import ModalManager from "../../ui/modal-manager"
+import FormBuilder from "../form-builder/form-builder"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -175,7 +176,10 @@ const QuantaEditor: React.FC = ({  }) => {
                             id="open"
                             title={formTitle!}
                         >
-
+                            <FormBuilder 
+                                forms={formContent} 
+                                closeModal={closeStoreModal}
+                            />
                         </ModalManager.Modal>
                     </ModalManager>
 

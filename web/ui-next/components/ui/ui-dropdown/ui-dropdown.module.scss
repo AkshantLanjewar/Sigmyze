@@ -16,6 +16,7 @@ $dark8: var(--mantine-color-dark-7);
     width: 200px;
     border-radius: 8px;
     padding: 10px;
+    cursor: pointer;
 
     &:hover {
         background-color: $dark8;

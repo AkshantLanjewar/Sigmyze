@@ -1,6 +1,8 @@
 import { v4 } from "uuid"
+import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
 import prebuildNodeDict from "./prebuilt_nodes"
-import { IQuantaNodeDetails, IQuantaRFNode, IQuantaStoreItem, IQuantaTypeRef } from "./types"
+import typeGroups from "./quanta_types"
+import { IQuantaNodeDetails, IQuantaRFNode, IQuantaStoreItem, IQuantaType, IQuantaTypeRef } from "./types"
 
 function BuildNode(type: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
@@ -67,9 +69,36 @@ function buildStoreKey(nodeId: string, key: string) {
 	return `${nodeId}_${key}`
 }
 
+function convertTypesToDropdown(groupId: string) : IUIDropdownItem[] | undefined {
+	let group = null
+	for(let i = 0; i < typeGroups.length; i++) {
+		let group_ = typeGroups[i]
+		if(group_.groupId === groupId)
+			group = group_
+	}
+
+	if(group?.types === undefined)
+		return
+
+	let dropdownItems = [] as IUIDropdownItem[]
+	for(let i = 0; i < group.types.length; i++) {
+		let type = group.types[i] as IQuantaType
+		let nDropdownItem = {} as IUIDropdownItem
+
+		nDropdownItem.id = type.typeId!
+		nDropdownItem.icon = type.typeIcon!
+		nDropdownItem.description = type.typeDescription!
+		nDropdownItem.name = type.typeName!
+		dropdownItems.push(nDropdownItem)
+	}
+
+	return dropdownItems
+}
+
 export {
 	BuildNode,
 	DetailedCreateList,
 	validateStoreSocket,
-	buildStoreKey
+	buildStoreKey,
+	convertTypesToDropdown
 }

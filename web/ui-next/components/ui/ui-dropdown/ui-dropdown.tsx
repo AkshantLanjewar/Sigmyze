@@ -1,4 +1,5 @@
 import { Button, Group, MantineSize, Menu, Stack, Text, ThemeIcon } from "@mantine/core"
+import { FloatingPosition } from "@mantine/core/lib/Floating"
 import { IconChevronDown } from "@tabler/icons"
 import { useState } from "react"
 import { IUIDropdownItem } from "./types"
@@ -34,10 +35,13 @@ interface IUIDropdownProps {
     size?: MantineSize,
     items?: IUIDropdownItem[],
     value?: string,
-    emitChange?: (id: string) => void
+    emitChange?: (id: string) => void,
+    expand?: boolean,
+    radius?: MantineSize,
+    position?: FloatingPosition
 }
 
-const UIDropdown: React.FC<IUIDropdownProps> = ({ size, items, value, emitChange }) => {
+const UIDropdown: React.FC<IUIDropdownProps> = ({ size, items, value, emitChange, expand, radius, position }) => {
     const [opened, setOpened] = useState(false)
 
     function selectItem(id: string) {
@@ -57,6 +61,14 @@ const UIDropdown: React.FC<IUIDropdownProps> = ({ size, items, value, emitChange
         }
     }
 
+    let radiusVal: MantineSize = "xl"
+    if(radius !== undefined)
+        radiusVal = radius
+
+    let positionVal: FloatingPosition = "bottom-end"
+    if(position !== undefined)
+        positionVal = position
+
     return (
         <div>
             <Menu
@@ -65,13 +77,13 @@ const UIDropdown: React.FC<IUIDropdownProps> = ({ size, items, value, emitChange
                 onClose={() => setOpened(false)}
                 radius={"md"}
                 withArrow
-                position={'bottom-end'}
+                position={positionVal}
             >
                 <Menu.Target>
                     <Button
-                        radius={"xl"}
+                        radius={radiusVal}
                         size={size}
-                        compact
+                        compact={expand ? false : true}
                         color={"indigo"}
                     >
                         <Group align={"center"} spacing={10}>
