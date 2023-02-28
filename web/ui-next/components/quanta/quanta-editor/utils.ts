@@ -63,8 +63,13 @@ function validateStoreSocket(item: IQuantaStoreItem) : boolean {
 	return true
 }
 
+function buildStoreKey(nodeId: string, key: string) {
+	return `${nodeId}_${key}`
+}
+
 export {
 	BuildNode,
 	DetailedCreateList,
-	validateStoreSocket
+	validateStoreSocket,
+	buildStoreKey
 }

@@ -2,12 +2,12 @@ import prebuildNodeDict from "../prebuilt_nodes"
 import { IQuantaEditorGlobals, IQuantaRFNodeData } from "../types"
 import styles from './node-renderer.module.scss'
 import { useState, useRef, useEffect, useContext } from "react"
-import NodeOutput from "./output/node-output"
 import { QuantaEditorContext } from "../quanta-editor"
 import NodeInput from "./node-input"
 import OutputRenderer from "./output/OutputRenderer"
 import { Divider } from "@mantine/core"
 import { IconPlus } from "@tabler/icons"
+import NodeControl from "./node-control"
 
 interface IQuantaNodeProps {
     data?: IQuantaRFNodeData
@@ -90,6 +90,13 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
                             nodeId={data.nodeId}
                             focused={focused}
                             unfocus={unfocus}
+                        />
+                    ))}
+
+                    {instructions.controls?.map((step) => (
+                        <NodeControl 
+                            control={step}
+                            nodeId={data.nodeId}
                         />
                     ))}
                 </div>

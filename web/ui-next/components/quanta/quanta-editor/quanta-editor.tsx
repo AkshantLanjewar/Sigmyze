@@ -117,11 +117,12 @@ const QuantaEditor: React.FC = ({  }) => {
         return store
     }
 
-    function createStore(storeKey: string, storeName: string, createFields: IQuantaFormField[]) {
+    function createStore(storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) {
         let newStore = {} as IQuantaStoreData
         newStore.name = storeName
         newStore.items = []
         newStore.form = createFields
+        newStore.formTitle = formTitle
 
         let nStore = quantaStore
         nStore[storeKey] = newStore

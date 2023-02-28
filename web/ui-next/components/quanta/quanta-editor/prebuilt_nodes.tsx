@@ -1,4 +1,5 @@
-import { IconPlayerPlay, IconEngine, IconCloudUpload } from "@tabler/icons"
+import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus } from "@tabler/icons"
+import { v4 } from "uuid"
 import { IQuantaNodeInstructions } from "./types"
 
 const prebuildNodeDict = {
@@ -45,6 +46,16 @@ const prebuildNodeDict = {
                 groupTitle: "Files",
                 dynamicDepend: "store",
                 storeKey: "file_upload"
+            }
+        ],
+
+        controls: [
+            {
+                activates: "store",
+                storeKey: "file_upload",
+                id: "create_file_control",
+                name: "Add File",
+                icon: <IconPlus />
             }
         ]
     }

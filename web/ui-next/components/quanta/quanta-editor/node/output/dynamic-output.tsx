@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import PREBUILT_FORMS from '../../prebuilt_forms'
 import { QuantaEditorContext } from '../../quanta-editor'
 import { IQuantaSocket, IQuantaStoreData, IQuantaStoreItem } from '../../types'
-import { validateStoreSocket } from '../../utils'
+import { validateStoreSocket, buildStoreKey } from '../../utils'
 import styles from '../node-renderer.module.scss'
 
 interface IDynamicOutput {
@@ -41,10 +41,14 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId }) => {
             return
         
         if(output.dynamicDepend === "store") {
-            let storeKey = `${nodeId}_${output.storeKey}`
-            let store = quantaEditorContext.getStoreValue(storeKey)
+            let store = quantaEditorContext.getStoreValue(buildStoreKey(nodeId, output.storeKey))
             if(store === undefined)
-                return quantaEditorContext.createStore(storeKey, output.groupTitle!, PREBUILT_FORMS.createFile)
+                return quantaEditorContext.createStore(
+                    buildStoreKey(nodeId, output.storeKey), 
+                    output.groupTitle!, 
+                    PREBUILT_FORMS.createFile, 
+                    "New File"
+                )
 
             let storeItems = store.items
             if(storeItems === undefined)

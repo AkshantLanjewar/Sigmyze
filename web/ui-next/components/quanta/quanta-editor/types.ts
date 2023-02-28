@@ -180,7 +180,7 @@ interface IQuantaSocket {
  * This is the control component for the nodes.
  * Creates buttons that can execute certain functions
  */
-interface IQuantaControl {
+interface   IQuantaControl {
     /**
      * The function the control can call.
      * 
@@ -206,7 +206,7 @@ interface IQuantaControl {
     /**
      * The icon for the control
      */
-    icon?: string
+    icon?: JSX.Element
 }
 
 /**
@@ -306,7 +306,7 @@ interface IQuantaEditorGlobals {
      * @param createFields
      *  the form to create new elements in the store
      */
-    createStore: (storeKey: string, storeName: string, createFields: IQuantaFormField[]) => void,
+    createStore: (storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) => void,
     
     /**
      * This function activates the focusToggle effects
@@ -404,7 +404,12 @@ interface IQuantaStoreData {
     /**
      * form field definition for creating a new item
      */
-    form?: IQuantaFormField[]
+    form?: IQuantaFormField[],
+
+    /**
+     * This is the title for the form
+     */
+    formTitle?: string,
 }
 
 export type {
