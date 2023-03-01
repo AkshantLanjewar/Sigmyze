@@ -1,5 +1,5 @@
-import { ActionIcon, Group, Menu, Text } from '@mantine/core'
-import { IconPlus } from '@tabler/icons'
+import { ActionIcon, Group, Menu, Text, Tooltip } from '@mantine/core'
+import { IconPlus, IconTrash } from '@tabler/icons'
 import { useEffect, useRef, useState } from 'react'
 import { Motion, spring } from 'react-motion'
 import { Handle, Position } from 'reactflow'
@@ -14,10 +14,11 @@ interface INodeOutputProps {
     nodeId?: string,
     focused: boolean,
     unfocus: () => void,
-    editType?: (itemId: string, newType: IQuantaTypeRef) => void
+    editType?: (itemId: string, newType: IQuantaTypeRef) => void,
+    deleteStoreField?: (itemId: string) => void
 }
 
-const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus, editType }) => {
+const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus, editType, deleteStoreField }) => {
     const ref = useRef<HTMLElement>(null)
     const [opened, setOpened] = useState(false)
 
@@ -25,6 +26,17 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
         if(focused === false)
             setOpened(false)
     }, [focused])
+
+    function deleteField() {
+        if(output.dynamicSocketTag !== true)
+            return
+        if(output.socketId === undefined)
+            return
+        if(deleteStoreField === undefined)
+            return
+
+        deleteStoreField(output.socketId)
+    }
 
     return (
         <div className={styles.node__socket}>
@@ -68,6 +80,33 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
                 className={styles.output}
                 id={output.socketId}
             />
+
+            {output.dynamicSocketTag === true && (
+                <Motion style={{ x: spring(focused ? -75 : 0), opacity: spring(focused ? 1 : 0) }}>
+                    {({ x, opacity }) => (
+                        <div className={styles.node__add} style={{ left: x, opacity: opacity }}>       
+                            <Tooltip
+                                withArrow
+                                color={"dark"}
+                                label={"Delete Field"}
+                                styles={{ tooltip: { backgroundColor: "#08090A" } }}
+                                openDelay={250}
+                                transition={"slide-down"}
+                                position={"left"}
+                            >
+                                <ActionIcon
+                                    color={"red"}
+                                    variant={"light"}
+                                    radius={"sm"}
+                                    onClick={deleteField}
+                                >
+                                    <IconTrash size={18} />
+                                </ActionIcon>
+                            </Tooltip>
+                        </div>
+                    )}
+                </Motion>
+            )}
 
             <Motion style={{ x: spring(focused ? -75 : 0), opacity: spring(focused ? 1 : 0) }} >
                 {({ x, opacity }) => (

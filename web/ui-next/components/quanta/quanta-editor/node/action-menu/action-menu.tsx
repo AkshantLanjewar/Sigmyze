@@ -47,7 +47,6 @@ const NodeActionMenu: React.FC<INodeActionMenuProps> = ({ instructions, focused,
                                                 color={"red"}
                                                 variant={"filled"}
                                                 radius={"sm"}
-                                                className={styles.action__item}
                                                 onClick={deleteNode}
                                             >
                                                 <IconTrash size={18} />

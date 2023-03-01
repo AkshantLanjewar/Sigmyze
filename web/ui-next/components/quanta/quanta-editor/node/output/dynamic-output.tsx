@@ -30,6 +30,8 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused }) =>
             nOutput.icon = storeItem.data.icon
             nOutput.socketName = storeItem.data.name
             nOutput.selectableType = output.selectableType
+            nOutput.dynamicSocketTag = true
+            
             nOutputs.push(nOutput)
         }
 
@@ -95,6 +97,18 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused }) =>
         }
     }
 
+    function deleteStoreField(itemId: string) {
+        if(output.storeKey === undefined)
+            return
+        if(nodeId === undefined)
+            return
+        if(quantaEditorContext === null)
+            return
+
+        let storeKey = buildStoreKey(nodeId, output.storeKey)
+        quantaEditorContext.deleteStoreItem(storeKey, itemId)
+    }
+
     return (
         <div className={styles.dynamic__node}>
             <div className={styles.title}>{output.groupTitle}</div>
@@ -106,6 +120,7 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused }) =>
                     focused={focused}
                     unfocus={() => { }}
                     editType={editType}
+                    deleteStoreField={deleteStoreField}
                 />
             ))}
         </div>

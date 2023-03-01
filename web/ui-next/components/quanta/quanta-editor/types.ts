@@ -163,6 +163,12 @@ interface IQuantaSocket {
     dynamicSocket?: boolean,
 
     /**
+     * used to identify the sockets that are rendereed
+     * within a dynamic socket renderer
+     */
+    dynamicSocketTag?: boolean,
+
+    /**
      * This is the title for the dynamic group of outputs
      */
     groupTitle?: string,
@@ -342,6 +348,8 @@ interface IQuantaEditorGlobals {
     deleteNode: (nodeId: string) => void,
 
     editorDeleteNode: () => void,
+
+    deleteStoreItem: (storeKey: string, itemId: string) => void,
 
     /**
      * This function activates the focusToggle effects

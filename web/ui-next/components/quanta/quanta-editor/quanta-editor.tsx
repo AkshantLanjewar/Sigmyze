@@ -269,6 +269,33 @@ const QuantaEditor: React.FC = ({  }) => {
         toggleUpdateStore()
     }
 
+    function deleteStoreItem(storeKey: string, itemId: string) {
+        let storeKeys = Object.keys(quantaStore)
+        if(storeKeys.includes(storeKey) === undefined)
+            return
+
+        let store = quantaStore[storeKey]
+        let items = store.items
+        if(items === undefined)
+            return
+
+        let nItems = []
+        for(let i = 0; i < items.length; i++) {
+            let item = items[i]
+            if(item.id === itemId)
+                continue
+
+            nItems.push(item)
+        }
+
+        let nQuantaStore = quantaStore
+        store.items = nItems
+        nQuantaStore[storeKey] = { ...store }
+        
+        setQuantaStore({ ...nQuantaStore })
+        toggleUpdateStore()
+    }
+
     function deleteNode(nodeId: string) {
         setStoreModal('delete_node')
         setModalNodeId(nodeId)
@@ -303,6 +330,7 @@ const QuantaEditor: React.FC = ({  }) => {
     value.editStoreValue = editStoreValue
     value.deleteNode = deleteNode
     value.editorDeleteNode = editorDeleteNode
+    value.deleteStoreItem = deleteStoreItem
 
     return (
         <div 
