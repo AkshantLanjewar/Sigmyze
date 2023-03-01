@@ -58,7 +58,7 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
                         color={"dark"}
                         variant={"filled"}
                         radius={"md"}
-                        className={styles.add__button}
+                        className={`${styles.add__button} ${focused && styles.active}`}
                         onClick={() => setOpened(true)}
                     >
                         <IconPlus size={14} stroke={"2"} />

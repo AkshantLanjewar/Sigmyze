@@ -34,6 +34,7 @@ import { BuildNode } from "./utils"
 import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../form-builder/form-builder"
 import { v4 } from "uuid"
+import DeleteNodeForm from "./forms/delete-node-form"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -82,7 +83,10 @@ const QuantaEditor: React.FC = ({  }) => {
     const [formContent, setFormContent] = useState<IQuantaFormField[]>([])
     const [storeKey, setStoreKey] = useState<string | undefined>(undefined)
     const [storeModal, setStoreModal] = useState<string | null>(null)
-    const openStoreModal = () => setStoreModal('open')
+
+    const [modalNodeId, setModalNodeId] = useState<string | undefined>(undefined)
+
+    const openStoreModal = () => setStoreModal('store')
     const closeStoreModal = () => setStoreModal(null)
 
     /**
@@ -265,6 +269,28 @@ const QuantaEditor: React.FC = ({  }) => {
         toggleUpdateStore()
     }
 
+    function deleteNode(nodeId: string) {
+        setStoreModal('delete_node')
+        setModalNodeId(nodeId)
+    }
+
+    function editorDeleteNode() {
+        if(modalNodeId === undefined)
+            return
+
+        let nNodes = []
+        for(let i = 0; i < nodes.length; i++) {
+            let node = nodes[i]
+            if(node.id=== modalNodeId)
+                continue
+
+            nNodes.push(node)
+        }
+
+        setModalNodeId(undefined)
+        setNodes([ ...nNodes ])
+    }
+
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
     value.storeToggle = storeToggle
@@ -275,6 +301,8 @@ const QuantaEditor: React.FC = ({  }) => {
     value.createStore = createStore
     value.createStoreModal = createStoreModal
     value.editStoreValue = editStoreValue
+    value.deleteNode = deleteNode
+    value.editorDeleteNode = editorDeleteNode
 
     return (
         <div 
@@ -288,13 +316,23 @@ const QuantaEditor: React.FC = ({  }) => {
                         close={closeStoreModal}
                     >
                         <ModalManager.Modal
-                            id="open"
+                            id="store"
                             title={formTitle!}
                         >
                             <FormBuilder 
                                 forms={formContent} 
                                 closeModal={closeStoreModal}
                                 submit={submitStoreModal}
+                            />
+                        </ModalManager.Modal>
+
+                        <ModalManager.Modal
+                            id={"delete_node"}
+                            title={"Are you Sure?"}
+                        >
+                            <DeleteNodeForm     
+                                opened={storeModal === "delete_node"} 
+                                closeModal={closeStoreModal}
                             />
                         </ModalManager.Modal>
                     </ModalManager>

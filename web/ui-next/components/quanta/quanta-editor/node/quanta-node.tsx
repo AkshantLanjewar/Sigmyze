@@ -8,6 +8,8 @@ import OutputRenderer from "./output/OutputRenderer"
 import { Divider } from "@mantine/core"
 import { IconPlus } from "@tabler/icons"
 import NodeControl from "./node-control"
+import ActionMenu from "../../../lunar/document-editor/blocks/action-menu"
+import NodeActionMenu from "./action-menu/action-menu"
 
 interface IQuantaNodeProps {
     data?: IQuantaRFNodeData
@@ -84,6 +86,12 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
                             nodeId={data.nodeId}
                         />
                     ))}
+
+                    <NodeActionMenu 
+                        instructions={instructions}
+                        focused={focused}
+                        nodeId={data.nodeId}
+                    />
                 </div>
             </div>
         </div>

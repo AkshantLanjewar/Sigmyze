@@ -229,6 +229,11 @@ interface IQuantaNodeInstructions {
     icon?: React.ReactNode,
 
     /**
+     * whether or not the node can be deleted / edited
+     */
+    immutableNode?: boolean,
+
+    /**
      * This is the description of the node
      */
     description?: string
@@ -333,6 +338,10 @@ interface IQuantaEditorGlobals {
      *  value we want to replace the previous field with
      */
     editStoreValue: (storeKey: string, itemId: string, key: string, field: any) => void,
+
+    deleteNode: (nodeId: string) => void,
+
+    editorDeleteNode: () => void,
 
     /**
      * This function activates the focusToggle effects

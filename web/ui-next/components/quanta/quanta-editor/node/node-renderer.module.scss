@@ -4,11 +4,14 @@ $inputWidth: 10px;
     display: flex;
     flex-direction: column;
 
+    
     border-radius: 8px;
     background-color: #08090A;
     min-width: 250px;
-    z-index: 5;
+    z-index: 10;
     cursor: pointer;
+    position: relative;
+    will-change: auto;
 
     border: 2px solid transparent;
 

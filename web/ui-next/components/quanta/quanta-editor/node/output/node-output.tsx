@@ -69,9 +69,9 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
                 id={output.socketId}
             />
 
-            <Motion style={{ x: spring(focused ? -75 : 0) }} >
-                {({ x }) => (
-                    <div className={styles.node__add} style={{ right: x }}>       
+            <Motion style={{ x: spring(focused ? -75 : 0), opacity: spring(focused ? 1 : 0) }} >
+                {({ x, opacity }) => (
+                    <div className={styles.node__add} style={{ right: x, opacity: opacity }}>       
                         <NodeCreateMenu 
                             focused={focused} 
                             output={output}
