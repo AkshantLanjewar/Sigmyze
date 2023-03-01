@@ -1,5 +1,5 @@
-import { IconCpu, IconFileCode2, IconTextRecognition } from "@tabler/icons";
-import { IQuantaTypeGroup } from "./types";
+import { IconCpu, IconFileCode2, IconGitCompare, IconTextRecognition } from "@tabler/icons";
+import { IQuantaTypeGroup } from "../types/types";
 
 const typeGroups = [
     {
@@ -35,6 +35,30 @@ const typeGroups = [
                 typeName: "XSD File",
                 typeIcon: <IconFileCode2 />,
                 typeDescription: "XSD File type"
+            }
+        ]
+    },
+    {
+        groupName: "SDMX Versions",
+        groupId: "sdmx_version",
+        types: [
+            {
+                typeId: "sdmx_2_1",
+                typeName: "SDMX 2.1",
+                typeIcon: <IconGitCompare />,
+                typeDescription: "SDMX Version 2.1"
+            }
+        ]
+    },
+    {
+        groupName: "SDMX File Types",
+        groupId: "sdmx_file",
+        types: [
+            {
+                typeId: "sdmx_xml",
+                typeName: "SDMX XML",
+                typeIcon: <IconFileCode2 />,
+                typeDescription: "SDMX Xml file format"
             }
         ]
     }

@@ -1,8 +1,8 @@
 import { v4 } from "uuid"
 import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
-import prebuildNodeDict from "./prebuilt_nodes"
-import typeGroups from "./quanta_types"
-import { IQuantaNodeDetails, IQuantaRFNode, IQuantaStoreItem, IQuantaType, IQuantaTypeRef } from "./types"
+import prebuildNodeDict from "./config/prebuilt_nodes"
+import typeGroups from "./config/quanta_types"
+import { IQuantaNodeDetails, IQuantaRFNode, IQuantaStoreItem, IQuantaType, IQuantaTypeRef } from "./types/types"
 
 function BuildNode(type: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
@@ -18,6 +18,9 @@ function BuildNode(type: string): IQuantaRFNode | undefined {
 }
 
 function compareTypes(a: IQuantaTypeRef, b: IQuantaTypeRef) {
+	if(a === undefined || b === undefined)
+		return false
+
 	return (a.groupId === b.groupId) && (a.typeId === b.typeId)
 }
 
@@ -33,7 +36,8 @@ function DetailedCreateList(outputType: IQuantaTypeRef) {
 
 		for (let x = 0; x < inputs.length; x++) {
 			let input = inputs[x]
-			if (compareTypes(input.type!, outputType))
+			let flag = input.staticSocket === true
+			if (compareTypes(input.type!, outputType) && !flag)
 				keysWithMatchingInputType.push(key)
 		}
 	}

@@ -1,6 +1,6 @@
 import { Group, Text } from "@mantine/core"
 import { Handle, Position } from "reactflow"
-import { IQuantaSocket } from "../types"
+import { IQuantaSocket } from "../types/types"
 import styles from './node-renderer.module.scss'
 
 interface INodeInputProps {

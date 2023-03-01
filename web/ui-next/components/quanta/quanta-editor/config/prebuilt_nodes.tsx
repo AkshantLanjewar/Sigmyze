@@ -1,6 +1,6 @@
-import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus } from "@tabler/icons"
+import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare } from "@tabler/icons"
 import { v4 } from "uuid"
-import { IQuantaNodeInstructions } from "./types"
+import { IQuantaNodeInstructions } from "../types/types"
 
 const prebuildNodeDict = {
     "start": {
@@ -19,6 +19,37 @@ const prebuildNodeDict = {
                 socketName: "Execution Thread",
                 icon: <IconEngine />,
                 hideType: true
+            }
+        ]
+    },
+
+    sdmx_data_parser: {
+        name: "SDMX Data Parser",
+        icon: <IconBraces />,
+        description: "This node parses SDMX files into a readable format",
+
+        inputs: [
+            {
+                socketId: "version",
+                socketName: "Version",
+                selectableType: true,
+                staticSocket: true,
+                icon: <IconGitCompare />,
+                type: {
+                    groupId: "sdmx_version",
+                    typeId: "sdmx_2_1"
+                }
+            },
+            {
+                socketId: "format",
+                socketName: "Data Format",
+                selectableType: true,
+                staticSocket: true,
+                icon: <IconBraces />,
+                type: {
+                    groupId: "sdmx_file",
+                    typeId: "sdmx_xml"
+                }
             }
         ]
     },

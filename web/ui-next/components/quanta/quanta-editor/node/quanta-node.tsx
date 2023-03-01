@@ -1,5 +1,5 @@
-import prebuildNodeDict from "../prebuilt_nodes"
-import { IQuantaEditorGlobals, IQuantaRFNodeData } from "../types"
+import prebuildNodeDict from "../config/prebuilt_nodes"
+import { IQuantaEditorGlobals, IQuantaRFNodeData } from "../types/types"
 import styles from './node-renderer.module.scss'
 import { useState, useRef, useEffect, useContext } from "react"
 import { QuantaEditorContext } from "../quanta-editor"

@@ -1,6 +1,6 @@
 import { Button, Group, Stack } from "@mantine/core"
 import { useState } from "react"
-import { IQuantaFormField } from "../quanta-editor/types"
+import { IQuantaFormField } from "../quanta-editor/types/types"
 import { convertTypesToDropdown } from "../quanta-editor/utils"
 import DropdownInput from "./dropdown-input"
 import TextInputQuanta from "./text-input"

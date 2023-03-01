@@ -1,6 +1,6 @@
 import { IconFileCode2, IconSignature } from "@tabler/icons"
 import { v4 } from "uuid"
-import { IQuantaFormField } from "../quanta-editor/types"
+import { IQuantaFormField } from "../quanta-editor/types/types"
 
 const PREBUILT_FORMS = {
     createFile: [

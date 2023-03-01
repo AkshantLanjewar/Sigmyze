@@ -1,7 +1,7 @@
 import { Button, Group } from "@mantine/core"
 import React, { useContext } from "react"
 import { QuantaEditorContext } from "../quanta-editor"
-import { IQuantaControl } from "../types"
+import { IQuantaControl } from "../types/types"
 import { buildStoreKey } from '../utils'
 
 interface INodeControlProps {

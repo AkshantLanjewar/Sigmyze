@@ -3,7 +3,7 @@ import { IconPlus } from "@tabler/icons"
 import React, { cloneElement, RefObject, useContext } from "react"
 import { useEffect, useState } from "react"
 import { QuantaEditorContext } from "../quanta-editor"
-import { IQuantaEditorGlobals, IQuantaNodeDetails, IQuantaSocket } from "../types"
+import { IQuantaEditorGlobals, IQuantaNodeDetails, IQuantaSocket } from "../types/types"
 import { DetailedCreateList } from "../utils"
 import styles from './node-renderer.module.scss'
 

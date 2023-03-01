@@ -2,7 +2,7 @@ import { Group } from "@mantine/core"
 import { useEffect, useState } from "react"
 import { IUIDropdownItem } from "../../../../ui/ui-dropdown/types"
 import UIDropdown from "../../../../ui/ui-dropdown/ui-dropdown"
-import { IQuantaSocket, IQuantaTypeRef } from "../../types"
+import { IQuantaSocket, IQuantaTypeRef } from "../../types/types"
 import { convertTypesToDropdown } from "../../utils"
 
 interface INodeTypeSelector {

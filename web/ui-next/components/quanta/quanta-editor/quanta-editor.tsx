@@ -25,7 +25,7 @@ import {
     IQuantaStoreItem, 
     IQuantaTypeRef, 
     IQuantaXYPos,
-} from "./types"
+} from "./types/types"
 
 import 'reactflow/dist/style.css'
 import { applyNodeChanges, applyEdgeChanges } from "@reactflow/core"

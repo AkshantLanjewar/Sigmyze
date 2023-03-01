@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import PREBUILT_FORMS from '../../../form-builder/prebuilt_forms'
 import { QuantaEditorContext } from '../../quanta-editor'
-import { IQuantaSocket, IQuantaStoreData, IQuantaStoreItem, IQuantaTypeRef } from '../../types'
+import { IQuantaSocket, IQuantaStoreData, IQuantaStoreItem, IQuantaTypeRef } from '../../types/types'
 import { validateStoreSocket, buildStoreKey } from '../../utils'
 import styles from '../node-renderer.module.scss'
 import NodeOutput from './node-output'

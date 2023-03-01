@@ -1,4 +1,4 @@
-import { IQuantaSocket } from "../../types"
+import { IQuantaSocket } from "../../types/types"
 import DynamicOutput from "./dynamic-output"
 import NodeOutput from "./node-output"
 

@@ -3,7 +3,7 @@ import { IconTrash } from "@tabler/icons"
 import { useContext } from "react"
 import { Motion, spring } from "react-motion"
 import { QuantaEditorContext } from "../../quanta-editor"
-import { IQuantaNodeInstructions } from "../../types"
+import { IQuantaNodeInstructions } from "../../types/types"
 import styles from './action-menu.module.scss'
 
 interface INodeActionMenuProps {
