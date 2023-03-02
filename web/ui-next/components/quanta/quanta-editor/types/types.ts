@@ -40,6 +40,17 @@ interface IQuantaEditorGlobals {
     createNode: (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) => void,
 
     /**
+     * this function creates an iterable node loop
+     * @param parentId
+     *  the id of the node where the create function was called 
+     * @param parentHandle 
+     *  the handle where the create menu spawned from
+     * @param handleRef 
+     *  this is the ref for the button that spawned the create menu
+     */
+    createIter: (parentId: string, parentHandle: string, handleRef: RefObject<HTMLElement>) => void,
+
+    /**
      * This retreives the store value with a given key
      * @param storeKey 
      *  This is the store key for the store that we are trying to retreive 

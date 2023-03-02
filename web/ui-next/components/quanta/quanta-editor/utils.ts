@@ -4,7 +4,7 @@ import prebuildNodeDict from "./config/prebuilt_nodes"
 import typeGroups from "./config/quanta_types"
 import { IQuantaNodeDetails, IQuantaRFNode, IQuantaStoreItem, IQuantaType, IQuantaTypeRef } from "./types/types"
 
-function BuildNode(type: string): IQuantaRFNode | undefined {
+function BuildNode(type: string, parentNode?: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
 		return
 
@@ -13,6 +13,12 @@ function BuildNode(type: string): IQuantaRFNode | undefined {
 	newNode.type = "quanta_node"
 	newNode.position = { x: 0, y: 0 }
 	newNode.data = { instructionId: type, nodeId: newNode.id }
+	
+	if(parentNode !== undefined)
+	{
+		newNode.parentNode = parentNode
+		newNode.extent = "parent"
+	}
 
 	return newNode
 }

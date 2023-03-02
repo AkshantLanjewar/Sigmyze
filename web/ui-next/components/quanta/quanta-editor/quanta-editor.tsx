@@ -20,10 +20,7 @@ import {
     IQuantaFormField, 
     IQuantaRFEdge, 
     IQuantaRFNode, 
-    IQuantaRFNodeDataType, 
     IQuantaStore, 
-    IQuantaStoreData, 
-    IQuantaStoreItem, 
     IQuantaTypeRef, 
     IQuantaXYPos,
 } from "./types/types"
@@ -34,9 +31,22 @@ import QuantaNode from "./node/quanta-node"
 import { BuildNode } from "./utils"
 import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../form-builder/form-builder"
-import { v4 } from "uuid"
 import DeleteNodeForm from "./forms/delete-node-form"
-import { CreateMenuNode, createStore, createStoreItem, createStoreModal, deleteNode, deleteStoreItem, editorDeleteNode, editStoreValue, getStoreValue, submitStoreModal, trackNodeType, updateTrackedNodeType } from "./functions"
+
+import { 
+    BuildIterNode,
+    CreateMenuNode, 
+    createStore, 
+    createStoreModal, 
+    deleteNode, 
+    deleteStoreItem, 
+    editorDeleteNode, 
+    editStoreValue, 
+    getStoreValue, 
+    submitStoreModal, 
+    trackNodeType, 
+    updateTrackedNodeType 
+} from "./functions"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -135,6 +145,17 @@ const QuantaEditor: React.FC = ({  }) => {
             setNodes, 
             toggleFocus
         )
+    value.createIter = (parentId: string, parentHandle: string, handleRef: RefObject<HTMLElement>) =>
+        BuildIterNode(
+            parentId, 
+            parentHandle, 
+            handleRef, 
+            nodes, 
+            reactFlowInstance, 
+            editorBounds, 
+            setNodes, 
+            toggleFocus
+        )
     value.toggleFocus = toggleFocus
     value.createStore = (storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) =>
         createStore(storeKey, storeName, createFields, formTitle, quantaStore, toggleUpdateStore, setQuantaStore)
@@ -193,6 +214,7 @@ const QuantaEditor: React.FC = ({  }) => {
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
                         nodeTypes={nodeTypes}
+                        attributionPosition={'bottom-left'}
                         onInit={setReactFlowInstance}
                     >
                         <Background />

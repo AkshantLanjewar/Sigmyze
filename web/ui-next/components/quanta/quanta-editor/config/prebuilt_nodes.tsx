@@ -1,4 +1,4 @@
-import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare, IconFileCode2, IconBrackets } from "@tabler/icons"
+import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare, IconFileCode2, IconBrackets, IconRepeat } from "@tabler/icons"
 import { v4 } from "uuid"
 import { IQuantaNodeInstructions } from "../types/types"
 
@@ -21,6 +21,13 @@ const prebuildNodeDict = {
                 hideType: true
             }
         ]
+    },
+
+    iter: {
+        name: "Iterate",
+        icon: <IconRepeat />,
+        description: "This node iterates over an array",
+        immutableNode: true
     },
 
     sdmx_data_parser: {

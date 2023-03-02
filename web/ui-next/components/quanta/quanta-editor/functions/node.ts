@@ -1,5 +1,6 @@
 import { Dispatch, RefObject, SetStateAction } from "react"
 import { ReactFlowInstance } from "reactflow"
+import { v4 } from "uuid"
 import { IQuantaRFNode, IQuantaRFNodeDataType, IQuantaTypeRef, IQuantaXYPos } from "../types/types"
 import { BuildNode } from "../utils"
 
@@ -33,6 +34,50 @@ function CreateMenuNode(
 
     toggleFocus()
     setNodes([ ...nNodes ])
+}
+
+function BuildIterNode(
+    parentId: string,
+    parentHandle: string,
+    handleRef: RefObject<HTMLElement>,
+    nodes: IQuantaRFNode[],
+    reactFlowInstance: ReactFlowInstance<any, any> | null,
+    editorBounds: IQuantaXYPos,
+    setNodes: Dispatch<SetStateAction<IQuantaRFNode[]>>,
+    toggleFocus: () => void
+) {
+    if(handleRef.current === null)
+        return
+    if(reactFlowInstance === null)
+        return
+
+    let handleCoords = handleRef.current.getBoundingClientRect()
+    const position = reactFlowInstance.project({
+        x: handleCoords.x - editorBounds.x,
+        y: handleCoords.y - editorBounds.y - 70
+    })
+
+    let nNodes = nodes
+    nNodes.push({
+        id: v4(),
+        type: 'group',
+        position: position,
+        style: {
+            width: 300,
+            height: 150
+        },
+        data: {
+            label: null
+        }
+    })
+
+    //build out the iter obj
+    let groupId = nNodes[nNodes.length - 1].id
+    nNodes.push(BuildNode("iter", groupId)!)
+
+
+    setNodes([ ...nNodes ])
+    toggleFocus()
 }
 
 function trackNodeType(
@@ -162,5 +207,6 @@ export {
     trackNodeType,
     updateTrackedNodeType,
     deleteNode,
-    editorDeleteNode 
+    editorDeleteNode,
+    BuildIterNode 
 }

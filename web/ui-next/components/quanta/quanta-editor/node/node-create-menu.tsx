@@ -67,7 +67,7 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
 
                 <Menu.Dropdown>
                     {output.isArray === true && (
-                        <Menu.Item onClick={() => { }}>
+                        <Menu.Item onClick={() => { quantaEditorContext?.createIter(nodeId!, output.socketId!, handleRef) }}>
                             <Group 
                                 spacing={"sm"}
                                 noWrap

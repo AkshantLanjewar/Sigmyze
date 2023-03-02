@@ -13,9 +13,10 @@ interface IQuantaRFNode {
 
     /**
      * This is the react_flow type for the node
-     * always set to quanta node so we can build custom nodes easier
+     * Quanta node signifies a node within the editor, while group stands for a
+     * loops associated group
      */
-    type?: 'quanta_node',
+    type?: 'quanta_node' | 'group',
 
     /**
      * This is the XY Position of the node in 
@@ -26,7 +27,37 @@ interface IQuantaRFNode {
     /**
      * This is the data that is stored in the react-flow node
      */
-    data?: IQuantaRFNodeData
+    data?: IQuantaRFNodeData,
+
+    /**
+     * if the node is a child of another group, the id of the parent group
+     */
+    parentNode?: string,
+
+    /**
+     * the node may not leave the group
+     */
+    extent?: 'parent',
+
+    /**
+     * styles if node is a group
+     */
+    style?: IQuantaRFNodeStyles
+}
+
+/**
+ * implementation of RF node styles
+ */
+interface IQuantaRFNodeStyles {
+    /**
+     * height of the group
+     */
+    width?: number,
+
+    /**
+     * height of the group
+     */
+    height?: number
 }
 
 /**
@@ -75,7 +106,9 @@ interface IQuantaRFNodeData {
     /**
      * Theese are the custom types for sockets in the node
      */
-    types?: IQuantaRFNodeDataType[]
+    types?: IQuantaRFNodeDataType[],
+
+    label?: null
 }
 
 /**
