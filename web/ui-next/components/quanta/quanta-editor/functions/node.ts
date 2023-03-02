@@ -60,7 +60,7 @@ function BuildIterNode(
     let nNodes = nodes
     nNodes.push({
         id: v4(),
-        type: 'group',
+        type: 'quanta_group',
         position: position,
         style: {
             width: 300,

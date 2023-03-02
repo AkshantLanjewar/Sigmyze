@@ -47,6 +47,7 @@ import {
     trackNodeType, 
     updateTrackedNodeType 
 } from "./functions"
+import QuantaGroup from "./group/quanta-group"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -106,7 +107,7 @@ const QuantaEditor: React.FC = ({  }) => {
      */
     const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
     const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
-    const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode }), [])
+    const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode, quanta_group: QuantaGroup }), [])
 
     /**
      * Ref for the react flow element
@@ -213,7 +214,7 @@ const QuantaEditor: React.FC = ({  }) => {
                         edges={edges as any}
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
-                        nodeTypes={nodeTypes}
+                        nodeTypes={nodeTypes as any}
                         attributionPosition={'bottom-left'}
                         onInit={setReactFlowInstance}
                     >

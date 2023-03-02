@@ -17,7 +17,7 @@ function BuildNode(type: string, parentNode?: string): IQuantaRFNode | undefined
 	if(parentNode !== undefined)
 	{
 		newNode.parentNode = parentNode
-		newNode.extent = "parent"
+		newNode.expandParent = true
 	}
 
 	return newNode

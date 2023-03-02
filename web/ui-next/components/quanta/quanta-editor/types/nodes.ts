@@ -16,7 +16,7 @@ interface IQuantaRFNode {
      * Quanta node signifies a node within the editor, while group stands for a
      * loops associated group
      */
-    type?: 'quanta_node' | 'group',
+    type?: 'quanta_node' | 'group' | 'quanta_group',
 
     /**
      * This is the XY Position of the node in 
@@ -42,7 +42,12 @@ interface IQuantaRFNode {
     /**
      * styles if node is a group
      */
-    style?: IQuantaRFNodeStyles
+    style?: IQuantaRFNodeStyles,
+
+    /**
+     * groups always expand parent
+     */
+    expandParent?: boolean
 }
 
 /**
@@ -139,5 +144,6 @@ export type {
     IQuantaNodeDetails,
     IQuantaRFNodeData,
     IQuantaXYPos,
-    IQuantaRFNodeDataType
+    IQuantaRFNodeDataType,
+    IQuantaRFNodeStyles
 }
