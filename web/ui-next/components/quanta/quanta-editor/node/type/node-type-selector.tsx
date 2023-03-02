@@ -45,6 +45,12 @@ const NodeTypeSelector: React.FC<INodeTypeSelector> = ({ output, focused, socket
             setSubscribeClose(!subscribeClose)
     }, [focused])
 
+    /**
+     * 
+     * @param id 
+     *  NOTE: NOt the socket id
+     * @returns 
+     */
     function emitChange(id: string) {
         if(output?.type === undefined)
             return

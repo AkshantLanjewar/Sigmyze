@@ -1,3 +1,5 @@
+import { IQuantaTypeRef } from "./node-type"
+
 /**
  * This is the node for the react flow object
  * stores all the info needed for react flow, and the info to create our quanta nodes
@@ -68,7 +70,27 @@ interface IQuantaRFNodeData {
      * This is the node id of the created node
      * used to execute functions within the editor
      */
-    nodeId?: string
+    nodeId?: string,
+
+    /**
+     * Theese are the custom types for sockets in the node
+     */
+    types?: IQuantaRFNodeDataType[]
+}
+
+/**
+ * Implementation of the custom type for sockets in the node
+ */
+interface IQuantaRFNodeDataType {
+    /**
+     * id of the socket in the node
+     */
+    socketId?: string,
+
+    /**
+     * the socket's type
+     */
+    type?: IQuantaTypeRef
 }
 
 /**
@@ -83,5 +105,6 @@ export type {
     IQuantaRFNode,
     IQuantaNodeDetails,
     IQuantaRFNodeData,
-    IQuantaXYPos
+    IQuantaXYPos,
+    IQuantaRFNodeDataType
 }

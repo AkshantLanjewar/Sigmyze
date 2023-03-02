@@ -20,6 +20,7 @@ import {
     IQuantaFormField, 
     IQuantaRFEdge, 
     IQuantaRFNode, 
+    IQuantaRFNodeDataType, 
     IQuantaStore, 
     IQuantaStoreData, 
     IQuantaStoreItem, 
@@ -296,6 +297,48 @@ const QuantaEditor: React.FC = ({  }) => {
         toggleUpdateStore()
     }
 
+    function trackNodeType(nodeId: string, socketId: string, type: IQuantaTypeRef) {
+        let node = null
+        let index = null
+
+        for(let i = 0; i < nodes.length; i++) {
+            let node_ = nodes[i]
+            if(node_.id === nodeId) {
+                node = node_
+                index = i
+            }
+        }
+
+        if(node === null)
+            return
+        
+        let nodeData = node.data!
+        let trackedTypes = nodeData.types
+        if(trackedTypes === undefined)
+            trackedTypes = []
+
+        //check if the tracked types already contains this type
+        for(let i = 0; i < trackedTypes.length; i++) {
+            let trackedType = trackedTypes[i]
+            if(trackedType.socketId === socketId)
+                return
+        }
+
+        let nTrack = {
+            socketId: socketId,
+            type: type
+        } as IQuantaRFNodeDataType
+        trackedTypes.push(nTrack)
+
+        //set the data
+        nodeData.types = trackedTypes
+        node.data = nodeData
+        
+        let nNodes = nodes
+        nNodes[index!] = node
+        setNodes([ ...nNodes ]) 
+    }
+
     function deleteNode(nodeId: string) {
         setStoreModal('delete_node')
         setModalNodeId(nodeId)
@@ -331,6 +374,7 @@ const QuantaEditor: React.FC = ({  }) => {
     value.deleteNode = deleteNode
     value.editorDeleteNode = editorDeleteNode
     value.deleteStoreItem = deleteStoreItem
+    value.trackNodeType = trackNodeType
 
     return (
         <div 

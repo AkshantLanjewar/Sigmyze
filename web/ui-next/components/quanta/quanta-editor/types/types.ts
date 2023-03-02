@@ -1,5 +1,6 @@
 import { RefObject } from "react"
 import { IQuantaFormField } from "./form"
+import { IQuantaTypeRef } from "./node-type"
 import { IQuantaStoreData } from "./store"
 
 /**
@@ -90,6 +91,8 @@ interface IQuantaEditorGlobals {
      * unfocusing all the nodes in the editor
      */
     toggleFocus: () => void,
+
+    trackNodeType: (nodeId: string, socketId: string, type: IQuantaTypeRef) => void,
 }
 
 export * from './nodes'
