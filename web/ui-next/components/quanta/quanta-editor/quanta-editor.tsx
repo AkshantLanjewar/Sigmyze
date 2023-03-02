@@ -36,6 +36,7 @@ import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../form-builder/form-builder"
 import { v4 } from "uuid"
 import DeleteNodeForm from "./forms/delete-node-form"
+import { CreateMenuNode, createStore, createStoreItem, createStoreModal, deleteNode, deleteStoreItem, editorDeleteNode, editStoreValue, getStoreValue, submitStoreModal, trackNodeType, updateTrackedNodeType } from "./functions"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -117,304 +118,41 @@ const QuantaEditor: React.FC = ({  }) => {
         setEditorBounds({ x: boundingBox.x, y: boundingBox.y })
     }, [])
 
-    //definition for the createNode function
-    function CreateMenuNode(parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) {
-        if(handleRef.current === null)
-            return
-        if(reactFlowInstance === null)
-            return
-
-        let nNodes = nodes
-        let newNode = BuildNode(childType)!
-        let handleCoords = handleRef.current.getBoundingClientRect()
-
-        const position = reactFlowInstance.project({
-            x: handleCoords.x - editorBounds.x,
-            y: handleCoords.y - editorBounds.y - 70
-        })
-
-        newNode.position = position
-        nNodes.push(newNode)
-
-        toggleFocus()
-        setNodes([ ...nNodes ])
-    }
-
-    
-
-    function getStoreValue(storeKey: string) : IQuantaStoreData | undefined {
-        let storeKeys = Object.keys(quantaStore)
-        if(storeKeys.includes(storeKey) === undefined)
-            return undefined
-
-        let store = quantaStore[storeKey]
-        return store
-    }
-
-    function createStore(storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) {
-        let newStore = {} as IQuantaStoreData
-        newStore.name = storeName
-        newStore.items = []
-        newStore.form = createFields
-        newStore.formTitle = formTitle
-
-        let nStore = quantaStore
-        nStore[storeKey] = newStore
-
-        toggleUpdateStore()
-        setQuantaStore({ ...nStore })
-    }
-
-    function createStoreModal(modalKey: string) {
-        let storeKeys = Object.keys(quantaStore)
-        if(storeKeys.includes(modalKey) === false)
-            return
-
-        let store = quantaStore[modalKey]
-
-        setFormTitle(store.formTitle)
-        setFormContent([ ...store.form! ])
-        setStoreKey(modalKey)
-        openStoreModal()
-    }
-
-    function createStoreItem(storeKey: string, data: any) {
-        let storeKeys = Object.keys(quantaStore)
-        if(storeKeys.includes(storeKey) === undefined)
-            return
-
-        let store = quantaStore[storeKey]
-        let items = store.items
-        if(items === undefined)
-            items = []
-
-        let nItem = {} as IQuantaStoreItem
-        nItem.id = v4()
-        nItem.data = data
-        nItem.addedKeys = Object.keys(data)
-        items.push(nItem)
-
-        let nStore = quantaStore
-        store.items = items
-        nStore[storeKey] = store
-
-        setQuantaStore({ ...nStore })
-    }
-
-    function submitStoreModal(forms: IQuantaFormField[], valStore: {[key: string]: string}) {
-        let data = {} as any
-        if(storeKey === undefined)
-            return
-
-        for(let i = 0; i < forms.length; i++) {
-            let form = forms[i]
-            if(form.type === "text" || form.type === "dropdown") {
-                if(form.linkedKey === undefined)
-                    continue
-                if(form.id === undefined)
-                    continue
-                
-                let val = valStore[form.id]
-                if(val === undefined || val.length === 0)
-                    return
-
-                data[form.linkedKey] = val
-                if(form.type === "dropdown") {
-                    let type = {} as IQuantaTypeRef
-                    type.groupId = form.dropdownField
-                    type.typeId = val
-                    
-                    data[form.linkedKey] = type
-                }
-            }
-
-            if(form.type === "additional") {
-                let additionalAdds = form.additionalFields
-                if(additionalAdds === undefined)
-                    continue
-
-                for(let x = 0; x < additionalAdds.length; x++) {
-                    let field = additionalAdds[x]
-                    data[field.key] = field.value
-                }
-            }
-        }
-        
-        createStoreItem(storeKey, data)
-        closeStoreModal()
-        toggleUpdateStore()
-    }
-
-    function editStoreValue(storeKey: string, itemId: string, key: string, field: any) {
-        let storeKeys = Object.keys(quantaStore)
-        if(storeKeys.includes(storeKey) === undefined)
-            return
-
-        let store = quantaStore[storeKey]
-        let items = store.items
-        if(items === undefined)
-            return
-
-        let nItems = []
-        for(let i = 0; i < items.length; i++) {
-            let item = items[i]
-            if(item.id === itemId)
-                item.data[key] = field
-
-            nItems.push(item)
-        }
-
-        let nQuantaStore = quantaStore
-        store.items = nItems
-        nQuantaStore[storeKey] = { ...store }
-        
-        setQuantaStore({ ...nQuantaStore })
-        toggleUpdateStore()
-    }
-
-    function deleteStoreItem(storeKey: string, itemId: string) {
-        let storeKeys = Object.keys(quantaStore)
-        if(storeKeys.includes(storeKey) === undefined)
-            return
-
-        let store = quantaStore[storeKey]
-        let items = store.items
-        if(items === undefined)
-            return
-
-        let nItems = []
-        for(let i = 0; i < items.length; i++) {
-            let item = items[i]
-            if(item.id === itemId)
-                continue
-
-            nItems.push(item)
-        }
-
-        let nQuantaStore = quantaStore
-        store.items = nItems
-        nQuantaStore[storeKey] = { ...store }
-        
-        setQuantaStore({ ...nQuantaStore })
-        toggleUpdateStore()
-    }
-
-    function trackNodeType(nodeId: string, socketId: string, type: IQuantaTypeRef) {
-        let node = null
-        let index = null
-
-        for(let i = 0; i < nodes.length; i++) {
-            let node_ = nodes[i]
-            if(node_.id === nodeId) {
-                node = node_
-                index = i
-            }
-        }
-
-        if(node === null)
-            return
-        
-        let nodeData = node.data!
-        let trackedTypes = nodeData.types
-        if(trackedTypes === undefined)
-            trackedTypes = []
-
-        //check if the tracked types already contains this type
-        for(let i = 0; i < trackedTypes.length; i++) {
-            let trackedType = trackedTypes[i]
-            if(trackedType.socketId === socketId)
-                return
-        }
-
-        let nTrack = {
-            socketId: socketId,
-            type: type
-        } as IQuantaRFNodeDataType
-        trackedTypes.push(nTrack)
-
-        //set the data
-        nodeData.types = trackedTypes
-        node.data = nodeData
-        
-        let nNodes = nodes
-        nNodes[index!] = node
-        setNodes([ ...nNodes ]) 
-    }
-
-    function updateTrackedNodeType(nodeId: string, socketId: string, type: IQuantaTypeRef) {
-        let node = null
-        let index = null
-
-        for(let i = 0; i < nodes.length; i++) {
-            let node_ = nodes[i]
-            if(node_.id === nodeId) {
-                node = node_
-                index = i
-            }
-        }
-
-        if(node === null)
-            return
-        let nodeData = node.data!
-        let trackedTypes = nodeData.types
-        if(trackedTypes === undefined)
-            return
-
-        let nTrackedTypes = []
-        for(let i = 0; i < trackedTypes.length; i++) {
-            let trackedType = trackedTypes[i]
-            if(trackedType.socketId === socketId)
-                trackedType.type = type
-
-            nTrackedTypes.push(trackedType)
-        }
-
-        //set the data
-        nodeData.types = trackedTypes
-        node.data = nodeData
-        
-        let nNodes = nodes
-        nNodes[index!] = node
-        setNodes([ ...nNodes ]) 
-    }
-
-    function deleteNode(nodeId: string) {
-        setStoreModal('delete_node')
-        setModalNodeId(nodeId)
-    }
-
-    function editorDeleteNode() {
-        if(modalNodeId === undefined)
-            return
-
-        let nNodes = []
-        for(let i = 0; i < nodes.length; i++) {
-            let node = nodes[i]
-            if(node.id=== modalNodeId)
-                continue
-
-            nNodes.push(node)
-        }
-
-        setModalNodeId(undefined)
-        setNodes([ ...nNodes ])
-    }
-
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
     value.storeToggle = storeToggle
 
-    value.getStoreValue = getStoreValue
-    value.createNode = CreateMenuNode
+    value.getStoreValue = (storeKey: string) => getStoreValue(storeKey, quantaStore)
+    value.createNode = (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) =>
+        CreateMenuNode(
+            parentId, 
+            parentHandle, 
+            childType, 
+            handleRef, 
+            nodes, 
+            reactFlowInstance, 
+            editorBounds, 
+            setNodes, 
+            toggleFocus
+        )
     value.toggleFocus = toggleFocus
-    value.createStore = createStore
-    value.createStoreModal = createStoreModal
-    value.editStoreValue = editStoreValue
-    value.deleteNode = deleteNode
-    value.editorDeleteNode = editorDeleteNode
-    value.deleteStoreItem = deleteStoreItem
-    value.trackNodeType = trackNodeType
-    value.updateTrackedNodeType = updateTrackedNodeType
+    value.createStore = (storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) =>
+        createStore(storeKey, storeName, createFields, formTitle, quantaStore, toggleUpdateStore, setQuantaStore)
+    value.createStoreModal = (modalKey: string) =>
+        createStoreModal(modalKey, quantaStore, setFormTitle, setFormContent, setStoreKey, openStoreModal)
+    value.editStoreValue = (storeKey: string, itemId: string, key: string, field: any) =>
+        editStoreValue(storeKey, itemId, key, field, quantaStore, setQuantaStore, toggleUpdateStore)
+    value.deleteNode = (nodeId: string) => deleteNode(nodeId, setStoreModal, setModalNodeId)
+    value.editorDeleteNode = () => editorDeleteNode(modalNodeId, setModalNodeId, nodes, setNodes)
+    value.deleteStoreItem = (storeKey: string, itemId: string) =>
+        deleteStoreItem(storeKey, itemId, quantaStore, setQuantaStore, toggleUpdateStore)
+    value.trackNodeType = (nodeId: string, socketId: string, type: IQuantaTypeRef) =>
+        trackNodeType(nodeId, socketId, type, nodes, setNodes)
+    value.updateTrackedNodeType = (nodeId: string, socketId: string, type: IQuantaTypeRef) =>
+        updateTrackedNodeType(nodeId, socketId, type, nodes, setNodes)
+
+    const submitStoreModal_ = (forms: IQuantaFormField[], valStore: {[key: string]: string}) =>
+        submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)
 
     return (
         <div 
@@ -434,7 +172,7 @@ const QuantaEditor: React.FC = ({  }) => {
                             <FormBuilder 
                                 forms={formContent} 
                                 closeModal={closeStoreModal}
-                                submit={submitStoreModal}
+                                submit={submitStoreModal_}
                             />
                         </ModalManager.Modal>
 
