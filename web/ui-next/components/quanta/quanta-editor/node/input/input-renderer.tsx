@@ -76,6 +76,13 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
         
         setLocalType({ ...newType })
         setTypeUpdate(!typeUpdated)
+
+        if(nodeId === undefined)
+            return
+        if(quantaEditorContext === null)
+            return
+
+        quantaEditorContext.updateTrackedNodeType(nodeId, socketId, newType)
     }
 
     return (

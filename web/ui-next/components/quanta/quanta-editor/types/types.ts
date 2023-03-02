@@ -117,6 +117,17 @@ interface IQuantaEditorGlobals {
      *  this is the inital type being set in the object
      */
     trackNodeType: (nodeId: string, socketId: string, type: IQuantaTypeRef) => void,
+
+    /**
+     * This function updates the type of a tracked type within the node
+     * @param nodeId 
+     *  the id of the node the socket is a part of
+     * @param socketId
+     *  this is the id of the socket we are tracking 
+     * @param type 
+     *  this is the new type being set
+     */
+    updateTrackedNodeType: (nodeId: string, socketId: string, type: IQuantaTypeRef) => void
 }
 
 export * from './nodes'

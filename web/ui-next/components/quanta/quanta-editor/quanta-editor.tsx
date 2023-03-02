@@ -140,6 +140,8 @@ const QuantaEditor: React.FC = ({  }) => {
         setNodes([ ...nNodes ])
     }
 
+    
+
     function getStoreValue(storeKey: string) : IQuantaStoreData | undefined {
         let storeKeys = Object.keys(quantaStore)
         if(storeKeys.includes(storeKey) === undefined)
@@ -339,8 +341,41 @@ const QuantaEditor: React.FC = ({  }) => {
         setNodes([ ...nNodes ]) 
     }
 
-    function updateTrackedNodType(nodeId: string, socketId: string, type: IQuantaTypeRef) {
+    function updateTrackedNodeType(nodeId: string, socketId: string, type: IQuantaTypeRef) {
+        let node = null
+        let index = null
+
+        for(let i = 0; i < nodes.length; i++) {
+            let node_ = nodes[i]
+            if(node_.id === nodeId) {
+                node = node_
+                index = i
+            }
+        }
+
+        if(node === null)
+            return
+        let nodeData = node.data!
+        let trackedTypes = nodeData.types
+        if(trackedTypes === undefined)
+            return
+
+        let nTrackedTypes = []
+        for(let i = 0; i < trackedTypes.length; i++) {
+            let trackedType = trackedTypes[i]
+            if(trackedType.socketId === socketId)
+                trackedType.type = type
+
+            nTrackedTypes.push(trackedType)
+        }
+
+        //set the data
+        nodeData.types = trackedTypes
+        node.data = nodeData
         
+        let nNodes = nodes
+        nNodes[index!] = node
+        setNodes([ ...nNodes ]) 
     }
 
     function deleteNode(nodeId: string) {
@@ -379,6 +414,7 @@ const QuantaEditor: React.FC = ({  }) => {
     value.editorDeleteNode = editorDeleteNode
     value.deleteStoreItem = deleteStoreItem
     value.trackNodeType = trackNodeType
+    value.updateTrackedNodeType = updateTrackedNodeType
 
     return (
         <div 
