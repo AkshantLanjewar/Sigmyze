@@ -26,9 +26,9 @@ import {
 } from "./types/types"
 
 import 'reactflow/dist/style.css'
-import { applyNodeChanges, applyEdgeChanges } from "@reactflow/core"
+import { applyNodeChanges, applyEdgeChanges, Connection } from "@reactflow/core"
 import QuantaNode from "./node/quanta-node"
-import { BuildNode } from "./utils"
+import { buildEdge, BuildNode, compareTypes, GetNodeSocket } from "./utils"
 import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../form-builder/form-builder"
 import DeleteNodeForm from "./forms/delete-node-form"
@@ -109,6 +109,34 @@ const QuantaEditor: React.FC = ({  }) => {
     const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
     const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
     const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode, quanta_group: QuantaGroup }), [])
+
+    //when edges connect
+    const onConnect = useCallback((params: Connection) => {
+        //source node vars
+        let sourceNode = params.source
+        let sourceSocket = params.sourceHandle
+        if(sourceNode === null || sourceSocket === null)
+            return
+        
+        //target node vars
+        let targetNode = params.target
+        let targetSocket = params.targetHandle
+        if(targetNode === null || targetSocket === null)
+            return
+
+        const sourceSocketObject = GetNodeSocket(nodes, sourceNode, sourceSocket, "output")
+        const targetSocketObject = GetNodeSocket(nodes, targetNode, targetSocket, "input")
+        if(sourceSocketObject === undefined || targetSocketObject === undefined)
+            return
+
+        if(compareTypes(sourceSocketObject.type!, sourceSocketObject.type!))
+        {
+            let nEdges = edges
+            nEdges.push(buildEdge(sourceNode, sourceSocket, targetNode, targetSocket))
+
+            setEdges([ ...nEdges ])
+        }
+    }, [nodes])
 
     /**
      * Ref for the react flow element
@@ -220,6 +248,7 @@ const QuantaEditor: React.FC = ({  }) => {
                         nodeTypes={nodeTypes as any}
                         attributionPosition={'bottom-left'}
                         onInit={setReactFlowInstance}
+                        onConnect={onConnect}
                     >
                         <Background />
                         <Controls /> 

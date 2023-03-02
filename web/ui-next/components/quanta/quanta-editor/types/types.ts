@@ -4,13 +4,6 @@ import { IQuantaTypeRef } from "./node-type"
 import { IQuantaStoreData } from "./store"
 
 /**
- * TODO: Add edges functionality
- */
-interface IQuantaRFEdge {
-
-}
-
-/**
  * Data stored in the editors react context
  */
 interface IQuantaEditorGlobals {
@@ -146,8 +139,6 @@ export * from './store'
 export * from './node-instructions'
 export * from './form'
 export * from './node-type'
+export * from './edges'
 
-export type {
-    IQuantaRFEdge,
-    IQuantaEditorGlobals
-}
+export type { IQuantaEditorGlobals }

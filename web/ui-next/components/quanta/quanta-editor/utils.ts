@@ -2,7 +2,7 @@ import { v4 } from "uuid"
 import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
 import prebuildNodeDict from "./config/prebuilt_nodes"
 import typeGroups from "./config/quanta_types"
-import { IQuantaNodeDetails, IQuantaRFNode, IQuantaStoreItem, IQuantaType, IQuantaTypeRef } from "./types/types"
+import { IQuantaNodeDetails, IQuantaRFEdge, IQuantaRFNode, IQuantaStoreItem, IQuantaType, IQuantaTypeRef } from "./types/types"
 
 function BuildNode(type: string, parentNode?: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
@@ -154,6 +154,68 @@ function getDetailedType(ref: IQuantaTypeRef) : undefined | IQuantaType {
 	return type
 }
 
+function GetNodeSocket(nodes: IQuantaRFNode[], nodeId: string, socketId: string, type: "input" | "output") {
+	let node = null
+	for(let i = 0; i < nodes.length; i++) {
+		let node_ = nodes[i]
+		if(node_.id === nodeId)
+			node = node_
+	}
+
+	if(node === null)
+		return
+
+	//node instructions
+	let nodeInstructions = node.data?.instructionId
+	if(nodeInstructions === undefined)
+		return
+	if(node.type !== "quanta_node")
+		return
+	if (Object.keys(prebuildNodeDict).includes(nodeInstructions) === false)
+		return
+
+	const nodeInstruction = prebuildNodeDict[nodeInstructions]
+	let socketList = null
+	if(type === "input")
+		socketList = nodeInstruction.inputs
+	else
+		socketList = nodeInstruction.outputs
+	
+	if(socketList === undefined)
+		return
+
+	//find the socket now
+	let socket = undefined
+	for(let i = 0; i < socketList.length; i++) {
+		let socket_ = socketList[i]
+		if(socket_.socketId === socketId)
+			socket = socket_
+
+		//TODO: Handle dynamic sockets
+
+	}
+
+	return socket
+}
+
+function buildEdge(sourceNode: string, sourceHandle: string, targetNode: string, targetHandle: string) {
+	let nEdge = {} as IQuantaRFEdge
+	nEdge.id = v4()
+	nEdge.type = "bezier"
+
+	nEdge.style = {
+		strokeWidth: 3,
+		stroke: "#ffffff"
+	}
+	
+	nEdge.source = sourceNode
+	nEdge.sourceHandle = sourceHandle
+	nEdge.target = targetNode
+	nEdge.targetHandle = targetHandle
+
+	return nEdge
+}
+
 export {
 	BuildNode,
 	DetailedCreateList,
@@ -161,5 +223,7 @@ export {
 	buildStoreKey,
 	convertTypesToDropdown,
 	getDetailedType,
-	compareTypes
+	compareTypes,
+	GetNodeSocket,
+	buildEdge
 }

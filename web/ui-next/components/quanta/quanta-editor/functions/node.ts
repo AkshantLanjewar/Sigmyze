@@ -194,7 +194,6 @@ function _deleteNode(nodes: IQuantaRFNode[], modalNodeId: string, backend?: stri
         nNodes.push(node)
     }
     
-    console.log(nNodes)
     return nNodes
 }
 

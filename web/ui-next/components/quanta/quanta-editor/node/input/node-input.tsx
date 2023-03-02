@@ -34,7 +34,7 @@ const NodeInput: React.FC<INodeInputProps> = ({ socket, focused, editType }) => 
                 ? null
                 : (
                     <Handle 
-                        type='source' 
+                        type='target' 
                         position={Position.Left}
                         className={styles.input}
                         id={socket.socketId}
