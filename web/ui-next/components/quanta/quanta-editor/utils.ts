@@ -39,6 +39,29 @@ function DetailedCreateList(outputType: IQuantaTypeRef) {
 			let flag = input.staticSocket === true
 			if (compareTypes(input.type!, outputType) && !flag)
 				keysWithMatchingInputType.push(key)
+
+			//check if dependent socket group
+			if(input.dynamicSocket === true && input.dynamicDepend === "input_val") {
+				let subInputs = input.dependentInputs
+				if(subInputs === undefined)
+					continue
+
+				for(let z = 0; z < subInputs.length; z++) {
+					let subInput = subInputs[z]
+					let subSockets = subInput.sockets
+					if(subSockets === undefined)
+						continue
+
+					for(let y = 0; y < subSockets.length; y++) {
+						let subSocket = subSockets[y]
+						let subFlag = subSocket.staticSocket === true
+
+						console.log(subSocket.type)
+						if(compareTypes(subSocket.type!, outputType) && !subFlag)
+							keysWithMatchingInputType.push(key)
+					}
+				}
+			}
 		}
 	}
 

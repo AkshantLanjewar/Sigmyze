@@ -1,4 +1,4 @@
-import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare } from "@tabler/icons"
+import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare, IconFileCode2 } from "@tabler/icons"
 import { v4 } from "uuid"
 import { IQuantaNodeInstructions } from "../types/types"
 
@@ -50,6 +50,37 @@ const prebuildNodeDict = {
                     groupId: "sdmx_file",
                     typeId: "sdmx_xml"
                 }
+            },
+            {
+                dynamicSocket: true,
+                groupTitle: "SDMX XML Files",
+                dynamicDepend: "input_val",
+                inputId: "format",
+                dependentInputs: [
+                    {
+                        inputValue: "sdmx_xml",
+                        sockets: [
+                            {
+                                socketId: "data_file",
+                                socketName: "Data",
+                                icon: <IconFileCode2 />,
+                                type: {
+                                    groupId: "files",
+                                    typeId: "xml"
+                                }
+                            },
+                            {
+                                socketId: "schema_file",
+                                socketName: "Schema",
+                                icon: <IconFileCode2 />,
+                                type: {
+                                    groupId: "files",
+                                    typeId: "xsd"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
