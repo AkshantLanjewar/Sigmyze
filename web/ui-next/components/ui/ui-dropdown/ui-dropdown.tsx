@@ -1,6 +1,7 @@
 import { Button, Group, MantineSize, Menu, Stack, Text, ThemeIcon } from "@mantine/core"
 import { FloatingPosition } from "@mantine/core/lib/Floating"
 import { IconChevronDown } from "@tabler/icons"
+import React from "react"
 import { useEffect, useState } from "react"
 import { IUIDropdownItem } from "./types"
 import styles from './ui-dropdown.module.scss'
@@ -99,7 +100,7 @@ const UIDropdown: React.FC<IUIDropdownProps> =
                             <Group spacing={2.5}>
                                 {displayNode && (
                                     <>
-                                        {displayNode.icon}
+                                        {React.cloneElement(displayNode.icon, { size: 18 })}
                                         {displayNode.name}
                                     </>
                                 )}

@@ -155,5 +155,6 @@ export {
 	validateStoreSocket,
 	buildStoreKey,
 	convertTypesToDropdown,
-	getDetailedType
+	getDetailedType,
+	compareTypes
 }

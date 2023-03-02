@@ -4,13 +4,18 @@ import { IQuantaTypeRef } from "../../types/types"
 import { getDetailedType } from "../../utils"
 
 interface INodeTypeProps {
-    type?: IQuantaTypeRef
+    type?: IQuantaTypeRef,
+    isArray?: boolean,
+    arrayType?: IQuantaTypeRef
 }
 
-const NodeType: React.FC<INodeTypeProps> = ({ type }) => {
+const NodeType: React.FC<INodeTypeProps> = ({ type, isArray, arrayType }) => {
     if(type === undefined)
         return null
+    
     let detailedType = getDetailedType(type)
+    if(isArray === true && arrayType !== undefined)
+        type.typeId = arrayType.typeId
 
     return (
         <Group align={"center"} position={"center"}>
@@ -19,11 +24,12 @@ const NodeType: React.FC<INodeTypeProps> = ({ type }) => {
                     <Badge
                         variant={"filled"}
                         color={"indigo"}
+                        size={"lg"}
                     >
-                        <Group spacing={2}>
+                        <Group spacing={2} align={"center"}>
                             {detailedType && (
                                 <>
-                                    {React.cloneElement(detailedType.typeIcon!, { size: 14 })}
+                                    {React.cloneElement(detailedType.typeIcon!, { size: 18 })}
                                 </>
                             )}
                             

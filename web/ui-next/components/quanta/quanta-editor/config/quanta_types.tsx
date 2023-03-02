@@ -1,4 +1,4 @@
-import { IconCpu, IconFileCode2, IconGitCompare, IconTextRecognition } from "@tabler/icons";
+import { IconBrackets, IconCpu, IconDatabase, IconFileCode2, IconGitCompare, IconTextRecognition } from "@tabler/icons";
 import { IQuantaTypeGroup } from "../types/types";
 
 const typeGroups = [
@@ -17,6 +17,18 @@ const typeGroups = [
                 typeName: "Thread",
                 typeIcon: <IconCpu />,
                 typeDescription: "exeucution flow for the graph"
+            },
+            {
+                typeId: "array",
+                typeName: "Indicators",
+                typeIcon: <IconBrackets />,
+                typeDescription: "list of elements"
+            },
+            {
+                typeId: "sdmx_indicator",
+                typeName: "SDMX Indicators",
+                typeIcon: <IconDatabase />,
+                typeDescription: "SDMX Indicator from parsed files"
             }
         ]
     },

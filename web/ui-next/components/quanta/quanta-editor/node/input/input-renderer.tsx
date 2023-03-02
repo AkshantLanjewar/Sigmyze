@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { QuantaEditorContext } from "../../quanta-editor"
 import { IQuantaSocket } from "../../types/node-instructions"
 import { IQuantaRFNodeData, IQuantaTypeRef } from "../../types/types"
+import DynamicInput from "./dynamic-input"
 import NodeInput from "./node-input"
 
 interface IInputRendererProps {
@@ -80,7 +81,14 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
     return (
         <div>
             {input.dynamicSocket
-                ? null
+                ? (
+                    <DynamicInput 
+                        input={controlledSocket ? controlledSocket : input}
+                        focused={focused}
+                        nodeId={nodeId}
+                        data={data}
+                    />
+                )
                 : (
                     <NodeInput
                         socket={controlledSocket ? controlledSocket : input}

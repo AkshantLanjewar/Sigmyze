@@ -53,7 +53,13 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
                                     editType={editType}
                                 />
                             )
-                            : <NodeType type={output.type}/>
+                            : (
+                                <NodeType 
+                                    type={output.type}
+                                    isArray={output.isArray}
+                                    arrayType={output.arrayType}
+                                />
+                            )
                         }
                     </>
                 )

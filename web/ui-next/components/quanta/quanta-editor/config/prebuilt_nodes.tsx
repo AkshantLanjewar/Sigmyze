@@ -1,4 +1,4 @@
-import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare, IconFileCode2 } from "@tabler/icons"
+import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare, IconFileCode2, IconBrackets } from "@tabler/icons"
 import { v4 } from "uuid"
 import { IQuantaNodeInstructions } from "../types/types"
 
@@ -81,6 +81,23 @@ const prebuildNodeDict = {
                         ]
                     }
                 ]
+            }
+        ],
+
+        outputs: [
+            {
+                socketId: "sdmx_indicators",
+                socketName: "Indicators",
+                icon: <IconBrackets />,
+                isArray: true,
+                type: {
+                    groupId: "base",
+                    typeId: "array"
+                },
+                arrayType: {
+                    groupId: "base",
+                    typeId: "sdmx_indicator"
+                }
             }
         ]
     },

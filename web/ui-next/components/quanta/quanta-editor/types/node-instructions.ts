@@ -1,4 +1,4 @@
-import { IQuantaTypeRef } from "./types"
+import { IQuantaType, IQuantaTypeRef } from "./types"
 
 /**
  * This is the definition for a socket (Input/Output)
@@ -83,7 +83,17 @@ interface IQuantaSocket {
     /**
      * The input definitions for the dynamic inputs
      */
-    dependentInputs?: IQuantaDependentSocket[]
+    dependentInputs?: IQuantaDependentSocket[],
+
+    /**
+     * whether or not the socket's return type is an array
+     */
+    isArray?: boolean,
+
+    /**
+     * the type of item returned in the array
+     */
+    arrayType?: IQuantaTypeRef
 }
 
 /**
