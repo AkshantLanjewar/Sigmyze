@@ -339,6 +339,10 @@ const QuantaEditor: React.FC = ({  }) => {
         setNodes([ ...nNodes ]) 
     }
 
+    function updateTrackedNodType(nodeId: string, socketId: string, type: IQuantaTypeRef) {
+        
+    }
+
     function deleteNode(nodeId: string) {
         setStoreModal('delete_node')
         setModalNodeId(nodeId)

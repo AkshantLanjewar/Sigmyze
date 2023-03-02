@@ -1,5 +1,5 @@
 import { ActionIcon, Group, Menu, Stack, Text, ThemeIcon } from "@mantine/core"
-import { IconPlus } from "@tabler/icons"
+import { IconBrackets, IconPlus } from "@tabler/icons"
 import React, { cloneElement, RefObject, useContext } from "react"
 import { useEffect, useState } from "react"
 import { QuantaEditorContext } from "../quanta-editor"
@@ -66,6 +66,40 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
                 </Menu.Target>
 
                 <Menu.Dropdown>
+                    {output.isArray === true && (
+                        <Menu.Item onClick={() => { }}>
+                            <Group 
+                                spacing={"sm"}
+                                noWrap
+                                sx={{ alignItems: 'normal' }}
+                            >
+                                <ThemeIcon 
+                                    variant={"filled"}
+                                    color={"violet"}
+                                >
+                                    <IconBrackets 
+                                        size={14} 
+                                        stroke={2}
+                                    />
+                                </ThemeIcon>
+
+                                <Stack spacing={2.5}>
+                                    <Text 
+                                        size={"sm"}
+                                        weight={"bold"}
+                                        sx={{ lineHeight: 1 }}
+                                    >
+                                        Iterate
+                                    </Text>
+
+                                     <Text size={8}>
+                                        Iterate through an array.
+                                    </Text>
+                                </Stack>
+                            </Group>
+                        </Menu.Item>
+                    )}
+
                     {menuItems.map((step) => (
                         <Menu.Item 
                             onClick={() => menuClick(step.instructionId)}

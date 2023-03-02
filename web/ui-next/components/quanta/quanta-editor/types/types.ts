@@ -80,10 +80,25 @@ interface IQuantaEditorGlobals {
      */
     editStoreValue: (storeKey: string, itemId: string, key: string, field: any) => void,
 
+    /**
+     * This function opens the delete modal in order to ensure the node being deleted is intentional
+     * @param nodeId 
+     *  the id of the node we want to delete
+     */
     deleteNode: (nodeId: string) => void,
 
+    /**
+     * this function deletes a node in the editor based on the state set by the delete node
+     */
     editorDeleteNode: () => void,
 
+    /**
+     * this function deletes an item from the store
+     * @param storeKey 
+     *  key of the store where we want to delete the item
+     * @param itemId 
+     *  this is the id of the item we want to delete
+     */
     deleteStoreItem: (storeKey: string, itemId: string) => void,
 
     /**
@@ -92,6 +107,15 @@ interface IQuantaEditorGlobals {
      */
     toggleFocus: () => void,
 
+    /**
+     * This function sets up the object to track a sockets type within a node
+     * @param nodeId 
+     *  the id of the node the socket is a part of
+     * @param socketId
+     *  this is the id of the socket we are tracking 
+     * @param type 
+     *  this is the inital type being set in the object
+     */
     trackNodeType: (nodeId: string, socketId: string, type: IQuantaTypeRef) => void,
 }
 

@@ -56,7 +56,6 @@ function DetailedCreateList(outputType: IQuantaTypeRef) {
 						let subSocket = subSockets[y]
 						let subFlag = subSocket.staticSocket === true
 
-						console.log(subSocket.type)
 						if(compareTypes(subSocket.type!, outputType) && !subFlag)
 							keysWithMatchingInputType.push(key)
 					}
