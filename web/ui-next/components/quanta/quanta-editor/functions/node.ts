@@ -62,13 +62,11 @@ function BuildIterNode(
         id: v4(),
         type: 'quanta_group',
         position: position,
+        data: {}, // to be set
         style: {
             width: 300,
             height: 150
         },
-        data: {
-            label: null
-        }
     })
 
     //build out the iter obj
@@ -174,32 +172,61 @@ function updateTrackedNodeType(
 function deleteNode(
     nodeId: string,
     setStoreModal: Dispatch<SetStateAction<string | null>>,
-    setModalNodeId: Dispatch<SetStateAction<string | undefined>>
+    setModalNodeId: Dispatch<SetStateAction<string | undefined>>,
+    setModalNodeBackend: Dispatch<SetStateAction<string | undefined>>,
+    backend?: string,
 ) {
     setStoreModal('delete_node')
     setModalNodeId(nodeId)
+    setModalNodeBackend(backend)
+}
+
+function _deleteNode(nodes: IQuantaRFNode[], modalNodeId: string, backend?: string) {
+    let nNodes = []
+    for(let i = 0; i < nodes.length; i++) {
+        let node = nodes[i]
+        
+        if(node.id === modalNodeId)
+            continue
+        if(backend === "group" && node.parentNode === modalNodeId)
+            continue
+
+        nNodes.push(node)
+    }
+    
+    console.log(nNodes)
+    return nNodes
 }
 
 function editorDeleteNode(
     modalNodeId: string | undefined,
+    backend: string | undefined,
     setModalNodeId: Dispatch<SetStateAction<string | undefined>>,
+    setModalNodeBackend: Dispatch<SetStateAction<string | undefined>>,
     nodes: IQuantaRFNode[],
     setNodes: Dispatch<SetStateAction<IQuantaRFNode[]>>,
 ) {
     if(modalNodeId === undefined)
         return
 
-    let nNodes = []
-    for(let i = 0; i < nodes.length; i++) {
-        let node = nodes[i]
-        if(node.id=== modalNodeId)
-            continue
-
-        nNodes.push(node)
+    let nNodes = null
+    function quit() {
+        setModalNodeBackend(undefined)
+        setModalNodeId(undefined)
     }
 
-    setModalNodeId(undefined)
+    if(backend === undefined)
+        nNodes = _deleteNode(nodes, modalNodeId)
+    else
+        nNodes = _deleteNode(nodes, modalNodeId, backend)
+
+    if(nNodes === null) {
+        quit()
+        return
+    }
+
     setNodes([ ...nNodes ])
+    quit()
 }
 
 export { 

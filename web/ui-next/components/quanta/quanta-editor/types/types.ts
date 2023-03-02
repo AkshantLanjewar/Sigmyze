@@ -96,7 +96,7 @@ interface IQuantaEditorGlobals {
      * @param nodeId 
      *  the id of the node we want to delete
      */
-    deleteNode: (nodeId: string) => void,
+    deleteNode: (nodeId: string, backend?: string) => void,
 
     /**
      * this function deletes a node in the editor based on the state set by the delete node

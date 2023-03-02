@@ -98,6 +98,7 @@ const QuantaEditor: React.FC = ({  }) => {
     const [storeModal, setStoreModal] = useState<string | null>(null)
 
     const [modalNodeId, setModalNodeId] = useState<string | undefined>(undefined)
+    const [modalNodeBackend, setModalNodeBackend] = useState<string | undefined>(undefined)
 
     const openStoreModal = () => setStoreModal('store')
     const closeStoreModal = () => setStoreModal(null)
@@ -164,8 +165,10 @@ const QuantaEditor: React.FC = ({  }) => {
         createStoreModal(modalKey, quantaStore, setFormTitle, setFormContent, setStoreKey, openStoreModal)
     value.editStoreValue = (storeKey: string, itemId: string, key: string, field: any) =>
         editStoreValue(storeKey, itemId, key, field, quantaStore, setQuantaStore, toggleUpdateStore)
-    value.deleteNode = (nodeId: string) => deleteNode(nodeId, setStoreModal, setModalNodeId)
-    value.editorDeleteNode = () => editorDeleteNode(modalNodeId, setModalNodeId, nodes, setNodes)
+    value.deleteNode = (nodeId: string, backend?: string) => 
+        deleteNode(nodeId, setStoreModal, setModalNodeId, setModalNodeBackend, backend)
+    value.editorDeleteNode = () => 
+        editorDeleteNode(modalNodeId, modalNodeBackend, setModalNodeId, setModalNodeBackend, nodes, setNodes)
     value.deleteStoreItem = (storeKey: string, itemId: string) =>
         deleteStoreItem(storeKey, itemId, quantaStore, setQuantaStore, toggleUpdateStore)
     value.trackNodeType = (nodeId: string, socketId: string, type: IQuantaTypeRef) =>

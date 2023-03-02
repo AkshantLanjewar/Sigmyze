@@ -12,10 +12,11 @@ import NodeActionMenu from "./action-menu/action-menu"
 import InputRenderer from "./input/input-renderer"
 
 interface IQuantaNodeProps {
-    data?: IQuantaRFNodeData
+    data?: IQuantaRFNodeData,
+    selected: boolean
 }
 
-const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
+const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
     if(data?.instructionId === undefined)
         return null
     const instructions = prebuildNodeDict[data.instructionId]
@@ -27,20 +28,8 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
     const quantaEditorContext = useContext(QuantaEditorContext) as IQuantaEditorGlobals | null
     
     useEffect(() => {
-        function clickListener(e: any) {
-            if(ref.current === null)
-                return
-            if(ref.current.contains(e.target))
-                return
-
-            setFocused(false)
-        }
-
-        if(focused === false)
-            document.removeEventListener("click", clickListener)
-        else
-            document.addEventListener("click", clickListener)
-    }, [focused])
+        setFocused(selected)
+    }, [selected])
 
     useEffect(() => {
         if(quantaEditorContext?.focusToggle === undefined)
@@ -53,7 +42,6 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data }) => {
         <div>
             <div
                 className={`${styles.node__wrapper} ${focused && styles.active}`}
-                onClick={() => setFocused(true)}
                 ref={ref}
             >
                 <div className={styles.node__title}>

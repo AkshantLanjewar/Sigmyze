@@ -7,12 +7,13 @@ import { IQuantaNodeInstructions } from "../../types/types"
 import styles from './action-menu.module.scss'
 
 interface INodeActionMenuProps {
-    instructions: IQuantaNodeInstructions,
+    instructions?: IQuantaNodeInstructions,
     focused: boolean,
-    nodeId?: string
+    nodeId?: string,
+    backend?: string
 }
 
-const NodeActionMenu: React.FC<INodeActionMenuProps> = ({ instructions, focused, nodeId }) => {
+const NodeActionMenu: React.FC<INodeActionMenuProps> = ({ instructions, focused, nodeId, backend }) => {
     const quantaEditorContext = useContext(QuantaEditorContext)
 
     function deleteNode() {
@@ -21,12 +22,12 @@ const NodeActionMenu: React.FC<INodeActionMenuProps> = ({ instructions, focused,
         if(nodeId === undefined)
             return
 
-        quantaEditorContext.deleteNode(nodeId)
+        quantaEditorContext.deleteNode(nodeId, backend)
     }
 
     return (
         <div className={styles.action__wrapper}>
-            {instructions.immutableNode
+            {instructions?.immutableNode
                 ? null
                 : (
                     <div className={styles.action}>
@@ -37,7 +38,7 @@ const NodeActionMenu: React.FC<INodeActionMenuProps> = ({ instructions, focused,
                                         <Tooltip
                                             withArrow
                                             color={"dark"}
-                                            label={"Delete Node"}
+                                            label={backend === "group" ? "Delete Group" : "Delete Node"}
                                             styles={{ tooltip: { backgroundColor: "#08090A" } }}
                                             openDelay={250}
                                             transition={"slide-down"}

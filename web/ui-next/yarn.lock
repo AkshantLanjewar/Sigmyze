@@ -723,7 +723,7 @@
     "@reactflow/core" "11.5.5"
     classcat "^5.0.3"
 
-"@reactflow/core@11.5.5":
+"@reactflow/core@11.5.5", "@reactflow/core@^11.3.3":
   version "11.5.5"
   resolved "https://registry.yarnpkg.com/@reactflow/core/-/core-11.5.5.tgz#bced11d76fc200b4dc301f2f2b882c4f4ec3dad3"
   integrity sha512-/FPnpvO9I4E6/mmfZInbsVusR214gzIZ2e2xgl9XJdBo90cWaqHgo0c5F2YPXX19R3mItzxveN+WlENFEOvdPg==
@@ -749,6 +749,17 @@
     classcat "^5.0.3"
     d3-selection "^3.0.0"
     d3-zoom "^3.0.0"
+    zustand "^4.3.1"
+
+"@reactflow/node-resizer@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@reactflow/node-resizer/-/node-resizer-2.0.1.tgz#45d4fe18b3fa2d92029e2c1bd32283763c3737b8"
+  integrity sha512-07PNFkv4lH07SEthuz5l87YtFIms+8SFkYVsMhe6Cfdej1tPuIa4f6Xmy0ILOLjBU0B2TRrbw0+T+cJ62zcofQ==
+  dependencies:
+    "@reactflow/core" "^11.3.3"
+    classcat "^5.0.4"
+    d3-drag "^3.0.0"
+    d3-selection "^3.0.0"
     zustand "^4.3.1"
 
 "@reactflow/node-toolbar@1.1.8":
@@ -1567,7 +1578,7 @@ chownr@^1.1.1:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.4.tgz#6fc9d7b42d32a583596337666e7d08084da2cc6b"
   integrity sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==
 
-classcat@^5.0.3:
+classcat@^5.0.3, classcat@^5.0.4:
   version "5.0.4"
   resolved "https://registry.yarnpkg.com/classcat/-/classcat-5.0.4.tgz#e12d1dfe6df6427f260f03b80dc63571a5107ba6"
   integrity sha512-sbpkOw6z413p+HDGcBENe498WM9woqWHiJxCq7nvmxe9WmrUmqfAcxpIwAiMtM5Q3AhYkzXcNQHqsWq0mND51g==
