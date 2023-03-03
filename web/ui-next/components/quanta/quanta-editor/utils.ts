@@ -2,7 +2,17 @@ import { v4 } from "uuid"
 import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
 import prebuildNodeDict from "./config/prebuilt_nodes"
 import typeGroups from "./config/quanta_types"
-import { IQuantaNodeDetails, IQuantaRFEdge, IQuantaRFNode, IQuantaStoreItem, IQuantaType, IQuantaTypeRef } from "./types/types"
+
+import { 
+	IQuantaNodeDetails, 
+	IQuantaRFEdge, 
+	IQuantaRFNode, 
+	IQuantaSocket, 
+	IQuantaStore, 
+	IQuantaStoreItem, 
+	IQuantaType, 
+	IQuantaTypeRef 
+} from "./types/types"
 
 function BuildNode(type: string, parentNode?: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
@@ -26,8 +36,12 @@ function BuildNode(type: string, parentNode?: string): IQuantaRFNode | undefined
 function compareTypes(a: IQuantaTypeRef, b: IQuantaTypeRef) {
 	if(a === undefined || b === undefined)
 		return false
+	if(a.groupId !== b.groupId)
+		return false
+	if(a.typeId !== b.typeId)
+		return false
 
-	return (a.groupId === b.groupId) && (a.typeId === b.typeId)
+	return true
 }
 
 function DetailedCreateList(outputType: IQuantaTypeRef) {
@@ -154,7 +168,13 @@ function getDetailedType(ref: IQuantaTypeRef) : undefined | IQuantaType {
 	return type
 }
 
-function GetNodeSocket(nodes: IQuantaRFNode[], nodeId: string, socketId: string, type: "input" | "output") {
+function GetNodeSocket(
+	nodes: IQuantaRFNode[], 
+	quantaStore: IQuantaStore, 
+	nodeId: string, 
+	socketId: string, 
+	type: "input" | "output"
+) {
 	let node = null
 	for(let i = 0; i < nodes.length; i++) {
 		let node_ = nodes[i]
@@ -191,8 +211,81 @@ function GetNodeSocket(nodes: IQuantaRFNode[], nodeId: string, socketId: string,
 		if(socket_.socketId === socketId)
 			socket = socket_
 
-		//TODO: Handle dynamic sockets
 
+		if(socket_.dynamicSocket === true)
+		{	
+			if(socket_.dynamicDepend === "store")
+			{
+				let storeKey = socket_.storeKey
+				if(storeKey === undefined)
+					continue
+
+				let storeKeys = Object.keys(quantaStore)
+				storeKey = buildStoreKey(node.id!, storeKey)
+				if(storeKeys.includes(storeKey) === false)
+					continue
+
+				let store = quantaStore[storeKey]
+				let storeItems = store.items
+				if(storeItems === undefined)
+					continue
+
+				for(let x = 0; x < storeItems.length; x++) {
+					let storeItem = storeItems[i]
+					if(storeItem.id === socketId)
+					{
+						let storeData = storeItem.data
+						let storeType = storeData.type
+						if(storeType === undefined)
+							continue
+
+						let tmpSocket = {} as IQuantaSocket
+						tmpSocket.type = storeType
+						tmpSocket.socketId = storeItem.id
+						socket = tmpSocket
+					}
+				}
+			}
+
+			if(socket_.dynamicDepend === "input_val")
+			{
+				let dependentInput = socket_.inputId
+				if(dependentInput === undefined)
+					continue
+
+				//retreive the socket
+				let dependentSocket = null
+				for(let x = 0; x < socketList.length; x++) {
+					let tmpSocket = socketList[x]
+					if(tmpSocket.socketId === dependentInput)
+						dependentSocket = tmpSocket
+				}
+
+				if(dependentSocket === null)
+					continue
+
+				let dependentValues = socket_.dependentInputs
+				let dependentSockets = null
+				let dependentValue = dependentSocket.type?.typeId
+				if(dependentValues === undefined)
+					continue
+
+				for(let x = 0; x < dependentValues.length; x++) {
+					let dependentVal = dependentValues[x]
+					if(dependentVal.inputValue === dependentValue)
+						dependentSockets = dependentVal.sockets
+				}
+
+				if(dependentSockets === null)
+					continue
+
+				for(let x = 0; x < dependentSockets.length; x++) {
+					let dependentSocket = dependentSockets[x]
+					if(dependentSocket.socketId === socketId)
+						socket = dependentSocket
+				}
+			}
+		}
 	}
 
 	return socket

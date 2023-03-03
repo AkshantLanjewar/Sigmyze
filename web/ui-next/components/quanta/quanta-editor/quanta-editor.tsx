@@ -124,12 +124,12 @@ const QuantaEditor: React.FC = ({  }) => {
         if(targetNode === null || targetSocket === null)
             return
 
-        const sourceSocketObject = GetNodeSocket(nodes, sourceNode, sourceSocket, "output")
-        const targetSocketObject = GetNodeSocket(nodes, targetNode, targetSocket, "input")
+        const sourceSocketObject = GetNodeSocket(nodes, quantaStore, sourceNode, sourceSocket, "output")
+        const targetSocketObject = GetNodeSocket(nodes, quantaStore, targetNode, targetSocket, "input")
         if(sourceSocketObject === undefined || targetSocketObject === undefined)
             return
 
-        if(compareTypes(sourceSocketObject.type!, sourceSocketObject.type!))
+        if(compareTypes(sourceSocketObject.type!, targetSocketObject.type!) === true)
         {
             let nEdges = edges
             nEdges.push(buildEdge(sourceNode, sourceSocket, targetNode, targetSocket))
