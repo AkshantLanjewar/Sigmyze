@@ -28,7 +28,7 @@ import {
 import 'reactflow/dist/style.css'
 import { applyNodeChanges, applyEdgeChanges, Connection } from "@reactflow/core"
 import QuantaNode from "./node/quanta-node"
-import { buildEdge, BuildNode, compareTypes, GetNodeSocket } from "./utils"
+import { arrayConnection, buildEdge, BuildNode, compareTypes, GetNodeSocket, isNodeArray } from "./utils"
 import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../form-builder/form-builder"
 import DeleteNodeForm from "./forms/delete-node-form"
@@ -114,14 +114,20 @@ const QuantaEditor: React.FC = ({  }) => {
     const onConnect = useCallback((params: Connection) => {
         //source node vars
         let sourceNode = params.source
-        let sourceSocket = params.sourceHandle
-        if(sourceNode === null || sourceSocket === null)
+        let targetNode = params.target
+        if(sourceNode === null || targetNode === null)
             return
+
+        if(isNodeArray(nodes, sourceNode) || isNodeArray(nodes, targetNode))
+        {
+            arrayConnection(params, nodes, quantaStore, edges, setEdges)
+            return
+        }
         
         //target node vars
-        let targetNode = params.target
+        let sourceSocket = params.sourceHandle
         let targetSocket = params.targetHandle
-        if(targetNode === null || targetSocket === null)
+        if(sourceSocket === null || targetSocket === null)
             return
 
         const sourceSocketObject = GetNodeSocket(nodes, quantaStore, sourceNode, sourceSocket, "output")

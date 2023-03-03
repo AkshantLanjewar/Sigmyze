@@ -13,9 +13,10 @@ const NodeType: React.FC<INodeTypeProps> = ({ type, isArray, arrayType }) => {
     if(type === undefined)
         return null
     
-    let detailedType = getDetailedType(type)
+    let displayType = type
+    let detailedType = getDetailedType(displayType)
     if(isArray === true && arrayType !== undefined)
-        type.typeId = arrayType.typeId
+        displayType.typeId = arrayType.typeId
 
     return (
         <Group align={"center"} position={"center"}>
@@ -33,7 +34,7 @@ const NodeType: React.FC<INodeTypeProps> = ({ type, isArray, arrayType }) => {
                                 </>
                             )}
                             
-                            {type.typeId}
+                            {displayType.typeId}
                         </Group>
                     </Badge>
                 </>

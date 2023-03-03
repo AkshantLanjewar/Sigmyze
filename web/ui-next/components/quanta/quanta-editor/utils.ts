@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react"
+import { Connection, isNode } from "reactflow"
 import { v4 } from "uuid"
 import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
 import prebuildNodeDict from "./config/prebuilt_nodes"
@@ -14,6 +16,14 @@ import {
 	IQuantaTypeRef 
 } from "./types/types"
 
+/**
+ * this function builds a RF node object for the editor
+ * @param type 
+ * 	the instruction id for how to construct the node
+ * @param parentNode 
+ * 	if the node is a child of an array group, the id of the parent group
+ * @returns IQuantaRFNode | undefined
+ */
 function BuildNode(type: string, parentNode?: string): IQuantaRFNode | undefined {
 	if (Object.keys(prebuildNodeDict).includes(type) === false)
 		return
@@ -33,6 +43,14 @@ function BuildNode(type: string, parentNode?: string): IQuantaRFNode | undefined
 	return newNode
 }
 
+/**
+ * This function compares two type ref objects for equality
+ * @param a 
+ * 	type ref object 1
+ * @param b 
+ * 	type ref object 2
+ * @returns boolean
+ */
 function compareTypes(a: IQuantaTypeRef, b: IQuantaTypeRef) {
 	if(a === undefined || b === undefined)
 		return false
@@ -44,6 +62,11 @@ function compareTypes(a: IQuantaTypeRef, b: IQuantaTypeRef) {
 	return true
 }
 
+/**
+ * returns a list of objects that can accept the output type as an input
+ * @param outputType 
+ * 	the type of the output socket
+ */
 function DetailedCreateList(outputType: IQuantaTypeRef) {
 	let keys = Object.keys(prebuildNodeDict)
 	let keysWithMatchingInputType = []
@@ -100,6 +123,12 @@ function DetailedCreateList(outputType: IQuantaTypeRef) {
 	return detailedNodes
 }
 
+/**
+ * validates if an item within a store is a valid socket object
+ * @param item 
+ * 	the store item
+ * @returns boolean
+ */
 function validateStoreSocket(item: IQuantaStoreItem) : boolean {
 	if(item.addedKeys.includes("name") === false)
 		return false
@@ -111,10 +140,22 @@ function validateStoreSocket(item: IQuantaStoreItem) : boolean {
 	return true
 }
 
+/**
+ * builds the store key from params
+ * @param nodeId 
+ * 	node id of the node
+ * @param key 
+ * 	key specified in the node instructions
+ */
 function buildStoreKey(nodeId: string, key: string) {
 	return `${nodeId}_${key}`
 }
 
+/**
+ * convertys type group into dropdown list for dropdown component
+ * @param groupId 
+ * 	id of the type group
+ */
 function convertTypesToDropdown(groupId: string) : IUIDropdownItem[] | undefined {
 	let group = null
 	for(let i = 0; i < typeGroups.length; i++) {
@@ -141,6 +182,11 @@ function convertTypesToDropdown(groupId: string) : IUIDropdownItem[] | undefined
 	return dropdownItems
 }
 
+/**
+ * returns type object based on ref
+ * @param ref 
+ * 	ref of the type
+ */
 function getDetailedType(ref: IQuantaTypeRef) : undefined | IQuantaType {
 	let groupId = ref.groupId
 	if(groupId === undefined)
@@ -168,6 +214,19 @@ function getDetailedType(ref: IQuantaTypeRef) : undefined | IQuantaType {
 	return type
 }
 
+/**
+ * Gets an active socket within the editor
+ * @param nodes 
+ * 	nodes within the editor
+ * @param quantaStore 
+ * 	the quanta store of the editor
+ * @param nodeId 
+ * 	id of the node
+ * @param socketId
+ * 	id of the socket 
+ * @param type 
+ * 	whether input or output
+ */
 function GetNodeSocket(
 	nodes: IQuantaRFNode[], 
 	quantaStore: IQuantaStore, 
@@ -291,6 +350,17 @@ function GetNodeSocket(
 	return socket
 }
 
+/**
+ * builds an edge for the editor
+ * @param sourceNode 
+ * 	id for the emitter node
+ * @param sourceHandle 
+ * 	id for the emitter handle
+ * @param targetNode 
+ * 	id for the target node
+ * @param targetHandle 
+ * 	id for the target handle
+ */
 function buildEdge(sourceNode: string, sourceHandle: string, targetNode: string, targetHandle: string) {
 	let nEdge = {} as IQuantaRFEdge
 	nEdge.id = v4()
@@ -309,6 +379,60 @@ function buildEdge(sourceNode: string, sourceHandle: string, targetNode: string,
 	return nEdge
 }
 
+/**
+ * checks if a node is an array group
+ * @param nodes 
+ * 	list of nodes in editor
+ * @param nodeId 
+ * 	id of the node
+ */
+function isNodeArray(nodes: IQuantaRFNode[], nodeId: string) {
+	for(let i = 0; i < nodes.length; i++) {
+		let node = nodes[i]
+		if(node.id === nodeId && node.type === "quanta_group")
+			return true
+	}
+
+	return false
+}
+
+function arrayConnection(
+	params: Connection, 
+	nodes: IQuantaRFNode[], 
+	quantaStore: IQuantaStore,
+	edges: IQuantaRFEdge[],
+	setEdges: Dispatch<SetStateAction<IQuantaRFEdge[]>>
+) {
+	let sourceNode = params.source
+	let targetNode = params.target
+	if(sourceNode === null || targetNode === null)
+		return
+
+	let isSource = isNodeArray(nodes, sourceNode)
+
+	let targetId = isSource ? targetNode : sourceNode
+	let targetHandle = isSource ? params.targetHandle : params.sourceHandle 
+	let handleType = isSource ?  "input" : "output"
+	if(targetHandle === null)
+		return
+
+	let handleObject = GetNodeSocket(nodes, quantaStore, targetId, targetHandle, handleType as any)
+	if(handleObject === undefined)
+		return
+	if(handleObject.isArray !== true)
+		return
+
+	let nEdge = {}
+	if(handleType === "input")
+		nEdge = buildEdge(sourceNode, sourceNode, targetNode, targetHandle)
+	else
+		nEdge = buildEdge(sourceNode, targetHandle, targetNode, targetNode)
+
+	let nEdges = edges
+	nEdges.push(nEdge)
+	setEdges([ ...nEdges ])
+}
+
 export {
 	BuildNode,
 	DetailedCreateList,
@@ -318,5 +442,7 @@ export {
 	getDetailedType,
 	compareTypes,
 	GetNodeSocket,
-	buildEdge
+	buildEdge,
+	isNodeArray,
+	arrayConnection
 }

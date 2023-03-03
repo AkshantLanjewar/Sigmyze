@@ -25,15 +25,17 @@ const QuantaGroup: React.FC<IQuantaGroupProps> = ({ selected, id }) => {
             />
 
             <Handle
-                type={"source"}
+                type={"target"}
                 position={Position.Left}
                 className={`${styles.input} ${styles.left}`}
+                id={id}
             />
 
             <Handle
-                type={"target"}
+                type={"source"}
                 position={Position.Right}
                 className={`${styles.input} ${styles.right}`}
+                id={id}
             />
 
             <div className={styles.quanta__group}>
