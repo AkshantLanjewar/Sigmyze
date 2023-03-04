@@ -1,5 +1,7 @@
 import { RefObject } from "react"
+import { IQuantaRFEdge } from "./edges"
 import { IQuantaFormField } from "./form"
+import { IQuantaSocket } from "./node-instructions"
 import { IQuantaTypeRef } from "./node-type"
 import { IQuantaStoreData } from "./store"
 
@@ -17,6 +19,16 @@ interface IQuantaEditorGlobals {
      * This is the toggle to update the dynamic data subscribed to stores
      */
     storeToggle: boolean,
+
+    /**
+     * when edges are updated within the editor
+     */
+    edgeToggle: boolean,
+
+    /**
+     * when nodes are updated within the editor
+     */
+    nodeToggle: boolean,
 
     /**
      * Function that creates a new node within the editor
@@ -131,7 +143,33 @@ interface IQuantaEditorGlobals {
      * @param type 
      *  this is the new type being set
      */
-    updateTrackedNodeType: (nodeId: string, socketId: string, type: IQuantaTypeRef) => void
+    updateTrackedNodeType: (nodeId: string, socketId: string, type: IQuantaTypeRef) => void,
+
+    /**
+     * This gets the edges connected to a specific node
+     * @param nodeId 
+     *  id of the node we are looking up
+     */
+    getConnectedEdge: (nodeId: string, source: "source" | "target") => IQuantaRFEdge | undefined,
+
+    /**
+     * Gets the potential parent id of the node 
+     * @param nodeId 
+     *  id of the node
+     * @returns 
+     */
+    getParentId: (nodeId: string) => string | undefined,
+
+    /**
+     * this gets a socket from a node within the editor
+     * @param nodeId
+     *  id of the node the socket is a part of 
+     * @param socketId 
+     *  id of the socket
+     * @param type 
+     *  whether the socket is an input or output
+     */
+    getNodeSocket: (nodeId: string, socketId: string, type: "input" | "output") => IQuantaSocket | undefined
 }
 
 export * from './nodes'

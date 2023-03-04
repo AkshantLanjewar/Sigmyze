@@ -290,7 +290,7 @@ function GetNodeSocket(
 					continue
 
 				for(let x = 0; x < storeItems.length; x++) {
-					let storeItem = storeItems[i]
+					let storeItem = storeItems[x]
 					if(storeItem.id === socketId)
 					{
 						let storeData = storeItem.data
@@ -420,6 +420,9 @@ function arrayConnection(
 	if(handleObject === undefined)
 		return
 	if(handleObject.isArray !== true)
+		return
+
+	if(isSource && handleObject.type?.typeId !== "thread")
 		return
 
 	let nEdge = {}

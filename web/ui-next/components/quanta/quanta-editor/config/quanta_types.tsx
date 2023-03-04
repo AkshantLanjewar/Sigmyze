@@ -26,7 +26,7 @@ const typeGroups = [
             },
             {
                 typeId: "sdmx_indicator",
-                typeName: "SDMX Indicators",
+                typeName: "SDMX Indicator",
                 typeIcon: <IconDatabase />,
                 typeDescription: "SDMX Indicator from parsed files"
             }

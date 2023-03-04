@@ -228,11 +228,16 @@ function editorDeleteNode(
     quit()
 }
 
+function setIterNodeType(nodeId: string, newType: IQuantaTypeRef) {
+
+}
+
 export { 
     CreateMenuNode,
     trackNodeType,
     updateTrackedNodeType,
     deleteNode,
     editorDeleteNode,
-    BuildIterNode 
+    BuildIterNode,
+    setIterNodeType 
 }

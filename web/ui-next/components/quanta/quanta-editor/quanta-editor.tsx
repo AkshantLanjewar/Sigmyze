@@ -42,6 +42,8 @@ import {
     deleteStoreItem, 
     editorDeleteNode, 
     editStoreValue, 
+    GetConnectedEdge, 
+    GetParentId, 
     getStoreValue, 
     submitStoreModal, 
     trackNodeType, 
@@ -88,6 +90,12 @@ const QuantaEditor: React.FC = ({  }) => {
      */
     const [focusToggle, setFocusToggle] = useState(false)
     const toggleFocus = () => setFocusToggle(!focusToggle)
+
+    const [edgeToggle, setEdgeToggle] = useState(false)
+    const toggleEdge = () => setEdgeToggle(!edgeToggle)
+
+    const [nodeToggle, setNodeToggle] = useState(false)
+    const toggleNode = () => setNodeToggle(!nodeToggle)
 
     const [storeToggle, setStoreToggle] = useState(false)
     const toggleUpdateStore = () => setStoreToggle(!storeToggle)
@@ -142,7 +150,7 @@ const QuantaEditor: React.FC = ({  }) => {
 
             setEdges([ ...nEdges ])
         }
-    }, [nodes])
+    }, [nodes, quantaStore])
 
     /**
      * Ref for the react flow element
@@ -164,11 +172,18 @@ const QuantaEditor: React.FC = ({  }) => {
         setEditorBounds({ x: boundingBox.x, y: boundingBox.y })
     }, [])
 
+    useEffect(() => {
+        toggleEdge()
+    }, [edges])
+
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
     value.storeToggle = storeToggle
+    value.edgeToggle = edgeToggle
+    value.nodeToggle = nodeToggle
 
-    value.getStoreValue = (storeKey: string) => getStoreValue(storeKey, quantaStore)
+    value.getStoreValue = (storeKey: string) => 
+        getStoreValue(storeKey, quantaStore)
     value.createNode = (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) =>
         CreateMenuNode(
             parentId, 
@@ -209,6 +224,12 @@ const QuantaEditor: React.FC = ({  }) => {
         trackNodeType(nodeId, socketId, type, nodes, setNodes)
     value.updateTrackedNodeType = (nodeId: string, socketId: string, type: IQuantaTypeRef) =>
         updateTrackedNodeType(nodeId, socketId, type, nodes, setNodes)
+    value.getConnectedEdge = (nodeId: string, source: "source" | "target") =>
+        GetConnectedEdge(nodeId, source, edges)
+    value.getParentId = (nodeId: string) =>
+        GetParentId(nodeId, nodes)
+    value.getNodeSocket = (nodeId: string, socketId: string, type: "input" | "output") =>
+        GetNodeSocket(nodes, quantaStore, nodeId, socketId, type)
 
     const submitStoreModal_ = (forms: IQuantaFormField[], valStore: {[key: string]: string}) =>
         submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)

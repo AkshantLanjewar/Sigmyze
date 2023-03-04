@@ -15,7 +15,6 @@ interface IInputRendererProps {
 const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, data }) => {
     const [localType, setLocalType] = useState<IQuantaTypeRef | undefined>(undefined)
     const [typeUpdated, setTypeUpdate] = useState(false)
-    const [buildType, setBuildType] = useState(false)
     const [controlledSocket, setControlledSocket] = useState<IQuantaSocket | undefined>(undefined)
 
     const quantaEditorContext = useContext(QuantaEditorContext)
@@ -53,7 +52,7 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
             setControlledSocket({ ...input })
             setLocalType({ ...socketType })
         }
-    }, [input, data?.types, buildType])
+    }, [input, data?.types])
 
     useEffect(() => {
         if(localType === undefined)

@@ -10,6 +10,7 @@ import NodeControl from "./node-control"
 import ActionMenu from "../../../lunar/document-editor/blocks/action-menu"
 import NodeActionMenu from "./action-menu/action-menu"
 import InputRenderer from "./input/input-renderer"
+import IterBody from "./iter-body"
 
 interface IQuantaNodeProps {
     data?: IQuantaRFNodeData,
@@ -53,6 +54,15 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
                 </div>
 
                 <div className={styles.node__body}>
+                    {data.instructionId === "iter" && (
+                        <IterBody 
+                            nodeId={data.nodeId} 
+                            types={data.types}
+                            data={data}
+                            focused={selected}
+                        />
+                    )}
+
                     {instructions.inputs?.map((step) => (
                         <InputRenderer
                             input={step}

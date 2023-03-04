@@ -181,7 +181,9 @@ interface IQuantaNodeInstructions {
     /**
      * The nodes controls
      */
-    controls?: IQuantaControl[]
+    controls?: IQuantaControl[],
+
+    isIter?: boolean
 }
 
 export type {
