@@ -3,6 +3,7 @@ import { IQuantaRFEdge } from "./edges"
 import { IQuantaFormField } from "./form"
 import { IQuantaSocket } from "./node-instructions"
 import { IQuantaTypeRef } from "./node-type"
+import { IQuantaRFNode } from "./nodes"
 import { IQuantaStoreData } from "./store"
 
 /**
@@ -42,7 +43,13 @@ interface IQuantaEditorGlobals {
      * @param handleRef 
      *  this is the ref for the button that spawned the create menu
      */
-    createNode: (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) => void,
+    createNode: (
+        parentId: string, 
+        parentHandle: string, 
+        childType: string, 
+        handleRef: RefObject<HTMLElement>, 
+        groupId?: string
+    ) => void,
 
     /**
      * this function creates an iterable node loop
@@ -169,7 +176,9 @@ interface IQuantaEditorGlobals {
      * @param type 
      *  whether the socket is an input or output
      */
-    getNodeSocket: (nodeId: string, socketId: string, type: "input" | "output") => IQuantaSocket | undefined
+    getNodeSocket: (nodeId: string, socketId: string, type: "input" | "output") => IQuantaSocket | undefined,
+
+    getNode: (nodeId: string) => IQuantaRFNode | undefined
 }
 
 export * from './nodes'

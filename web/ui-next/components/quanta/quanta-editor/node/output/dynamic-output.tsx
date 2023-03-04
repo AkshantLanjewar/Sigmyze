@@ -9,10 +9,11 @@ import NodeOutput from './node-output'
 interface IDynamicOutput {
     output: IQuantaSocket,
     nodeId?: string,
-    focused: boolean
+    focused: boolean,
+    parentId?: string
 }
 
-const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused }) => {
+const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, parentId }) => {
     const [renderedOutputs, setRenderedOutputs] = useState<IQuantaSocket[]>([])
     const quantaEditorContext = useContext(QuantaEditorContext)
 

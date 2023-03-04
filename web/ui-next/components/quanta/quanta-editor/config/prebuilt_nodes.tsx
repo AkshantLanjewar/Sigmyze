@@ -1,9 +1,9 @@
-import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare, IconFileCode2, IconBrackets, IconRepeat } from "@tabler/icons"
+import { IconPlayerPlay, IconEngine, IconCloudUpload, IconPlus, IconBraces, IconGitCompare, IconFileCode2, IconBrackets, IconRepeat, IconMapSearch, IconDatabaseImport } from "@tabler/icons"
 import { v4 } from "uuid"
 import { IQuantaNodeInstructions } from "../types/types"
 
 const prebuildNodeDict = {
-    "start": {
+    start: {
         name: "Start",
         icon: <IconPlayerPlay />,
         description: "This node signifies the start of execution for the file",
@@ -109,6 +109,24 @@ const prebuildNodeDict = {
         ]
     },
 
+    sdmx_data_mapper: {
+        name: "SDMX Data Mapper",
+        icon: <IconMapSearch />,
+        description: "This node exposes the fields within an SDMX indicator",
+
+        inputs: [
+            {
+                socketId: "sdmx_data",
+                socketName: "SDMX Data",
+                icon: <IconDatabaseImport />,
+                type: {
+                    groupId: "base",
+                    typeId: "sdmx_indicator"
+                }
+            }
+        ]
+    },
+
     file_upload: {
         name: "File Upload",
         icon: <IconCloudUpload />,
@@ -146,7 +164,7 @@ const prebuildNodeDict = {
                 icon: <IconPlus />
             }
         ]
-    }
+    },
 } as { [key: string]: IQuantaNodeInstructions }
 
 export default prebuildNodeDict

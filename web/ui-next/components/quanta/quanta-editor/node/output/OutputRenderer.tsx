@@ -6,10 +6,11 @@ interface IOutputRendererProps {
     output: IQuantaSocket,
     nodeId?: string,
     focused: boolean,
-    unfocus: () => void
+    unfocus: () => void,
+    parentId?: string
 }
 
-const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focused, unfocus }) => {
+const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focused, unfocus, parentId }) => {
     return (
         <>
             {output.dynamicSocket
@@ -18,6 +19,7 @@ const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focuse
                         output={output}
                         nodeId={nodeId}
                         focused={focused}
+                        parentId={parentId}
                     />
                 )
                 : (
@@ -26,6 +28,7 @@ const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focuse
                         nodeId={nodeId}
                         focused={focused}
                         unfocus={unfocus}
+                        parentId={parentId}
                     />
                 )
             }

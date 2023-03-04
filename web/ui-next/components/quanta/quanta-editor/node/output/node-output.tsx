@@ -15,10 +15,11 @@ interface INodeOutputProps {
     focused: boolean,
     unfocus: () => void,
     editType?: (itemId: string, newType: IQuantaTypeRef) => void,
-    deleteStoreField?: (itemId: string) => void
+    deleteStoreField?: (itemId: string) => void,
+    parentId?: string
 }
 
-const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus, editType, deleteStoreField }) => {
+const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus, editType, deleteStoreField, parentId }) => {
     const ref = useRef<HTMLElement>(null)
     const [opened, setOpened] = useState(false)
 
@@ -123,6 +124,7 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
                             unfocus={unfocus}
                             nodeId={nodeId}
                             handleRef={ref}
+                            parentId={parentId}
                         />
                     </div>
                 )}

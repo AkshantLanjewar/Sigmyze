@@ -43,6 +43,7 @@ import {
     editorDeleteNode, 
     editStoreValue, 
     GetConnectedEdge, 
+    getNode, 
     GetParentId, 
     getStoreValue, 
     submitStoreModal, 
@@ -184,7 +185,7 @@ const QuantaEditor: React.FC = ({  }) => {
 
     value.getStoreValue = (storeKey: string) => 
         getStoreValue(storeKey, quantaStore)
-    value.createNode = (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>) =>
+    value.createNode = (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>, groupId?: string) =>
         CreateMenuNode(
             parentId, 
             parentHandle, 
@@ -194,7 +195,8 @@ const QuantaEditor: React.FC = ({  }) => {
             reactFlowInstance, 
             editorBounds, 
             setNodes, 
-            toggleFocus
+            toggleFocus,
+            groupId
         )
     value.createIter = (parentId: string, parentHandle: string, handleRef: RefObject<HTMLElement>) =>
         BuildIterNode(
@@ -230,6 +232,7 @@ const QuantaEditor: React.FC = ({  }) => {
         GetParentId(nodeId, nodes)
     value.getNodeSocket = (nodeId: string, socketId: string, type: "input" | "output") =>
         GetNodeSocket(nodes, quantaStore, nodeId, socketId, type)
+    value.getNode = (nodeId: string) => getNode(nodeId, nodes)
 
     const submitStoreModal_ = (forms: IQuantaFormField[], valStore: {[key: string]: string}) =>
         submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)

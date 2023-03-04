@@ -13,7 +13,8 @@ function CreateMenuNode(
     reactFlowInstance: ReactFlowInstance<any, any> | null,
     editorBounds: IQuantaXYPos,
     setNodes: Dispatch<SetStateAction<IQuantaRFNode[]>>,
-    toggleFocus: () => void
+    toggleFocus: () => void,
+    groupId?: string
 ) {
     if(handleRef.current === null)
         return
@@ -21,7 +22,7 @@ function CreateMenuNode(
         return
 
     let nNodes = nodes
-    let newNode = BuildNode(childType)!
+    let newNode = BuildNode(childType, groupId)!
     let handleCoords = handleRef.current.getBoundingClientRect()
 
     const position = reactFlowInstance.project({
@@ -30,6 +31,17 @@ function CreateMenuNode(
     })
 
     newNode.position = position
+    if(groupId !== undefined)
+    {
+        let parentNode = getNode(groupId, nodes)
+        let parentPos = parentNode?.position
+        if(parentPos === undefined)
+            return
+
+        position.x = position.x - parentPos.x
+        position.y = position.y - parentPos.y
+    }
+
     nNodes.push(newNode)
 
     toggleFocus()
@@ -64,8 +76,8 @@ function BuildIterNode(
         position: position,
         data: {}, // to be set
         style: {
-            width: 300,
-            height: 150
+            width: 475,
+            height: 250
         },
     })
 
@@ -228,8 +240,15 @@ function editorDeleteNode(
     quit()
 }
 
-function setIterNodeType(nodeId: string, newType: IQuantaTypeRef) {
+function getNode(nodeId: string, nodes: IQuantaRFNode[]) : IQuantaRFNode | undefined {
+    let node = undefined
+    for(let i = 0; i < nodes.length; i++) {
+        let node_ = nodes[i]
+        if(node_.id === nodeId)
+            node = node_
+    }
 
+    return node
 }
 
 export { 
@@ -239,5 +258,5 @@ export {
     deleteNode,
     editorDeleteNode,
     BuildIterNode,
-    setIterNodeType 
+    getNode 
 }

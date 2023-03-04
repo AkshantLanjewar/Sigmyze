@@ -15,6 +15,7 @@ interface IIterBodyProps {
 
 const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) => {
     const [iterOutputs, setIterOutputs] = useState<IQuantaSocket[]>([])
+    const [parentId, setParentId] = useState<string | undefined>(undefined)
     const quantaContext = useContext(QuantaEditorContext)
 
     function getIterType() {
@@ -90,6 +91,11 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
         socket.socketName = detailedSocket.typeName
         socket.icon = detailedSocket.typeIcon
         setIterOutputs([ { ...socket } ])
+
+        const node = quantaContext.getNode(nodeId)
+        const parentId_ = node?.parentNode
+
+        setParentId(parentId_)
     }
 
     useEffect(() => {
@@ -107,6 +113,7 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
                     output={step}
                     nodeId={nodeId}
                     focused={focused}
+                    parentId={parentId}
                     unfocus={() => {  }}
                 />
             ))}

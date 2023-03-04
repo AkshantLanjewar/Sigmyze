@@ -260,9 +260,21 @@ function GetNodeSocket(
 	else
 		socketList = nodeInstruction.outputs
 	
+	if(socketList === undefined && nodeInstructions === "iter")
+	{
+		let trackedTypes = node.data?.types
+		if(trackedTypes === undefined || trackedTypes.length === 0)
+			return
+
+		let track = trackedTypes[0]
+		let nSocket = {} as IQuantaSocket
+		nSocket.socketId = socketId
+		nSocket.type = track.type
+		socketList = [ nSocket ]
+	}
+	
 	if(socketList === undefined)
 		return
-
 	//find the socket now
 	let socket = undefined
 	for(let i = 0; i < socketList.length; i++) {
@@ -364,7 +376,6 @@ function GetNodeSocket(
 function buildEdge(sourceNode: string, sourceHandle: string, targetNode: string, targetHandle: string) {
 	let nEdge = {} as IQuantaRFEdge
 	nEdge.id = v4()
-	nEdge.type = "bezier"
 
 	nEdge.style = {
 		strokeWidth: 3,

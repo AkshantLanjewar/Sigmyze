@@ -26,11 +26,25 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
     const unfocus = () => setFocused(false)
     const ref = useRef<HTMLDivElement>(null)
 
+    const [parentId, setParentId] = useState<string | undefined>(undefined)
+
     const quantaEditorContext = useContext(QuantaEditorContext) as IQuantaEditorGlobals | null
     
     useEffect(() => {
         setFocused(selected)
     }, [selected])
+
+    useEffect(() => {
+        let nodeId = data.nodeId
+        if(nodeId === undefined)
+            return
+        if(quantaEditorContext === null)
+            return
+
+        let node = quantaEditorContext.getNode(nodeId)
+        let parent = node?.parentNode
+        setParentId(parent)
+    }, [data])
 
     useEffect(() => {
         if(quantaEditorContext?.focusToggle === undefined)
@@ -78,6 +92,7 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
                             nodeId={data.nodeId}
                             focused={focused}
                             unfocus={unfocus}
+                            parentId={parentId}
                         />
                     ))}
 

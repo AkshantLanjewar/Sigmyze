@@ -34,7 +34,7 @@ const NodeType: React.FC<INodeTypeProps> = ({ type, isArray, arrayType }) => {
                                 </>
                             )}
                             
-                            {displayType.typeId}
+                            {detailedType?.typeName}
                         </Group>
                     </Badge>
                 </>

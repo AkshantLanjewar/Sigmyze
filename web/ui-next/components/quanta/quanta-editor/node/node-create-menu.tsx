@@ -7,15 +7,56 @@ import { IQuantaEditorGlobals, IQuantaNodeDetails, IQuantaSocket } from "../type
 import { DetailedCreateList } from "../utils"
 import styles from './node-renderer.module.scss'
 
+interface INodeCreateMenuInner {
+    onClick: Function,
+    name: string,
+    description: string,
+    icon: JSX.Element
+}
+
+const NodeCreateMenuInner: React.FC<INodeCreateMenuInner> = ({ onClick, name, description, icon }) => {
+    return (
+        <Menu.Item onClick={() => { onClick() }}>
+            <Group 
+                spacing={"sm"}
+                noWrap
+                sx={{ alignItems: 'normal' }}
+            >
+                <ThemeIcon 
+                    variant={"filled"}
+                    color={"violet"}
+                >
+                    {cloneElement(icon, { size: 14 })}
+                </ThemeIcon>
+
+                <Stack spacing={2.5}>
+                    <Text 
+                        size={"sm"}
+                        weight={"bold"}
+                        sx={{ lineHeight: 1 }}
+                    >
+                        {name}
+                    </Text>
+
+                        <Text size={8}>
+                        {description}
+                    </Text>
+                </Stack>
+            </Group>
+        </Menu.Item>
+    )
+}
+
 interface INodeCreateMenu {
     focused: boolean,
     nodeId?: string,
     handleRef: RefObject<HTMLElement>
     output: IQuantaSocket,
-    unfocus: () => void
+    unfocus: () => void,
+    parentId?: string
 }
 
-const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, handleRef, unfocus }) => {
+const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, handleRef, unfocus, parentId }) => {
     const [opened, setOpened] = useState(false)
     const [menuItems, setMenuItems] = useState<IQuantaNodeDetails[]>([])
 
@@ -41,7 +82,7 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
         if(nodeId === undefined)
             return
 
-        createMenuFunc(nodeId, output.socketId!, type, handleRef)
+        createMenuFunc(nodeId, output.socketId!, type, handleRef, parentId)
     }
     
     return (
@@ -66,72 +107,29 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    {output.isArray === true && (
-                        <Menu.Item onClick={() => { quantaEditorContext?.createIter(nodeId!, output.socketId!, handleRef) }}>
-                            <Group 
-                                spacing={"sm"}
-                                noWrap
-                                sx={{ alignItems: 'normal' }}
-                            >
-                                <ThemeIcon 
-                                    variant={"filled"}
-                                    color={"violet"}
-                                >
+                    {output.isArray
+                        ? (
+                            <NodeCreateMenuInner
+                                onClick={() => quantaEditorContext?.createIter(nodeId!, output.socketId!, handleRef)}
+                                name={"Iterate"}
+                                description={"Iterate through an array."}
+                                icon={(
                                     <IconBrackets 
                                         size={14} 
                                         stroke={2}
                                     />
-                                </ThemeIcon>
-
-                                <Stack spacing={2.5}>
-                                    <Text 
-                                        size={"sm"}
-                                        weight={"bold"}
-                                        sx={{ lineHeight: 1 }}
-                                    >
-                                        Iterate
-                                    </Text>
-
-                                     <Text size={8}>
-                                        Iterate through an array.
-                                    </Text>
-                                </Stack>
-                            </Group>
-                        </Menu.Item>
-                    )}
-
-                    {menuItems.map((step) => (
-                        <Menu.Item 
-                            onClick={() => menuClick(step.instructionId)}
-                        >
-                            <Group 
-                                spacing={"sm"}
-                                noWrap
-                                sx={{ alignItems: 'normal' }}
-                            >
-                                <ThemeIcon 
-                                    variant={"filled"}
-                                    color={"violet"}
-                                >
-                                    {cloneElement(step.icon, { size: 14 })}
-                                </ThemeIcon>
-
-                                <Stack spacing={2.5}>
-                                    <Text 
-                                        size={"sm"}
-                                        weight={"bold"}
-                                        sx={{ lineHeight: 1 }}
-                                    >
-                                        {step.name}
-                                    </Text> 
-
-                                    <Text size={8}>
-                                        {step.description}
-                                    </Text>
-                                </Stack>
-                            </Group>
-                        </Menu.Item>
-                    ))}
+                                )}
+                            />
+                        )
+                        : menuItems.map((step) => (
+                            <NodeCreateMenuInner
+                                onClick={() => menuClick(step.instructionId)}
+                                name={step.name}
+                                description={step.description}
+                                icon={step.icon}
+                            />
+                        ))
+                    }
                 </Menu.Dropdown>
             </Menu>
         </>
