@@ -86,7 +86,7 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
         }
 
         let socket = {} as IQuantaSocket
-        socket.socketId = v4()
+        socket.socketId = nodeId
         socket.type = socketType
         socket.socketName = detailedSocket.typeName
         socket.icon = detailedSocket.typeIcon
