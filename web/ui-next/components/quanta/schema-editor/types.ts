@@ -39,7 +39,14 @@ interface IQuantaSchema {
     focusNode?: boolean
 }
 
+interface IQuantaSchemaShort {
+    name: string,
+    type: IQuantaSchemaType,
+    id: string
+}
+
 export type { 
     IQuantaSchema,
-    IQuantaSchemaType 
+    IQuantaSchemaType,
+    IQuantaSchemaShort 
 }

@@ -1,8 +1,10 @@
 import { createContext, useEffect, useState } from "react"
 import { v4 } from "uuid"
+import { IQuantaSchema } from "../../quanta/schema-editor/types"
 import ModalManager from "../../ui/modal-manager"
+import { activateSelector, changeTab, changeText, closeTab, focusTab, openModal, openSelector } from "./functions"
 import { IQuantaState } from "./types"
-import { IQuantaFile, IQuantaProjectData } from "./types/project"
+import { IQuantaProjectData } from "./types/project"
 import { IQuantaTab } from "./types/ui"
 import { DefaultQuantaProject } from "./utils"
 
@@ -27,6 +29,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     //state for the selector
     const [activeSelector, setActiveSelector] = useState<string | null>(null)
 
+    //the datasets schema
+    const [datasetSchema, setDatasetSchema] = useState<IQuantaSchema | undefined>(undefined)
+
     useEffect(() => {
         loadQuanta()
     }, [])
@@ -44,7 +49,10 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     }
 
     let value: IQuantaState = {} as IQuantaState
-    value.project_data = projectData
+    value.project_data = { ...projectData }
+    if(value.project_data !== undefined)
+        value.project_data.dataset_schema = datasetSchema
+
     value.tabId = activeTab
     value.tabs = tabs
     value.activeSelectorId = activeSelector
@@ -53,131 +61,33 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     
     //NOTE: This function changes the tab to the specified tabs string
     // meant to be used by the mantine component only
-    value.changeTab = ( tabId: string ) => {
-        if(tabId === activeTab)
-            return
-            
-        setActiveTab(tabId)
-    }
+    value.changeTab = ( tabId: string ) => 
+        changeTab(tabId, activeTab, setActiveTab)
 
     //Note this function focuses to a tab within the editor
     // creates a tab if it does not exist
-    value.focusTab = (fileId: string, fileType: string) => {
-        let relatedTab = undefined
-        for(let i = 0; i < tabs.length; i++) {
-            let tab = tabs[i]
-            if(tab.connected_file === fileId)
-                relatedTab = tab.tabId
-        }
-
-        if(relatedTab === undefined) {
-            //get the linked file
-            let files = projectData?.files
-            let file = undefined
-            if(files === undefined)
-                return
-
-            for(let i = 0; i < files.length; i++) {
-                let _file = files[i]
-                if(_file.id === fileId)
-                    file = _file
-            }
-
-            if(file === undefined)
-                return
-            let newTab = {
-                connected_file: fileId,
-                tabId: v4(),
-                tabType: fileType,
-                tabName: file.name
-            } as IQuantaTab
-
-            let nTabs = tabs
-            nTabs.push(newTab)
-
-            relatedTab = newTab.tabId!
-            setTabs([ ...nTabs ])
-        }
-
-        setActiveTab(relatedTab)
-    }
+    value.focusTab = (fileId: string, fileType: string) => 
+        focusTab(fileId, fileType, tabs, projectData, setTabs, setActiveTab)
 
     //this function closes a tab and context switches appropriately
-    value.closeTab = (tabId: string) => {
-        let nTabs = []
-        for(let i = 0; i < tabs.length; i++) {
-            let tab = tabs[i]
-            if(tab.tabId === tabId)
-                continue
-
-            nTabs.push(tab)
-        }
-
-        setTabs([ ...nTabs ])
-
-        if(tabId === activeTab) {
-            let activeIndex = 0
-            for(let i = 0; i < tabs.length; i++) {
-                if(tabs[i].tabId === activeTab)
-                    activeIndex = i
-            }
-
-            if(activeIndex > 0)
-                activeIndex = activeIndex - 1
-
-            if(nTabs.length > 0)
-                setActiveTab(nTabs[activeIndex].tabId)
-            else
-                setActiveTab(undefined)
-        }
-    }
+    value.closeTab = (tabId: string) => 
+        closeTab(tabId, tabs, activeTab, setTabs, setActiveTab)
 
     //this function handles changing a text field
-    value.changeText = (text: string, field: "title" | "id" | "desc") => {
-        let nData = projectData
-        if(nData === undefined)
-            return
-
-        if(field === "title")
-            nData.dataset_name = text
-        if(field === "id")
-            nData.dataset_id = text
-        if(field === "desc")
-            nData.dataset_description = text
-        
-        setProjectData({ ...nData })
-    }
+    value.changeText = (text: string, field: "title" | "id" | "desc") =>
+        changeText(text, field, projectData, setProjectData)
 
     //this function opens a modal
-    value.openModal = (modalId: string) => {
-        setModalState(modalId)
-    }
+    value.openModal = (modalId: string) => 
+        openModal(modalId, setModalState)
 
     //this function activates a selector
-    value.activateSelector = (selectorId: string) => {
-        setActiveSelector(selectorId)
-    }
+    value.activateSelector = (selectorId: string) => 
+        activateSelector(selectorId, setActiveSelector)
 
     //this function opens a selector in the selector view
-    value.openSelector = (selectorId: string) => {
-        //get thje file
-        let files = projectData?.files
-        if(files === undefined)
-            return
-
-        let file = null
-        for(let i = 0; i < files.length; i++) {
-            let file_ = files[i]
-            if(file_.type === "selectors")
-                file = file_
-        }
-
-        if(file === null)
-            return
-        
-        setActiveSelector(selectorId)
-        value.focusTab(file.id!, file.type!)
-    }
+    value.openSelector = (selectorId: string) => 
+        openSelector(selectorId, value, projectData, setActiveSelector)
 
     return (
         <>

@@ -52,7 +52,15 @@ const ApplyDataRule = {
     ],
 
     outputs: [
-        
+        {
+            socketId: "chart_data",
+            socketName: "Chart Data",
+            icon: <IconChartAreaLine />,
+            type: {
+                groupId: "base",
+                typeId: "chart_data"
+            }
+        }
     ]
 } as IQuantaNodeInstructions
 

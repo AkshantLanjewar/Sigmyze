@@ -1,4 +1,4 @@
-import { IQuantaFile, IQuantaProjectData } from "./project"
+import { IQuantaProjectData } from "./project"
 import { IQuantaTab } from "./ui"
 
 interface IQuantaState {

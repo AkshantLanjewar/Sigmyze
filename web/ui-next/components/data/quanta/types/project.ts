@@ -1,3 +1,5 @@
+import { IQuantaSchema } from "../../../quanta/schema-editor/types"
+
 interface IQuantaProjectData {
     /**
      * This is the name of the dataset
@@ -22,7 +24,12 @@ interface IQuantaProjectData {
     /**
      * Store where all the data and configs are stored
      */
-    store?: IQuantaDataStore
+    store?: IQuantaDataStore,
+
+    /**
+     * this is the schema for the dataset
+     */
+    dataset_schema?: IQuantaSchema
 }
 
 interface IQuantaFile {

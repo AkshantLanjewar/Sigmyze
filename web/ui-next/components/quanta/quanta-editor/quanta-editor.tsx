@@ -2,6 +2,7 @@ import {
     createContext, 
     RefObject, 
     useCallback, 
+    useContext, 
     useEffect, 
     useMemo, 
     useRef, 
@@ -51,6 +52,8 @@ import {
     updateTrackedNodeType 
 } from "./functions"
 import QuantaGroup from "./group/quanta-group"
+import { IQuantaSchemaShort } from "../schema-editor/types"
+import QuantaContext, { QuantaContextData } from "../../data/quanta/context"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -109,6 +112,9 @@ const QuantaEditor: React.FC = ({  }) => {
     const [modalNodeId, setModalNodeId] = useState<string | undefined>(undefined)
     const [modalNodeBackend, setModalNodeBackend] = useState<string | undefined>(undefined)
 
+    //dataset types
+    const [datasetTypes, setDatasetTypes] = useState<IQuantaSchemaShort[]>([])
+
     const openStoreModal = () => setStoreModal('store')
     const closeStoreModal = () => setStoreModal(null)
 
@@ -159,6 +165,11 @@ const QuantaEditor: React.FC = ({  }) => {
     const ref = useRef<HTMLDivElement>(null)
 
     /**
+     * greater quanta context
+     */
+    const quantaContext = useContext(QuantaContextData)
+
+    /**
      * This is the mount effect.
      * handles creating the default start node, and getting the xy position of the container
      */
@@ -176,6 +187,16 @@ const QuantaEditor: React.FC = ({  }) => {
     useEffect(() => {
         toggleEdge()
     }, [edges])
+
+    useEffect(() => {
+        if(quantaContext === null)
+            return
+
+        let quantaSchema = quantaContext.project_data?.dataset_schema?.children
+        if(quantaSchema === undefined)
+            return
+
+    }, [quantaContext])
 
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
