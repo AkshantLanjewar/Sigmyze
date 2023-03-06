@@ -1,5 +1,14 @@
-import { IconBrackets, IconCpu, IconDatabase, IconFileCode2, IconGitCompare, IconTextRecognition } from "@tabler/icons";
-import { IQuantaTypeGroup } from "../types/types";
+import { IQuantaTypeGroup } from "../types/types"
+import { 
+    IconBrackets, 
+    IconCalendarEvent, 
+    IconChartAreaLine, 
+    IconCpu, 
+    IconDatabase, 
+    IconFileCode2, 
+    IconGitCompare, 
+    IconTextRecognition 
+} from "@tabler/icons"
 
 const typeGroups = [
     {
@@ -29,6 +38,18 @@ const typeGroups = [
                 typeName: "SDMX Indicator",
                 typeIcon: <IconDatabase />,
                 typeDescription: "SDMX Indicator from parsed files"
+            },
+            {
+                typeId: "chart_data",
+                typeName: "Chart Data",
+                typeIcon: <IconChartAreaLine />,
+                typeDescription: "Chart Data used by all time series data"
+            },
+            {
+                typeId: "date",
+                typeName: "Date",
+                typeIcon: <IconCalendarEvent />,
+                typeDescription: "Date element"
             }
         ]
     },
@@ -71,6 +92,18 @@ const typeGroups = [
                 typeName: "SDMX XML",
                 typeIcon: <IconFileCode2 />,
                 typeDescription: "SDMX Xml file format"
+            }
+        ]
+    },
+    {
+        groupName: "Chart Rules",
+        groupId: "chart_rules",
+        types: [
+            {
+                typeId: "is_projection",
+                typeName: "Is Projection",
+                typeIcon: <IconCalendarEvent />,
+                typeDescription: "Whether or not the data is a projection"
             }
         ]
     }
