@@ -86,9 +86,12 @@
         .schema__compare {
             width: 100%;
             display: flex;
-            gap: 5px;
+            gap: 10px;
 
-            .compare { flex-grow: 1; }
+            .compare { 
+                width: calc(50% - 10px);
+                overflow: hidden; 
+            }
         }
     }
 }

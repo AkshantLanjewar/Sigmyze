@@ -2,11 +2,28 @@ import { createContext, useEffect, useState } from "react"
 import { v4 } from "uuid"
 import { IQuantaSchema } from "../../quanta/schema-editor/types"
 import ModalManager from "../../ui/modal-manager"
-import { activateSelector, changeTab, changeText, closeTab, focusTab, openModal, openSelector } from "./functions"
 import { IQuantaState } from "./types"
-import { IQuantaProjectData } from "./types/project"
+import { IQuantaProjectData, ProjectSchemas } from "./types/project"
 import { IQuantaTab } from "./types/ui"
 import { DefaultQuantaProject } from "./utils"
+
+import { 
+    activateSelector, 
+    changeTab, 
+    changeText, 
+    closeTab, 
+    focusTab, 
+    openModal, 
+    openSelector, 
+    createElement, 
+    initSchema, 
+    editSchema,
+    getSchema,
+    changeSchema,
+    deleteSchema,
+    unfocusAllSchema
+} from "./functions"
+import { IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 
 interface IQuantaContextProps {
     quantaId?: string,
@@ -30,7 +47,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     const [activeSelector, setActiveSelector] = useState<string | null>(null)
 
     //the datasets schema
-    const [datasetSchema, setDatasetSchema] = useState<IQuantaSchema | undefined>(undefined)
+    const [schemas, setSchemas] = useState<ProjectSchemas[]>([])
+    const [updateSchema, setUpdateSchema] = useState(false)
+    const toggleUpdateSchema = () => setUpdateSchema(!updateSchema)
 
     useEffect(() => {
         loadQuanta()
@@ -51,8 +70,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     let value: IQuantaState = {} as IQuantaState
     value.project_data = { ...projectData }
     if(value.project_data !== undefined)
-        value.project_data.dataset_schema = datasetSchema
+        value.project_data.dataset_schema = schemas
 
+    value.updateSchema = updateSchema
     value.tabId = activeTab
     value.tabs = tabs
     value.activeSelectorId = activeSelector
@@ -88,6 +108,33 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     //this function opens a selector in the selector view
     value.openSelector = (selectorId: string) => 
         openSelector(selectorId, value, projectData, setActiveSelector)
+
+    value.getSchema = (parentId: string) =>
+        getSchema(parentId, schemas)
+
+    value.changeSchema = (parentId: string, nSchema: IQuantaSchema) =>
+        changeSchema(parentId, nSchema, schemas, setSchemas)
+
+    value.initSchema = (parentId: string) =>
+        initSchema(parentId, schemas, setSchemas)
+
+    value.createElement = (parentId: string, nodeId: string) =>
+        createElement(parentId, nodeId, value.getSchema(parentId), value.changeSchema)
+
+    value.editSchema = (
+        parentId: string,
+        nodeId: string, 
+        type: "edit_text" | "edit_type", 
+        text: string, 
+        node_type: IQuantaTypeRef | undefined
+    ) =>
+        editSchema(parentId, nodeId, type, text, node_type, value.getSchema(parentId), value.changeSchema, toggleUpdateSchema)
+
+    value.deleteElement = (parentId: string, nodeId: string) =>
+        deleteSchema(parentId, nodeId, value.getSchema(parentId), value.changeSchema)
+
+    value.unfocusAll = (parentId: string) =>
+        unfocusAllSchema(parentId, value.getSchema(parentId), value.changeSchema)
 
     return (
         <>

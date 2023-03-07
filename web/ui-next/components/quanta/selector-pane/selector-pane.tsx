@@ -107,11 +107,13 @@ const SelectorPane: React.FC = ({ }) => {
 
                         <div className={styles.schema__compare}>
                             <div className={styles.compare}>
-                                <SchemaEditor />
+                                {selector && (
+                                    <SchemaEditor schemaId={selector.selectorId!} />
+                                )}
                             </div>
 
                             <div className={styles.compare}>
-                                <SchemaEditor />
+                                <SchemaEditor schemaId={"dataset"} />
                             </div>
                         </div>
                     </div>

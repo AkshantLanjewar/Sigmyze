@@ -54,6 +54,7 @@ import {
 import QuantaGroup from "./group/quanta-group"
 import { IQuantaSchemaShort } from "../schema-editor/types"
 import QuantaContext, { QuantaContextData } from "../../data/quanta/context"
+import { v4 } from "uuid"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -192,10 +193,27 @@ const QuantaEditor: React.FC = ({  }) => {
         if(quantaContext === null)
             return
 
-        let quantaSchema = quantaContext.project_data?.dataset_schema?.children
+        let quantaSchema = quantaContext.getSchema("dataset")?.children
         if(quantaSchema === undefined)
+        {
+            quantaContext.initSchema("dataset")
             return
+        }
 
+        let nDatasetTypes = [] as IQuantaSchemaShort[]
+        for(let i = 0; i < quantaSchema.length; i++) {
+            let schemaObject = quantaSchema[i]
+            if(schemaObject.name === undefined || schemaObject.type === undefined || schemaObject.nodeId === undefined)
+                return
+
+            nDatasetTypes.push({
+                name: schemaObject.name,
+                type: schemaObject.type,
+                id: schemaObject.nodeId
+            })
+        }
+
+        setDatasetTypes([ ...nDatasetTypes ])
     }, [quantaContext])
 
     let value = {} as IQuantaEditorGlobals

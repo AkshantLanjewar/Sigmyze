@@ -1,3 +1,5 @@
+import { IQuantaTypeRef } from "../quanta-editor/types/types"
+
 type IQuantaSchemaType = "schema" | "string"
 
 interface IQuantaSchema {
@@ -10,6 +12,8 @@ interface IQuantaSchema {
      * This is the type of node in the schema
      */
     type?: IQuantaSchemaType,
+
+    quantaType?: IQuantaTypeRef,
 
     /**
      * Whether or not you can change the type of the node

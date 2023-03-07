@@ -11,6 +11,10 @@ $dark7: var(--mantine-color-dark-7);
     background-color: $dark9;
     border-radius: 4px;
 
+    min-height: 48px;
+    max-height: 48px;
+    overflow: hidden;
+
     &.dark {
         background-color: $dark9;
     }
@@ -36,10 +40,18 @@ $dark7: var(--mantine-color-dark-7);
         .text {
             font-weight: 700;
             font-size: 18px;
-            height: 28px;
+            max-height: 20px;
 
             display: flex;
             align-items: center;
+
+            min-height: 0;
+            padding: 0px;
+
+            width: auto!important;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
         }
     }
 

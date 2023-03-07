@@ -29,7 +29,7 @@ interface IQuantaProjectData {
     /**
      * this is the schema for the dataset
      */
-    dataset_schema?: IQuantaSchema
+    dataset_schema?: ProjectSchemas[]
 }
 
 interface IQuantaFile {
@@ -42,6 +42,10 @@ interface IQuantaDataStore {
     selectors: IQuantaSelector[]
 }
 
+interface ProjectSchemas {
+    schemaId: string,
+    schema: IQuantaSchema
+}
 
 interface IQuantaSelector {
     selectorId?: string,
@@ -53,5 +57,6 @@ export type {
     IQuantaProjectData,
     IQuantaFile,
     IQuantaDataStore,
-    IQuantaSelector 
+    IQuantaSelector,
+    ProjectSchemas 
 }

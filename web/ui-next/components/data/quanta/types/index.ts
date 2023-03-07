@@ -1,3 +1,5 @@
+import { IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
+import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 import { IQuantaProjectData } from "./project"
 import { IQuantaTab } from "./ui"
 
@@ -23,6 +25,8 @@ interface IQuantaState {
      */
     activeSelectorId?: string | null,
 
+    updateSchema: boolean,
+
     //tab related functions
     changeTab: (tabId: string) => void,
     focusTab: (fileId: string, fileType: string) => void,
@@ -37,7 +41,27 @@ interface IQuantaState {
     //opens the specified selector in the selectors view
     openSelector: (selectorId: string) => void
     //activeates selector
-    activateSelector: (selectorId: string) => void
+    activateSelector: (selectorId: string) => void,
+
+    //retreives a schema from the list
+    getSchema: (parentId: string) => IQuantaSchema | undefined
+    //edits a schema from the list
+    changeSchema: (parentId: string, nSchema: IQuantaSchema) => void
+    //inits the schema object within the context
+    initSchema: (parentId: string) => void,
+    //creates a new element within the schema
+    createElement: (parentId: string, nodeId: string) => void,
+    //edits an elements info
+    editSchema: (
+        parentId: string,
+        nodeId: string, 
+        type: "edit_text" | "edit_type", 
+        text: string, 
+        node_type: IQuantaTypeRef | undefined
+    ) => void
+    //deletes an element within the schema
+    deleteElement: (parentId: string, nodeId: string) => void,
+    unfocusAll: (parentId: string) => void
 }
 
 export type { IQuantaState }

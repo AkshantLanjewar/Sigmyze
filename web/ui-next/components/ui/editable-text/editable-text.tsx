@@ -8,25 +8,35 @@ interface IEditableTextProps {
     setValue?: (value: string) => void,
     inputType?: string,
     defaultValue?: boolean,
-    emitBlur?: () => void
+    emitBlur?: () => void,
+    emitEditState?: (edit: boolean) => void
 }
 
-const EditableText: React.FC<IEditableTextProps> = ({ className, value, setValue, inputType, defaultValue, emitBlur }) => {
+const EditableText: React.FC<IEditableTextProps> = ({ 
+    className, 
+    value, 
+    setValue, 
+    inputType, 
+    defaultValue, 
+    emitBlur, 
+    emitEditState 
+}) => {
     const [edit, setEdit] = useState(defaultValue ? defaultValue : false)
     let inputTypeReal = "text"
     if(inputType !== undefined)
         inputTypeReal = inputType
 
     useEffect(() => {
-        if(emitBlur === undefined)
-            return
-
-        if(edit === false)
+        if(edit === false && emitBlur !== undefined)
             emitBlur()
+
+        if(emitEditState === undefined)
+            return
+        emitEditState(edit)
     }, [edit])
     
     return (
-        <div>
+        <>
             {edit
                 ? (
                     <FocusTrap active={true}>
@@ -35,7 +45,7 @@ const EditableText: React.FC<IEditableTextProps> = ({ className, value, setValue
                                 <Input
                                     variant={'unstyled'}
                                     value={value}
-                                    classNames={{ input: className }}
+                                    classNames={{ input: className, wrapper: styles.input__wrapper }}
                                     data-autoFocus
                                     multiline
                                     onBlur={() => { setEdit(false) }}
@@ -76,7 +86,7 @@ const EditableText: React.FC<IEditableTextProps> = ({ className, value, setValue
                     </Tooltip>
                 )
             }
-        </div>
+        </>
     )
 }
 
