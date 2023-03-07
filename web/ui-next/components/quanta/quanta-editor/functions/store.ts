@@ -46,6 +46,8 @@ function createStoreModal(
         return
 
     let store = quantaStore[modalKey]
+    if(store.form === undefined)
+        return
 
     setFormTitle(store.formTitle)
     setFormContent([ ...store.form! ])

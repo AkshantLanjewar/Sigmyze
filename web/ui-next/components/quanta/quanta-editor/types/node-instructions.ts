@@ -67,8 +67,17 @@ interface IQuantaSocket {
      * 
      * INPUT_VAL: This backend creates dynamic **INPUTS** based on the value of another input 
      * in the object. requires the id of the input being referenced, and a list of dependent input groups.
+     * 
+     * QUANTA: this backend creates dynamic sockets based on variables in the quanta context
      */
-    dynamicDepend?: "store" | "input_val",
+    dynamicDepend?: "store" | "input_val" | "quanta",
+
+    /**
+     * This is the overall quanta project variable the socket depends on
+     * 
+     * SCHEMA: creates sockets based on schemas present in the project
+     */
+    quantaDepend?: "schema",
 
     /**
      * If the backend is a store, the key within the editors store to access the data
@@ -121,7 +130,9 @@ interface IQuantaControl {
      * 
      * STORE: This activates a store's create form
      */
-    activates?: "store",
+    activates?: "store" | "quanta",
+
+    quantaActivation?: "field"
 
     /**
      * if the backend is a store, the key to access the stores data
