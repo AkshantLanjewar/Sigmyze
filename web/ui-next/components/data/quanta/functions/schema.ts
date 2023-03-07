@@ -7,7 +7,8 @@ import { ProjectSchemas } from "../types/project"
 const initSchema = (
     parentId: string,
     schemas: ProjectSchemas[],
-    setSchemas: Dispatch<SetStateAction<ProjectSchemas[]>>
+    setSchemas: Dispatch<SetStateAction<ProjectSchemas[]>>,
+    toggleUpdateEditorSchema: () => void
 ) => {
     let nSchema = {
         name: "dataset_schema",
@@ -33,7 +34,8 @@ const createElement = (
     parentId: string,
     nodeId: string,
     datasetSchema: IQuantaSchema | undefined, 
-    setDatasetSchema: (parentId: string, nSchema: IQuantaSchema) => void
+    setDatasetSchema: (parentId: string, nSchema: IQuantaSchema) => void,
+    toggleUpdateEditorSchema: () => void
 ) => {
     let nDatasetSchema = datasetSchema
     let schemaChildren = nDatasetSchema?.children
@@ -52,6 +54,7 @@ const createElement = (
 
     nDatasetSchema.children = schemaChildren
     setDatasetSchema(parentId, nDatasetSchema)
+    toggleUpdateEditorSchema()
 }
 
 const editSchema = (
@@ -62,7 +65,8 @@ const editSchema = (
     node_type: IQuantaTypeRef | undefined,
     datasetSchema: IQuantaSchema | undefined,
     setDatasetSchema: (parentId: string, nSchema: IQuantaSchema) => void,
-    toggleUpdateSchema: () => void
+    toggleUpdateSchema: () => void,
+    toggleUpdateEditorSchema: () => void
 ) => {
     let nDatasetSchema = datasetSchema
     let schemaChildren = nDatasetSchema?.children
@@ -88,13 +92,15 @@ const editSchema = (
 
     setDatasetSchema(parentId, nDatasetSchema)
     toggleUpdateSchema()
+    toggleUpdateEditorSchema()
 }
 
 const deleteSchema = (
     parentId: string,
     nodeId: string, 
     datasetSchema: IQuantaSchema | undefined,
-    setDatasetSchema: (parentId: string, nSchema: IQuantaSchema) => void
+    setDatasetSchema: (parentId: string, nSchema: IQuantaSchema) => void,
+    toggleUpdateEditorSchema: () => void
 ) => {
     let nDatasetSchema = datasetSchema
     let schemaChildren = nDatasetSchema?.children
@@ -112,6 +118,7 @@ const deleteSchema = (
 
     nDatasetSchema.children = [ ...nSchemaChildren ]
     setDatasetSchema(parentId, nDatasetSchema)
+    toggleUpdateEditorSchema()
 }
 
 const unfocusAllSchema = (
@@ -167,7 +174,8 @@ const changeSchema = (
     parentId: string, 
     nSchema: IQuantaSchema,
     schemas: ProjectSchemas[], 
-    setSchemas: Dispatch<SetStateAction<ProjectSchemas[]>>
+    setSchemas: Dispatch<SetStateAction<ProjectSchemas[]>>,
+    toggleUpdateEditorSchema: () => void,
 ) => {
     let nSchemas = []
     for(let i = 0; i < schemas.length; i++) {
@@ -179,6 +187,7 @@ const changeSchema = (
     }
 
     setSchemas([ ...nSchemas ])
+    toggleUpdateEditorSchema()
 }
 
 export {

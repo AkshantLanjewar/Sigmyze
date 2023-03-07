@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react"
-import { v4 } from "uuid"
 import { IQuantaSchema } from "../../quanta/schema-editor/types"
 import ModalManager from "../../ui/modal-manager"
 import { IQuantaState } from "./types"
@@ -48,8 +47,12 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
 
     //the datasets schema
     const [schemas, setSchemas] = useState<ProjectSchemas[]>([])
+
     const [updateSchema, setUpdateSchema] = useState(false)
     const toggleUpdateSchema = () => setUpdateSchema(!updateSchema)
+
+    const [updateEditorSchema, setUpdateEditorSchema] = useState(false)
+    const toggleUpdateEditorSchema = () => setUpdateEditorSchema(!updateEditorSchema)
 
     useEffect(() => {
         loadQuanta()
@@ -72,6 +75,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     if(value.project_data !== undefined)
         value.project_data.dataset_schema = schemas
 
+    value.updateEditorSchema = updateEditorSchema
     value.updateSchema = updateSchema
     value.tabId = activeTab
     value.tabs = tabs
@@ -113,13 +117,13 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
         getSchema(parentId, schemas)
 
     value.changeSchema = (parentId: string, nSchema: IQuantaSchema) =>
-        changeSchema(parentId, nSchema, schemas, setSchemas)
+        changeSchema(parentId, nSchema, schemas, setSchemas, toggleUpdateEditorSchema)
 
     value.initSchema = (parentId: string) =>
-        initSchema(parentId, schemas, setSchemas)
+        initSchema(parentId, schemas, setSchemas, toggleUpdateEditorSchema)
 
     value.createElement = (parentId: string, nodeId: string) =>
-        createElement(parentId, nodeId, value.getSchema(parentId), value.changeSchema)
+        createElement(parentId, nodeId, value.getSchema(parentId), value.changeSchema, toggleUpdateEditorSchema)
 
     value.editSchema = (
         parentId: string,
@@ -128,10 +132,20 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
         text: string, 
         node_type: IQuantaTypeRef | undefined
     ) =>
-        editSchema(parentId, nodeId, type, text, node_type, value.getSchema(parentId), value.changeSchema, toggleUpdateSchema)
+        editSchema(
+            parentId, 
+            nodeId, 
+            type, 
+            text, 
+            node_type, 
+            value.getSchema(parentId), 
+            value.changeSchema, 
+            toggleUpdateSchema,
+            toggleUpdateEditorSchema
+        )
 
     value.deleteElement = (parentId: string, nodeId: string) =>
-        deleteSchema(parentId, nodeId, value.getSchema(parentId), value.changeSchema)
+        deleteSchema(parentId, nodeId, value.getSchema(parentId), value.changeSchema, toggleUpdateEditorSchema)
 
     value.unfocusAll = (parentId: string) =>
         unfocusAllSchema(parentId, value.getSchema(parentId), value.changeSchema)

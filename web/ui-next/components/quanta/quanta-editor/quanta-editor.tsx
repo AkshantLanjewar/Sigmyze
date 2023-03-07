@@ -193,28 +193,32 @@ const QuantaEditor: React.FC = ({  }) => {
         if(quantaContext === null)
             return
 
-        let quantaSchema = quantaContext.getSchema("dataset")?.children
+        let quantaSchema = quantaContext.getSchema("dataset")
         if(quantaSchema === undefined)
         {
             quantaContext.initSchema("dataset")
             return
         }
 
+        let schemaChildren = quantaSchema.children
+        if(schemaChildren === undefined)
+            return
+        
         let nDatasetTypes = [] as IQuantaSchemaShort[]
-        for(let i = 0; i < quantaSchema.length; i++) {
-            let schemaObject = quantaSchema[i]
-            if(schemaObject.name === undefined || schemaObject.type === undefined || schemaObject.nodeId === undefined)
-                return
+        for(let i = 0; i < schemaChildren.length; i++) {
+            let schemaObject = schemaChildren[i]
+            if(schemaObject.name === undefined || schemaObject.quantaType === undefined || schemaObject.nodeId === undefined)
+                continue
 
             nDatasetTypes.push({
                 name: schemaObject.name,
-                type: schemaObject.type,
+                type: schemaObject.quantaType,
                 id: schemaObject.nodeId
             })
         }
 
         setDatasetTypes([ ...nDatasetTypes ])
-    }, [quantaContext])
+    }, [quantaContext?.updateEditorSchema])
 
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle

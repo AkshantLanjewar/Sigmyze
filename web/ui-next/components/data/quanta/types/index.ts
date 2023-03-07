@@ -27,6 +27,8 @@ interface IQuantaState {
 
     updateSchema: boolean,
 
+    updateEditorSchema: boolean,
+
     //tab related functions
     changeTab: (tabId: string) => void,
     focusTab: (fileId: string, fileType: string) => void,

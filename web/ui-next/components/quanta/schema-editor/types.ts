@@ -45,7 +45,7 @@ interface IQuantaSchema {
 
 interface IQuantaSchemaShort {
     name: string,
-    type: IQuantaSchemaType,
+    type: IQuantaTypeRef,
     id: string
 }
 
