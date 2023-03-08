@@ -60,6 +60,11 @@ interface IQuantaSocket {
     groupTitle?: string,
 
     /**
+     * this is the id for the group, used by the execution engine
+     */
+    groupId?: string,
+
+    /**
      * This is the backend that the dynamic group depends on.
      * 
      * STORE: This backend constucts outputs based on what is in the editors store.

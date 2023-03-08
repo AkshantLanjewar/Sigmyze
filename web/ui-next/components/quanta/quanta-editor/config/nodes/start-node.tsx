@@ -6,6 +6,8 @@ const StartNode = {
     icon: <IconPlayerPlay />,
     description: "This node signifies the start of execution for the file",
     immutableNode: true,
+
+    inputs: [],
     
     outputs: [
         {

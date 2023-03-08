@@ -23,6 +23,7 @@ const FileUpload = {
         {
             dynamicSocket: true,
             groupTitle: "Files",
+            groupId: "files",
             dynamicDepend: "store",
             storeKey: "file_upload",
             selectableType: true

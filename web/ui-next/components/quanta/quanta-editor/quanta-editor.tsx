@@ -55,6 +55,7 @@ import QuantaGroup from "./group/quanta-group"
 import { IQuantaSchemaShort } from "../schema-editor/types"
 import QuantaContext, { QuantaContextData } from "../../data/quanta/context"
 import { v4 } from "uuid"
+import ExecuteNodeGraph from "./execution-engine"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -120,12 +121,12 @@ const QuantaEditor: React.FC = ({  }) => {
     const closeStoreModal = () => setStoreModal(null)
 
     /**
-     * This is the react-flow related variables
+     * This is the react-flow related variables 
      */
     const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
     const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
     const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode, quanta_group: QuantaGroup }), [])
-
+ 
     //when edges connect
     const onConnect = useCallback((params: Connection) => {
         //source node vars
@@ -184,7 +185,7 @@ const QuantaEditor: React.FC = ({  }) => {
         const boundingBox = ref.current.getBoundingClientRect()
         setEditorBounds({ x: boundingBox.x, y: boundingBox.y })
     }, [])
-
+ 
     useEffect(() => {
         toggleEdge()
     }, [edges])
@@ -219,6 +220,10 @@ const QuantaEditor: React.FC = ({  }) => {
 
         setDatasetTypes([ ...nDatasetTypes ])
     }, [quantaContext?.updateEditorSchema])
+
+    useEffect(() => { 
+        ExecuteNodeGraph(nodes, edges, quantaStore)
+    }, [edges, nodes, quantaStore])
 
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
