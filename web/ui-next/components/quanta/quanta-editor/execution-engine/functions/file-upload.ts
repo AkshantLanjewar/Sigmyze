@@ -5,13 +5,13 @@ import { IQuantaFormField } from "../../types/types";
 import { IEngineModalProps } from "../engine-wrapper";
 import { ICallStackFunc } from "../types";
 
-function fileUploadExecute(this: any, stack: ICallStackFunc ) {
+function fileUploadExecute(this: any, stack: ICallStackFunc) {
     this.logMsg("Executing File Upload Node")
     let keepRunning = true // js has retarded error handling
     let filesUploaded = false
 
     let inputs = stack.inputs
-    let executution_input = undefined
+    let executution_input = undefined as any
     for(let i = 0; i < inputs.length; i++) {
         let input = inputs[i]
         switch(input.id) {
@@ -23,62 +23,57 @@ function fileUploadExecute(this: any, stack: ICallStackFunc ) {
         }
     }
 
-    function abort(this: any, errorMsg: string) {
-        modals.close("engineModal")
-        if(this === undefined)
-            return
-        if(filesUploaded === true)
-            return
-
-        this.logMsg("Aborting File Upload")
-        keepRunning = false
-    }
-
-    function submit(this: any, forms: IQuantaFormField[], valStore: {[key: string]: any}) {
-        if(!keepRunning)
-            return
-        if(this === undefined)
-            return
-
-        let validForm = true
-        for(let i = 0; i < forms.length; i++) {
-            let form = forms[i]
-            let val = valStore[form.id!]
-            if(typeof val !== "string")
-                validForm = false
+    let that = this
+    let promise = new Promise(function(resolve, reject) {
+        function abort(errorMsg: string) {
+            modals.close("engineModal")
+            if(filesUploaded === true)
+                return
+    
+            reject(`file_upload ${errorMsg}`)
         }
-
-        if(!validForm) {
-            showNotification({
-                title: "File Upload Error",
-                message: "Please upload all the requested files in the form.",
-                color: 'red',
-                autoClose: 1000 * 3.5
-            })
-            
-            return
+    
+        function submit(forms: IQuantaFormField[], valStore: {[key: string]: any}) {
+            if(!keepRunning)
+                return
+    
+            let validForm = true
+            for(let i = 0; i < forms.length; i++) {
+                let form = forms[i]
+                let val = valStore[form.id!]
+                if(typeof val !== "string")
+                    validForm = false
+            }
+    
+            if(!validForm) {
+                showNotification({
+                    title: "File Upload Error",
+                    message: "Please upload all the requested files in the form.",
+                    color: 'red',
+                    autoClose: 1000 * 3.5
+                })
+                
+                return
+            }
+    
+            //output the values
+            for(let i = 0; i < forms.length; i++) {
+                let form = forms[i]
+                if(form.linkedKey === undefined)
+                    continue
+    
+                let val = valStore[form.id!]
+                that.setOutputValue(stack.nodeId, form.linkedKey, val)
+            }
+    
+            filesUploaded = true
+            modals.closeAll()
+            that.logMsg("files uploaded")
+            resolve("done")
         }
-
-        //output the values
-        for(let i = 0; i < forms.length; i++) {
-            let form = forms[i]
-            if(form.linkedKey === undefined)
-                continue
-
-            let val = valStore[form.id!]
-            this.setOutputValue(stack.nodeId, form.linkedKey, val)
-        }
-
-        filesUploaded = true
-        modals.closeAll()
-        this.logMsg("files uploaded")
-    }
-
-    try {
+    
         if(executution_input !== true)
-            abort.call(this, "missing inputs")
-        if(!keepRunning)
-            return
+            abort("missing inputs")
 
         //find the files we want uploaded
         let dynamicOutputs = stack.dynamicOutputs
@@ -109,17 +104,17 @@ function fileUploadExecute(this: any, stack: ICallStackFunc ) {
         modals.openContextModal({
             modal: "engineModal",
             title: "File Upload",
-            onClose: () =>  abort.call(this, "files not uploaded"),
+            onClose: () =>  abort("files not uploaded"),
             centered: true,
             exitTransitionDuration: 250,
             innerProps: {
                 forms: formComponents,
-                submit: (forms, valStore) => submit.call(this, forms, valStore)
+                submit: (forms, valStore) => submit(forms, valStore)
             } as IEngineModalProps
         })
-    } catch (error) {
-        this.logMsg("[ERROR]: " + error)
-    }
+    })
+
+    return promise
 }
 
 export default fileUploadExecute

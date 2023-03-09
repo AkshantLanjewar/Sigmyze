@@ -1,5 +1,6 @@
 import { IQuantaRFEdge } from "../types/types";
 import fileUploadExecute from "./functions/file-upload";
+import sdmxDataParserExecute from "./functions/sdmx-data-parser";
 import startExecute from "./functions/start";
 import { ICallStackFunc, ICallStackParam, ICallStackStore } from "./types";
 
@@ -16,10 +17,10 @@ class StackEngine {
         this.edges = _edges
     }
 
-    execute() {
+    async execute() {
         for(let i = 0; i < this.callstack.length; i++) {
             let stack = this.callstack[i]
-            this.executeNode(stack)
+            await this.executeNode(stack)
         }
     }
 
@@ -64,7 +65,7 @@ class StackEngine {
         this.callstackStore[query] = val
     }
 
-    private executeNode(stack: ICallStackFunc) {
+    private async executeNode(stack: ICallStackFunc) {
         let executionId = `${stack.functionId}:${stack.nodeId}`
         let dependencies = stack.dependencies
         if(this.executedNodes.includes(executionId))
@@ -76,18 +77,25 @@ class StackEngine {
             if(dependentStack === undefined)
                 continue
 
-            this.executeNode(dependentStack)
+            await this.executeNode(dependentStack)
         }
 
-        switch(stack.functionId) {
-            case "start":
-                startExecute.call(this, stack)
-                break
-            case "file_upload":
-                fileUploadExecute.call(this, stack)
-                break
-            default:
-                break
+        try {
+            switch(stack.functionId) {
+                case "start":
+                    await startExecute.call(this, stack)
+                    break
+                case "file_upload":
+                    await fileUploadExecute.call(this, stack)
+                    break
+                case "sdmx_data_parser":
+                    await sdmxDataParserExecute.call(this, stack)
+                    break
+                default:
+                    break
+            }
+        } catch (error) {
+            this.logMsg(`error -> ${error}`)
         }
 
         //node has been executed

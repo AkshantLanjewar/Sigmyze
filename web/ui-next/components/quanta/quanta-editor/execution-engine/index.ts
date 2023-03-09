@@ -2,7 +2,7 @@ import prebuildNodeDict from "../config/prebuilt_nodes";
 import { GetConnectedEdge } from "../functions";
 import { IQuantaRFEdge } from "../types/edges";
 import { IQuantaRFNode } from "../types/nodes";
-import { IQuantaStore } from "../types/types";
+import { IQuantaSocket, IQuantaStore } from "../types/types";
 import { buildStoreKey } from "../utils";
 import StackEngine from "./callstack"
 import { ICallStackFunc, ICallStackParam } from "./types";
@@ -35,17 +35,63 @@ function getNodeParams(node: IQuantaRFNode, quantaStore: IQuantaStore) {
     let inputs = [] as ICallStackParam[]
     for(let i = 0; i < nodeInputSockets.length; i++) {
         let input = nodeInputSockets[i]
-        if(input.dynamicSocket) {
+        if(input.dynamicSocket === true)
+            continue
+        if(input.socketId === undefined || input.type === undefined || input.socketName === undefined)
+            continue
 
-        } else {
-            if(input.socketId === undefined || input.type === undefined || input.socketName === undefined)
+        inputs.push({
+            id: input.socketId,
+            type: input.type,
+            name: input.socketName,
+            staticSocket: input.staticSocket
+        })
+    }
+
+    //handles the dynamic sockets
+    for(let i = 0; i < nodeInputSockets.length; i++) {
+        let input = nodeInputSockets[i]
+        if(input.dynamicSocket !== true)
+            continue
+
+        let dependent = input.dynamicDepend
+        if(dependent === "input_val") {
+            let inputId = input.inputId
+            let depdendentInputs = input.dependentInputs
+            if(inputId === undefined || depdendentInputs === undefined)
                 continue
 
-            inputs.push({
-                id: input.socketId,
-                type: input.type,
-                name: input.socketName
-            })
+            let socket = undefined
+            for(let x = 0; x < inputs.length; x++) {
+                let colInput = inputs[x]
+                if(colInput.id === inputId)
+                    socket = colInput
+            }
+
+            if(socket === undefined)
+                continue
+            let socketValue = socket.type.typeId
+            if(socketValue === undefined)
+                continue
+
+            let dynamicSockets = [] as IQuantaSocket[]
+            for(let x = 0; x < depdendentInputs.length; x++) {
+                let depdendentInput = depdendentInputs[x]
+                if(depdendentInput.inputValue === socketValue)
+                    dynamicSockets = depdendentInput.sockets
+            }
+
+            for(let x = 0; x < dynamicSockets.length; x++) {
+                let dynamicSocket = dynamicSockets[x]
+                if(dynamicSocket.socketId === undefined || dynamicSocket.type === undefined || dynamicSocket.socketName === undefined)
+                    continue
+                
+                inputs.push({
+                    id: dynamicSocket.socketId,
+                    type: dynamicSocket.type,
+                    name: dynamicSocket.socketName
+                })
+            }
         }
     }
 

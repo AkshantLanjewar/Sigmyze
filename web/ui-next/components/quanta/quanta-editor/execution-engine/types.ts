@@ -3,7 +3,8 @@ import { IQuantaTypeRef } from "../types/node-type"
 interface ICallStackParam {
     id: string,
     type: IQuantaTypeRef,
-    name: string
+    name: string,
+    staticSocket?: boolean
 }
 
 interface ICallStackFunc {
