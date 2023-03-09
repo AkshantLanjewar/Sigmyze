@@ -3,13 +3,16 @@ import { useForm } from "@mantine/form"
 import { showNotification } from "@mantine/notifications"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { FormEvent, useContext, useEffect } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import Logo from "../../nav-elements/logo/logo"
 import styles from './auth-styles.module.scss'
+import { LoadingOverlay } from "@mantine/core"
 
 const SignupPageComponent: React.FC = ({ }) => {
+    const[visible, setVisible] = useState(false);
+
     const form = useForm({
         initialValues: {
             email: '',
@@ -40,8 +43,11 @@ const SignupPageComponent: React.FC = ({ }) => {
         e.preventDefault()
 
         async function main() {
-            if(userContext.register === undefined)
+            setVisible(true);
+            if(userContext.register === undefined) {
+                setVisible(false);
                 return
+            }    
 
             let email = form.values.email
             let username = form.values.username 
@@ -50,26 +56,31 @@ const SignupPageComponent: React.FC = ({ }) => {
             let terms = form.values.terms
 
             if(username.length === 0) {
+                setVisible(false);
                 errorMessage("It seems you forgot to type in a Username")
                 return
             }
 
             if(password.length < 7) {
+                setVisible(false);
                 errorMessage("Please type in a longer password")
                 return
             }
 
             if(password !== passwordConf) {
+                setVisible(false);
                 errorMessage("Please make sure the passwords you typed match")
                 return
             }
 
             if(terms === false) {
+                setVisible(false);
                 errorMessage("You must accept the terms")
                 return
             }
 
             await userContext.register(email, username, password)
+            setVisible(false);
             router.push('/auth/verify')
         }
 
@@ -99,7 +110,7 @@ const SignupPageComponent: React.FC = ({ }) => {
             <div className={styles.content}>
                 <div className={styles.loginWrapper}>
                     <div className={styles.title}>Get Started!</div>
-
+                    <LoadingOverlay visible={visible} loaderProps={{ size: 'sm', color: 'blue', variant: 'oval' }} overlayOpacity={0.3} overlayColor="#c5c5c5"/>
                     <form className={styles.form} onSubmit={onSubmit}>
                         <input type="text" style={{ display: "none" }} />
                         <input type="password" style={{ display: "none" }} />
