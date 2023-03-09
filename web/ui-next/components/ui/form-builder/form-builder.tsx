@@ -1,24 +1,25 @@
 import { Button, Group, Stack } from "@mantine/core"
 import { useState } from "react"
-import { IQuantaFormField } from "../quanta-editor/types/types"
-import { convertTypesToDropdown } from "../quanta-editor/utils"
-import DropdownInput from "./dropdown-input"
-import TextInputQuanta from "./text-input"
+import { IQuantaFormField } from "../../quanta/quanta-editor/types/types"
+import { convertTypesToDropdown } from "../../quanta/quanta-editor/utils"
+import DropdownInput from "./form-elements/dropdown-input"
+import FileInput from "./form-elements/file-input/file-input"
+import TextInputQuanta from "./form-elements/text-input"
 
 interface IFormBuilderProps {
     forms: IQuantaFormField[],
     closeModal: () => void,
-    submit: (forms: IQuantaFormField[], valStore: {[key: string]: string}) => void
+    submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => void
 }
 
 const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit }) => {
-    const [valStore, setValStore] = useState<{[key: string]: string}>({})
+    const [valStore, setValStore] = useState<{[key: string]: any}>({})
 
     function getValue(id: string) {
         return valStore[id]
     }
 
-    function setValue(id: string, val: string) {
+    function setValue(id: string, val: any) {
         let nValStore = valStore
         nValStore[id] = val
 
@@ -59,6 +60,21 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit })
                                 value={getValue(step.id!)}
                                 setValue={(value: string) => setValue(step.id!, value)}
                             />
+                        )
+                    }
+
+                    if(inputType === "file") {
+                        let fileType = step.fileType
+                        let fileName = step.name
+                        if(fileType === undefined || fileName === undefined)
+                            return
+
+                        return (
+                            <FileInput 
+                                fileType={fileType}
+                                fileName={fileName}
+                                setValue={(val: any) => setValue(step.id!, val)}
+                            /> 
                         )
                     }
                 })}

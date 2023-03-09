@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import PREBUILT_FORMS from '../../../form-builder/prebuilt_forms'
+import PREBUILT_FORMS from '../../../../ui/form-builder/prebuilt_forms'
 import { QuantaEditorContext } from '../../quanta-editor'
 import { IQuantaSocket, IQuantaStoreData, IQuantaStoreItem, IQuantaTypeRef } from '../../types/types'
 import { validateStoreSocket, buildStoreKey } from '../../utils'

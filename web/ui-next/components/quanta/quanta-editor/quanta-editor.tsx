@@ -31,7 +31,7 @@ import { applyNodeChanges, applyEdgeChanges, Connection } from "@reactflow/core"
 import QuantaNode from "./node/quanta-node"
 import { arrayConnection, buildEdge, BuildNode, compareTypes, GetNodeSocket, isNodeArray } from "./utils"
 import ModalManager from "../../ui/modal-manager"
-import FormBuilder from "../form-builder/form-builder"
+import FormBuilder from "../../ui/form-builder/form-builder"
 import DeleteNodeForm from "./forms/delete-node-form"
 
 import { 
@@ -56,6 +56,7 @@ import { IQuantaSchemaShort } from "../schema-editor/types"
 import QuantaContext, { QuantaContextData } from "../../data/quanta/context"
 import { v4 } from "uuid"
 import ExecuteNodeGraph from "./execution-engine"
+import EngineWrapper from "./execution-engine/engine-wrapper"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -116,6 +117,10 @@ const QuantaEditor: React.FC = ({  }) => {
 
     //dataset types
     const [datasetTypes, setDatasetTypes] = useState<IQuantaSchemaShort[]>([])
+
+    //when the engine wrapper should execute
+    const [engineWrapperToggle, setEngineWrapperToggle] = useState(false)
+    const toggleEngineWrapper = () => setEngineWrapperToggle(!engineWrapperToggle)
 
     const openStoreModal = () => setStoreModal('store')
     const closeStoreModal = () => setStoreModal(null)
@@ -222,8 +227,8 @@ const QuantaEditor: React.FC = ({  }) => {
     }, [quantaContext?.updateEditorSchema])
 
     useEffect(() => { 
-        ExecuteNodeGraph(nodes, edges, quantaStore)
-    }, [edges, nodes, quantaStore])
+        toggleEngineWrapper()
+    }, [edges])
 
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
@@ -292,6 +297,13 @@ const QuantaEditor: React.FC = ({  }) => {
         >
             <QuantaEditorContext.Provider value={value}>
                 <>
+                    <EngineWrapper
+                        subscribeExecute={engineWrapperToggle}
+                        nodes={nodes}
+                        edges={edges}
+                        store={quantaStore}
+                    />
+
                     <ModalManager
                         modalState={storeModal}
                         close={closeStoreModal}

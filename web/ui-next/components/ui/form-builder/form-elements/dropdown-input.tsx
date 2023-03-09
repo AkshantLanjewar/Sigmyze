@@ -1,7 +1,7 @@
 import { Text } from "@mantine/core"
 import { useEffect } from "react"
-import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
-import UIDropdown from "../../ui/ui-dropdown/ui-dropdown"
+import { IUIDropdownItem } from "../../ui-dropdown/types"
+import UIDropdown from "../../ui-dropdown/ui-dropdown"
 
 interface IDropdownInput {
     items: IUIDropdownItem[],

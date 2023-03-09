@@ -4,11 +4,27 @@
     justify-content: space-between;
     width: 100%;
     cursor: pointer;
+    position: relative;
     
     .file__inner {
         display: flex;
         align-items: center;
         gap: 10px;
+        position: relative;
+        cursor: pointer;
+        width: 100%;
+
+        .file__input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
 
         .file__name {
             color: #d0bfff;

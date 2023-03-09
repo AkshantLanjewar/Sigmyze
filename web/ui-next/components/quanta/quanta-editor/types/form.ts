@@ -1,4 +1,4 @@
-type QuantaFormType = "text" | "dropdown" | "additional"
+type QuantaFormType = "text" | "dropdown" | "additional" | "file"
 
 /**
  * Form field definitions
@@ -37,7 +37,17 @@ interface IQuantaFormField {
     /**
      * id for the field
      */
-    id?: string
+    id?: string,
+
+    /**
+     * this is the type for the file
+     */
+    fileType?: string,
+
+    /**
+     * this is the name for the file we want uploaded
+     */
+    fileName?: string,
 }
 
 /**
