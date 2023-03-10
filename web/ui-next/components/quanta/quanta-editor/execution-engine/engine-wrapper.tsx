@@ -10,6 +10,7 @@ import { IQuantaRFNode } from "../types/nodes"
 import { IQuantaStore } from "../types/store"
 import StackEngine from "./callstack"
 import { ExecutionContextData } from "./context"
+import { IExecutionEngineContext } from "./context/types"
 
 interface IEngineModalProps {
     forms: IQuantaFormField[],
@@ -40,8 +41,15 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
     const [internalEdges, setInternalEdges] = useState<IQuantaRFEdge[]>([])
     const [internalStore, setInternalStore] = useState<IQuantaStore | undefined>(undefined)
 
+    const [internalEngine, setInternalEngine] = useState<StackEngine | undefined>(undefined)
+
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
-    const executionContext = useContext(ExecutionContextData)
+    const { 
+        setOutputValueSocket, 
+        socketResponse, 
+        socketResponseQueue,
+        deleteSocketMessage 
+    } = useContext(ExecutionContextData) as IExecutionEngineContext
 
     useEffect(() => {
         if(internalStore === undefined)
@@ -50,9 +58,29 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
             return
 
         let callStack = ExecuteNodeGraph(internalNodes, internalEdges, internalStore)
-        let engine = new StackEngine(callStack, internalEdges)
-        engine.execute()
+        let engine = new StackEngine(
+            callStack, 
+            internalEdges,
+            setOutputValueSocket,
+            deleteSocketMessage
+        )
+        
+        setInternalEngine(engine)
     }, [loggedIn, loaded, subscribeExecute])
+
+    useEffect(() => {
+        if(internalEngine === undefined)
+            return
+
+        internalEngine.execute()
+    }, [internalEngine])
+
+    useEffect(() => {
+        if(internalEngine === undefined)
+            return
+
+        internalEngine.updateMessages([ ...socketResponseQueue ])
+    }, [socketResponse])
 
     //effect hook to set the internal nodes
     useEffect(() => {

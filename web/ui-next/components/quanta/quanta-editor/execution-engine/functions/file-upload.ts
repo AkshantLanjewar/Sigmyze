@@ -37,39 +37,44 @@ function fileUploadExecute(this: any, stack: ICallStackFunc) {
             if(!keepRunning)
                 return
     
-            let validForm = true
-            for(let i = 0; i < forms.length; i++) {
-                let form = forms[i]
-                let val = valStore[form.id!]
-                if(typeof val !== "string")
-                    validForm = false
+            async function main() {
+                let validForm = true
+                for(let i = 0; i < forms.length; i++) {
+                    let form = forms[i]
+                    let val = valStore[form.id!]
+                    if(typeof val !== "string")
+                        validForm = false
+                }
+        
+                if(!validForm) {
+                    showNotification({
+                        title: "File Upload Error",
+                        message: "Please upload all the requested files in the form.",
+                        color: 'red',
+                        autoClose: 1000 * 3.5
+                    })
+                    
+                    return
+                }
+        
+                //output the values
+                for(let i = 0; i < forms.length; i++) {
+                    let form = forms[i]
+                    if(form.linkedKey === undefined)
+                        continue
+        
+                    let val = valStore[form.id!]
+                    that.setOutputValue(stack.nodeId, form.linkedKey, val)
+                    await that.setOutputValueAsync(stack.nodeId, form.linkedKey, val)
+                }
+        
+                filesUploaded = true
+                modals.closeAll()
+                that.logMsg("files uploaded")
+                resolve("done")
             }
-    
-            if(!validForm) {
-                showNotification({
-                    title: "File Upload Error",
-                    message: "Please upload all the requested files in the form.",
-                    color: 'red',
-                    autoClose: 1000 * 3.5
-                })
-                
-                return
-            }
-    
-            //output the values
-            for(let i = 0; i < forms.length; i++) {
-                let form = forms[i]
-                if(form.linkedKey === undefined)
-                    continue
-    
-                let val = valStore[form.id!]
-                that.setOutputValue(stack.nodeId, form.linkedKey, val)
-            }
-    
-            filesUploaded = true
-            modals.closeAll()
-            that.logMsg("files uploaded")
-            resolve("done")
+
+            main()
         }
     
         if(executution_input !== true)

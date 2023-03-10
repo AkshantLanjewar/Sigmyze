@@ -1,5 +1,8 @@
+import { v4 } from "uuid";
 import { IQuantaRFEdge } from "../types/types";
+import { ISocketResp } from "./context/types";
 import fileUploadExecute from "./functions/file-upload";
+import Observable from "./functions/observable";
 import sdmxDataParserExecute from "./functions/sdmx-data-parser";
 import startExecute from "./functions/start";
 import { ICallStackFunc, ICallStackParam, ICallStackStore } from "./types";
@@ -9,12 +12,32 @@ class StackEngine {
     private executedNodes: string[]
     private callstackStore: ICallStackStore
     private edges: IQuantaRFEdge[]
+    private executionId: string
+    private socketResponseQueue: Observable
 
-    constructor(_callstack: ICallStackFunc[], _edges: IQuantaRFEdge[]) {
+    //passed functions
+    private setOutputValueSocket: (processId: string, nodeId: string, socketId: string, value: any) => string | undefined
+    private deleteSocketMessage: (requestId: string) => void
+
+    constructor(
+        _callstack: ICallStackFunc[], 
+        _edges: IQuantaRFEdge[],
+        _setOutputValueSocket: (processId: string, nodeId: string, socketId: string, value: any) => string | undefined,
+        _deleteSocketMessage: (requestId: string) => void
+    ) {
         this.callstack = _callstack
         this.executedNodes = []
         this.callstackStore = {}
         this.edges = _edges
+        this.executionId = v4()
+        this.socketResponseQueue = new Observable([])
+
+        this.setOutputValueSocket = _setOutputValueSocket
+        this.deleteSocketMessage = _deleteSocketMessage
+    }
+
+    updateMessages(socketResponseQueue: ISocketResp[]) {
+        this.socketResponseQueue.setValue([ ...socketResponseQueue ])
     }
 
     async execute() {
@@ -63,6 +86,35 @@ class StackEngine {
 
         let query = `${nodeId}:${socketId}`
         this.callstackStore[query] = val
+    }
+
+    setOutputValueAsync(nodeId: string, socketId: string, val: any) : Promise<boolean> {
+        let that = this
+        let promise = new Promise<boolean>(function(resolve, reject) {
+            let requestId = that.setOutputValueSocket(that.executionId, nodeId, socketId, val)
+            if(requestId === undefined)
+                resolve(false)
+
+            that.socketResponseQueue.onChange(() => {
+                let messages = that.socketResponseQueue.getValue() as ISocketResp[]
+                let message = undefined
+                for(let i = 0; i < messages.length; i++) {
+                    let _message = messages[i]
+                    if(_message.requestId === requestId)
+                        message = _message
+                }
+
+                if(message === undefined)
+                    return
+                if(requestId === undefined)
+                    return
+
+                that.deleteSocketMessage(requestId)
+                resolve(true)
+            })
+        })
+
+        return promise
     }
 
     private async executeNode(stack: ICallStackFunc) {

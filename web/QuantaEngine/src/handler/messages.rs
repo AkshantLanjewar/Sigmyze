@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 pub const SET_OUTPUT_VALUE: &str = "setOutputValue";
 pub const GET_OUTPUT_VALUE: &str = "getOutputValue";
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct SocketMessage {
     #[serde(rename="socketFunc")]
     pub socket_func: Option<String>,
@@ -41,7 +41,10 @@ pub struct GetOutputValueData {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SocketResponse {
     pub error: bool,
-    pub message: String
+    pub message: String,
+
+    #[serde(rename="requestId")]
+    pub request_id: String
 }
 
 #[derive(Debug, Deserialize, Serialize)]
