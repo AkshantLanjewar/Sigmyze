@@ -70,7 +70,7 @@ pub async fn get_output_value(
     let value_string = data_store.get::<String>(store_query).await.unwrap().unwrap();
     let value: serde_json::Value = serde_json::from_slice(value_string.as_bytes())?;
 
-    let data = messages::GetOutputValueResponse {
+    let data = messages::GetOutputValueResponse { 
         value: value
     };
 

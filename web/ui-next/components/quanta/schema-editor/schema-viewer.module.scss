@@ -58,6 +58,6 @@ $dark7: var(--mantine-color-dark-7);
     .flare {
         flex-grow: 1;
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
     }
 }
