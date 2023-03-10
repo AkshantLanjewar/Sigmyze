@@ -57,6 +57,7 @@ import QuantaContext, { QuantaContextData } from "../../data/quanta/context"
 import { v4 } from "uuid"
 import ExecuteNodeGraph from "./execution-engine"
 import EngineWrapper from "./execution-engine/engine-wrapper"
+import ExecutionContext from "./execution-engine/context"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -295,56 +296,58 @@ const QuantaEditor: React.FC = ({  }) => {
             ref={ref}
             style={{ width: "100%", height: "100%", position: 'relative' }}
         >
-            <QuantaEditorContext.Provider value={value}>
-                <>
-                    <EngineWrapper
-                        subscribeExecute={engineWrapperToggle}
-                        nodes={nodes}
-                        edges={edges}
-                        store={quantaStore}
-                    />
+            <ExecutionContext>
+                <QuantaEditorContext.Provider value={value}>
+                    <>
+                        <EngineWrapper
+                            subscribeExecute={engineWrapperToggle}
+                            nodes={nodes}
+                            edges={edges}
+                            store={quantaStore}
+                        />
 
-                    <ModalManager
-                        modalState={storeModal}
-                        close={closeStoreModal}
-                    >
-                        <ModalManager.Modal
-                            id="store"
-                            title={formTitle!}
+                        <ModalManager
+                            modalState={storeModal}
+                            close={closeStoreModal}
                         >
-                            <FormBuilder 
-                                forms={formContent} 
-                                closeModal={closeStoreModal}
-                                submit={submitStoreModal_}
-                            />
-                        </ModalManager.Modal>
+                            <ModalManager.Modal
+                                id="store"
+                                title={formTitle!}
+                            >
+                                <FormBuilder 
+                                    forms={formContent} 
+                                    closeModal={closeStoreModal}
+                                    submit={submitStoreModal_}
+                                />
+                            </ModalManager.Modal>
 
-                        <ModalManager.Modal
-                            id={"delete_node"}
-                            title={"Are you Sure?"}
+                            <ModalManager.Modal
+                                id={"delete_node"}
+                                title={"Are you Sure?"}
+                            >
+                                <DeleteNodeForm     
+                                    opened={storeModal === "delete_node"} 
+                                    closeModal={closeStoreModal}
+                                />
+                            </ModalManager.Modal>
+                        </ModalManager>
+
+                        <ReactFlow
+                            nodes={nodes as any}
+                            edges={edges as any}
+                            onNodesChange={onNodesChange}
+                            onEdgesChange={onEdgesChange}
+                            nodeTypes={nodeTypes as any}
+                            attributionPosition={'bottom-left'}
+                            onInit={setReactFlowInstance}
+                            onConnect={onConnect}
                         >
-                            <DeleteNodeForm     
-                                opened={storeModal === "delete_node"} 
-                                closeModal={closeStoreModal}
-                            />
-                        </ModalManager.Modal>
-                    </ModalManager>
-
-                    <ReactFlow
-                        nodes={nodes as any}
-                        edges={edges as any}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        nodeTypes={nodeTypes as any}
-                        attributionPosition={'bottom-left'}
-                        onInit={setReactFlowInstance}
-                        onConnect={onConnect}
-                    >
-                        <Background />
-                        <Controls /> 
-                    </ReactFlow>
-                </>
-            </QuantaEditorContext.Provider>
+                            <Background />
+                            <Controls /> 
+                        </ReactFlow>
+                    </>
+                </QuantaEditorContext.Provider>
+            </ExecutionContext>
         </div>
     )
 }

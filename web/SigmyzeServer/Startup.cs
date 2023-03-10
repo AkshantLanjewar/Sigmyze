@@ -10,6 +10,7 @@ using SigmyzeServer.Services.DatabaseServices;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using SigmyzeServer.Services.OrganizationServices;
+using System.Net.WebSockets;
 
 namespace SigmyzeServer
 {

@@ -163,8 +163,7 @@ function ExecuteNodeGraph(nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quanta
         })
     }
 
-    let engine = new StackEngine(callStack, edges)
-    engine.execute()
+    return callStack
 }
 
 export default ExecuteNodeGraph
