@@ -1,5 +1,6 @@
 use actix_web::{HttpResponse, Error, HttpServer, HttpRequest, web, App, middleware, rt};
 use basteh::Basteh;
+
 mod handler;
 
 #[actix_web::get("/")]
@@ -20,6 +21,7 @@ async fn main() -> std::io::Result<()> {
     let provider = basteh_memory::MemoryBackend::start_default();
     let data_store = Basteh::build().provider(provider).finish();
     let data_store = web::Data::new(data_store);
+
 
     HttpServer::new(move || {
         App::new()

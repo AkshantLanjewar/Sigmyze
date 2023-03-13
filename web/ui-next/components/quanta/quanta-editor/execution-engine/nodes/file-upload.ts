@@ -1,30 +1,31 @@
 import { modals } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { v4 } from "uuid";
-import { IQuantaFormField } from "../../types/types";
+import { IQuantaFormField } from "../../types/form";
 import { IEngineModalProps } from "../engine-wrapper";
 import { ICallStackFunc } from "../types";
 
-function fileUploadExecute(this: any, stack: ICallStackFunc) {
-    this.logMsg("Executing File Upload Node")
-    let keepRunning = true // js has retarded error handling
+async function fileUploadNode(
+    stack: ICallStackFunc,
+    getInputValue: (nodeId: string, socketId: string) => void,
+    setOutputValue: (nodeId: string, socketId: string, val: any) => void
+) : Promise<any> {
     let filesUploaded = false
-
     let inputs = stack.inputs
     let executution_input = undefined as any
+
     for(let i = 0; i < inputs.length; i++) {
         let input = inputs[i]
         switch(input.id) {
             case "execute_input":
-                executution_input = this.getInputValue(stack.nodeId, input.id)
+                executution_input = await getInputValue(stack.nodeId, input.id)
                 break
             default:
                 break
         }
     }
 
-    let that = this
-    let promise = new Promise(function(resolve, reject) {
+    let promise = new Promise((resolve, reject) => {
         function abort(errorMsg: string) {
             modals.close("engineModal")
             if(filesUploaded === true)
@@ -32,51 +33,42 @@ function fileUploadExecute(this: any, stack: ICallStackFunc) {
     
             reject(`file_upload ${errorMsg}`)
         }
-    
-        function submit(forms: IQuantaFormField[], valStore: {[key: string]: any}) {
-            if(!keepRunning)
+
+        async function submit(forms: IQuantaFormField[], valStore: {[key: string]: any}) {
+            let validForm = true
+            for(let i = 0; i < forms.length; i++) {
+                let form = forms[i]
+                let val = valStore[form.id!]
+                if(typeof val !== "string")
+                    validForm = false
+            }
+            
+            if(!validForm) {
+                showNotification({
+                    title: "File Upload Error",
+                    message: "Please upload all the requested files in the form.",
+                    color: 'red',
+                    autoClose: 1000 * 3.5
+                })
+                
                 return
-    
-            async function main() {
-                let validForm = true
-                for(let i = 0; i < forms.length; i++) {
-                    let form = forms[i]
-                    let val = valStore[form.id!]
-                    if(typeof val !== "string")
-                        validForm = false
-                }
-        
-                if(!validForm) {
-                    showNotification({
-                        title: "File Upload Error",
-                        message: "Please upload all the requested files in the form.",
-                        color: 'red',
-                        autoClose: 1000 * 3.5
-                    })
-                    
-                    return
-                }
-        
-                //output the values
-                for(let i = 0; i < forms.length; i++) {
-                    let form = forms[i]
-                    if(form.linkedKey === undefined)
-                        continue
-        
-                    let val = valStore[form.id!]
-                    that.setOutputValue(stack.nodeId, form.linkedKey, val)
-                    await that.setOutputValueAsync(stack.nodeId, form.linkedKey, val)
-                }
-        
-                filesUploaded = true
-                modals.closeAll()
-                that.logMsg("files uploaded")
-                resolve("done")
             }
 
-            main()
-        }
+            //output the values
+            for(let i = 0; i < forms.length; i++) {
+                let form = forms[i]
+                if(form.linkedKey === undefined)
+                    continue
     
+                let val = valStore[form.id!]
+                await setOutputValue(stack.nodeId, form.linkedKey, val)
+            }
+
+            filesUploaded = true
+            modals.closeAll()
+            resolve("done")
+        }
+
         if(executution_input !== true)
             abort("missing inputs")
 
@@ -122,4 +114,4 @@ function fileUploadExecute(this: any, stack: ICallStackFunc) {
     return promise
 }
 
-export default fileUploadExecute
+export default fileUploadNode

@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { UserContextData } from "../../../../data/user/context"
 import { IUserContext } from "../../../../data/user/types"
 import { wsServer } from "../../../../data/utils"
-import { setOutputValueSocket } from "./functions"
-import { IExecutionEngineContext, ISocketResp } from "./types"
+import { getOutputValueSocket, setOutputValueSocket } from "./functions"
+import { IExecutionEngineContext, ISocketResp, ISocketRespHandler } from "./types"
 
 interface IExecutionContextProps {
     children?: React.ReactNode
@@ -18,6 +18,7 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
     const [webSocket, setWebSocket] = useState<WebSocket | null>(null)
     const [socketResponseQueue, setSocketResponseQueue] = useState<ISocketResp[]>([])
     const [socketResponse, setSocketResponse] = useState(false)
+    const [socketHandlers, setSocketHandlers] = useState<ISocketRespHandler[]>([])
 
     function addMessage(msg: ISocketResp) {
         let nSocketQueue = socketResponseQueue
@@ -25,6 +26,17 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
 
         setSocketResponseQueue([ ...nSocketQueue ])
         setSocketResponse(!socketResponse)
+    }
+
+    function addHandler(requestId: string, callback: Function) {
+        let handler = {
+            requestId,
+            callback
+        } as ISocketRespHandler
+
+        let nHandlers = socketHandlers
+        nHandlers.push(handler)
+        setSocketHandlers([ ...nHandlers ])
     }
 
     useEffect(() => {
@@ -40,6 +52,8 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
         newWebsocket.onmessage = msg => {
             let msgData = msg.data
             let parsed: ISocketResp = JSON.parse(msgData)
+
+            console.debug(`[Lunar Socket]: Received msg with id ${parsed.requestId}`)
             addMessage(parsed)
         }
 
@@ -57,14 +71,42 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
             webSocket.close()
         }
     }, [webSocket])
+
+    useEffect(() => {
+        let collectedResponses = []
+        for(let i = 0; i < socketResponseQueue.length; i++) {
+            let response = socketResponseQueue[i]
+            collectedResponses.push(response.requestId)
+        }
+
+        //go thru the handlers
+        let nHandlers = []
+        for(let i = 0; i < socketHandlers.length; i++) {
+            let handler = socketHandlers[i]
+            if(collectedResponses.includes(handler.requestId))
+            {
+                let index = collectedResponses.indexOf(handler.requestId)
+                let response = socketResponseQueue[index]
+
+                handler.callback(response.message)
+                continue
+            }
+
+            nHandlers.push(handler)
+        }
+
+        setSocketHandlers([ ...nHandlers ])
+    }, [socketResponseQueue])
     
     let contextData = {} as IExecutionEngineContext
     contextData.socketCreated = socketCreated
     contextData.socketResponseQueue = socketResponseQueue
     contextData.socketResponse = socketResponse
 
-    contextData.setOutputValueSocket = (processId: string, nodeId: string, socketId: string, value: any) =>
-        setOutputValueSocket(processId, nodeId, socketId, value, webSocket)
+    contextData.setOutputValueSocket = (processId: string, nodeId: string, socketId: string, value: any, cb: Function) =>
+        setOutputValueSocket(processId, nodeId, socketId, value, cb, webSocket, addHandler)
+    contextData.getOutputValueSocket = (processId: string, nodeId: string, socketId: string, cb: Function) =>
+        getOutputValueSocket(processId, nodeId, socketId, cb, webSocket, addHandler)
 
     contextData.deleteSocketMessage = (requestId: string) => {
         let nMessages = []

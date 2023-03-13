@@ -63,8 +63,6 @@ pub async fn ws_connection(mut session: actix_ws::Session, mut msg_stream: actix
     let close_reason = loop {
         match msg_stream.recv().await {
             Some(Ok(msg)) => {
-                log::debug!("[DEBUG]: received msg {msg:?}");
-
                 match msg {
                     Message::Text(text) => {
                         let bytes = &text.into_bytes();

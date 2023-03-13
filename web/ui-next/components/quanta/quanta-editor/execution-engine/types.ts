@@ -19,8 +19,13 @@ interface ICallStackStore {
     [key: string]: any
 }
 
+interface IInputValueResp {
+    value: any
+}
+
 export type { 
     ICallStackParam,
     ICallStackFunc,
-    ICallStackStore
+    ICallStackStore,
+    IInputValueResp
 }

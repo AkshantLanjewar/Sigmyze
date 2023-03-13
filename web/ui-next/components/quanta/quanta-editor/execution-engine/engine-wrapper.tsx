@@ -8,9 +8,8 @@ import { IQuantaRFEdge } from "../types/edges"
 import { IQuantaFormField } from "../types/form"
 import { IQuantaRFNode } from "../types/nodes"
 import { IQuantaStore } from "../types/store"
-import StackEngine from "./callstack"
-import { ExecutionContextData } from "./context"
-import { IExecutionEngineContext } from "./context/types"
+import CallstackWrapper from "./callstack-wrapper"
+import { ICallStackFunc } from "./types"
 
 interface IEngineModalProps {
     forms: IQuantaFormField[],
@@ -41,15 +40,11 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
     const [internalEdges, setInternalEdges] = useState<IQuantaRFEdge[]>([])
     const [internalStore, setInternalStore] = useState<IQuantaStore | undefined>(undefined)
 
-    const [internalEngine, setInternalEngine] = useState<StackEngine | undefined>(undefined)
+    const [callStack, setCallStack] = useState<ICallStackFunc[]>([])
+    const [execute, setExecute] = useState(false)
+    const toggleExecute = () => setExecute(!execute)
 
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
-    const { 
-        setOutputValueSocket, 
-        socketResponse, 
-        socketResponseQueue,
-        deleteSocketMessage 
-    } = useContext(ExecutionContextData) as IExecutionEngineContext
 
     useEffect(() => {
         if(internalStore === undefined)
@@ -58,29 +53,9 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
             return
 
         let callStack = ExecuteNodeGraph(internalNodes, internalEdges, internalStore)
-        let engine = new StackEngine(
-            callStack, 
-            internalEdges,
-            setOutputValueSocket,
-            deleteSocketMessage
-        )
-        
-        setInternalEngine(engine)
+        setCallStack([ ...callStack ])
+        toggleExecute()
     }, [loggedIn, loaded, subscribeExecute])
-
-    useEffect(() => {
-        if(internalEngine === undefined)
-            return
-
-        internalEngine.execute()
-    }, [internalEngine])
-
-    useEffect(() => {
-        if(internalEngine === undefined)
-            return
-
-        internalEngine.updateMessages([ ...socketResponseQueue ])
-    }, [socketResponse])
 
     //effect hook to set the internal nodes
     useEffect(() => {
@@ -107,6 +82,12 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
     
     return (
         <>
+            <CallstackWrapper 
+                callStack={callStack}
+                execute={execute}    
+                edges={internalEdges}        
+            />
+
             <ModalsProvider modals={{ engineModal: EngineModal }}>
                 
             </ModalsProvider>

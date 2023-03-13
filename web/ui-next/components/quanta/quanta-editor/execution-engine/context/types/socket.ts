@@ -37,7 +37,20 @@ interface ISocketResp {
     requestId: string
 }
 
+interface ISocketRespHandler {
+    /**
+     * id of the request we want to handle
+     */
+    requestId: string,
+
+    /**
+     * function being called to handle the request
+     */
+    callback: Function
+}
+
 export type { 
     ISocketMessage,
-    ISocketResp 
+    ISocketResp,
+    ISocketRespHandler 
 }
