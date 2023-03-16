@@ -2,6 +2,7 @@ use actix_web::{HttpResponse, Error, HttpServer, HttpRequest, web, App, middlewa
 use basteh::Basteh;
 
 mod handler;
+mod sdmx_parser;
 
 #[actix_web::get("/")]
 async fn handle_ws(req: HttpRequest, stream: web::Payload, data_store: web::Data<Basteh>) -> Result<HttpResponse, Error> {
@@ -22,6 +23,8 @@ async fn main() -> std::io::Result<()> {
     let data_store = Basteh::build().provider(provider).finish();
     let data_store = web::Data::new(data_store);
 
+    //test the sdmx parser
+    sdmx_parser::parse_sdml_ml(String::from("./data/WEO_PUB_OCT2022.xml"), String::from("./data/WEO_PUB_OCT2022.xsd"));
 
     HttpServer::new(move || {
         App::new()

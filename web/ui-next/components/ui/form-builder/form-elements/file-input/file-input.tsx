@@ -51,7 +51,7 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
             if(result === null)
                 return
 
-            let data = result.toString()
+            let data = result.toString().split(',')[1]
             setValue(data)
             setFileUploaded(true)
             setLoader(false)
