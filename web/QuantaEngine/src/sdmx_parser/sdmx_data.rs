@@ -86,7 +86,11 @@ impl SDMXSeriesFields {
         }
 
         //create a new type
-        let n_series = SDMXSeriesField::new(String::from(""), String::from(internal_type));
+        let n_series = SDMXSeriesField::new(
+            String::from(""), 
+            String::from(internal_type)
+        );
+        
         self.series_fields.push(n_series);
     }
 
@@ -106,7 +110,11 @@ impl SDMXSeriesFields {
 
         if field.is_none() {
             //build a new field
-            let mut n_series = SDMXSeriesField::new(String::from(""), String::from(internal_type));
+            let mut n_series = SDMXSeriesField::new(
+                String::from(""), 
+                String::from(internal_type)
+            );
+
             n_series.add_value(String::from(internal_value), String::from(internal_documentation));
             self.series_fields.push(n_series);
         } else {
@@ -117,6 +125,30 @@ impl SDMXSeriesFields {
     }
 
     pub fn add_field_key(&mut self, field_key: &String, field_type: &String) {
-        
+        let internal_key = field_key.as_str();
+        let internal_type = field_type.as_str();
+
+        let mut field_index = 0;
+        let mut field: Option<SDMXSeriesField> = None;
+        for (i, series_field) in self.series_fields.iter().enumerate() {
+            if series_field.field_type.as_str() == internal_type {
+                field_index = i;
+                field = Some(series_field.clone());
+            }
+        }
+
+        if field.is_none() {
+            //build a new field
+            let n_series = SDMXSeriesField::new(
+                String::from(internal_key), 
+                String::from(internal_type)
+            );
+
+            self.series_fields.push(n_series);
+        } else {
+            let mut field = field.unwrap();
+            field.field_key = String::from(internal_key);
+            self.series_fields[field_index] = field;
+        }
     }
 }

@@ -42,7 +42,7 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
                             depth_map.insert(depth, Some(field_name.clone()));
                             depth += 1;
                         }
-                    }
+                    },
 
                     "complexType" => {
                         let mut series_name: Option<String> = None;
@@ -64,13 +64,13 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
                             depth_map.insert(depth, Some(series_name.clone()));
                             depth += 1;
                         }
-                    }
+                    },
 
                     "attribute" => {
                         if depth == 0 {
                             continue;
                         }
-
+                        
                         let mut attribute_name: Option<String> = None;
                         let mut attribute_type: Option<String> = None;
                         for attribute in e.attributes().into_iter() {
@@ -128,6 +128,48 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
                         }
 
                         depth_map.insert(depth, Some(String::from("collect_text")));
+                    }
+
+                    _ => {}
+                }
+            }
+
+            Ok(Event::Empty(e)) => {
+                let tag_name = &e.name();
+                let tag_name = String::from_utf8(tag_name.as_ref().to_vec()).unwrap();
+                let tag_name: Vec<&str> = tag_name.split(":").collect();
+
+                let _namespace = tag_name[0];
+                let tag_name = tag_name[1];
+
+                match tag_name {
+                    "attribute" => {
+                        if depth == 0 {
+                            continue;
+                        }
+                        
+                        let mut attribute_name: Option<String> = None;
+                        let mut attribute_type: Option<String> = None;
+                        for attribute in e.attributes().into_iter() {
+                            let attribute = attribute.unwrap();
+                            let attr_name = &attribute.key;
+
+                            if attr_name.as_ref() == b"name" {
+                                attribute_name = Some(String::from_utf8(attribute.value.as_ref().to_vec()).unwrap());
+                            }
+
+                            if attr_name.as_ref() == b"type" {
+                                attribute_type = Some(String::from_utf8(attribute.value.as_ref().to_vec()).unwrap());
+                            }
+                        }
+
+                        if attribute_name.is_none() || attribute_type.is_none() {
+                            continue;
+                        }
+
+                        let attribute_name = attribute_name.unwrap();
+                        let attribute_type = attribute_type.unwrap();
+                        sdmx_series_fields.add_field_key(&attribute_name, &attribute_type);
                     }
 
                     _ => {}
