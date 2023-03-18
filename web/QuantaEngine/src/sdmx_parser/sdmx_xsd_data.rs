@@ -151,4 +151,15 @@ impl SDMXSeriesFields {
             self.series_fields[field_index] = field;
         }
     }
+
+    pub fn get_series_name(&self, key: &String) -> Option<&SDMXSeriesField> {
+        let mut selected_series: Option<&SDMXSeriesField> = None;
+        for series in self.series_fields.iter() {
+            if series.field_key.as_str() == key.as_str() {
+                selected_series = Some(series);
+            }
+        }
+
+        return selected_series;
+    }
 }

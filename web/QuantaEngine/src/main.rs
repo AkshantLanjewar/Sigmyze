@@ -3,6 +3,7 @@ use basteh::Basteh;
 
 mod handler;
 mod sdmx_parser;
+mod quanta_dataset;
 
 #[actix_web::get("/")]
 async fn handle_ws(req: HttpRequest, stream: web::Payload, data_store: web::Data<Basteh>) -> Result<HttpResponse, Error> {

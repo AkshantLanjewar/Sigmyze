@@ -19,3 +19,5 @@ basteh-memory = "0.4.0-alpha.5"
 actix-http = { version = "3.0", default-features = false, features = ["ws"] }
 quick-xml = "0.28.0"
 rustc-hash = "1.1.0"
+dateparser = "0.1.8"
+chrono = "0.4.24"

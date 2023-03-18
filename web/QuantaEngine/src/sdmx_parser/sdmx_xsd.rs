@@ -1,10 +1,12 @@
 use quick_xml::{Reader, events::Event};
 use rustc_hash::FxHashMap;
 
-use super::sdmx_data::{self, SDMXSeriesFields};
+use super::sdmx_xsd_data::{self, SDMXSeriesFields};
 
+// function that handles parsing the XSD
+// NOTE: currently XSD is mandatory, as the scraping format cannot handle generic SDMX
 pub fn parse_xsd(path: String) -> SDMXSeriesFields {
-    let mut sdmx_series_fields = sdmx_data::SDMXSeriesFields::new();
+    let mut sdmx_series_fields = sdmx_xsd_data::SDMXSeriesFields::new();
     let mut depth = 0;
     let mut depth_map: FxHashMap<i32, Option<String>> = FxHashMap::default();
 
