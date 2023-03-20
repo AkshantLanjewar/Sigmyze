@@ -23,10 +23,6 @@ async fn main() -> std::io::Result<()> {
     let provider = basteh_memory::MemoryBackend::start_default();
     let data_store = Basteh::build().provider(provider).finish();
     let data_store = web::Data::new(data_store);
-
-    //test the sdmx parser
-    sdmx_parser::parse_sdml_ml(String::from("./data/WEO_PUB_OCT2022.xml"), String::from("./data/WEO_PUB_OCT2022.xsd"));
-
     HttpServer::new(move || {
         App::new()
             .app_data(data_store.clone())

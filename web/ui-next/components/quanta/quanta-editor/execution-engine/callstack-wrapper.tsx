@@ -4,8 +4,9 @@ import { IQuantaRFEdge } from "../types/types"
 import { ExecutionContextData } from "./context"
 import { IExecutionEngineContext } from "./context/types"
 import fileUploadNode from "./nodes/file-upload"
+import sdmxDataParserNode from "./nodes/sdmx-data-parser"
 import startNode from "./nodes/start"
-import { ICallStackFunc, IInputValueResp } from "./types"
+import { ICallStackFunc, IFunctionResp, IInputValueResp } from "./types"
 
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
@@ -20,7 +21,8 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
     const { 
         socketCreated, 
         setOutputValueSocket,
-        getOutputValueSocket 
+        getOutputValueSocket,
+        executeSocketFunction 
     } = useContext(ExecutionContextData) as IExecutionEngineContext
 
     useEffect(() => {
@@ -29,7 +31,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         if(socketCreated !== true)
             return
 
-        async function execute() {
+        async function execute_node() {
             if(callStack === undefined)
                 return
 
@@ -40,7 +42,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         }
 
         setExecutedNodes([])
-        execute()
+        execute_node()
     }, [execute])
 
     function addExecutedNode(id: string) {
@@ -67,7 +69,6 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
     function setOutputValue(nodeId: string, socketId: string, val: any) {
         let promise = new Promise((resolve, reject) => {
             function handler(val: string) {
-                console.debug(`set ${socketId}`)
                 resolve(true)
             }
             
@@ -77,13 +78,19 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         return promise
     }
 
-    function getInputValue(nodeId: string, socketId: string) {
+    function getInputEdge(nodeId: string, socketId: string) : IQuantaRFEdge | undefined {
         let edge: IQuantaRFEdge | undefined = undefined
         for(let i = 0; i < edges.length; i++) {
             let edge_ = edges[i]
             if(edge_.target === nodeId && edge_.targetHandle === socketId)
                 edge = edge_
         }
+
+        return edge
+    }
+
+    function getInputValue(nodeId: string, socketId: string) {
+        let edge: IQuantaRFEdge | undefined = getInputEdge(nodeId, socketId)
 
         let promise = new Promise((resolve, reject) => {
             if(edge === undefined)
@@ -93,12 +100,23 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             }
 
             function handler(val: string) {
-                console.debug(`retreived ${socketId}`)
                 let data: IInputValueResp = JSON.parse(val)
                 resolve(data.value)
             }
 
             getOutputValueSocket(processId, edge.source!, edge.sourceHandle!, handler)
+        })
+
+        return promise
+    }
+
+    function executeFunction(nodeId: string, functionId: string, outputIds: string[], functionData: any) {
+        let promise = new Promise<string>((resolve, reject) => {
+            function handler(val: string) {
+                resolve(val)
+            }
+
+            executeSocketFunction(processId, nodeId, functionId, outputIds, functionData, handler)
         })
 
         return promise
@@ -130,7 +148,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
 
                     break
                 case "sdmx_data_parser":
-                    
+                    await sdmxDataParserNode(stack, getInputEdge, executeFunction)
                     break
                 default:
                     break

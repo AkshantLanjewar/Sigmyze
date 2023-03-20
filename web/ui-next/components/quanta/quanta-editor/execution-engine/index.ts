@@ -4,7 +4,6 @@ import { IQuantaRFEdge } from "../types/edges";
 import { IQuantaRFNode } from "../types/nodes";
 import { IQuantaSocket, IQuantaStore } from "../types/types";
 import { buildStoreKey } from "../utils";
-import StackEngine from "./callstack"
 import { ICallStackFunc, ICallStackParam } from "./types";
 
 function getDependentEdges(nodeId: string, edges: IQuantaRFEdge[]) {
@@ -159,9 +158,14 @@ function ExecuteNodeGraph(nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quanta
             functionId,
             inputs: params.inputs,
             dynamicOutputs: params.dynamicOutputs,
-            dependencies: dependentEdges
+            dependencies: dependentEdges,
+            parentId: node.parentNode,
+            stackThread: []
         })
     }
+
+    //build the iter threads
+    
 
     return callStack
 }

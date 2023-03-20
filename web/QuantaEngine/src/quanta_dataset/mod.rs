@@ -1,10 +1,14 @@
 use std::fmt::Debug;
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Utc, serde::ts_seconds};
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct ChartData {
+    #[serde(with = "ts_seconds", rename="xValue")]
     pub x_val: DateTime<Utc>,
+
+    #[serde(rename = "yValue")]
     pub y_val: f32,
 }
 

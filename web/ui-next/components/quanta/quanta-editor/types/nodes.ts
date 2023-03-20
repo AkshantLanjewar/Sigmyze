@@ -139,11 +139,20 @@ interface IQuantaXYPos {
     y: number
 }
 
+/**
+ * the types for an iter node in the editor
+ */
+interface IQuantaIterNodeType {
+    nodeId: string,
+    type: IQuantaTypeRef
+}
+
 export type {
     IQuantaRFNode,
     IQuantaNodeDetails,
     IQuantaRFNodeData,
     IQuantaXYPos,
     IQuantaRFNodeDataType,
-    IQuantaRFNodeStyles
+    IQuantaRFNodeStyles,
+    IQuantaIterNodeType
 }

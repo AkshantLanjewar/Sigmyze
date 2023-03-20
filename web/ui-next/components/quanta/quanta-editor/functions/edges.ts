@@ -1,4 +1,4 @@
-import { IQuantaRFEdge, IQuantaRFNode } from "../types/types";
+import { IQuantaIterNodeType, IQuantaRFEdge, IQuantaRFNode, IQuantaTypeRef } from "../types/types";
 
 function GetConnectedEdge(nodeId: string, type: "source" | "target", edges: IQuantaRFEdge[]) : IQuantaRFEdge | undefined {
     let edge = undefined
@@ -29,7 +29,50 @@ function GetParentId(nodeId: string, nodes: IQuantaRFNode[]) : string | undefine
     return parentId
 }
 
+function SetIterNodeType(
+    nodeId: string,
+    nodeType: IQuantaTypeRef,
+    iterNodeTypes: IQuantaIterNodeType[],
+    setIterNodeTypes: (val: IQuantaIterNodeType[]) => void
+) {
+    let index = undefined
+    for(let i = 0; i < iterNodeTypes.length; i++) {
+        let nodeType = iterNodeTypes[i]
+        if(nodeType.nodeId === nodeId)
+            index = i
+    }
+
+    if(index === undefined) {
+        let nNodeType = {} as IQuantaIterNodeType
+        nNodeType.nodeId = nodeId
+        nNodeType.type = nodeType
+
+        let nIterNodeTypes = [...iterNodeTypes, nNodeType]
+        setIterNodeTypes(nIterNodeTypes)
+    } else {
+        let node = iterNodeTypes[index]
+        node.type = nodeType
+
+        let nIterNodeTypes = iterNodeTypes
+        nIterNodeTypes[index] = node
+        setIterNodeTypes([ ...nIterNodeTypes ])
+    }
+}
+
+function GetIterNodeType(nodeId: string, iterNodeTypes: IQuantaIterNodeType[]) {
+    let nodeType = undefined
+    for(let i = 0; i < iterNodeTypes.length; i++) {
+        let nodeType_ = iterNodeTypes[i]
+        if(nodeType_.nodeId === nodeId)
+            nodeType = nodeType_.type
+    }
+
+    return nodeType
+}
+
 export { 
     GetConnectedEdge,
-    GetParentId 
+    GetParentId,
+    SetIterNodeType,
+    GetIterNodeType 
 }

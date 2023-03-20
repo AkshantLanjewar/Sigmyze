@@ -1,12 +1,16 @@
 use std::fmt::Debug;
 use chrono::{DateTime, Utc};
 use dateparser::parse_with_timezone;
+use serde::{Deserialize, Serialize};
 
 use crate::quanta_dataset::ChartData;
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct SDMXSeries {
+    #[serde(rename = "chartData")]
     pub chart_data: Vec<ChartData>,
+
+    #[serde(rename = "seriesFields")]
     pub series_fields: Vec<SDMXField>
 }
 
@@ -56,10 +60,15 @@ impl Debug for SDMXSeries {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct SDMXField {
+    #[serde(rename = "fieldKey")]
     pub field_key: String,
+
+    #[serde(rename = "fieldValue")]
     pub field_value: String,
+
+    #[serde(rename = "fieldDocumentation")]
     pub field_documentation: String
 }
 

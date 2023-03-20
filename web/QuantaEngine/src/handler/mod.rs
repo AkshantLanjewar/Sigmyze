@@ -6,6 +6,8 @@ use actix_web::{web};
 use self::messages::SocketResponse;
 mod messages;
 mod socket_store;
+mod socket_function;
+mod functions;
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
@@ -51,6 +53,15 @@ async fn parse_request(request: messages::SocketMessage, request_id: String, dat
                 process_id, 
                 data_store
             ).await,
+        
+        messages::SOCKET_FUNC =>
+            socket_function::parse_function_request(
+                request_id, 
+                process_id, 
+                socket_data,
+                data_store 
+            ).await,
+        
         _ => Ok(socket_response(String::from("none"), false, request_id))
     };
 

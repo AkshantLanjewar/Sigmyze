@@ -16,8 +16,30 @@ interface IExecutionEngineContext {
      */
     socketResponse: boolean,
 
-    setOutputValueSocket: (processId: string, nodeId: string, socketId: string, value: any, cb: (val: string) => void) => string | undefined,
-    getOutputValueSocket: (processId: string, nodeId: string, socketId: string, cb: (val: string) => void) => string | undefined,
+    setOutputValueSocket: (
+        processId: string, 
+        nodeId: string, 
+        socketId: string, 
+        value: any, 
+        cb: (val: string) => void
+    ) => string | undefined,
+
+    getOutputValueSocket: (
+        processId: string, 
+        nodeId: string, 
+        socketId: string, 
+        cb: (val: string) => void
+    ) => string | undefined,
+
+    executeSocketFunction: (
+        processId: string, 
+        nodeId: string, 
+        functionId: string,
+        outputIds: string[],
+        functionData: any,
+        cb: (val: string) => void
+    ) => string | undefined,
+
     deleteSocketMessage: (requestId: string) => void
 }
 

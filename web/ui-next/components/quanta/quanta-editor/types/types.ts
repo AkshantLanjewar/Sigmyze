@@ -178,7 +178,11 @@ interface IQuantaEditorGlobals {
      */
     getNodeSocket: (nodeId: string, socketId: string, type: "input" | "output") => IQuantaSocket | undefined,
 
-    getNode: (nodeId: string) => IQuantaRFNode | undefined
+    getNode: (nodeId: string) => IQuantaRFNode | undefined,
+
+    setIterNodeType: (nodeId: string, nodeType: IQuantaTypeRef) => void,
+
+    getIterNodeType: (nodeId: string) => IQuantaTypeRef | undefined
 }
 
 export * from './nodes'

@@ -12,7 +12,10 @@ interface ICallStackFunc {
     functionId: string,
     inputs: ICallStackParam[],
     dynamicOutputs: ICallStackParam[],
-    dependencies: string[]
+    dependencies: string[],
+
+    parentId?: string,
+    stackThread?: ICallStackFunc[]
 }
 
 interface ICallStackStore {
@@ -23,9 +26,14 @@ interface IInputValueResp {
     value: any
 }
 
+interface IFunctionResp {
+    success: boolean
+}
+
 export type { 
     ICallStackParam,
     ICallStackFunc,
     ICallStackStore,
-    IInputValueResp
+    IInputValueResp,
+    IFunctionResp
 }

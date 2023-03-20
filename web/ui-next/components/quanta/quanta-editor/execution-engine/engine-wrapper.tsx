@@ -49,8 +49,11 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
     useEffect(() => {
         if(internalStore === undefined)
             return
+        /*
+        comment out for debugging
         if(loaded === false || loggedIn === false)
             return
+        */
 
         let callStack = ExecuteNodeGraph(internalNodes, internalEdges, internalStore)
         setCallStack([ ...callStack ])

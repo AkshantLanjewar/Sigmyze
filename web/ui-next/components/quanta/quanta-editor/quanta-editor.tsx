@@ -19,8 +19,10 @@ import {
 import { 
     IQuantaEditorGlobals, 
     IQuantaFormField, 
+    IQuantaIterNodeType, 
     IQuantaRFEdge, 
     IQuantaRFNode, 
+    IQuantaSocket, 
     IQuantaStore, 
     IQuantaTypeRef, 
     IQuantaXYPos,
@@ -44,9 +46,11 @@ import {
     editorDeleteNode, 
     editStoreValue, 
     GetConnectedEdge, 
+    GetIterNodeType, 
     getNode, 
     GetParentId, 
     getStoreValue, 
+    SetIterNodeType, 
     submitStoreModal, 
     trackNodeType, 
     updateTrackedNodeType 
@@ -116,6 +120,9 @@ const QuantaEditor: React.FC = ({  }) => {
     const [modalNodeId, setModalNodeId] = useState<string | undefined>(undefined)
     const [modalNodeBackend, setModalNodeBackend] = useState<string | undefined>(undefined)
 
+    //the types for the iter nodes
+    const [iterNodeTypes, setIterNodeTypes] = useState<IQuantaIterNodeType[]>([])
+
     //dataset types
     const [datasetTypes, setDatasetTypes] = useState<IQuantaSchemaShort[]>([])
 
@@ -132,40 +139,6 @@ const QuantaEditor: React.FC = ({  }) => {
     const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
     const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
     const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode, quanta_group: QuantaGroup }), [])
- 
-    //when edges connect
-    const onConnect = useCallback((params: Connection) => {
-        //source node vars
-        let sourceNode = params.source
-        let targetNode = params.target
-        if(sourceNode === null || targetNode === null)
-            return
-
-        if(isNodeArray(nodes, sourceNode) || isNodeArray(nodes, targetNode))
-        {
-            arrayConnection(params, nodes, quantaStore, edges, setEdges)
-            return
-        }
-        
-        //target node vars
-        let sourceSocket = params.sourceHandle
-        let targetSocket = params.targetHandle
-        if(sourceSocket === null || targetSocket === null)
-            return
-
-        const sourceSocketObject = GetNodeSocket(nodes, quantaStore, sourceNode, sourceSocket, "output")
-        const targetSocketObject = GetNodeSocket(nodes, quantaStore, targetNode, targetSocket, "input")
-        if(sourceSocketObject === undefined || targetSocketObject === undefined)
-            return
-
-        if(compareTypes(sourceSocketObject.type!, targetSocketObject.type!) === true)
-        {
-            let nEdges = edges
-            nEdges.push(buildEdge(sourceNode, sourceSocket, targetNode, targetSocket))
-
-            setEdges([ ...nEdges ])
-        }
-    }, [nodes, quantaStore])
 
     /**
      * Ref for the react flow element
@@ -288,8 +261,57 @@ const QuantaEditor: React.FC = ({  }) => {
         GetNodeSocket(nodes, quantaStore, nodeId, socketId, type)
     value.getNode = (nodeId: string) => getNode(nodeId, nodes)
 
+    value.setIterNodeType = (nodeId: string, nodeType: IQuantaTypeRef) =>
+        SetIterNodeType(nodeId, nodeType, iterNodeTypes, setIterNodeTypes)
+    value.getIterNodeType = (nodeId: string) =>
+        GetIterNodeType(nodeId, iterNodeTypes)
+
     const submitStoreModal_ = (forms: IQuantaFormField[], valStore: {[key: string]: string}) =>
         submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)
+
+    //when edges connect
+    const onConnect = useCallback((params: Connection) => {
+        //source node vars
+        let sourceNode = params.source
+        let targetNode = params.target
+        if(sourceNode === null || targetNode === null)
+            return
+
+        if(isNodeArray(nodes, sourceNode) || isNodeArray(nodes, targetNode))
+        {
+            arrayConnection(params, nodes, quantaStore, edges, setEdges)
+            return
+        }
+        
+        //target node vars
+        let sourceSocket = params.sourceHandle
+        let targetSocket = params.targetHandle
+        if(sourceSocket === null || targetSocket === null)
+            return
+
+        let sourceSocketObject = GetNodeSocket(nodes, quantaStore, sourceNode, sourceSocket, "output")
+        if(sourceSocketObject === undefined && sourceSocket === sourceNode)
+        {
+            let phantomSocket = {} as IQuantaSocket
+            phantomSocket.type = value.getIterNodeType(sourceNode)
+            if(phantomSocket.type === undefined)
+                return
+
+            sourceSocketObject = phantomSocket
+        }
+
+        const targetSocketObject = GetNodeSocket(nodes, quantaStore, targetNode, targetSocket, "input")
+        if(sourceSocketObject === undefined || targetSocketObject === undefined)
+            return
+
+        if(compareTypes(sourceSocketObject.type!, targetSocketObject.type!) === true)
+        {
+            let nEdges = edges
+            nEdges.push(buildEdge(sourceNode, sourceSocket, targetNode, targetSocket))
+
+            setEdges([ ...nEdges ])
+        }
+    }, [nodes, quantaStore])
 
     return (
         <div 

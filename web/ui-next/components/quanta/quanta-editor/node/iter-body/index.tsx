@@ -95,6 +95,7 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
         const node = quantaContext.getNode(nodeId)
         const parentId_ = node?.parentNode
 
+        quantaContext.setIterNodeType(nodeId, socketType)
         setParentId(parentId_)
     }
 

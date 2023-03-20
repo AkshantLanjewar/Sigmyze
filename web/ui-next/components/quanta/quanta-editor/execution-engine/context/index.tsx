@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { UserContextData } from "../../../../data/user/context"
 import { IUserContext } from "../../../../data/user/types"
 import { wsServer } from "../../../../data/utils"
-import { getOutputValueSocket, setOutputValueSocket } from "./functions"
+import { executeSocketFunction, getOutputValueSocket, setOutputValueSocket } from "./functions"
 import { IExecutionEngineContext, ISocketResp, ISocketRespHandler } from "./types"
 
 interface IExecutionContextProps {
@@ -42,8 +42,8 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
     useEffect(() => {
         if(loaded === false)
             return
-        if(loggedIn === false)
-            return
+        /*if(loggedIn === false)
+            return */
         if(socketCreated === true)
             return
         
@@ -107,6 +107,14 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
         setOutputValueSocket(processId, nodeId, socketId, value, cb, webSocket, addHandler)
     contextData.getOutputValueSocket = (processId: string, nodeId: string, socketId: string, cb: Function) =>
         getOutputValueSocket(processId, nodeId, socketId, cb, webSocket, addHandler)
+    contextData.executeSocketFunction = (
+        processId: string, 
+        nodeId: string, 
+        functionId: string, 
+        outputIds: string[], 
+        functionData: any, 
+        cb: Function
+    ) => executeSocketFunction(processId, nodeId, functionId, outputIds, functionData, cb, webSocket, addHandler)
 
     contextData.deleteSocketMessage = (requestId: string) => {
         let nMessages = []
@@ -118,7 +126,6 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
             nMessages.push(message)
         }
 
-        console.debug(`computed message ${requestId}`)
         setSocketResponseQueue([ ...nMessages ])
     }
 
