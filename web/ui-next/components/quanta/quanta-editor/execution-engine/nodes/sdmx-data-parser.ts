@@ -9,6 +9,7 @@ interface ISDMXFunctionData {
 
 async function sdmxDataParserNode(
     stack: ICallStackFunc,
+    isFailedNode: (nodeId: string) => boolean,
     getInputEdge: (nodeId: string, socketId: string) => IQuantaRFEdge | undefined,
     executeFunction: (nodeId: string, functionId: string, outputIds: string[], functionData: any) => Promise<string>
 ) {
@@ -48,12 +49,15 @@ async function sdmxDataParserNode(
         }
 
         if(data_file_id === undefined || schema_file_id === undefined)
-            return
+            throw new Error("malformed data")
 
         let data_edge = getInputEdge(stack.nodeId, data_file_id)
         let schema_edge = getInputEdge(stack.nodeId, schema_file_id)
+
         if(data_edge === undefined || schema_edge === undefined)
-            return
+            throw new Error("inputs not connected")    
+        if(isFailedNode(data_edge.source!) || isFailedNode(schema_edge.source!))
+            throw new Error("input nodes failed")
 
         const function_id = "sdmx_data_parser"
         const output_ids = ["sdmx_indicators"]
@@ -69,7 +73,8 @@ async function sdmxDataParserNode(
         }
 
         let funcRes = await executeFunction(stack.nodeId, function_id, output_ids, function_data)
-        console.log(funcRes)
+        if(funcRes !== "Parsed SDMX Data")
+            throw new Error("sdmx parsing error")
     }
 }
 

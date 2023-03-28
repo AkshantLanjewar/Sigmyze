@@ -3,7 +3,7 @@ use actix_web::web;
 use basteh::Basteh;
 
 use super::messages::{self};
-use super::functions::{sdmx_data_parser};
+use super::functions::{sdmx_data_parser, loop_functions};
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
@@ -45,6 +45,19 @@ pub async fn parse_function_request(
             process_id,
             function_data,
             output_ids,
+            data_store
+        ).await,
+
+        "load_loop" => return loop_functions::loop_load::load_loop(
+            request_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "unload_loop" => return loop_functions::loop_unload::unload_loop(
+            request_id, 
+            function_data, 
             data_store
         ).await,
 

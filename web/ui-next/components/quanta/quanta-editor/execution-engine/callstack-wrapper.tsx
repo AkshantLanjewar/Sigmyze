@@ -4,6 +4,7 @@ import { IQuantaRFEdge } from "../types/types"
 import { ExecutionContextData } from "./context"
 import { IExecutionEngineContext } from "./context/types"
 import fileUploadNode from "./nodes/file-upload"
+import quantaLoop from "./nodes/loop"
 import sdmxDataParserNode from "./nodes/sdmx-data-parser"
 import startNode from "./nodes/start"
 import { ICallStackFunc, IFunctionResp, IInputValueResp } from "./types"
@@ -16,6 +17,7 @@ interface ICallstackWrapperProps {
 
 const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute, edges }) => {
     const [executedNodes, setExecutedNodes] = useState<string[]>([])
+    const [failedNodes, setFailedNodes] = useState<string[]>([])
     const [processId, setProcessId] = useState(v4())
 
     const { 
@@ -42,6 +44,8 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         }
 
         setExecutedNodes([])
+        setFailedNodes([])
+
         execute_node()
     }, [execute])
 
@@ -50,6 +54,13 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         nExecutedNodes.push(id)
 
         setExecutedNodes([ ...nExecutedNodes ])
+    }
+
+    function addFailedNode(nodeId: string) {
+        let nFailedNodes = failedNodes
+        nFailedNodes.push(nodeId)
+
+        setFailedNodes([ ...nFailedNodes ])
     }
 
     function findStack(nodeId: string) {
@@ -122,11 +133,45 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         return promise
     }
 
-    async function executeNode(stack: ICallStackFunc) {
+    async function executeNode(
+        stack: ICallStackFunc, 
+        index?: number, 
+        loop_id?: string,
+        _executedNodes?: string[], 
+        _failedNodes?: string[],
+        _addExecutedNode?: (val: string) => void,
+        _addFailedNode?: (val: string) => void
+    ) {
         let executionId = `${stack.functionId}:${stack.nodeId}`
         let dependencies = stack.dependencies
-        if(executedNodes.includes(executionId))
+
+        let internalExecutedNodes = executedNodes
+        let internalFailedNodes = failedNodes
+        let internalAddExecutedNode = addExecutedNode
+        let internalAddFailedNode = addFailedNode
+
+        if(_executedNodes !== undefined)
+            internalExecutedNodes = _executedNodes
+        if(_failedNodes !== undefined)
+            internalFailedNodes = _failedNodes
+        if(_addExecutedNode !== undefined)
+            internalAddExecutedNode = _addExecutedNode
+        if(_addFailedNode !== undefined)
+            internalAddFailedNode = _addFailedNode
+
+        if(internalExecutedNodes.includes(executionId))
             return
+
+        function isFailedNode(nodeId: string) {
+            let failedNode = false
+            for(let i = 0; i < internalFailedNodes.length; i++) {
+                let failedId = internalFailedNodes[i]
+                if(failedId === nodeId)
+                    failedNode = true
+            }
+    
+            return failedNode
+        }
 
         for(let i = 0; i < dependencies.length; i++) {
             let dependency = dependencies[i]
@@ -143,21 +188,25 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
                     await startNode(stack, setOutputValue)
                     break
                 case "file_upload":
-                    let promise = await fileUploadNode(stack, getInputValue, setOutputValue)
+                    let promise = await fileUploadNode(stack, isFailedNode, getInputEdge, getInputValue, setOutputValue)
                     await promise
 
                     break
                 case "sdmx_data_parser":
-                    await sdmxDataParserNode(stack, getInputEdge, executeFunction)
+                    await sdmxDataParserNode(stack, isFailedNode, getInputEdge, executeFunction)
+                    break
+                case "loop":
+                    await quantaLoop(stack, isFailedNode, executeFunction, executeNode)
                     break
                 default:
                     break
             }
         } catch (error) {
-            console.debug(`error -> ${error}`)
+            console.debug(`error in ${stack.functionId} -> ${error}`)
+            internalAddFailedNode(stack.nodeId)
         }
 
-        addExecutedNode(executionId)
+        internalAddExecutedNode(executionId)
     }
 
     return (

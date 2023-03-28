@@ -2,7 +2,7 @@ import prebuildNodeDict from "../config/prebuilt_nodes";
 import { GetConnectedEdge } from "../functions";
 import { IQuantaRFEdge } from "../types/edges";
 import { IQuantaRFNode } from "../types/nodes";
-import { IQuantaSocket, IQuantaStore } from "../types/types";
+import { IQuantaSocket, IQuantaStore, IQuantaTypeRef } from "../types/types";
 import { buildStoreKey } from "../utils";
 import { ICallStackFunc, ICallStackParam } from "./types";
 
@@ -139,12 +139,48 @@ function getNodeParams(node: IQuantaRFNode, quantaStore: IQuantaStore) {
 function ExecuteNodeGraph(nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) {
     let unsortedNodes = [...nodes].reverse()
     let callStack = [] as ICallStackFunc[]
+
     for(let i = 0; i < unsortedNodes.length; i++) {
         let node = unsortedNodes[i]
+        let edges_copy = edges
         let dependentEdges = getDependentEdges(node.id!, edges)
         
         //figure out the inputs and outputs to the function
         let params = getNodeParams(node, quantaStore)
+        
+        if(params === undefined && node.type === "quanta_group") {
+            if(node.id === undefined)
+                continue
+
+            let stackNode = {} as ICallStackFunc
+            stackNode.nodeId = node.id
+            stackNode.functionId = "loop"
+            stackNode.stackThread = []
+            stackNode.dependencies = []
+            stackNode.inputs = []
+
+            let connectedNodeId = undefined
+            let connectedSocket = undefined
+            for(let x = 0; x < edges_copy.length; x++) {
+                let edge = edges_copy[x]
+                if(edge.target === stackNode.nodeId) {
+                    connectedNodeId = edge.source
+                    connectedSocket = edge.sourceHandle
+                }
+            }
+
+            if(connectedNodeId === undefined || connectedSocket === undefined)
+                continue
+
+            let phantomInput = {} as ICallStackParam
+            phantomInput.id = connectedNodeId
+            phantomInput.type = {} as IQuantaTypeRef
+            phantomInput.name = connectedSocket
+
+            stackNode.inputs.push(phantomInput)
+            callStack.push(stackNode)
+        }
+
         if(params === undefined)
             continue
 
@@ -165,9 +201,38 @@ function ExecuteNodeGraph(nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quanta
     }
 
     //build the iter threads
-    
+    let realStack = [] as ICallStackFunc[]
+    callStack.reverse()
 
-    return callStack
+    for(let i = 0; i < callStack.length; i++) {
+        let stack = callStack[i]
+        let stackParent = stack.parentId
+        
+        if(stackParent === undefined) {
+            realStack.push(stack)
+            continue
+        }
+
+        //find the parent index
+        let parentIndex = undefined
+        for(let x = 0; x < realStack.length; x++) {
+            let subStack = realStack[x]
+            if(subStack.nodeId === stackParent)
+                parentIndex = x
+        }
+
+        if(parentIndex === undefined)
+            continue
+        
+        let parentNode = realStack[parentIndex]
+        if(parentNode.stackThread === undefined)
+            continue
+
+        parentNode.stackThread.push(stack)
+        realStack[parentIndex] = parentNode
+    }
+
+    return realStack
 }
 
 export default ExecuteNodeGraph

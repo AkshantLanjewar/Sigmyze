@@ -62,6 +62,7 @@ import { v4 } from "uuid"
 import ExecuteNodeGraph from "./execution-engine"
 import EngineWrapper from "./execution-engine/engine-wrapper"
 import ExecutionContext from "./execution-engine/context"
+import ContextButtons from "./editor-toolkit/context-buttons"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -200,10 +201,6 @@ const QuantaEditor: React.FC = ({  }) => {
         setDatasetTypes([ ...nDatasetTypes ])
     }, [quantaContext?.updateEditorSchema])
 
-    useEffect(() => { 
-        toggleEngineWrapper()
-    }, [edges])
-
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
     value.storeToggle = storeToggle
@@ -318,6 +315,10 @@ const QuantaEditor: React.FC = ({  }) => {
             ref={ref}
             style={{ width: "100%", height: "100%", position: 'relative' }}
         >
+            <ContextButtons 
+                toggleEngineWrapper={toggleEngineWrapper}
+            />
+
             <ExecutionContext>
                 <QuantaEditorContext.Provider value={value}>
                     <>
