@@ -2,8 +2,9 @@ import { createContext, useContext, useEffect, useRef, useState } from "react"
 import { UserContextData } from "../../../../data/user/context"
 import { IUserContext } from "../../../../data/user/types"
 import { wsServer } from "../../../../data/utils"
-import { executeSocketFunction, getOutputValueSocket, setOutputValueSocket } from "./functions"
-import { IExecutionEngineContext, ISocketResp, ISocketRespHandler } from "./types"
+import { IQuantaSocket } from "../../types/types"
+import { addExecutionResults, executeSocketFunction, getOutputValueSocket, setOutputValueSocket, updateResults } from "./functions"
+import { IExecutionEngineContext, INodeExecutionResult, ISocketResp, ISocketRespHandler } from "./types"
 
 interface IExecutionContextProps {
     children?: React.ReactNode
@@ -14,11 +15,19 @@ const ExecutionContextData = createContext<IExecutionEngineContext | null>(null)
 const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
     const { loggedIn, loaded, authData } = useContext(UserContextData) as IUserContext
 
+    /**
+     * state relating to sockets
+     */
     const [socketCreated, setSocketCreated] = useState(false)
     const [webSocket, setWebSocket] = useState<WebSocket | null>(null)
     const [socketResponseQueue, setSocketResponseQueue] = useState<ISocketResp[]>([])
     const [socketResponse, setSocketResponse] = useState(false)
     const [socketHandlers, setSocketHandlers] = useState<ISocketRespHandler[]>([])
+
+    /**
+     * state relating to dynamic socket output
+     */
+    const [executionResults, setExecutionResults] = useState<INodeExecutionResult[]>([])
 
     function addMessage(msg: ISocketResp) {
         let nSocketQueue = socketResponseQueue
@@ -102,6 +111,7 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
     contextData.socketCreated = socketCreated
     contextData.socketResponseQueue = socketResponseQueue
     contextData.socketResponse = socketResponse
+    contextData.executionResults = executionResults
 
     contextData.setOutputValueSocket = (processId: string, nodeId: string, socketId: string, value: any, cb: Function) =>
         setOutputValueSocket(processId, nodeId, socketId, value, cb, webSocket, addHandler)
@@ -128,6 +138,11 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
 
         setSocketResponseQueue([ ...nMessages ])
     }
+
+    contextData.updateResults = (nodeId: string, fieldId: string, data: string) =>
+        updateResults(nodeId, fieldId, data, executionResults)
+    contextData.addExecutionResult = (nodeId: string, fieldId: string, data: string, sockets: IQuantaSocket[]) =>
+        addExecutionResults(nodeId, fieldId, data, sockets, executionResults, setExecutionResults)
 
     return (
         <>

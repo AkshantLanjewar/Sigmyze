@@ -2,6 +2,8 @@ use std::error;
 use actix_web::web;
 use basteh::Basteh;
 
+use crate::handler::functions::sdmx_data_mapper;
+
 use super::messages::{self};
 use super::functions::{sdmx_data_parser, loop_functions};
 
@@ -37,7 +39,6 @@ pub async fn parse_function_request(
     let output_ids = body.output_ids.unwrap();
     let node_id = body.node_id.unwrap();
 
-    println!("{}", function_id);
     match function_id {
         "sdmx_data_parser" => return sdmx_data_parser::socket_sdmx_parser(
             request_id,
@@ -45,6 +46,14 @@ pub async fn parse_function_request(
             process_id,
             function_data,
             output_ids,
+            data_store
+        ).await,
+
+        "sdmx_data_mapper" => return sdmx_data_mapper::sdmx_data_mapper(
+            request_id, 
+            node_id, 
+            process_id, 
+            function_data, 
             data_store
         ).await,
 
@@ -58,6 +67,13 @@ pub async fn parse_function_request(
         "unload_loop" => return loop_functions::loop_unload::unload_loop(
             request_id, 
             function_data, 
+            data_store
+        ).await,
+
+        "get_loop_index" => return loop_functions::loop_index::get_loop_index(
+            request_id,
+            process_id,
+            function_data,
             data_store
         ).await,
 

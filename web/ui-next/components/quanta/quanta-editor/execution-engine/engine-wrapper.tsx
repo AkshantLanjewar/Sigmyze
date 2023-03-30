@@ -30,19 +30,24 @@ const EngineModal = ({ context, id, innerProps }: ContextModalProps<IEngineModal
 
 interface IEngineWrapperProps {
     subscribeExecute?: boolean,
+    engineCacheToggle: boolean,
     nodes?: IQuantaRFNode[],
     edges?: IQuantaRFEdge[],
     store?: IQuantaStore
 }
 
-const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes, edges, store }) => {
+const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, engineCacheToggle, nodes, edges, store }) => {
     const [internalNodes, setInternalNodes] = useState<IQuantaRFNode[]>([])
     const [internalEdges, setInternalEdges] = useState<IQuantaRFEdge[]>([])
     const [internalStore, setInternalStore] = useState<IQuantaStore | undefined>(undefined)
 
     const [callStack, setCallStack] = useState<ICallStackFunc[]>([])
+
     const [execute, setExecute] = useState(false)
     const toggleExecute = () => setExecute(!execute)
+
+    const [executeCache, setExecuteCache] = useState(false)
+    const toggleExecuteCache = () => setExecuteCache(!executeCache)
 
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
 
@@ -59,6 +64,20 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
         setCallStack([ ...callStack ])
         toggleExecute()
     }, [loggedIn, loaded, subscribeExecute])
+
+    useEffect(() => {
+        if(internalStore === undefined)
+            return
+        /*
+        comment out for debugging
+        if(loaded === false || loggedIn === false)
+            return
+        */
+
+        let callStack = ExecuteNodeGraph(internalNodes, internalEdges, internalStore)
+        setCallStack([ ...callStack ])
+        toggleExecuteCache()
+    }, [engineCacheToggle])
 
     //effect hook to set the internal nodes
     useEffect(() => {
@@ -88,6 +107,7 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, nodes,
             <CallstackWrapper 
                 callStack={callStack}
                 execute={execute}    
+                executeCache={executeCache}
                 edges={internalEdges}        
             />
 

@@ -74,8 +74,10 @@ interface IQuantaSocket {
      * in the object. requires the id of the input being referenced, and a list of dependent input groups.
      * 
      * QUANTA: this backend creates dynamic sockets based on variables in the quanta context
+     * 
+     * EXECUTION: This creates dynamic sockets based on the result of a node's specific execution
      */
-    dynamicDepend?: "store" | "input_val" | "quanta",
+    dynamicDepend?: "store" | "input_val" | "quanta" | "execution",
 
     /**
      * This is the overall quanta project variable the socket depends on
@@ -107,7 +109,12 @@ interface IQuantaSocket {
     /**
      * the type of item returned in the array
      */
-    arrayType?: IQuantaTypeRef
+    arrayType?: IQuantaTypeRef,
+
+    /**
+     * this is the execution field we will be referencing
+     */
+    executionField?: string
 }
 
 /**
@@ -199,7 +206,15 @@ interface IQuantaNodeInstructions {
      */
     controls?: IQuantaControl[],
 
+    /**
+     * is the iter node
+     */
     isIter?: boolean
+
+    /**
+     * whether or not the node caches data from the socket
+     */
+    cacheable?: boolean
 }
 
 export type {

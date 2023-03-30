@@ -53,6 +53,13 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
         setFocused(false)
     }, [quantaEditorContext?.focusToggle])
 
+    useEffect(() => {
+        if(quantaEditorContext === null)
+            return
+        if(instructions.cacheable === true)
+            quantaEditorContext.hasCache()
+    }, [instructions])
+
     return (
         <div>
             <div

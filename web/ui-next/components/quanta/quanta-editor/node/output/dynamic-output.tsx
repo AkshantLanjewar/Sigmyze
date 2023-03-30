@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import PREBUILT_FORMS from '../../../../ui/form-builder/prebuilt_forms'
+import { ExecutionContextData } from '../../execution-engine/context'
+import { IExecutionEngineContext } from '../../execution-engine/context/types'
 import { QuantaEditorContext } from '../../quanta-editor'
 import { IQuantaSocket, IQuantaStoreData, IQuantaStoreItem, IQuantaTypeRef } from '../../types/types'
 import { validateStoreSocket, buildStoreKey } from '../../utils'
@@ -16,6 +18,7 @@ interface IDynamicOutput {
 const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, parentId }) => {
     const [renderedOutputs, setRenderedOutputs] = useState<IQuantaSocket[]>([])
     const quantaEditorContext = useContext(QuantaEditorContext)
+    const { executionResults } = useContext(ExecutionContextData) as IExecutionEngineContext
 
     function buildStoreOutputs(storeItems: IQuantaStoreItem[]) {
         let nOutputs = []
@@ -38,16 +41,38 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, pare
 
         setRenderedOutputs([ ...nOutputs ])
     }
+
+    useEffect(() => {
+        if(output.dynamicDepend !== "execution")
+            return
+        if(output.executionField === undefined)
+            return
+
+        let executionField = output.executionField
+        let executionResult = undefined
+        for(let i = 0; i < executionResults.length; i++) {
+            let _executionResult = executionResults[i]
+            if(_executionResult.nodeId === nodeId && _executionResult.fieldId === executionField)
+                executionResult = _executionResult
+        }
+
+        if(executionResult === undefined)
+            return
+
+        let executionSockets = executionResult.computedSockets
+        setRenderedOutputs([ ...executionSockets ])
+    }, [executionResults])
     
     useEffect(() => {
-        if(output.storeKey === undefined)
-            return
         if(quantaEditorContext === null)
             return
         if(nodeId === undefined)
             return
         
         if(output.dynamicDepend === "store") {
+            if(output.storeKey === undefined)
+                return
+
             let store = quantaEditorContext.getStoreValue(buildStoreKey(nodeId, output.storeKey))
             if(store === undefined)
                 return quantaEditorContext.createStore(

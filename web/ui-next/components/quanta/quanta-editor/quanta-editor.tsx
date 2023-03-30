@@ -131,6 +131,14 @@ const QuantaEditor: React.FC = ({  }) => {
     const [engineWrapperToggle, setEngineWrapperToggle] = useState(false)
     const toggleEngineWrapper = () => setEngineWrapperToggle(!engineWrapperToggle)
 
+    //toggle for the engine
+    const [engineCacheToggle, setEngineCacheToggle] = useState(false)
+    const toggleEngineCache = () => setEngineCacheToggle(!engineCacheToggle)
+
+    //whether or not the editor has a node that has cachable data
+    const [requiresCache, setRequiresCache] = useState(false)
+    const hasCache = () => setRequiresCache(true)
+
     const openStoreModal = () => setStoreModal('store')
     const closeStoreModal = () => setStoreModal(null)
 
@@ -262,6 +270,7 @@ const QuantaEditor: React.FC = ({  }) => {
         SetIterNodeType(nodeId, nodeType, iterNodeTypes, setIterNodeTypes)
     value.getIterNodeType = (nodeId: string) =>
         GetIterNodeType(nodeId, iterNodeTypes)
+    value.hasCache = hasCache
 
     const submitStoreModal_ = (forms: IQuantaFormField[], valStore: {[key: string]: string}) =>
         submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)
@@ -316,7 +325,9 @@ const QuantaEditor: React.FC = ({  }) => {
             style={{ width: "100%", height: "100%", position: 'relative' }}
         >
             <ContextButtons 
+                hasCache={requiresCache}
                 toggleEngineWrapper={toggleEngineWrapper}
+                toggleEngineCache={toggleEngineCache}
             />
 
             <ExecutionContext>
@@ -324,6 +335,7 @@ const QuantaEditor: React.FC = ({  }) => {
                     <>
                         <EngineWrapper
                             subscribeExecute={engineWrapperToggle}
+                            engineCacheToggle={engineCacheToggle}
                             nodes={nodes}
                             edges={edges}
                             store={quantaStore}

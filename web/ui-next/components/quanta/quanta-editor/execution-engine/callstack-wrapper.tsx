@@ -4,7 +4,9 @@ import { IQuantaRFEdge } from "../types/types"
 import { ExecutionContextData } from "./context"
 import { IExecutionEngineContext } from "./context/types"
 import fileUploadNode from "./nodes/file-upload"
+import iterNode from "./nodes/iter"
 import quantaLoop from "./nodes/loop"
+import sdmxDataMapper from "./nodes/sdmx-data-mapper" 
 import sdmxDataParserNode from "./nodes/sdmx-data-parser"
 import startNode from "./nodes/start"
 import { ICallStackFunc, IFunctionResp, IInputValueResp } from "./types"
@@ -12,10 +14,11 @@ import { ICallStackFunc, IFunctionResp, IInputValueResp } from "./types"
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
     execute?: boolean,
+    executeCache: boolean,
     edges: IQuantaRFEdge[]
 }
 
-const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute, edges }) => {
+const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute, executeCache, edges }) => {
     const [executedNodes, setExecutedNodes] = useState<string[]>([])
     const [failedNodes, setFailedNodes] = useState<string[]>([])
     const [processId, setProcessId] = useState(v4())
@@ -24,8 +27,24 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         socketCreated, 
         setOutputValueSocket,
         getOutputValueSocket,
-        executeSocketFunction 
+        executeSocketFunction,
+        updateResults,
+        addExecutionResult 
     } = useContext(ExecutionContextData) as IExecutionEngineContext
+
+    async function execute_nodes(isCache?: boolean) {
+        if(callStack === undefined)
+            return
+
+        let cacheExecute = false
+        if(isCache === true)
+            cacheExecute = true
+
+        for(let i = 0; i < callStack.length; i++) {
+            let stack = callStack[i]
+            await executeNode(stack, cacheExecute)
+        }
+    }
 
     useEffect(() => {
         if(execute === undefined)
@@ -33,21 +52,21 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         if(socketCreated !== true)
             return
 
-        async function execute_node() {
-            if(callStack === undefined)
-                return
-
-            for(let i = 0; i < callStack.length; i++) {
-                let stack = callStack[i]
-                await executeNode(stack)
-            }
-        }
-
         setExecutedNodes([])
         setFailedNodes([])
 
-        execute_node()
+        execute_nodes()
     }, [execute])
+
+    useEffect(() => {
+        if(socketCreated !== true)
+            return
+        
+        setExecutedNodes([])
+        setFailedNodes([])
+        
+        execute_nodes(true)
+    }, [executeCache])
 
     function addExecutedNode(id: string) {
         let nExecutedNodes = executedNodes
@@ -135,6 +154,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
 
     async function executeNode(
         stack: ICallStackFunc, 
+        isCache: boolean,
         index?: number, 
         loop_id?: string,
         _executedNodes?: string[], 
@@ -179,7 +199,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             if(dependentStack === undefined)
                 continue
 
-            await executeNode(dependentStack)
+            await executeNode(dependentStack, isCache)
         }
 
         try {
@@ -195,8 +215,14 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
                 case "sdmx_data_parser":
                     await sdmxDataParserNode(stack, isFailedNode, getInputEdge, executeFunction)
                     break
+                case "sdmx_data_mapper":
+                    await sdmxDataMapper(stack, getInputEdge, executeFunction, isFailedNode, updateResults, addExecutionResult)
+                    break
                 case "loop":
-                    await quantaLoop(stack, isFailedNode, executeFunction, executeNode)
+                    await quantaLoop(stack, isCache, isFailedNode, executeFunction, executeNode)
+                    break
+                case "iter":
+                    await iterNode(stack, executeFunction, index, loop_id)
                     break
                 default:
                     break

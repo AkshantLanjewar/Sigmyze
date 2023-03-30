@@ -5,6 +5,7 @@ const SDMXDataMapper = {
     name: "SDMX Data Mapper",
     icon: <IconMapSearch />,
     description: "This node exposes the fields within an SDMX indicator",
+    cacheable: true,
 
     inputs: [
         {
@@ -19,6 +20,12 @@ const SDMXDataMapper = {
     ],
 
     outputs: [
+        {
+            dynamicSocket: true,
+            dynamicDepend: "execution",
+            groupTitle: "SDMX Fields",
+            executionField: "sdmx_fields"
+        },
         {
             socketId: "chart_data",
             socketName: "Chart Data",

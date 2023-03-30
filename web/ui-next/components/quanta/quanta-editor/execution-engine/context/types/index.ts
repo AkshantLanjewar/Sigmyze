@@ -1,3 +1,5 @@
+import { IQuantaSocket } from '../../../types/types'
+import { INodeExecutionResult } from './node_data'
 import { ISocketResp } from './socket'
 
 interface IExecutionEngineContext {
@@ -15,6 +17,11 @@ interface IExecutionEngineContext {
      * hook when message is received
      */
     socketResponse: boolean,
+
+    /**
+     * execution result data
+     */
+    executionResults: INodeExecutionResult[],
 
     setOutputValueSocket: (
         processId: string, 
@@ -40,8 +47,13 @@ interface IExecutionEngineContext {
         cb: (val: string) => void
     ) => string | undefined,
 
-    deleteSocketMessage: (requestId: string) => void
+    deleteSocketMessage: (requestId: string) => void,
+
+    //functions relating to dynamic execution data
+    updateResults: (nodeId: string, fieldId: string, data: string) => boolean,
+    addExecutionResult: (nodeId: string, fieldId: string, data: string, sockets: IQuantaSocket[]) => void
 }
 
 export type { IExecutionEngineContext }
 export * from './socket'
+export * from './node_data'

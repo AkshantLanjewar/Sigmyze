@@ -3,6 +3,7 @@ use super::messages::{SocketResponse, self};
 
 pub mod sdmx_data_parser;
 pub mod loop_functions;
+pub mod sdmx_data_mapper;
 
 mod types;
 

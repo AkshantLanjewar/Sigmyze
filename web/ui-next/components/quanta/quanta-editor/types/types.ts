@@ -182,7 +182,9 @@ interface IQuantaEditorGlobals {
 
     setIterNodeType: (nodeId: string, nodeType: IQuantaTypeRef) => void,
 
-    getIterNodeType: (nodeId: string) => IQuantaTypeRef | undefined
+    getIterNodeType: (nodeId: string) => IQuantaTypeRef | undefined,
+
+    hasCache: () => void,
 }
 
 export * from './nodes'

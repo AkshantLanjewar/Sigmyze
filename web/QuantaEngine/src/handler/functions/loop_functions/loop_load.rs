@@ -46,10 +46,15 @@ pub async fn load_loop(
     let connected_value = connected_value.as_array().unwrap();
     let loop_length = connected_value.len();
 
+    let mut connected_bytes: Vec<String> = Vec::new();
+    for value in connected_value.iter() {
+        let value_string = value.to_string();
+        connected_bytes.push(value_string);
+    }
+
     //store the vector in basteh, and return the length of the vector back to the client
-    let loop_string = serde_json::to_string(connected_value)?;
     let loop_id = body.loop_id.unwrap();
-    data_store.set(loop_id, loop_string).await.unwrap();
+    data_store.set(loop_id, connected_bytes).await.unwrap();
 
     let response = loop_response::LoadResponse::new(loop_length);
     let response_str = serde_json::to_string(&response)?;

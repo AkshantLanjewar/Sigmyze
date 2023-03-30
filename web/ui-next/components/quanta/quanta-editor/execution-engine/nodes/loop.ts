@@ -17,10 +17,12 @@ interface ILoadLoopResponse {
 
 async function quantaLoop(
     stack: ICallStackFunc,
+    isCache: boolean,
     isFailedNode: (nodeId: string) => boolean,
     executeFunction: (nodeId: string, functionId: string, outputIds: string[], functionData: any) => Promise<string>,
     executeNode: (
         stack: ICallStackFunc, 
+        isCache: boolean,
         index?: number, 
         loop_id?: string,
         _executedNodes?: string[], 
@@ -66,13 +68,16 @@ async function quantaLoop(
         failedNodes.push(val)
     }
 
+    if(isCache === true)
+        length = 1
+
     while(index < length) {
         executedNodes = []
         failedNodes = []
 
         for(let i = 0; i < childThread.length; i++) {
             let thread = childThread[i]
-            await executeNode(thread, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
+            await executeNode(thread, isCache, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
         }
 
         index += 1
