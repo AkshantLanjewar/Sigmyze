@@ -31,7 +31,6 @@ import {
 import 'reactflow/dist/style.css'
 import { applyNodeChanges, applyEdgeChanges, Connection } from "@reactflow/core"
 import QuantaNode from "./node/quanta-node"
-import { arrayConnection, buildEdge, BuildNode, compareTypes, GetNodeSocket, isNodeArray } from "./utils"
 import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../../ui/form-builder/form-builder"
 import DeleteNodeForm from "./forms/delete-node-form"
@@ -63,6 +62,8 @@ import ExecuteNodeGraph from "./execution-engine"
 import EngineWrapper from "./execution-engine/engine-wrapper"
 import ExecutionContext from "./execution-engine/context"
 import ContextButtons from "./editor-toolkit/context-buttons"
+
+import { compareTypes, BuildNode, GetNodeSocket, buildEdge, isNodeArray, arrayConnection } from "./utils"
 
 /**
  * This is the context created that stores all the node editor's global values
