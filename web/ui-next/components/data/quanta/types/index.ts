@@ -52,7 +52,7 @@ interface IQuantaState {
     //inits the schema object within the context
     initSchema: (parentId: string) => void,
     //creates a new element within the schema
-    createElement: (parentId: string, nodeId: string) => void,
+    createElement: (parentId: string, nodeId: string, fieldName?: string) => void,
     //edits an elements info
     editSchema: (
         parentId: string,

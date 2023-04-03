@@ -4,6 +4,7 @@ import { IQuantaSocket, IQuantaTypeRef } from "../../types/types"
 import styles from '../node-renderer.module.scss'
 import NodeType from "../type/node-type"
 import NodeTypeSelector from "../type/node-type-selector"
+import DatasetFieldActions from "./dataset-field-actions"
 
 interface INodeInputProps {
     socket: IQuantaSocket,
@@ -15,32 +16,41 @@ interface INodeInputProps {
 const NodeInput: React.FC<INodeInputProps> = ({ socket, focused, editType }) => {
     return (
         <div className={styles.node__socket}>
-            <Group
-                align={"center"} 
-                spacing={'xs'}
-                className={styles.priority}
-            >
-                {socket.icon}
-
-                <Text
-                    color={"dimmed"}
-                    size={'sm'}
+            <div>
+                <Group
+                    align={"center"} 
+                    spacing={'xs'}
+                    className={styles.priority}
                 >
-                    {socket.socketName}
-                </Text>
-            </Group>
+                    {socket.icon}
 
-            {socket.staticSocket
-                ? null
-                : (
-                    <Handle 
-                        type='target' 
-                        position={Position.Left}
-                        className={styles.input}
-                        id={socket.socketId}
+                    <Text
+                        color={"dimmed"}
+                        size={'sm'}
+                    >
+                        {socket.socketName}
+                    </Text>
+                </Group>
+
+                {socket.staticSocket
+                    ? null
+                    : (
+                        <Handle 
+                            type='target' 
+                            position={Position.Left}
+                            className={styles.input}
+                            id={socket.socketId}
+                        />
+                    )
+                }
+
+                {socket.isDatasetField === true && (
+                    <DatasetFieldActions 
+                        socket={socket}
+                        focused={focused} 
                     />
-                )
-            }
+                )}
+            </div>
             
             {socket.hideType === true
                 ? <div />

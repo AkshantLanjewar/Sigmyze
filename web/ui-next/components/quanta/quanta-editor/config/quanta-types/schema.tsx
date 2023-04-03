@@ -18,12 +18,6 @@ const SchemaTypes = {
             typeDescription: "can hold text based values"
         },
         {
-            typeId: "chart_data",
-            typeName: "Chart Data",
-            typeIcon: <IconChartAreaLine />,
-            typeDescription: "Chart Data used by all time series data"
-        },
-        {
             typeId: "date",
             typeName: "Date",
             typeIcon: <IconCalendarEvent />,

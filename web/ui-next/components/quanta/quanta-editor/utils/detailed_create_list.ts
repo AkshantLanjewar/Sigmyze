@@ -10,6 +10,8 @@ import { IQuantaNodeDetails, IQuantaTypeRef } from "../types/types"
 function DetailedCreateList(outputType: IQuantaTypeRef) {
 	let keys = Object.keys(prebuildNodeDict)
 	let keysWithMatchingInputType = []
+	if(outputType.groupId === "schema")
+		keysWithMatchingInputType.push("build_fields")
 
 	for (let i = 0; i < keys.length; i++) {
 		let key = keys[i]

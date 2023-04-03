@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react'
+import { IconBrandAirtable } from '@tabler/icons'
+import { useContext, useEffect, useState } from 'react'
+import { QuantaContextData } from '../../../../data/quanta/context'
+import { IQuantaState } from '../../../../data/quanta/types'
 import { IQuantaSocket } from '../../types/node-instructions'
 import { IQuantaRFNodeData } from '../../types/nodes'
 import { compareTypes } from '../../utils'
@@ -14,10 +17,51 @@ interface IDynamicInputProps {
 
 const DynamicInput: React.FC<IDynamicInputProps> = ({ input, nodeId, focused, data }) => {
     const [childSockets, setChildSockets] = useState<IQuantaSocket[]>([])
+    const [isSchema, setIsSchema] = useState(false)
+
+    const { getSchema, initSchema, updateEditorSchema, updateSchema } = useContext(QuantaContextData) as IQuantaState
+
+    useEffect(() => {
+        if(isSchema === false)
+            return
+
+        let schema = getSchema("dataset")
+        let schemaNodes = schema?.children
+        if(schemaNodes === undefined)
+            return
+
+        let dynamicSockets = []
+        for(let i = 0; i < schemaNodes.length; i++) {
+            let schemaNode = schemaNodes[i]
+            let newSocket = {} as IQuantaSocket
+
+            newSocket.type = schemaNode.quantaType
+            newSocket.socketId = schemaNode.nodeId
+            newSocket.socketName = schemaNode.name
+            newSocket.icon = <IconBrandAirtable />
+            newSocket.isDatasetField = true
+            newSocket.selectableType = true
+
+            dynamicSockets.push(newSocket)
+        }
+
+        setChildSockets([ ...dynamicSockets ])
+    }, [isSchema, updateEditorSchema, updateSchema])
 
     useEffect(() => {
         if(input.dynamicSocket !== true)
             return
+
+        if(input.dynamicDepend === "quanta") {
+            let quantaDepend = input.quantaDepend
+            if(quantaDepend === "schema") {
+                //get the schema from quanta context
+                setIsSchema(true)
+                let schema = getSchema("dataset")
+                if(schema === undefined)
+                    initSchema("dataset")
+            }
+        }
 
         if(input.dynamicDepend === "input_val") {
             let dependentId = input.inputId

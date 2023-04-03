@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from "react"
+import { QuantaContextData } from "../../../../data/quanta/context"
+import { IQuantaState } from "../../../../data/quanta/types"
 import { QuantaEditorContext } from "../../quanta-editor"
 import { IQuantaSocket } from "../../types/node-instructions"
 import { IQuantaRFNodeData, IQuantaTypeRef } from "../../types/types"
@@ -18,6 +20,7 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
     const [controlledSocket, setControlledSocket] = useState<IQuantaSocket | undefined>(undefined)
 
     const quantaEditorContext = useContext(QuantaEditorContext)
+    const { editSchema } = useContext(QuantaContextData) as IQuantaState
     
     useEffect(() => {
         if(nodeId === undefined)
@@ -81,7 +84,11 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
         if(quantaEditorContext === null)
             return
 
-        quantaEditorContext.updateTrackedNodeType(nodeId, socketId, newType)
+        if(input.isDatasetField === true) {
+            editSchema("dataset", socketId, "edit_type", "", newType)
+        } else {
+            quantaEditorContext.updateTrackedNodeType(nodeId, socketId, newType)
+        }
     }
 
     return (

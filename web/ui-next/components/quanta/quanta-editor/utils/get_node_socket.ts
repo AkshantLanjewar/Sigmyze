@@ -1,5 +1,7 @@
 import { buildStoreKey } from "."
+import { IQuantaSchema } from "../../schema-editor/types"
 import prebuildNodeDict from "../config/prebuilt_nodes"
+import { INodeExecutionResult } from "../execution-engine/context/types"
 import { IQuantaRFNode, IQuantaSocket, IQuantaStore } from "../types/types"
 
 /**
@@ -20,7 +22,9 @@ function GetNodeSocket(
 	quantaStore: IQuantaStore, 
 	nodeId: string, 
 	socketId: string, 
-	type: "input" | "output"
+	type: "input" | "output",
+	executionResults?: INodeExecutionResult[],
+	schema?: IQuantaSchema
 ) {
 	let node = null
 	for(let i = 0; i < nodes.length; i++) {
@@ -73,6 +77,52 @@ function GetNodeSocket(
 
 		if(socket_.dynamicSocket === true)
 		{	
+			if(socket_.dynamicDepend === "quanta") 
+			{
+				let quantaDepend = socket_.quantaDepend
+				if(quantaDepend === "schema")
+				{
+					let schemaChildren = schema?.children
+					if(schemaChildren === undefined)
+						continue
+
+					for(let x = 0; x < schemaChildren.length; x++) {
+						let schemaChild = schemaChildren[x]
+						if(schemaChild.nodeId === socketId) {
+							//construct fake node
+							let phantomSocket = {} as IQuantaSocket
+							phantomSocket.type = schemaChild.quantaType
+							phantomSocket.socketId = schemaChild.nodeId
+							socket = phantomSocket
+						}
+					}
+				}
+			}
+
+			if(socket_.dynamicDepend === "execution")
+			{
+				let executionField = socket_.executionField
+				if(executionResults === undefined || executionField === undefined)
+					continue
+
+				let executionResult = undefined
+				for(let x = 0; x < executionResults.length; x++) {
+					let executionResult_ = executionResults[x]
+					if(executionResult_.nodeId === nodeId && executionResult_.fieldId === executionField)
+						executionResult = executionResult_
+				}
+
+				if(executionResult === undefined)
+					continue
+
+				let executionSockets = executionResult.computedSockets
+				for(let x = 0; x < executionSockets.length; x++) {
+					let tmpSocket = executionSockets[x]
+					if(tmpSocket.socketId === socketId)
+						socket = tmpSocket
+				}
+			}
+
 			if(socket_.dynamicDepend === "store")
 			{
 				let storeKey = socket_.storeKey

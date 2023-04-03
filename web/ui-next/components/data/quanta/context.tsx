@@ -23,6 +23,7 @@ import {
     unfocusAllSchema
 } from "./functions"
 import { IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
+import NewFieldForm from "./forms/new_field"
 
 interface IQuantaContextProps {
     quantaId?: string,
@@ -122,8 +123,8 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     value.initSchema = (parentId: string) =>
         initSchema(parentId, schemas, setSchemas, toggleUpdateEditorSchema)
 
-    value.createElement = (parentId: string, nodeId: string) =>
-        createElement(parentId, nodeId, value.getSchema(parentId), value.changeSchema, toggleUpdateEditorSchema)
+    value.createElement = (parentId: string, nodeId: string, fieldName?: string) =>
+        createElement(parentId, nodeId, value.getSchema(parentId), fieldName, value.changeSchema, toggleUpdateEditorSchema)
 
     value.editSchema = (
         parentId: string,
@@ -163,6 +164,13 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
                             title="Create Selector"
                         >
 
+                        </ModalManager.Modal>
+
+                        <ModalManager.Modal
+                            id="new_field"
+                            title="Add Dataset Field"
+                        >
+                            <NewFieldForm closeModal={closeModal} />
                         </ModalManager.Modal>
                     </ModalManager>
 

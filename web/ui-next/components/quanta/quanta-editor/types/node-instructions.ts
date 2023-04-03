@@ -114,7 +114,12 @@ interface IQuantaSocket {
     /**
      * this is the execution field we will be referencing
      */
-    executionField?: string
+    executionField?: string,
+
+    /**
+     * whether or not the socket is linked to the dataset's fields
+     */
+    isDatasetField?: boolean,
 }
 
 /**
@@ -144,7 +149,7 @@ interface IQuantaControl {
      */
     activates?: "store" | "quanta",
 
-    quantaActivation?: "field"
+    quantaActivation?: "new_field",
 
     /**
      * if the backend is a store, the key to access the stores data

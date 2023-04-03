@@ -1,4 +1,4 @@
-import { IconDatabase } from "@tabler/icons";
+import { IconChartAreaLine, IconDatabase } from "@tabler/icons";
 import { IQuantaTypeGroup } from "../../types/node-type";
 
 const QuantaTypes = {
@@ -11,7 +11,13 @@ const QuantaTypes = {
             typeName: "Field",
             typeIcon: <IconDatabase />,
             typeDescription: "The data fields within an indicator"
-        }
+        },
+        {
+            typeId: "chart_data",
+            typeName: "Chart Data",
+            typeIcon: <IconChartAreaLine />,
+            typeDescription: "Chart Data used by all time series data"
+        },
     ]
 } as IQuantaTypeGroup
 

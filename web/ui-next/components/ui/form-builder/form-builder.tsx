@@ -1,5 +1,5 @@
 import { Button, Group, Stack } from "@mantine/core"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IQuantaFormField } from "../../quanta/quanta-editor/types/types"
 import { convertTypesToDropdown } from "../../quanta/quanta-editor/utils"
 import DropdownInput from "./form-elements/dropdown-input"
@@ -9,11 +9,28 @@ import TextInputQuanta from "./form-elements/text-input"
 interface IFormBuilderProps {
     forms: IQuantaFormField[],
     closeModal: () => void,
-    submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => void
+    submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => void,
+    defaultValue?: {[key: string]: any}
 }
 
-const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit }) => {
+const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, defaultValue }) => {
     const [valStore, setValStore] = useState<{[key: string]: any}>({})
+
+    useEffect(() => {
+        if(defaultValue === undefined)
+            return
+
+        let defaultKeys = Object.keys(defaultValue)
+        let nValStore = valStore
+
+        for(let i = 0; i < defaultKeys.length; i++) {
+            let key = defaultKeys[i]
+            let value = defaultValue[key]
+            nValStore[key] = value
+        }
+
+        setValStore({ ...nValStore })
+    }, [defaultValue])
 
     function getValue(id: string) {
         return valStore[id]

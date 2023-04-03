@@ -34,6 +34,7 @@ const createElement = (
     parentId: string,
     nodeId: string,
     datasetSchema: IQuantaSchema | undefined, 
+    fieldName: string | undefined,
     setDatasetSchema: (parentId: string, nSchema: IQuantaSchema) => void,
     toggleUpdateEditorSchema: () => void
 ) => {
@@ -42,14 +43,21 @@ const createElement = (
     if(schemaChildren === undefined || nDatasetSchema === undefined)
         return
 
+    let schema_name = "field_name"
+    let focus_node = true
+    if(fieldName !== undefined) {
+        schema_name = fieldName
+        focus_node = false
+    }
+
     schemaChildren.push({
-        name: "field_name",
+        name: schema_name,
         nodeId: nodeId,
         quantaType: {
             groupId: "schema",
             typeId: "string"
         },
-        focusNode: true
+        focusNode: focus_node
     })
 
     nDatasetSchema.children = schemaChildren

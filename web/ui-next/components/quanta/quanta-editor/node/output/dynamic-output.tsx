@@ -143,6 +143,7 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, pare
                 <NodeOutput
                     output={step}
                     nodeId={nodeId}
+                    parentId={parentId}
                     focused={focused}
                     unfocus={() => { }}
                     editType={editType}

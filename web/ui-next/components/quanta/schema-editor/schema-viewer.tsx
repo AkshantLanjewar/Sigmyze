@@ -79,7 +79,7 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
             return
 
         setInternalType({ ...schemaType })
-    }, [schemaNode, quantaContext?.updateSchema])
+    }, [schemaNode, quantaContext?.updateSchema, quantaContext?.updateEditorSchema])
 
     return (
         <div>
@@ -108,38 +108,39 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                         emitEditState={setEditing}
                     />
                 </div>
-                    <Group spacing={5} className={styles.flare}>
-                        {editing === false && (
-                            <>
-                                {schemaNode.mutableType
-                                    ? (
-                                        <SchemaTypeSelector 
-                                            type={internalType}
-                                            parentNode={parentId}
-                                            nodeId={schemaNode.nodeId}
-                                        />
-                                    )
-                                    : (
-                                        <Badge 
-                                            variant="filled" 
-                                            color={color_table[schemaNode.type as keyof typeof color_table]}
-                                            size={"lg"}
-                                        >
-                                            {schemaNode.quantaType?.typeId}
-                                        </Badge>
-                                    )
-                                }
 
-                                {schemaNode.removeableType === true && (
-                                    <CloseButton
-                                        title="Remove Field"
-                                        size={'md'}
-                                        onClick={() => deleteNode()}
+                <Group spacing={5} className={styles.flare}>
+                    {editing === false && (
+                        <>
+                            {schemaNode.mutableType
+                                ? (
+                                    <SchemaTypeSelector 
+                                        type={internalType}
+                                        parentNode={parentId}
+                                        nodeId={schemaNode.nodeId}
                                     />
-                                )}
-                            </>
-                        )}
-                    </Group>
+                                )
+                                : (
+                                    <Badge 
+                                        variant="filled" 
+                                        color={color_table[schemaNode.type as keyof typeof color_table]}
+                                        size={"lg"}
+                                    >
+                                        {schemaNode.quantaType?.typeId}
+                                    </Badge>
+                                )
+                            }
+
+                            {schemaNode.removeableType === true && (
+                                <CloseButton
+                                    title="Remove Field"
+                                    size={'md'}
+                                    onClick={() => deleteNode()}
+                                />
+                            )}
+                        </>
+                    )}
+                </Group>
             </UnstyledButton>
 
             <Collapse in={opened}>

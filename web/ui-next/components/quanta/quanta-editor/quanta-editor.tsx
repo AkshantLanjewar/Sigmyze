@@ -1,20 +1,13 @@
 import { 
     createContext, 
     RefObject, 
-    useCallback, 
     useContext, 
     useEffect, 
-    useMemo, 
     useRef, 
     useState 
 } from "react"
 
-import { 
-    ReactFlow, 
-    Background, 
-    Controls, 
-    ReactFlowInstance 
-} from "reactflow"
+import { ReactFlowInstance } from "reactflow"
 
 import { 
     IQuantaEditorGlobals, 
@@ -22,15 +15,12 @@ import {
     IQuantaIterNodeType, 
     IQuantaRFEdge, 
     IQuantaRFNode, 
-    IQuantaSocket, 
     IQuantaStore, 
     IQuantaTypeRef, 
     IQuantaXYPos,
 } from "./types/types"
 
 import 'reactflow/dist/style.css'
-import { applyNodeChanges, applyEdgeChanges, Connection } from "@reactflow/core"
-import QuantaNode from "./node/quanta-node"
 import ModalManager from "../../ui/modal-manager"
 import FormBuilder from "../../ui/form-builder/form-builder"
 import DeleteNodeForm from "./forms/delete-node-form"
@@ -53,17 +43,16 @@ import {
     submitStoreModal, 
     trackNodeType, 
     updateTrackedNodeType 
-} from "./functions"
-import QuantaGroup from "./group/quanta-group"
+} from "./functions" 
+
 import { IQuantaSchemaShort } from "../schema-editor/types"
-import QuantaContext, { QuantaContextData } from "../../data/quanta/context"
-import { v4 } from "uuid"
-import ExecuteNodeGraph from "./execution-engine"
+import { QuantaContextData } from "../../data/quanta/context"
 import EngineWrapper from "./execution-engine/engine-wrapper"
 import ExecutionContext from "./execution-engine/context"
 import ContextButtons from "./editor-toolkit/context-buttons"
 
-import { compareTypes, BuildNode, GetNodeSocket, buildEdge, isNodeArray, arrayConnection } from "./utils"
+import { BuildNode, GetNodeSocket } from "./utils"
+import QuantaFlow from "./quanta-flow"
 
 /**
  * This is the context created that stores all the node editor's global values
@@ -142,13 +131,6 @@ const QuantaEditor: React.FC = ({  }) => {
 
     const openStoreModal = () => setStoreModal('store')
     const closeStoreModal = () => setStoreModal(null)
-
-    /**
-     * This is the react-flow related variables 
-     */
-    const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
-    const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
-    const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode, quanta_group: QuantaGroup }), [])
 
     /**
      * Ref for the react flow element
@@ -276,50 +258,6 @@ const QuantaEditor: React.FC = ({  }) => {
     const submitStoreModal_ = (forms: IQuantaFormField[], valStore: {[key: string]: string}) =>
         submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)
 
-    //when edges connect
-    const onConnect = useCallback((params: Connection) => {
-        //source node vars
-        let sourceNode = params.source
-        let targetNode = params.target
-        if(sourceNode === null || targetNode === null)
-            return
-
-        if(isNodeArray(nodes, sourceNode) || isNodeArray(nodes, targetNode))
-        {
-            arrayConnection(params, nodes, quantaStore, edges, setEdges)
-            return
-        }
-        
-        //target node vars
-        let sourceSocket = params.sourceHandle
-        let targetSocket = params.targetHandle
-        if(sourceSocket === null || targetSocket === null)
-            return
-
-        let sourceSocketObject = GetNodeSocket(nodes, quantaStore, sourceNode, sourceSocket, "output")
-        if(sourceSocketObject === undefined && sourceSocket === sourceNode)
-        {
-            let phantomSocket = {} as IQuantaSocket
-            phantomSocket.type = value.getIterNodeType(sourceNode)
-            if(phantomSocket.type === undefined)
-                return
-
-            sourceSocketObject = phantomSocket
-        }
-
-        const targetSocketObject = GetNodeSocket(nodes, quantaStore, targetNode, targetSocket, "input")
-        if(sourceSocketObject === undefined || targetSocketObject === undefined)
-            return
-
-        if(compareTypes(sourceSocketObject.type!, targetSocketObject.type!) === true)
-        {
-            let nEdges = edges
-            nEdges.push(buildEdge(sourceNode, sourceSocket, targetNode, targetSocket))
-
-            setEdges([ ...nEdges ])
-        }
-    }, [nodes, quantaStore])
-
     return (
         <div 
             ref={ref}
@@ -368,19 +306,14 @@ const QuantaEditor: React.FC = ({  }) => {
                             </ModalManager.Modal>
                         </ModalManager>
 
-                        <ReactFlow
-                            nodes={nodes as any}
-                            edges={edges as any}
-                            onNodesChange={onNodesChange}
-                            onEdgesChange={onEdgesChange}
-                            nodeTypes={nodeTypes as any}
-                            attributionPosition={'bottom-left'}
-                            onInit={setReactFlowInstance}
-                            onConnect={onConnect}
-                        >
-                            <Background />
-                            <Controls /> 
-                        </ReactFlow>
+                        <QuantaFlow
+                            nodes={nodes}
+                            edges={edges}
+                            quantaStore={quantaStore}
+                            setNodes={setNodes}
+                            setEdges={setEdges}
+                            setReactFlowInstance={setReactFlowInstance}
+                        />
                     </>
                 </QuantaEditorContext.Provider>
             </ExecutionContext>

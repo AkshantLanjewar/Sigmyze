@@ -5,7 +5,10 @@ import {
     SDMXDataMapper, 
     SDMXDataParser, 
     StartNode, 
-    FileUpload 
+    FileUpload, 
+    GetSDMXFieldKey,
+    GetSDMXFieldValue,
+    BuildField
 } from "./nodes"
 
 const prebuildNodeDict = {
@@ -14,7 +17,10 @@ const prebuildNodeDict = {
     sdmx_data_parser: SDMXDataParser,
     sdmx_data_mapper: SDMXDataMapper,
     file_upload: FileUpload,
-    apply_data_rule: ApplyDataRule
+    apply_data_rule: ApplyDataRule,
+    get_sdmx_field_key: GetSDMXFieldKey,
+    get_sdmx_field_value: GetSDMXFieldValue,
+    build_fields: BuildField
 } as { [key: string]: IQuantaNodeInstructions }
 
 export default prebuildNodeDict

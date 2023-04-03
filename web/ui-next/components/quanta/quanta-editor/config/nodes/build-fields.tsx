@@ -1,10 +1,10 @@
-import { IconDatabaseImport, IconHammer } from "@tabler/icons";
+import { IconDatabaseImport, IconHammer, IconPlus } from "@tabler/icons";
 import { IQuantaNodeInstructions } from "../../types/node-instructions";
 
 const BuildField = {
     name: "Build Fields",
     icon: <IconHammer />,
-    description: "Converts individual values into a field value based on the schema for the dataset",
+    description: "Creates the field value for the indicator",
 
     inputs: [
         {
@@ -28,7 +28,13 @@ const BuildField = {
     ],
 
     controls: [
-        
+        {
+            activates: "quanta",
+            quantaActivation: "new_field",
+            id: "create_field_control",
+            name: "Add Field",
+            icon: <IconPlus />
+        }
     ]
 } as IQuantaNodeInstructions
 

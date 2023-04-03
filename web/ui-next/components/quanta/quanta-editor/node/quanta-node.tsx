@@ -4,10 +4,7 @@ import styles from './node-renderer.module.scss'
 import { useState, useRef, useEffect, useContext } from "react"
 import { QuantaEditorContext } from "../quanta-editor"
 import OutputRenderer from "./output/OutputRenderer"
-import { Divider } from "@mantine/core"
-import { IconPlus } from "@tabler/icons"
 import NodeControl from "./node-control"
-import ActionMenu from "../../../lunar/document-editor/blocks/action-menu"
 import NodeActionMenu from "./action-menu/action-menu"
 import InputRenderer from "./input/input-renderer"
 import IterBody from "./iter-body"
@@ -43,7 +40,9 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
 
         let node = quantaEditorContext.getNode(nodeId)
         let parent = node?.parentNode
-        setParentId(parent)
+        
+        if(parent !== undefined)
+            setParentId(parent)
     }, [data])
 
     useEffect(() => {
