@@ -16,17 +16,20 @@ namespace SigmyzeServer.Controllers
         private readonly IUserServiceRepository _userServiceRepository;
         private readonly IDriveRepository _driveRepository;
         private readonly IProjectRepository _projectRepository;
+        private readonly IQuantaRepository _quantaRepository;
 
         public ProjectController(
             IOrganizationRepository organizationRepository, 
             IUserServiceRepository userServiceRepository,
             IDriveRepository driveRepository,
-            IProjectRepository projectRepository
+            IProjectRepository projectRepository,
+            IQuantaRepository quantaRepository
         ) : base(organizationRepository)
         {
             _userServiceRepository = userServiceRepository;
             _driveRepository = driveRepository;
             _projectRepository = projectRepository;
+            _quantaRepository = quantaRepository;
         }
 
         //FEATURE: This retreives a drive from the collection chain
@@ -69,7 +72,7 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(resp);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
             if(utils.ValidateProject(drive, projectId) == false)
             {
                 msg.Error = true;
@@ -118,7 +121,7 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
             if(utils.ValidateProject(drive, projectId) == false)
             {
                 msg.Error = true;

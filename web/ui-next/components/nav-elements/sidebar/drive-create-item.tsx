@@ -1,9 +1,10 @@
 import { Menu, Tooltip } from "@mantine/core"
-import { IconBox, IconFolderPlus, IconPlus } from "@tabler/icons"
+import { IconAtom2, IconBox, IconFolderPlus, IconPlus } from "@tabler/icons"
 import { useState } from "react"
 import ModalManager from "../../ui/modal-manager"
 import NewFolderModal from "./modal-views/new-folder-modal"
 import NewProjectModal from "./modal-views/new-project-modal"
+import NewQuantaModal from "./modal-views/new-quanta-modal"
 import styles from './sidebar.module.scss'
 
 /**
@@ -48,11 +49,18 @@ const DriveCreateItem: React.FC = ({ }) => {
                 >
                     <NewProjectModal close={closeModal} />
                 </ModalManager.Modal>
+
+                <ModalManager.Modal
+                    title="Create Quanta Project"
+                    id={'new-quanta-project'}
+                >
+                    <NewQuantaModal close={closeModal} />
+                </ModalManager.Modal>
             </ModalManager>
 
             <Menu
                 withArrow
-                width={200}
+                width={225}
                 position={'right-start'}
                 transition={'slide-right'}
                 shadow={"md"}
@@ -82,6 +90,13 @@ const DriveCreateItem: React.FC = ({ }) => {
                         icon={<IconBox size={18} />}
                     >
                         New Lunar Project
+                    </Menu.Item>
+
+                    <Menu.Item
+                        onClick={() => setModalState("new-quanta-project")}
+                        icon={<IconAtom2 size={18} />}
+                    >
+                        New Quanta Project
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>

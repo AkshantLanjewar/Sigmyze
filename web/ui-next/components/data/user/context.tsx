@@ -105,7 +105,7 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
     useEffect(() => {
         const interval = setInterval(() => { 
             TokenRefresh() 
-        }, 1000 * 60 * 10)
+        }, 1000 * 60 * 5)
 
         return () => clearInterval(interval)
     }, [authData, contextValue.loggedIn])  

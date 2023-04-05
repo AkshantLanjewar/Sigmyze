@@ -6,9 +6,12 @@ namespace SigmyzeServer.Controllers;
 public class DriveUtils
 {
     private readonly IProjectRepository _projectRepository;
-    public DriveUtils(IProjectRepository projectRepository)
+    private readonly IQuantaRepository _quantaRepository;
+
+    public DriveUtils(IProjectRepository projectRepository, IQuantaRepository quantaRepository)
     {
         _projectRepository = projectRepository;
+        _quantaRepository = quantaRepository;
     }
 
     private List<ProjectView> getProjects(List<ProjectView> projects, List<Folder> folders) 
@@ -202,42 +205,50 @@ public class DriveUtils
         Drive drive, 
         string organizationId, 
         string parentFolder, 
-        string projectName
+        string projectName,
+        string projectType
     )
     {
         ProjectView projectView = new ProjectView();
         projectView.ProjectId = Guid.NewGuid().ToString();
         projectView.ProjectName = projectName;
+        projectView.ProjectType = projectType;
 
-        //Build the database version
-        ProjectData projectDB = new ProjectData();
-        projectDB.ProjectId = projectView.ProjectId;
-        projectDB.ProjectName = projectView.ProjectName;
-        projectDB.OrganizationId = organizationId;
-        projectDB.Documents = new List<Document>();
-        projectDB.Nodes = new List<Node>();
+        if(projectType == "lunar_project")
+        {
+            //Build the database version
+            ProjectData projectDB = new ProjectData();
+            projectDB.ProjectId = projectView.ProjectId;
+            projectDB.ProjectName = projectView.ProjectName;
+            projectDB.OrganizationId = organizationId;
+            projectDB.Documents = new List<Document>();
+            projectDB.Nodes = new List<Node>();
 
-        //build the default split
-        Node defaultSplit = new Node();
-        defaultSplit.NodeId = "project_split";
-        defaultSplit.NodeName = "Project";
-        defaultSplit.NodeType = "project";
-        defaultSplit.Data = new NodeData();
-        defaultSplit.Children = new List<Node>();
+            //build the default split
+            Node defaultSplit = new Node();
+            defaultSplit.NodeId = "project_split";
+            defaultSplit.NodeName = "Project";
+            defaultSplit.NodeType = "project";
+            defaultSplit.Data = new NodeData();
+            defaultSplit.Children = new List<Node>();
 
-        //build the default demo chart
-        Node demoChart = new Node();
-        demoChart.NodeId = "demo-chart";
-        demoChart.NodeName = "Demo Chart";
-        demoChart.NodeType = "chart";
-        demoChart.Children = new List<Node>();
-        demoChart.Data = new NodeData();
-        demoChart.Data.Indicators = new List<IIndicator>();
+            //build the default demo chart
+            Node demoChart = new Node();
+            demoChart.NodeId = "demo-chart";
+            demoChart.NodeName = "Demo Chart";
+            demoChart.NodeType = "chart";
+            demoChart.Children = new List<Node>();
+            demoChart.Data = new NodeData();
+            demoChart.Data.Indicators = new List<IIndicator>();
 
-        //append them together
-        defaultSplit.Children.Add(demoChart);
-        projectDB.Nodes.Add(defaultSplit);
-        _projectRepository.CreateProject(projectDB);
+            //append them together
+            defaultSplit.Children.Add(demoChart);
+            projectDB.Nodes.Add(defaultSplit);
+            _projectRepository.CreateProject(projectDB);
+        }
+
+        if(projectType == "quanta_project")
+            Task.Run(async () => await _quantaRepository.InitQuantaProject(projectView.ProjectId, projectView.ProjectName, organizationId));
 
         //Update the drive now
         Drive nDrive = drive;
@@ -283,10 +294,16 @@ public class DriveUtils
         return validateProject(drive.Folders!, projectId);
     }
     
-    public Drive DeleteProject(Drive drive, string parentId, string projectId)
+    public Drive DeleteProject(Drive drive, string parentId, string projectId, string projectType)
     {
         ProjectView view = new ProjectView();
         view.ProjectId = projectId;
+
+        //delete the project based on the type
+        if(projectType == "lunar_project")
+            Task.Run(async () => await _projectRepository.DeleteProject(projectId));
+        if(projectType == "quanta_project")
+            Task.Run(async () => await _quantaRepository.DeleteProject(projectId));
 
         Drive nDrive = drive;
         if(parentId == "root")
@@ -297,17 +314,18 @@ public class DriveUtils
         return nDrive;
     }
 
-    public async Task<Drive> UpdateProject(Drive drive, string parentId, string projectId, string? name)
+    public async Task<Drive> UpdateProject(Drive drive, string parentId, string projectId, string? name, string? projectType)
     {
         ProjectView view = new ProjectView();
         view.ProjectId = projectId;
         view.ProjectName = name;
-
+        view.ProjectType = projectType;
+        
         ProjectData projectDb = (await _projectRepository.GetProject(projectId))!;
         if(view.ProjectName != null)
             projectDb.ProjectName = view.ProjectName;
+            
         await _projectRepository.UpdateProject(projectId, projectDb);
-
         Drive nDrive = drive;
         if(parentId == "root")
             nDrive.Projects = _editProjectList(nDrive.Projects!, "update", view);

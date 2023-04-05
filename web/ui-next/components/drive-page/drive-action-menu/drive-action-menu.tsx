@@ -19,6 +19,7 @@ const DriveActionMenu: React.FC<IDriveActionMenuProps> =
     const [name, setName] = useState("")
     const [type, setType] = useState("")
     const [itemId, setItemId] = useState<string | null>(null)
+    const [typeId, setTypeId] = useState<string | null>(null)
     const closeModal = () => setModalState(null)
 
     useEffect(() => {
@@ -32,13 +33,22 @@ const DriveActionMenu: React.FC<IDriveActionMenuProps> =
         }
 
         if(selectedProject !== null) {
-            let name = selectedProject.project_name!
+            let name = selectedProject.project_name
+            let _typeId = selectedProject.project_type
+            if(name === undefined || _typeId === undefined)
+                return
 
             setType("Project")
             setName(name)
             setItemId(selectedProject.project_id!)
+            setTypeId(_typeId)
             return
         }
+
+        setName("")
+        setType("")
+        setItemId(null)
+        setTypeId(null)
     }, [selectedFolder, selectedProject])
 
     return (
@@ -55,6 +65,7 @@ const DriveActionMenu: React.FC<IDriveActionMenuProps> =
                         type={type}
                         name={name}
                         itemId={itemId}
+                        typeId={typeId}
                         close={closeModal}
                     />
                 </ModalManager.Modal>
@@ -67,6 +78,7 @@ const DriveActionMenu: React.FC<IDriveActionMenuProps> =
                         type={type}
                         name={name}
                         itemId={itemId}
+                        typeId={typeId}
                         close={closeModal}
                     />
                 </ModalManager.Modal>

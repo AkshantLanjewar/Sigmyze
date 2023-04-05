@@ -41,7 +41,7 @@ const ApplyDataRule = {
                             socketName: "Last Date Collected",
                             icon: <IconCalendarEvent />,
                             type: {
-                                groupId: "base",
+                                groupId: "schema",
                                 typeId: "date"
                             }
                         }

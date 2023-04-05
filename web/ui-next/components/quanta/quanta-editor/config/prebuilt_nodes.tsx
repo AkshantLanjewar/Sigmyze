@@ -8,7 +8,8 @@ import {
     FileUpload, 
     GetSDMXFieldKey,
     GetSDMXFieldValue,
-    BuildField
+    BuildField,
+    StringToDate
 } from "./nodes"
 
 const prebuildNodeDict = {
@@ -20,7 +21,8 @@ const prebuildNodeDict = {
     apply_data_rule: ApplyDataRule,
     get_sdmx_field_key: GetSDMXFieldKey,
     get_sdmx_field_value: GetSDMXFieldValue,
-    build_fields: BuildField
+    build_fields: BuildField,
+    string_to_date: StringToDate
 } as { [key: string]: IQuantaNodeInstructions }
 
 export default prebuildNodeDict

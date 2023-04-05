@@ -13,10 +13,11 @@ interface IUpdateFormProps {
     type: string,
     name: string,
     itemId: string | null,
+    typeId: string | null,
     close: () => void
 }
 
-const UpdateForm: React.FC<IUpdateFormProps> = ({ type, name, itemId, close }) => {
+const UpdateForm: React.FC<IUpdateFormProps> = ({ type, name, itemId, typeId, close }) => {
     const form = useForm({
         initialValues: {
             name: name
@@ -59,8 +60,11 @@ const UpdateForm: React.FC<IUpdateFormProps> = ({ type, name, itemId, close }) =
                 return
 
             if(type === "Project") {
+                if(typeId === null)
+                    return
+
                 setLoading(true)
-                await UpdateProject(token, selectedOrganization, activeDirectory, itemId, name)
+                await UpdateProject(token, selectedOrganization, activeDirectory, itemId, typeId, name)
                 toggleDrive()
                 setLoading(false)
                 close()

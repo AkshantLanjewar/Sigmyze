@@ -13,10 +13,11 @@ interface IDeleteFormProps {
     type: string,
     name: string,
     itemId: string | null,
+    typeId: string | null,
     close: () => void
 }
 
-const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) => {
+const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, typeId, close }) => {
     const form = useForm({
         initialValues: {
             name: ''
@@ -43,7 +44,7 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
                 return
             if(selectedOrganization === null)
                 return
-            if(itemId === null)
+            if(itemId === null || typeId === null)
                 return
 
             let formName = form.values.name.trim()
@@ -61,7 +62,7 @@ const DeleteForm: React.FC<IDeleteFormProps> = ({ type, name, itemId, close }) =
 
             if(type === "Project") {
                 setLoading(true)
-                await DeleteProject(token, selectedOrganization, activeDirectory, itemId)
+                await DeleteProject(token, selectedOrganization, activeDirectory, itemId, typeId)
                 toggleDrive()
                 setLoading(false)
                 close()
