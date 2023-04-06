@@ -51,15 +51,20 @@ import EngineWrapper from "./execution-engine/engine-wrapper"
 import ExecutionContext from "./execution-engine/context"
 import ContextButtons from "./editor-toolkit/context-buttons"
 
-import { BuildNode, GetNodeSocket } from "./utils"
+import { BuildNode, GetNodeSocket, LoadEditorProject } from "./utils"
 import QuantaFlow from "./quanta-flow"
+
+interface IQuantaEditorProps {
+    fileId: string,
+    fileName: string
+}
 
 /**
  * This is the context created that stores all the node editor's global values
  */
 const QuantaEditorContext = createContext<IQuantaEditorGlobals | null>(null)
 
-const QuantaEditor: React.FC = ({  }) => {
+const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
     /**
      * This is a list of nodes within the editor
      * State managed by both react flow and component
@@ -86,6 +91,16 @@ const QuantaEditor: React.FC = ({  }) => {
      * State that handles the quanta store
      */
     const [quantaStore, setQuantaStore] = useState<IQuantaStore>({})
+
+    /**
+     * state to relating what type of node editor
+     */
+    const [editorType, setEditorType] = useState<"create" | "update">("create")
+
+    /**
+     * whether or not the state has been loaded
+     */
+    const [projectLoaded, setProjectLoaded] = useState(false)
 
     //related to nodes within the editor
     /**
@@ -165,6 +180,33 @@ const QuantaEditor: React.FC = ({  }) => {
         if(quantaContext === null)
             return
 
+        LoadEditorProject(
+            fileId, 
+            fileName, 
+            quantaContext.getEditorProject, 
+            quantaContext.setEditorProject,
+            setNodes,
+            setEdges,
+            setQuantaStore,
+            setEditorType
+        )
+
+        setProjectLoaded(true)
+    }, [fileId, fileName])
+
+    useEffect(() => {
+        if(quantaContext === null)
+            return
+        if(projectLoaded === false)
+            return
+
+        quantaContext.setEditorProject(fileId, nodes, edges, quantaStore)
+    }, [projectLoaded, fileId, nodes, edges, quantaStore])
+
+    useEffect(() => {
+        if(quantaContext === null)
+            return
+
         let quantaSchema = quantaContext.getSchema("dataset")
         if(quantaSchema === undefined)
         {
@@ -197,6 +239,7 @@ const QuantaEditor: React.FC = ({  }) => {
     value.storeToggle = storeToggle
     value.edgeToggle = edgeToggle
     value.nodeToggle = nodeToggle
+    value.editorType = editorType
 
     value.getStoreValue = (storeKey: string) => 
         getStoreValue(storeKey, quantaStore)

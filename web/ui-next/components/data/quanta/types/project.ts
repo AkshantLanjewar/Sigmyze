@@ -1,3 +1,4 @@
+import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 
 interface IQuantaProjectData {
@@ -39,7 +40,8 @@ interface IQuantaFile {
 }
 
 interface IQuantaDataStore {
-    selectors: IQuantaSelector[]
+    selectors: IQuantaSelector[],
+    editorProjects?: IQuantaEditorProject[]
 }
 
 interface ProjectSchemas {
@@ -53,10 +55,18 @@ interface IQuantaSelector {
     selectorDescription?: string
 }
 
+interface IQuantaEditorProject {
+    fileId: string,
+    nodes: IQuantaRFNode[],
+    edges: IQuantaRFEdge[],
+    quantaStore: IQuantaStore
+}
+
 export type { 
     IQuantaProjectData,
     IQuantaFile,
     IQuantaDataStore,
     IQuantaSelector,
-    ProjectSchemas 
+    ProjectSchemas,
+    IQuantaEditorProject 
 }

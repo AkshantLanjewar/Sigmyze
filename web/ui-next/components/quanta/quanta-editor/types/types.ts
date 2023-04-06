@@ -32,6 +32,12 @@ interface IQuantaEditorGlobals {
     nodeToggle: boolean,
 
     /**
+     * this is the type for the editor, whether the script is creating into the dataset
+     * or updating an already existing dataset
+     */
+    editorType: "create" | "update",
+
+    /**
      * Function that creates a new node within the editor
      * 
      * @param parentId

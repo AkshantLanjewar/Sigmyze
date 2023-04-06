@@ -11,6 +11,7 @@ import { IUserContext } from "../../data/user/types"
 
 const QuantaPage: React.FC = ({ }) => {
     const [projectId, setProjectId] = useState<string | null>(null)
+    const [organizationId, setOrganizationId] = useState<string | null>(null)
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
     const router = useRouter()
 
@@ -20,13 +21,15 @@ const QuantaPage: React.FC = ({ }) => {
             return
         if(loggedIn === false)
             router.push('/')
-        if(Array.isArray(quantaId))
-            setProjectId(quantaId[0])
+        if(Array.isArray(quantaId) && quantaId.length === 2) {
+            setOrganizationId(quantaId[0])
+            setProjectId(quantaId[1])
+        }
     }, [loggedIn, loaded, router])
 
     return (
         <div style={{ height: '100%' }}>
-            <QuantaContext>
+            <QuantaContext quantaId={projectId} organizationId={organizationId}>
                 <div style={{ height: '100%' }}> 
                     <Group
                         spacing={"xs"}

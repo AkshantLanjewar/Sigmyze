@@ -9,7 +9,8 @@ import {
     GetSDMXFieldKey,
     GetSDMXFieldValue,
     BuildField,
-    StringToDate
+    StringToDate,
+    AddIndicator
 } from "./nodes"
 
 const prebuildNodeDict = {
@@ -22,7 +23,8 @@ const prebuildNodeDict = {
     get_sdmx_field_key: GetSDMXFieldKey,
     get_sdmx_field_value: GetSDMXFieldValue,
     build_fields: BuildField,
-    string_to_date: StringToDate
+    string_to_date: StringToDate,
+    add_indicator: AddIndicator
 } as { [key: string]: IQuantaNodeInstructions }
 
 export default prebuildNodeDict

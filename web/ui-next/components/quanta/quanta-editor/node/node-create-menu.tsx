@@ -60,7 +60,7 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
     const [opened, setOpened] = useState(false)
     const [menuItems, setMenuItems] = useState<IQuantaNodeDetails[]>([])
 
-    const quantaEditorContext = useContext(QuantaEditorContext) as IQuantaEditorGlobals | null
+    const { createNode, createIter, editorType } = useContext(QuantaEditorContext) as IQuantaEditorGlobals 
 
     useEffect(() => {
         if(focused === false)
@@ -71,12 +71,12 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
         if(opened === false)
             return
 
-        let nMenuItems = DetailedCreateList(output.type!)
+        let nMenuItems = DetailedCreateList(output.type!, editorType)
         setMenuItems([ ...nMenuItems ])
     }, [opened])
 
     function menuClick(type: string) {
-        let createMenuFunc = quantaEditorContext?.createNode
+        let createMenuFunc = createNode
         if(createMenuFunc === undefined)
             return
         if(nodeId === undefined)
@@ -110,7 +110,7 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
                     {output.isArray
                         ? (
                             <NodeCreateMenuInner
-                                onClick={() => quantaEditorContext?.createIter(nodeId!, output.socketId!, handleRef)}
+                                onClick={() => createIter(nodeId!, output.socketId!, handleRef)}
                                 name={"Iterate"}
                                 description={"Iterate through an array."}
                                 icon={(

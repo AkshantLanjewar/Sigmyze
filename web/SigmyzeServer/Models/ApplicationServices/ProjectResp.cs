@@ -10,3 +10,12 @@ public class GetProjectResp
     [JsonProperty("project_data")]
     public ProjectData? ProjectData { get; set; }
 }
+
+public class GetQuantaProjectResp
+{
+    [JsonProperty("status")]
+    public APIStatusMsg? Status { get; set; }
+
+    [JsonProperty("project_data")]
+    public QuantaRepositoryDefinition? ProjectData { get; set; }
+}

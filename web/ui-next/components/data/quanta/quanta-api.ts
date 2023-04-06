@@ -1,15 +1,15 @@
 import { showNotification } from "@mantine/notifications"
 import { IStatus } from "../datasets/DatasetsTypes"
-import { GenerateOptions, GET_Cacheless, removeEmpty, server } from "../utils"
-import { ILunarProjectData } from "./types/types"
+import { GET_Cacheless, GenerateOptions, removeEmpty, server } from "../utils"
+import { IQuantaProjectData } from "./types/project"
 
 interface GetProjectResponse {
-    status: IStatus
-    project_data?: ILunarProjectData
+    status: IStatus,
+    project_data?: IQuantaProjectData
 }
 
-async function GetProject(token: string, organization_id: string, project_id: string) {
-    let url = `${server}/api/v2/projects/${organization_id}/${project_id}`
+async function GetProject(token: string, organization_id: string, project_id: string) : Promise<IQuantaProjectData | undefined> {
+    let url = `${server}/api/v2/quanta/${organization_id}/${project_id}`
     let options = GenerateOptions("GET", token)
     let resp = await GET_Cacheless<GetProjectResponse>(url, options)
 
@@ -22,7 +22,7 @@ async function GetProject(token: string, organization_id: string, project_id: st
         })
         
         setTimeout(() => {
-            window.location.replace('/quanta')
+            window.location.replace('/lunar')
         }, 1000 * 3)
         return
     }
@@ -30,17 +30,14 @@ async function GetProject(token: string, organization_id: string, project_id: st
     return removeEmpty(resp.project_data)
 }
 
-async function UpdateProject(token: string, organization_id: string, project_id: string, data: ILunarProjectData) {
+async function UpdateProject(token: string, organization_id: string, project_id: string, data: IQuantaProjectData) {
     let body = {
         data: data
     }
-
-    let url = `${server}/api/v2/projects/${organization_id}/${project_id}`
+    
+    let url = `${server}/api/v2/quanta/${organization_id}/${project_id}`
     let options = GenerateOptions("POST", token, body)
     await GET_Cacheless(url, options)
 }
 
-export { 
-    GetProject,
-    UpdateProject 
-}
+export { GetProject, UpdateProject }

@@ -41,13 +41,15 @@ const QuantaViewport: React.FC = ({ }) => {
 
         tabBody = quantaTabs.map((step) => {
             let viewPanel = null
+            if(step.connected_file === undefined || step.tabName === undefined)
+                return
 
             if(step.tabType === "overview")
                 viewPanel = <QuantaOverviewView />
             if(step.tabType === "selectors")
                 viewPanel = <QuantaSelectorsView />
             if(step.tabType === "node_editor")
-                viewPanel = <QuantaEditor />
+                viewPanel = <QuantaEditor fileId={step.connected_file} fileName={step.tabName} />
 
             return (
                 <Tabs.Panel

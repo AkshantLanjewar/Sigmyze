@@ -201,7 +201,7 @@ public class DriveUtils
         return nDrive;
     }
 
-    public Drive InsertProject(
+    public async Task<Drive> InsertProject(
         Drive drive, 
         string organizationId, 
         string parentFolder, 
@@ -244,11 +244,11 @@ public class DriveUtils
             //append them together
             defaultSplit.Children.Add(demoChart);
             projectDB.Nodes.Add(defaultSplit);
-            _projectRepository.CreateProject(projectDB);
+            await _projectRepository.CreateProject(projectDB);
         }
 
         if(projectType == "quanta_project")
-            Task.Run(async () => await _quantaRepository.InitQuantaProject(projectView.ProjectId, projectView.ProjectName, organizationId));
+            await _quantaRepository.InitQuantaProject(projectView.ProjectId, projectView.ProjectName, organizationId);
 
         //Update the drive now
         Drive nDrive = drive;

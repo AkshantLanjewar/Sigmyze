@@ -7,7 +7,7 @@ import { IQuantaNodeDetails, IQuantaTypeRef } from "../types/types"
  * @param outputType 
  * 	the type of the output socket
  */
-function DetailedCreateList(outputType: IQuantaTypeRef) {
+function DetailedCreateList(outputType: IQuantaTypeRef, editorType: "create" | "update") {
 	let keys = Object.keys(prebuildNodeDict)
 	let keysWithMatchingInputType = []
 	if(outputType.groupId === "schema")
@@ -49,9 +49,21 @@ function DetailedCreateList(outputType: IQuantaTypeRef) {
 		}
 	}
 
-	let detailedNodes = [] as IQuantaNodeDetails[]
-	for (let i = 0; i < keysWithMatchingInputType.length; i++) {
+	//prune out based on the editorType
+	let nKeys = []
+	for(let i = 0; i < keysWithMatchingInputType.length; i++) {
 		let key = keysWithMatchingInputType[i]
+		if(key === "add_indicator" && editorType === "update")
+			continue
+		if(key === "update_indicator" && editorType === "update")
+			continue
+
+		nKeys.push(key)
+	}
+
+	let detailedNodes = [] as IQuantaNodeDetails[]
+	for (let i = 0; i < nKeys.length; i++) {
+		let key = nKeys[i]
 		let obj = prebuildNodeDict[key]
 
 		detailedNodes.push({

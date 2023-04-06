@@ -20,7 +20,7 @@ interface IDriveProjectProps {
     activeItem: string | null,
     setActiveItem: (id: string | null) => void,
     setModalState: (id: string | null) => void,
-    openItem: (id: string) => void
+    openItem: (id: string, type?: string) => void
 }
 
 const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiveItem, setModalState, openItem }) => {
@@ -53,7 +53,7 @@ const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiv
                     if(item.item_type === "lunar_project")
                         openItem(item.item_id)
                     if(item.item_type === "quanta_project")
-                        window.open(`/quanta/${item.item_id}`, "_blank") 
+                        openItem(item.item_id, "quanta")
                 }}
                 onContextMenu={(e) => {
                     setActiveItem(item.item_id)

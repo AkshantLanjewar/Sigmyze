@@ -1,8 +1,8 @@
-import { createContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { IQuantaSchema } from "../../quanta/schema-editor/types"
 import ModalManager from "../../ui/modal-manager"
 import { IQuantaState } from "./types"
-import { IQuantaProjectData, ProjectSchemas } from "./types/project"
+import { IQuantaEditorProject, IQuantaProjectData, ProjectSchemas } from "./types/project"
 import { IQuantaTab } from "./types/ui"
 import { DefaultQuantaProject } from "./utils"
 
@@ -20,19 +20,26 @@ import {
     getSchema,
     changeSchema,
     deleteSchema,
-    unfocusAllSchema
+    unfocusAllSchema,
+    GetEditorProjects,
+    SetEditorProjectData,
+    SaveQuantaProject
 } from "./functions"
-import { IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
+import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 import NewFieldForm from "./forms/new_field"
+import { GetProject } from "./quanta-api"
+import { UserContextData } from "../user/context"
+import { IUserContext } from "../user/types"
 
 interface IQuantaContextProps {
-    quantaId?: string,
+    quantaId: string | null,
+    organizationId: string | null,
     children?: JSX.Element | never[]
 }
 
 const QuantaContextData = createContext<IQuantaState | null>(null)
 
-const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) => {
+const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId, children }) => {
     const [projectData, setProjectData] = useState<IQuantaProjectData | undefined>(undefined)
     
     //state relating to the tabs
@@ -55,26 +62,35 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
     const [updateEditorSchema, setUpdateEditorSchema] = useState(false)
     const toggleUpdateEditorSchema = () => setUpdateEditorSchema(!updateEditorSchema)
 
+    //store elements
+    const [editorProjects, setEditorProjects] = useState<IQuantaEditorProject[]>([])
+
+    const { authData } = useContext(UserContextData) as IUserContext
+
     useEffect(() => {
         loadQuanta()
     }, [])
 
     useEffect(() => {
         loadQuanta()
-    }, [quantaId])
+    }, [quantaId, organizationId])
 
-    //function that loads the quanta data
-    function loadQuanta() {
-        if(quantaId === undefined) {
-            let defaultProject = DefaultQuantaProject()
-            setProjectData({ ...defaultProject })
-        }
-    }
+    useEffect(() => {
+        //update the editor
+        let token = authData?.token
+        if(token === undefined || organizationId === null || quantaId === null)
+            return
+
+        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects)
+    }, [editorProjects])
 
     let value: IQuantaState = {} as IQuantaState
     value.project_data = { ...projectData }
     if(value.project_data !== undefined)
         value.project_data.dataset_schema = schemas
+    if(value.project_data.store === undefined)
+        value.project_data.store = { selectors: [] }
+    value.project_data.store.editorProjects = editorProjects
 
     value.updateEditorSchema = updateEditorSchema
     value.updateSchema = updateSchema
@@ -150,6 +166,46 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, children }) =>
 
     value.unfocusAll = (parentId: string) =>
         unfocusAllSchema(parentId, value.getSchema(parentId), value.changeSchema)
+
+    value.getEditorProject = (fileId: string) =>
+        GetEditorProjects(fileId, editorProjects)
+
+    value.setEditorProject = (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) =>
+        SetEditorProjectData(fileId, nodes, edges, quantaStore, editorProjects, setEditorProjects)
+
+    //function that loads the quanta data
+    function loadQuanta() {
+        if(quantaId === null) {
+            let defaultProject = DefaultQuantaProject()
+            setProjectData({ ...defaultProject })
+            return
+        }
+
+        //otherwise load the project from the server
+        async function main() {
+            let token = authData?.token
+            if(organizationId === null || token === undefined)
+                return
+
+            let project = await GetProject(token, organizationId, quantaId!)
+            if(project === undefined)
+                return
+
+            let projectFiles = project.files
+            if(projectFiles === undefined)
+                return
+
+            let projectFile = projectFiles[0]
+            let _editorProjects = project.store?.editorProjects
+
+            setProjectData({ ...project })
+            value.focusTab(projectFile.id!, projectFile.type!)
+            if(_editorProjects !== undefined)
+                setEditorProjects([ ..._editorProjects ])
+        }
+
+        main()
+    }
 
     return (
         <>

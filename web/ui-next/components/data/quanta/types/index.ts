@@ -1,6 +1,6 @@
-import { IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
+import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
-import { IQuantaProjectData } from "./project"
+import { IQuantaEditorProject, IQuantaProjectData } from "./project"
 import { IQuantaTab } from "./ui"
 
 interface IQuantaState {
@@ -63,7 +63,12 @@ interface IQuantaState {
     ) => void
     //deletes an element within the schema
     deleteElement: (parentId: string, nodeId: string) => void,
-    unfocusAll: (parentId: string) => void
+
+    unfocusAll: (parentId: string) => void,
+
+    //this section handles the functions relating to quanta editor projects
+    getEditorProject: (fileId: string) => IQuantaEditorProject | undefined,
+    setEditorProject: (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) => void
 }
 
 export type { IQuantaState }

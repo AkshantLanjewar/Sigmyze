@@ -8,6 +8,7 @@ public interface IQuantaRepository
     Task InitQuantaProject(string projectId, string projectName, string organizationId);
     Task<QuantaRepositoryDefinition?> GetProject(string projectId);
     Task DeleteProject(string projectId);
+    Task UpdateProject(string projectId, QuantaRepositoryDefinition nProject);
 }
 
 public class QuantaRepository : IQuantaRepository
@@ -35,6 +36,9 @@ public class QuantaRepository : IQuantaRepository
         projectData.Store = new QuantaDataStore();
         projectData.DatasetSchema = new List<QuantaSchemas>();
 
+        //default store item
+        projectData.Store.Selectors = new List<QuantaSelector>();
+
         //create the files
         projectData.Files.Add(buildFile("Overview", "overview"));
         projectData.Files.Add(buildFile("Create Dataset", "node_editor"));
@@ -50,6 +54,9 @@ public class QuantaRepository : IQuantaRepository
 
     public async Task DeleteProject(string projectId) =>
         await _quantaRepository.DeleteOneAsync(x => x.ProjectId == projectId);
+
+    public async Task UpdateProject(string projectId, QuantaRepositoryDefinition nProject) =>
+        await _quantaRepository.ReplaceOneAsync(x => x.ProjectId == projectId, nProject);
 
     private QuantaFile buildFile(string name, string type)
     {

@@ -179,7 +179,7 @@ namespace SigmyzeServer.Controllers
             }
 
             DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
-            drive = utils.InsertProject(drive!, body.OrganizationId, body.ParentFolder, body.ProjectName, body.ProjectType);
+            drive = await utils.InsertProject(drive!, body.OrganizationId, body.ParentFolder, body.ProjectName, body.ProjectType);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
             return await SerializeJSON(msg);
