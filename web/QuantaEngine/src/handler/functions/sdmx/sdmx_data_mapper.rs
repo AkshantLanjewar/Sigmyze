@@ -2,7 +2,7 @@ use actix_web::web;
 use basteh::Basteh;
 use serde::{Deserialize, Serialize};
 use crate::{handler::{messages, socket_store::{get_store_value, set_store_value}}, sdmx_parser::sdmx_series::SDMXSeries};
-use super::{Result, socket_response, types};
+use crate::handler::{Result, socket_response, functions::types};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct SDMXDataMapperData {

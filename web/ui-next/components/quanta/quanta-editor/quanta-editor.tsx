@@ -312,7 +312,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
                 toggleEngineCache={toggleEngineCache}
             />
 
-            <ExecutionContext>
+            <ExecutionContext fileId={fileId}>
                 <QuantaEditorContext.Provider value={value}>
                     <>
                         <EngineWrapper

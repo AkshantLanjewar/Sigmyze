@@ -23,13 +23,15 @@ import {
     unfocusAllSchema,
     GetEditorProjects,
     SetEditorProjectData,
-    SaveQuantaProject
+    SaveQuantaProject,
+    SetEditorExecutionData
 } from "./functions"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 import NewFieldForm from "./forms/new_field"
 import { GetProject } from "./quanta-api"
 import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"
+import { INodeExecutionResult } from "../../quanta/quanta-editor/execution-engine/context/types"
 
 interface IQuantaContextProps {
     quantaId: string | null,
@@ -172,6 +174,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     value.setEditorProject = (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) =>
         SetEditorProjectData(fileId, nodes, edges, quantaStore, editorProjects, setEditorProjects)
+
+    value.setEditorExecution = (fileId: string, executionResults: INodeExecutionResult[]) =>
+        SetEditorExecutionData(fileId, executionResults, editorProjects, setEditorProjects)
 
     //function that loads the quanta data
     function loadQuanta() {

@@ -1,11 +1,13 @@
 use std::error;
 use super::messages::{SocketResponse, self};
 
-pub mod sdmx_data_parser;
 pub mod loop_functions;
-pub mod sdmx_data_mapper;
-
-mod types;
+pub mod sdmx;
+pub mod types;
+pub mod string_to_date;
+pub mod build_fields;
+pub mod apply_data_rule;
+pub mod add_indicator;
 
 pub type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 

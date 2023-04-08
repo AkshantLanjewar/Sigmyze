@@ -1,3 +1,4 @@
+import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 import { IQuantaEditorProject, IQuantaProjectData } from "./project"
@@ -68,7 +69,8 @@ interface IQuantaState {
 
     //this section handles the functions relating to quanta editor projects
     getEditorProject: (fileId: string) => IQuantaEditorProject | undefined,
-    setEditorProject: (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) => void
+    setEditorProject: (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) => void,
+    setEditorExecution: (fileId: string, executionResults: INodeExecutionResult[]) => void
 }
 
 export type { IQuantaState }

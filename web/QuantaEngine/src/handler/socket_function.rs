@@ -2,10 +2,16 @@ use std::error;
 use actix_web::web;
 use basteh::Basteh;
 
-use crate::handler::functions::sdmx_data_mapper;
+use crate::handler::functions::sdmx::{sdmx_data_mapper, sdmx_data_parser};
 
+use super::functions::add_indicator::add_indicator;
+use super::functions::apply_data_rule::apply_data_rule;
+use super::functions::build_fields::build_fields;
+use super::functions::sdmx::get_sdmx_field_key;
+use super::functions::sdmx::get_sdmx_field_val::get_sdmx_field_value;
+use super::functions::string_to_date::string_to_date;
 use super::messages::{self};
-use super::functions::{sdmx_data_parser, loop_functions};
+use super::functions::{loop_functions};
 
 type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
@@ -72,6 +78,54 @@ pub async fn parse_function_request(
 
         "get_loop_index" => return loop_functions::loop_index::get_loop_index(
             request_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "get_sdmx_field_key" => return get_sdmx_field_key::get_sdmx_field_key(
+            request_id, 
+            node_id, 
+            process_id, 
+            function_data, 
+            data_store
+        ).await,
+
+        "get_sdmx_field_val" => return get_sdmx_field_value(
+            request_id,
+            node_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "string_to_date" => return string_to_date(
+            request_id,
+            node_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "build_fields" => return build_fields(
+            request_id,
+            node_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "apply_data_rule" => return apply_data_rule(
+            request_id,
+            node_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "add_indicator" => return add_indicator(
+            request_id,
+            node_id,
             process_id,
             function_data,
             data_store

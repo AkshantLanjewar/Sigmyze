@@ -10,6 +10,14 @@ import sdmxDataMapper from "./nodes/sdmx-data-mapper"
 import sdmxDataParserNode from "./nodes/sdmx-data-parser"
 import startNode from "./nodes/start"
 import { ICallStackFunc, IFunctionResp, IInputValueResp } from "./types"
+import getSdmxFieldKey from "./nodes/get-sdmx-field-key"
+import getSdmxFieldValue from "./nodes/get-sdmx-field-val"
+import stringToDate from "./nodes/string-to-date"
+import { QuantaContextData } from "../../../data/quanta/context"
+import { IQuantaState } from "../../../data/quanta/types"
+import buildFields from "./nodes/build-fields"
+import applyDataRule from "./nodes/apply-data-rule"
+import addIndicator from "./nodes/add-indicator"
 
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
@@ -22,6 +30,8 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
     const [executedNodes, setExecutedNodes] = useState<string[]>([])
     const [failedNodes, setFailedNodes] = useState<string[]>([])
     const [processId, setProcessId] = useState(v4())
+
+    const { getSchema } = useContext(QuantaContextData) as IQuantaState
 
     const { 
         socketCreated, 
@@ -123,8 +133,12 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         let edge: IQuantaRFEdge | undefined = getInputEdge(nodeId, socketId)
 
         let promise = new Promise((resolve, reject) => {
-            if(edge === undefined)
-            {
+            if(edge === undefined) {
+                resolve(undefined)
+                return
+            }
+
+            if(edge.source === undefined || edge.sourceHandle === undefined) {
                 resolve(undefined)
                 return
             }
@@ -223,6 +237,24 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
                     break
                 case "iter":
                     await iterNode(stack, executeFunction, index, loop_id)
+                    break
+                case "get_sdmx_field_key":
+                    await getSdmxFieldKey(stack, getInputEdge, isFailedNode, executeFunction)
+                    break
+                case "get_sdmx_field_value":
+                    await getSdmxFieldValue(stack, getInputEdge, isFailedNode, executeFunction)
+                    break
+                case "string_to_date":
+                    await stringToDate(stack, getInputEdge, isFailedNode, getInputValue, executeFunction)
+                    break
+                case "build_fields":
+                    await buildFields(stack, getSchema, getInputEdge, isFailedNode, executeFunction)
+                    break
+                case "apply_data_rule":
+                    await applyDataRule(stack, getInputEdge, isFailedNode, executeFunction)
+                    break
+                case "add_indicator":
+                    await addIndicator(stack, getInputEdge, isFailedNode, executeFunction)
                     break
                 default:
                     break

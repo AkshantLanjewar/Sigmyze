@@ -57,7 +57,7 @@ const ApplyDataRule = {
             socketName: "Chart Data",
             icon: <IconChartAreaLine />,
             type: {
-                groupId: "base",
+                groupId: "quanta",
                 typeId: "chart_data"
             }
         }

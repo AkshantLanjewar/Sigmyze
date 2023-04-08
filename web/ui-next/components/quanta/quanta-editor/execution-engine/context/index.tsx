@@ -5,15 +5,19 @@ import { wsServer } from "../../../../data/utils"
 import { IQuantaSocket } from "../../types/types"
 import { addExecutionResults, executeSocketFunction, getOutputValueSocket, setOutputValueSocket, updateResults } from "./functions"
 import { IExecutionEngineContext, INodeExecutionResult, ISocketResp, ISocketRespHandler } from "./types"
+import { QuantaContextData } from "../../../../data/quanta/context"
+import { IQuantaState } from "../../../../data/quanta/types"
 
 interface IExecutionContextProps {
+    fileId: string,
     children?: React.ReactNode
 }
 
 const ExecutionContextData = createContext<IExecutionEngineContext | null>(null)
 
-const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
-    const { loggedIn, loaded, authData } = useContext(UserContextData) as IUserContext
+const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children }) => {
+    const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
+    const { setEditorExecution } = useContext(QuantaContextData) as IQuantaState
 
     /**
      * state relating to sockets
@@ -51,8 +55,8 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
     useEffect(() => {
         if(loaded === false)
             return
-        /*if(loggedIn === false)
-            return */
+        if(loggedIn === false)
+            return
         if(socketCreated === true)
             return
         
@@ -106,6 +110,16 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ children }) => {
 
         setSocketHandlers([ ...nHandlers ])
     }, [socketResponseQueue])
+
+    //handles caching / saving the execution results
+    useEffect(() => {
+        setEditorExecution(fileId, executionResults)
+    }, [fileId, executionResults])
+
+    //loads the cached results
+    useEffect(() => {
+
+    }, [fileId])
     
     let contextData = {} as IExecutionEngineContext
     contextData.socketCreated = socketCreated

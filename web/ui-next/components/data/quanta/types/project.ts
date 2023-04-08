@@ -1,3 +1,4 @@
+import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 
@@ -59,7 +60,8 @@ interface IQuantaEditorProject {
     fileId: string,
     nodes: IQuantaRFNode[],
     edges: IQuantaRFEdge[],
-    quantaStore: IQuantaStore
+    quantaStore: IQuantaStore,
+    executionResults?: INodeExecutionResult[]
 }
 
 export type { 

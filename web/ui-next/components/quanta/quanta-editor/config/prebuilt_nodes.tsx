@@ -14,16 +14,16 @@ import {
 } from "./nodes"
 
 const prebuildNodeDict = {
-    start: StartNode,
-    iter: IterNode,
-    sdmx_data_parser: SDMXDataParser,
-    sdmx_data_mapper: SDMXDataMapper,
-    file_upload: FileUpload,
-    apply_data_rule: ApplyDataRule,
-    get_sdmx_field_key: GetSDMXFieldKey,
-    get_sdmx_field_value: GetSDMXFieldValue,
-    build_fields: BuildField,
-    string_to_date: StringToDate,
+    start: StartNode, // created callstack
+    iter: IterNode, // created clalstack
+    sdmx_data_parser: SDMXDataParser, // created callstack
+    sdmx_data_mapper: SDMXDataMapper, // created callstack
+    file_upload: FileUpload, // created callstack
+    apply_data_rule: ApplyDataRule, //created callstack
+    get_sdmx_field_key: GetSDMXFieldKey, // created callstack
+    get_sdmx_field_value: GetSDMXFieldValue, // created callstack
+    build_fields: BuildField, // created callstack
+    string_to_date: StringToDate, // created callstack
     add_indicator: AddIndicator
 } as { [key: string]: IQuantaNodeInstructions }
 
