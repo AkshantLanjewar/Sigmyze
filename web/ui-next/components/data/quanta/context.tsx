@@ -24,7 +24,8 @@ import {
     GetEditorProjects,
     SetEditorProjectData,
     SaveQuantaProject,
-    SetEditorExecutionData
+    SetEditorExecutionData,
+    rehydrateQuantaProject
 } from "./functions"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 import NewFieldForm from "./forms/new_field"
@@ -32,6 +33,7 @@ import { GetProject } from "./quanta-api"
 import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"
 import { INodeExecutionResult } from "../../quanta/quanta-editor/execution-engine/context/types"
+import { IconFileCode2, IconStack2 } from "@tabler/icons"
 
 interface IQuantaContextProps {
     quantaId: string | null,
@@ -66,8 +68,19 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     //store elements
     const [editorProjects, setEditorProjects] = useState<IQuantaEditorProject[]>([])
+    //counter to efficiently save data
+    const [saveCounter, setSaveCounter] = useState(0)
 
     const { authData } = useContext(UserContextData) as IUserContext
+
+    function saveFunc() {
+        let token = authData?.token
+        if(token === undefined || organizationId === null || quantaId === null)
+            return
+
+        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects)
+        setSaveCounter(0)
+    }
 
     useEffect(() => {
         loadQuanta()
@@ -83,8 +96,25 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         if(token === undefined || organizationId === null || quantaId === null)
             return
 
-        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects)
+        setSaveCounter(saveCounter + 1)
     }, [editorProjects])
+
+    useEffect(() => {        
+        let interval: NodeJS.Timer | undefined = undefined
+        if(saveCounter !== 50 && saveCounter > 0)
+            interval = setInterval(() => {
+                saveFunc()
+            }, 1000 * 60)
+        else
+            saveFunc()
+
+        return () => {
+            if(interval === undefined)
+                return
+
+            clearInterval(interval)
+        }
+    }, [saveCounter])
 
     let value: IQuantaState = {} as IQuantaState
     value.project_data = { ...projectData }
@@ -99,6 +129,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.tabId = activeTab
     value.tabs = tabs
     value.activeSelectorId = activeSelector
+    value.quantaId = quantaId
 
     //NOTE: Theese are the functions relating to the context
     
@@ -172,8 +203,8 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.getEditorProject = (fileId: string) =>
         GetEditorProjects(fileId, editorProjects)
 
-    value.setEditorProject = (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) =>
-        SetEditorProjectData(fileId, nodes, edges, quantaStore, editorProjects, setEditorProjects)
+    value.setEditorProject = (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore, executionResults: INodeExecutionResult[],) =>
+        SetEditorProjectData(fileId, nodes, edges, quantaStore, editorProjects, executionResults, setEditorProjects)
 
     value.setEditorExecution = (fileId: string, executionResults: INodeExecutionResult[]) =>
         SetEditorExecutionData(fileId, executionResults, editorProjects, setEditorProjects)
@@ -186,6 +217,11 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
             return
         }
 
+        const icon_dict = {
+            file: <IconFileCode2 />,
+            stack_2: <IconStack2 />
+        } as any
+
         //otherwise load the project from the server
         async function main() {
             let token = authData?.token
@@ -196,17 +232,22 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
             if(project === undefined)
                 return
 
-            let projectFiles = project.files
-            if(projectFiles === undefined)
+            let projectData = project.project_data
+            if(projectData === undefined)
                 return
 
-            let projectFile = projectFiles[0]
-            let _editorProjects = project.store?.editorProjects
+            projectData = rehydrateQuantaProject(projectData, icon_dict)
+            setProjectData({ ...projectData })
+            let schema = projectData.dataset_schema
+            if(schema !== undefined)
+                setSchemas([ ...schema ])
 
-            setProjectData({ ...project })
-            value.focusTab(projectFile.id!, projectFile.type!)
-            if(_editorProjects !== undefined)
-                setEditorProjects([ ..._editorProjects ])
+            let editorProjects = projectData.store?.editorProjects
+            if(editorProjects !== undefined)
+                setEditorProjects([ ...editorProjects ])
+
+            toggleUpdateSchema()
+            toggleUpdateEditorSchema()
         }
 
         main()

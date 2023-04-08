@@ -1,5 +1,7 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using SigmyzeServer.Models.ApplicationServices;
+using SigmyzeServer.Models.User;
 
 namespace SigmyzeServer.Services.OrganizationServices;
 
@@ -14,8 +16,9 @@ public interface IQuantaRepository
 public class QuantaRepository : IQuantaRepository
 {
     private readonly IMongoCollection<QuantaRepositoryDefinition> _quantaRepository;
-    public QuantaRepository(IMongoClient mongoClient)
+    public QuantaRepository(IOptions<AuthDatabaseSettings> authDatabaseSettings)
     {
+        var mongoClient = new MongoClient(authDatabaseSettings.Value.ConnectionString);
         var mongoDatabse = mongoClient.GetDatabase("SigmyzeOrganizations");
         _quantaRepository = mongoDatabse.GetCollection<QuantaRepositoryDefinition>("quanta_projects");
     }

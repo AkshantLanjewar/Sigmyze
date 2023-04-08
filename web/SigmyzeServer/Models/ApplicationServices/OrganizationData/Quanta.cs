@@ -91,6 +91,11 @@ public class QuantaDataStore
     [JsonProperty("selectors")]
     [JsonPropertyName("selectors")]
     public List<QuantaSelector>? Selectors { get; set; }
+
+    [BsonElement("editorProjects")]
+    [JsonProperty("editorProjects")]
+    [JsonPropertyName("editorProjects")]
+    public List<QuantaEditorProject>? EditorProjects { get; set; }
 }
 
 public class QuantaSelector

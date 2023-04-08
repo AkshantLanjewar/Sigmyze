@@ -23,13 +23,16 @@ async fn main() -> std::io::Result<()> {
     let provider = basteh_memory::MemoryBackend::start_default();
     let data_store = Basteh::build().provider(provider).finish();
     let data_store = web::Data::new(data_store);
+
+    let socket_keys: Vec<String> = Vec::new();
+    data_store.set("keys", socket_keys).await.unwrap();
+
     HttpServer::new(move || {
         App::new()
             .app_data(data_store.clone())
             .service(handle_ws)
             .wrap(middleware::Logger::default())
     })
-    .workers(2)
     .bind(("127.0.0.1", 5025))?
     .run()
     .await

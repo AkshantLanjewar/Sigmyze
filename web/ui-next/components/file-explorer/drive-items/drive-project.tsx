@@ -39,10 +39,13 @@ const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiv
     if(item.item_type === "quanta_project")
         projectIcon = <IconAtom2 />
 
-    let projectType = ""
-    let typeSplit = item.item_type.split("_")
-    for(let i = 0; i < typeSplit.length; i++)
-        projectType += `${capitalizeFirstLetter(typeSplit[i])} `
+    let projectType = "Quanta Project"
+    if(item.item_type !== null) {
+        projectType = ""
+        let typeSplit = item.item_type.split("_")
+        for(let i = 0; i < typeSplit.length; i++)
+            projectType += `${capitalizeFirstLetter(typeSplit[i])} `
+    }
 
     return (
         <>

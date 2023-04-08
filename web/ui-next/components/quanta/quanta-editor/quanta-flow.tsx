@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useMemo, useContext } from "react"
+import { Dispatch, SetStateAction, useCallback, useMemo, useContext, useEffect } from "react"
 import { applyEdgeChanges, applyNodeChanges, Background, Connection, Controls, ReactFlow, ReactFlowInstance } from "reactflow"
 import { QuantaContextData } from "../../data/quanta/context"
 import { IQuantaState } from "../../data/quanta/types"
@@ -18,13 +18,15 @@ interface IQuantaFlowProps {
     quantaStore: IQuantaStore,
     setNodes: Dispatch<SetStateAction<IQuantaRFNode[]>>,
     setEdges: Dispatch<SetStateAction<IQuantaRFEdge[]>>,
-    setReactFlowInstance: Dispatch<SetStateAction<ReactFlowInstance<any, any> | null>>
+    setReactFlowInstance: Dispatch<SetStateAction<ReactFlowInstance<any, any> | null>>,
+    projectLoaded: boolean,
+    fileId: string
 }
 
-const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, setNodes, setEdges, setReactFlowInstance }) => {
+const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, setNodes, setEdges, setReactFlowInstance, projectLoaded, fileId }) => {
     const { getIterNodeType } = useContext(QuantaEditorContext) as IQuantaEditorGlobals
     const { executionResults } = useContext(ExecutionContextData) as IExecutionEngineContext
-    const { getSchema } = useContext(QuantaContextData) as IQuantaState
+    const { getSchema, setEditorProject } = useContext(QuantaContextData) as IQuantaState
     
     const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
     const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
@@ -91,6 +93,13 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
             setEdges([ ...nEdges ])
         }
     }, [nodes, quantaStore])
+
+    useEffect(() => {
+        if(projectLoaded === false)
+            return
+
+        setEditorProject(fileId, nodes, edges, quantaStore, executionResults)
+    }, [projectLoaded, fileId, nodes, edges, quantaStore, executionResults])
 
     return (
         <>

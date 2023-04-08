@@ -10,6 +10,7 @@ use super::functions::build_fields::build_fields;
 use super::functions::sdmx::get_sdmx_field_key;
 use super::functions::sdmx::get_sdmx_field_val::get_sdmx_field_value;
 use super::functions::string_to_date::string_to_date;
+use super::functions::unload_process_id::unload_process_id;
 use super::messages::{self};
 use super::functions::{loop_functions};
 
@@ -60,6 +61,12 @@ pub async fn parse_function_request(
             node_id, 
             process_id, 
             function_data, 
+            data_store
+        ).await,
+
+        "unload_process_id" => return unload_process_id(
+            request_id,
+            function_data,
             data_store
         ).await,
 

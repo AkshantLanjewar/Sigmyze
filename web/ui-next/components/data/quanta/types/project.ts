@@ -61,7 +61,7 @@ interface IQuantaEditorProject {
     nodes: IQuantaRFNode[],
     edges: IQuantaRFEdge[],
     quantaStore: IQuantaStore,
-    executionResults?: INodeExecutionResult[]
+    executionResults: INodeExecutionResult[]
 }
 
 export type { 

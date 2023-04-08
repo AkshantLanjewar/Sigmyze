@@ -30,6 +30,8 @@ interface IQuantaState {
 
     updateEditorSchema: boolean,
 
+    quantaId: string | null,
+
     //tab related functions
     changeTab: (tabId: string) => void,
     focusTab: (fileId: string, fileType: string) => void,
@@ -69,7 +71,7 @@ interface IQuantaState {
 
     //this section handles the functions relating to quanta editor projects
     getEditorProject: (fileId: string) => IQuantaEditorProject | undefined,
-    setEditorProject: (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore) => void,
+    setEditorProject: (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore, executionResults: INodeExecutionResult[]) => void,
     setEditorExecution: (fileId: string, executionResults: INodeExecutionResult[]) => void
 }
 

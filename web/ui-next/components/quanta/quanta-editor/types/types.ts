@@ -38,6 +38,11 @@ interface IQuantaEditorGlobals {
     editorType: "create" | "update",
 
     /**
+     * this is the file id for the editor
+     */
+    fileId: string,
+
+    /**
      * Function that creates a new node within the editor
      * 
      * @param parentId

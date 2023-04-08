@@ -197,15 +197,6 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
     useEffect(() => {
         if(quantaContext === null)
             return
-        if(projectLoaded === false)
-            return
-
-        quantaContext.setEditorProject(fileId, nodes, edges, quantaStore)
-    }, [projectLoaded, fileId, nodes, edges, quantaStore])
-
-    useEffect(() => {
-        if(quantaContext === null)
-            return
 
         let quantaSchema = quantaContext.getSchema("dataset")
         if(quantaSchema === undefined)
@@ -240,6 +231,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
     value.edgeToggle = edgeToggle
     value.nodeToggle = nodeToggle
     value.editorType = editorType
+    value.fileId = fileId
 
     value.getStoreValue = (storeKey: string) => 
         getStoreValue(storeKey, quantaStore)
@@ -356,6 +348,8 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
                             setNodes={setNodes}
                             setEdges={setEdges}
                             setReactFlowInstance={setReactFlowInstance}
+                            projectLoaded={projectLoaded}
+                            fileId={fileId}
                         />
                     </>
                 </QuantaEditorContext.Provider>

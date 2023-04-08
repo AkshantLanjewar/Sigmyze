@@ -31,7 +31,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
     const [failedNodes, setFailedNodes] = useState<string[]>([])
     const [processId, setProcessId] = useState(v4())
 
-    const { getSchema } = useContext(QuantaContextData) as IQuantaState
+    const { getSchema, quantaId } = useContext(QuantaContextData) as IQuantaState
 
     const { 
         socketCreated, 
@@ -45,7 +45,10 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
     async function execute_nodes(isCache?: boolean) {
         if(callStack === undefined)
             return
+        if(quantaId === null)
+            return
 
+        await create_process_store(quantaId)
         let cacheExecute = false
         if(isCache === true)
             cacheExecute = true
@@ -54,6 +57,27 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             let stack = callStack[i]
             await executeNode(stack, cacheExecute)
         }
+
+        await unload_process()
+    }
+
+    interface IUnloadProcessBody {
+        processId: string
+    }
+
+    async function unload_process() {
+        const functionId = "unload_process_id"
+        const outputIds = [] as string[]
+        const functionData: IUnloadProcessBody = {
+            processId: processId
+        }
+
+        let res = await executeFunction(v4(), functionId, outputIds, functionData)
+        console.debug(res)
+    }
+
+    async function create_process_store(quantaId: string) {
+
     }
 
     useEffect(() => {

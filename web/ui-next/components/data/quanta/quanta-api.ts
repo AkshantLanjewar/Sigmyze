@@ -3,12 +3,18 @@ import { IStatus } from "../datasets/DatasetsTypes"
 import { GET_Cacheless, GenerateOptions, removeEmpty, server } from "../utils"
 import { IQuantaProjectData } from "./types/project"
 
+interface IProjectDataResponse {
+    project_id?: string,
+    project_name?: string,
+    project_data?: IQuantaProjectData
+}   
+
 interface GetProjectResponse {
     status: IStatus,
-    project_data?: IQuantaProjectData
+    project_data?: IProjectDataResponse
 }
 
-async function GetProject(token: string, organization_id: string, project_id: string) : Promise<IQuantaProjectData | undefined> {
+async function GetProject(token: string, organization_id: string, project_id: string) : Promise<IProjectDataResponse | undefined> {
     let url = `${server}/api/v2/quanta/${organization_id}/${project_id}`
     let options = GenerateOptions("GET", token)
     let resp = await GET_Cacheless<GetProjectResponse>(url, options)
@@ -40,4 +46,5 @@ async function UpdateProject(token: string, organization_id: string, project_id:
     await GET_Cacheless(url, options)
 }
 
+export type { IProjectDataResponse }
 export { GetProject, UpdateProject }

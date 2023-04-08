@@ -33,7 +33,7 @@ pub async fn get_store_value(
     socket_id: &String,
     data_store: &web::Data<Basteh>
 ) -> Result<Value> {
-    let store_query = format!("{}-{}-{}", process_id, node_id, socket_id);
+    let store_query = format!("{}_{}_{}", process_id, node_id, socket_id);
     let mut value_string = data_store.get::<String>(store_query.clone()).await.unwrap().unwrap();
     if value_string == "file" {
         let file_path = format!("./data/{}.bin", store_query);
@@ -54,7 +54,9 @@ pub async fn set_store_value(
     value: &String,
     data_store: &web::Data<Basteh>
 ) {
-    let store_query = format!("{}-{}-{}", process_id, node_id, socket_id);
+    let store_query = format!("{}_{}_{}", process_id, node_id, socket_id);
+    data_store.push("keys", &store_query).await.unwrap();
+
     if value.len() > 1_000_000 {
         store_file(store_query, value.clone(), data_store).await;
     } else {

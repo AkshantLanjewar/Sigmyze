@@ -3,10 +3,12 @@ import PREBUILT_FORMS from '../../../../ui/form-builder/prebuilt_forms'
 import { ExecutionContextData } from '../../execution-engine/context'
 import { IExecutionEngineContext } from '../../execution-engine/context/types'
 import { QuantaEditorContext } from '../../quanta-editor'
-import { IQuantaSocket, IQuantaStoreData, IQuantaStoreItem, IQuantaTypeRef } from '../../types/types'
+import { IQuantaEditorGlobals, IQuantaSocket, IQuantaStoreData, IQuantaStoreItem, IQuantaTypeRef } from '../../types/types'
 import { validateStoreSocket, buildStoreKey } from '../../utils'
 import styles from '../node-renderer.module.scss'
 import NodeOutput from './node-output'
+import { QuantaContextData } from '../../../../data/quanta/context'
+import { IQuantaState } from '../../../../data/quanta/types'
 
 interface IDynamicOutput {
     output: IQuantaSocket,
@@ -17,7 +19,7 @@ interface IDynamicOutput {
 
 const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, parentId }) => {
     const [renderedOutputs, setRenderedOutputs] = useState<IQuantaSocket[]>([])
-    const quantaEditorContext = useContext(QuantaEditorContext)
+    const quantaEditorContext = useContext(QuantaEditorContext) as IQuantaEditorGlobals
     const { executionResults } = useContext(ExecutionContextData) as IExecutionEngineContext
 
     function buildStoreOutputs(storeItems: IQuantaStoreItem[]) {

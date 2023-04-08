@@ -1,4 +1,4 @@
-import { IconTextRecognition, IconCpu, IconBrackets, IconDatabase, IconChartAreaLine, IconCalendarEvent, IconInputSearch } from "@tabler/icons"
+import { IconTextRecognition, IconCpu, IconBrackets, IconDatabase, IconChartAreaLine, IconCalendarEvent, IconInputSearch, IconStack2 } from "@tabler/icons"
 import { IQuantaTypeGroup } from "../../types/node-type";
 
 const BaseTypes = {
@@ -32,7 +32,7 @@ const BaseTypes = {
         {
             typeId: "sdmx_field",
             typeName: "SDMX Field",
-            typeIcon: <IconInputSearch />,
+            typeIcon: <IconStack2 />,
             typeDescription: "Field from SDMX Indicator"
         },
         {

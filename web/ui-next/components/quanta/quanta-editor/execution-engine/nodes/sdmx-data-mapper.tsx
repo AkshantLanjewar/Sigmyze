@@ -1,4 +1,4 @@
-import { IconInputSearch } from "@tabler/icons";
+import { IconInputSearch, IconStack2 } from "@tabler/icons";
 import { IQuantaRFEdge, IQuantaSocket } from "../../types/types";
 import { ICallStackFunc } from "../types";
 import { IInternalStore } from "./types";
@@ -48,7 +48,7 @@ async function sdmxDataMapper(
         socket.type = { groupId: "base", typeId: "sdmx_field" }
         socket.socketId = sdmx_field
         socket.socketName = sdmx_field
-        socket.icon = <IconInputSearch />
+        socket.icon = <IconStack2 />
         sockets.push(socket)
     }
 

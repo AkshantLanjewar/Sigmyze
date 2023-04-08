@@ -17,7 +17,7 @@ const ExecutionContextData = createContext<IExecutionEngineContext | null>(null)
 
 const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children }) => {
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
-    const { setEditorExecution } = useContext(QuantaContextData) as IQuantaState
+    const { setEditorExecution, getEditorProject } = useContext(QuantaContextData) as IQuantaState
 
     /**
      * state relating to sockets
@@ -111,14 +111,17 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children }
         setSocketHandlers([ ...nHandlers ])
     }, [socketResponseQueue])
 
-    //handles caching / saving the execution results
-    useEffect(() => {
-        setEditorExecution(fileId, executionResults)
-    }, [fileId, executionResults])
-
     //loads the cached results
     useEffect(() => {
+        let editorProject = getEditorProject(fileId)
+        if(editorProject === undefined)
+            return
 
+        let executionCache = editorProject.executionResults
+        if(executionCache === undefined)
+            return
+
+        setExecutionResults([ ...executionCache ])
     }, [fileId])
     
     let contextData = {} as IExecutionEngineContext

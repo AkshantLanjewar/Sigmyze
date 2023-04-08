@@ -24,6 +24,6 @@ pub async fn unload_loop(
     }
 
     let loop_id = body.loop_id.unwrap();
-    data_store.remove::<String>(&loop_id).await?;
+    data_store.pop::<String>(loop_id).await?;
     Ok(socket_response(String::from("removed"), false, request_id))
 }

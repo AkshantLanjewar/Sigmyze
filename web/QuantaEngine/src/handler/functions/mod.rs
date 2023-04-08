@@ -8,6 +8,7 @@ pub mod string_to_date;
 pub mod build_fields;
 pub mod apply_data_rule;
 pub mod add_indicator;
+pub mod unload_process_id;
 
 pub type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 

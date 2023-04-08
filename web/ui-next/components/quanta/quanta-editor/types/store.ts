@@ -24,6 +24,11 @@ interface IQuantaStoreItem {
      */
     data: any,
 
+    /**
+     * frozen data for rehydrating etc
+     */
+    frozenData?: string,
+
     //TODO: Implement schema
     /**
      * keys added to the data

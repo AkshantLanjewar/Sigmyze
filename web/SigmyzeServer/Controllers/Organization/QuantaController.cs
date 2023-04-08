@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.ApplicationServices;
 using SigmyzeServer.Services.OrganizationServices;
@@ -138,6 +139,7 @@ public class QuantaController : OrganizationControllerBase
         }
 
         project.ProjectData = body.Data;
+
         await _quantaRepository.UpdateProject(project.ProjectId!, project);
         return await SerializeJSON(msg);
     }

@@ -75,9 +75,13 @@ async function quantaLoop(
         executedNodes = []
         failedNodes = []
 
-        for(let i = 0; i < childThread.length; i++) {
-            let thread = childThread[i]
-            await executeNode(thread, isCache, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
+        try {
+            for(let i = 0; i < childThread.length; i++) {
+                let thread = childThread[i]
+                await executeNode(thread, isCache, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
+            }
+        } catch (error) {
+            console.debug(`Received error -> ${error}`)
         }
 
         index += 1
@@ -90,7 +94,7 @@ async function quantaLoop(
 
     let unloadRes = await executeFunction(stack.nodeId, unloadFunctionId, outputIds, unloadFunctionData)
     if(unloadRes !== "removed")
-        throw new Error("failed to unload array from memory")
+        throw new Error(`failed to unload array from memory -> ${unloadRes}`)
 
     console.debug(`Finished executing loop with length: ${length}`)
 }
