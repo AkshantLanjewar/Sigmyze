@@ -48,7 +48,9 @@ pub async fn add_indicator(
     let chart: Vec<ChartData> = serde_json::from_value(chart_input_value)?;
 
     let indicator = QuantaIndicator::new(field, chart);
-    println!("{:?}", indicator);
+    let indicator_string = serde_json::to_string(&indicator)?;
+    let process_fmt = format!("{}::cache", &process_id);
 
+    data_store.push(process_fmt, indicator_string).await?;
     Ok(socket_response(String::from("success"), false, request_id))
 }

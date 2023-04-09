@@ -57,6 +57,17 @@ async function quantaLoop(
     if(childThread === undefined)
         throw new Error("no thread provided")
 
+    const findThread = (id: string) => {
+        let thread = undefined
+        for(let i = 0; i < childThread.length; i++) {
+            let _thread = childThread[i]
+            if(_thread.nodeId === id)
+                thread = _thread
+        }
+
+        return thread
+    }
+
     let executedNodes = [] as string[]
     let failedNodes = [] as string[]
 
@@ -78,6 +89,18 @@ async function quantaLoop(
         try {
             for(let i = 0; i < childThread.length; i++) {
                 let thread = childThread[i]
+
+                //executes sub dependencies
+                let dependencies = thread.dependencies
+                for(let i = 0; i < dependencies.length; i++) {
+                    let dependency = dependencies[i]
+                    let thread = findThread(dependency)
+                    if(thread === undefined)
+                        continue
+
+                    await executeNode(thread, isCache, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
+                }
+
                 await executeNode(thread, isCache, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
             }
         } catch (error) {

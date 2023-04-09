@@ -7,6 +7,7 @@ use crate::handler::functions::sdmx::{sdmx_data_mapper, sdmx_data_parser};
 use super::functions::add_indicator::add_indicator;
 use super::functions::apply_data_rule::apply_data_rule;
 use super::functions::build_fields::build_fields;
+use super::functions::load_process_id::load_process_id;
 use super::functions::sdmx::get_sdmx_field_key;
 use super::functions::sdmx::get_sdmx_field_val::get_sdmx_field_value;
 use super::functions::string_to_date::string_to_date;
@@ -61,6 +62,13 @@ pub async fn parse_function_request(
             node_id, 
             process_id, 
             function_data, 
+            data_store
+        ).await,
+
+        "load_process_id" => return load_process_id(
+            request_id,
+            process_id,
+            function_data,
             data_store
         ).await,
 

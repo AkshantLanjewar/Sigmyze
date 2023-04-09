@@ -18,6 +18,9 @@ import { IQuantaState } from "../../../data/quanta/types"
 import buildFields from "./nodes/build-fields"
 import applyDataRule from "./nodes/apply-data-rule"
 import addIndicator from "./nodes/add-indicator"
+import { UserContextData } from "../../../data/user/context"
+import { IUserContext } from "../../../data/user/types"
+import { CreateExecutionCache, DeleteExecutionCache } from "../../../data/quanta/quanta-api"
 
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
@@ -31,7 +34,8 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
     const [failedNodes, setFailedNodes] = useState<string[]>([])
     const [processId, setProcessId] = useState(v4())
 
-    const { getSchema, quantaId } = useContext(QuantaContextData) as IQuantaState
+    const { getSchema, quantaId, organizationId, toggleUpdateEditorIndicators } = useContext(QuantaContextData) as IQuantaState
+    const { authData } = useContext(UserContextData) as IUserContext
 
     const { 
         socketCreated, 
@@ -42,13 +46,32 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         addExecutionResult 
     } = useContext(ExecutionContextData) as IExecutionEngineContext
 
+    interface IUnloadProcessBody {
+        processId: string
+    }
+
+    interface ILoadProcessBody {
+        organizationId: string,
+        quantaId: string
+    }
+
     async function execute_nodes(isCache?: boolean) {
-        if(callStack === undefined)
+        let token = authData?.token
+        if(callStack === undefined || token === undefined)
             return
-        if(quantaId === null)
+        if(quantaId === null || organizationId === null)
             return
 
-        await create_process_store(quantaId)
+        const functionId = "load_process_id"
+        const outputIds = [] as string[]
+        const functionData: ILoadProcessBody = {
+            organizationId: organizationId,
+            quantaId: quantaId
+        }
+
+        await CreateExecutionCache(token, organizationId, quantaId, processId)
+        let res = await executeFunction(v4(), functionId, outputIds, functionData)
+
         let cacheExecute = false
         if(isCache === true)
             cacheExecute = true
@@ -61,10 +84,6 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         await unload_process()
     }
 
-    interface IUnloadProcessBody {
-        processId: string
-    }
-
     async function unload_process() {
         const functionId = "unload_process_id"
         const outputIds = [] as string[]
@@ -74,10 +93,17 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
 
         let res = await executeFunction(v4(), functionId, outputIds, functionData)
         console.debug(res)
-    }
 
-    async function create_process_store(quantaId: string) {
+        //delete the cache form the server
+        let token = authData?.token
+        if(token === undefined)
+            return
+        if(quantaId === null || organizationId === null)
+            return
 
+        await DeleteExecutionCache(token, organizationId, quantaId, processId)
+        setProcessId(v4())
+        toggleUpdateEditorIndicators()
     }
 
     useEffect(() => {
@@ -116,15 +142,23 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         setFailedNodes([ ...nFailedNodes ])
     }
 
-    function findStack(nodeId: string) {
+    function findStack(nodeId: string, passedStack?: ICallStackFunc[]): ICallStackFunc | undefined {
         let stack = undefined
         if(callStack === undefined)
             return
+        
+        let internalStack = callStack
+        if(passedStack !== undefined)
+            internalStack = passedStack
 
-        for(let i = 0; i < callStack.length; i++) {
-            let stack_ = callStack[i]
+        for(let i = 0; i < internalStack.length; i++) {
+            let stack_ = internalStack[i]
             if(stack_.nodeId === nodeId)
                 stack = stack_
+
+            let stackChildren = stack_.stackThread
+            if(stackChildren !== undefined)
+                stack = findStack(nodeId, stackChildren)
         }
 
         return stack

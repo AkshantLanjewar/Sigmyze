@@ -5,6 +5,29 @@ using Newtonsoft.Json;
 
 namespace SigmyzeServer.Models.ApplicationServices;
 
+public class QuantaProjectCacheId
+{
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    [Newtonsoft.Json.JsonIgnore]
+    public string? Id { get; set; }
+
+    [BsonElement("organizationId")]
+    [JsonProperty("organizationId")]
+    [JsonPropertyName("organizationId")]
+    public string? OrganizationId { get; set; }
+
+    [BsonElement("projectId")]
+    [JsonProperty("projectId")]
+    [JsonPropertyName("projectId")]
+    public string? ProjectId { get; set; }
+
+    [BsonElement("processId")]
+    [JsonProperty("processId")]
+    [JsonPropertyName("processId")]
+    public string? ProcessId { get; set; }
+}
+
 public class QuantaRepositoryDefinition
 {
     [BsonId]
@@ -27,6 +50,10 @@ public class QuantaRepositoryDefinition
     [BsonElement("organization_id")]
     [Newtonsoft.Json.JsonIgnore]
     public string? OrganizationId { get; set; }
+
+    [BsonElement("project_indicators")]
+    [Newtonsoft.Json.JsonIgnore]
+    public List<QuantaIndicator>? ProjectIndicators { get; set; }
 
     [BsonElement("project_data")]
     [JsonProperty("project_data")]
@@ -64,7 +91,7 @@ public class QuantaProjectData
     [BsonElement("dataset_schema")]
     [JsonProperty("dataset_schema")]
     [JsonPropertyName("dataset_schema")]
-    public List<QuantaSchemas>? DatasetSchema { get; set; }
+    public List<QuantaSchemas>? DatasetSchema { get; set; }    
 }
 
 public class QuantaFile

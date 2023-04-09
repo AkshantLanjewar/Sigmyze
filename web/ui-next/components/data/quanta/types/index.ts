@@ -30,7 +30,14 @@ interface IQuantaState {
 
     updateEditorSchema: boolean,
 
+    updateEditorIndicators: boolean,
+
     quantaId: string | null,
+
+    organizationId: string | null,
+
+    //tells the application to update the indicators
+    toggleUpdateEditorIndicators: () => void,
 
     //tab related functions
     changeTab: (tabId: string) => void,

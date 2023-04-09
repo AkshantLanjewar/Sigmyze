@@ -46,5 +46,48 @@ async function UpdateProject(token: string, organization_id: string, project_id:
     await GET_Cacheless(url, options)
 }
 
+async function CreateExecutionCache(token: string, organization_id: string, project_id: string, process_id: string) {
+    let url = `${server}/api/v2/quanta/${organization_id}/${project_id}/cache/create/${process_id}`
+    let options = GenerateOptions("GET", token)
+    let resp = await GET_Cacheless<IStatus>(url, options)
+
+    if(resp.error === true) {
+        showNotification({
+            title: "Execution Error",
+            message: "Server Error, unable to create execution cache",
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return false
+    }
+
+    return true
+}
+
+async function DeleteExecutionCache(token: string, organization_id: string, project_id: string, process_id: string) {
+    let url = `${server}/api/v2/quanta/${organization_id}/${project_id}/cache/delete/${process_id}`
+    let options = GenerateOptions("GET", token)
+    let resp = await GET_Cacheless<IStatus>(url, options)
+
+    if(resp.error === true) {
+        showNotification({
+            title: "Execution Error",
+            message: "Server Error, unable to delete execution cache",
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return false
+    }
+
+    return true
+}
+
 export type { IProjectDataResponse }
-export { GetProject, UpdateProject }
+export { 
+    GetProject, 
+    UpdateProject,
+    CreateExecutionCache,
+    DeleteExecutionCache 
+}

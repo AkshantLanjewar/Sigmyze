@@ -11,16 +11,22 @@ public interface IQuantaRepository
     Task<QuantaRepositoryDefinition?> GetProject(string projectId);
     Task DeleteProject(string projectId);
     Task UpdateProject(string projectId, QuantaRepositoryDefinition nProject);
+    Task<QuantaProjectCacheId?> GetQuantaProjectCache(string projectId, string processId);
+    Task DeleteQuantaProjectCache(string projectId, string processId);
+    Task CreateQuantaProjectCache(string organizationId, string projectId, string processId);
 }
 
 public class QuantaRepository : IQuantaRepository
 {
     private readonly IMongoCollection<QuantaRepositoryDefinition> _quantaRepository;
+    private readonly IMongoCollection<QuantaProjectCacheId> _quantaProjectCache;
     public QuantaRepository(IOptions<AuthDatabaseSettings> authDatabaseSettings)
     {
         var mongoClient = new MongoClient(authDatabaseSettings.Value.ConnectionString);
         var mongoDatabse = mongoClient.GetDatabase("SigmyzeOrganizations");
+
         _quantaRepository = mongoDatabse.GetCollection<QuantaRepositoryDefinition>("quanta_projects");
+        _quantaProjectCache = mongoDatabse.GetCollection<QuantaProjectCacheId>("quanta_project_cache");
     }
 
     public async Task InitQuantaProject(string projectId, string projectName, string organizationId)
@@ -50,6 +56,26 @@ public class QuantaRepository : IQuantaRepository
 
         newProject.ProjectData = projectData;
         await _quantaRepository.InsertOneAsync(newProject);
+    }
+
+    public async Task<QuantaProjectCacheId?> GetQuantaProjectCache(string projectId, string processId) =>
+        await _quantaProjectCache.Find(x => x.ProcessId == processId && x.ProjectId == projectId).FirstOrDefaultAsync();
+
+    public async Task DeleteQuantaProjectCache(string projectId, string processId) =>
+        await _quantaProjectCache.DeleteOneAsync(x => x.ProcessId == processId && x.ProjectId == projectId);
+    
+    public async Task CreateQuantaProjectCache(string organizationId, string projectId, string processId)
+    {
+        QuantaProjectCacheId? potentialCache = await GetQuantaProjectCache(projectId, processId);
+        if(potentialCache != null)
+            await DeleteQuantaProjectCache(projectId, processId);
+
+        QuantaProjectCacheId quantaCache = new QuantaProjectCacheId();
+        quantaCache.OrganizationId = organizationId;
+        quantaCache.ProjectId = projectId;
+        quantaCache.ProcessId = processId;
+
+        await _quantaProjectCache.InsertOneAsync(quantaCache);
     }
 
     public async Task<QuantaRepositoryDefinition?> GetProject(string projectId) =>

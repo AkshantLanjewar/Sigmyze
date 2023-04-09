@@ -77,6 +77,7 @@ impl DatasetFieldItem {
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
 pub struct DatasetField {
+    #[serde(rename = "datasetFields")]
     pub dataset_fields: Vec<DatasetFieldItem>
 }
 

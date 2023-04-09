@@ -34,6 +34,7 @@ import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"
 import { INodeExecutionResult } from "../../quanta/quanta-editor/execution-engine/context/types"
 import { IconFileCode2, IconStack2 } from "@tabler/icons"
+import QuantaIndicatorManager from "../../quanta/quanta-indicator-manager"
 
 interface IQuantaContextProps {
     quantaId: string | null,
@@ -66,6 +67,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     const [updateEditorSchema, setUpdateEditorSchema] = useState(false)
     const toggleUpdateEditorSchema = () => setUpdateEditorSchema(!updateEditorSchema)
 
+    const [updateEditorIndicators, setUpdateEditorIndicators] = useState(false)
+    const toggleUpdateEditorIndicators = () => setUpdateEditorIndicators(!updateEditorIndicators)
+
     //store elements
     const [editorProjects, setEditorProjects] = useState<IQuantaEditorProject[]>([])
     //counter to efficiently save data
@@ -78,7 +82,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         if(token === undefined || organizationId === null || quantaId === null)
             return
 
-        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects)
+        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects, schemas)
         setSaveCounter(0)
     }
 
@@ -98,6 +102,10 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
         setSaveCounter(saveCounter + 1)
     }, [editorProjects])
+
+    useEffect(() => {
+        saveFunc()
+    }, [schemas])
 
     useEffect(() => {        
         let interval: NodeJS.Timer | undefined = undefined
@@ -124,11 +132,16 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         value.project_data.store = { selectors: [] }
     value.project_data.store.editorProjects = editorProjects
 
+    value.updateEditorIndicators
+    value.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators
+
     value.updateEditorSchema = updateEditorSchema
     value.updateSchema = updateSchema
     value.tabId = activeTab
     value.tabs = tabs
     value.activeSelectorId = activeSelector
+
+    value.organizationId = organizationId
     value.quantaId = quantaId
 
     //NOTE: Theese are the functions relating to the context
@@ -256,28 +269,30 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     return (
         <>
             <QuantaContextData.Provider value={value}>
-                <div style={{ width: "100%", height: "100%" }}>
-                    <ModalManager
-                        modalState={modalState}
-                        close={closeModal}
-                    >
-                        <ModalManager.Modal
-                            id="new_selector"
-                            title="Create Selector"
+                <QuantaIndicatorManager>
+                    <div style={{ width: "100%", height: "100%" }}>
+                        <ModalManager
+                            modalState={modalState}
+                            close={closeModal}
                         >
+                            <ModalManager.Modal
+                                id="new_selector"
+                                title="Create Selector"
+                            >
 
-                        </ModalManager.Modal>
+                            </ModalManager.Modal>
 
-                        <ModalManager.Modal
-                            id="new_field"
-                            title="Add Dataset Field"
-                        >
-                            <NewFieldForm closeModal={closeModal} />
-                        </ModalManager.Modal>
-                    </ModalManager>
+                            <ModalManager.Modal
+                                id="new_field"
+                                title="Add Dataset Field"
+                            >
+                                <NewFieldForm closeModal={closeModal} />
+                            </ModalManager.Modal>
+                        </ModalManager>
 
-                    {children}
-                </div>
+                        {children}
+                    </div>
+                </QuantaIndicatorManager>
             </QuantaContextData.Provider>
         </>
     )

@@ -2,8 +2,8 @@ use actix_web::web;
 use basteh::Basteh;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use super::types::{QuantaFieldParam, QuantaDate};
-use crate::{handler::{messages, socket_response, Result, socket_store::{set_store_value}}, quanta_dataset::{DatasetField, DatasetFieldItem}};
+use super::types::{QuantaFieldParam, QuantaDate, QuantaString};
+use crate::{handler::{messages, socket_response, Result, socket_store::{set_store_value, get_store_value}}, quanta_dataset::{DatasetField, DatasetFieldItem}};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BuildFieldsBody {
@@ -66,16 +66,15 @@ pub async fn build_fields(
         let field_socket = field.socket.unwrap();
         let field_socket_node_id = field_socket.node_id.clone().unwrap();
         let field_socket_socket_id = field_socket.socket_id.clone().unwrap();
-
-        let store_query = format!("{}-{}-{}", process_id, field_socket_node_id, field_socket_socket_id);
-        let field_value = data_store.get::<String>(store_query).await?.unwrap();
+        let field_value = get_store_value(&process_id, &field_socket_node_id, &field_socket_socket_id, data_store).await?;
 
         let mut string_value: Option<String> = None;
         let mut date_value: Option<DateTime<Utc>> = None;
         if field_type == "string" {
-            string_value = Some(field_value.clone());
+            let field_value = serde_json::from_value::<QuantaString>(field_value.clone())?;
+            string_value = Some(field_value.value);
         } if field_type == "date" {
-            let quanta_date: QuantaDate = serde_json::from_slice(field_value.as_bytes())?;
+            let quanta_date: QuantaDate = serde_json::from_value(field_value)?;
             date_value = Some(quanta_date.internal_date);
         }
 

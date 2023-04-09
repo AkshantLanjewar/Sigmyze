@@ -32,6 +32,13 @@ interface IQuantaProjectData {
      * this is the schema for the dataset
      */
     dataset_schema?: ProjectSchemas[]
+
+    //the fields below are used for server purposes only
+
+    /**
+     * this is the schemas stored by the quanta context
+     */
+    schemas?: ProjectSchemas[]
 }
 
 interface IQuantaFile {

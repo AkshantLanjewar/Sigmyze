@@ -1,5 +1,6 @@
 use actix_web::web;
 use basteh::Basteh;
+use std::time::Duration;
 use serde::{Deserialize, Serialize};
 use crate::handler::{messages, functions::{Result, socket_response}};
 
@@ -24,6 +25,6 @@ pub async fn unload_loop(
     }
 
     let loop_id = body.loop_id.unwrap();
-    data_store.pop::<String>(loop_id).await?;
+    data_store.set_expiring(loop_id, String::from("delete"), Duration::from_secs(5));
     Ok(socket_response(String::from("removed"), false, request_id))
 }

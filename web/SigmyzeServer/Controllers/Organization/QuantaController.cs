@@ -46,6 +46,56 @@ public class QuantaController : OrganizationControllerBase
         return drive;
     }
 
+    [HttpPost("add_indicator")]
+    [MapToApiVersion("2.0")]
+    [AllowAnonymous]
+    public async Task<IActionResult> AddIndicator([FromBody]AddQuantaIndicator body)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "added indicators";
+
+        if(body.ProcessId == null || body.OrganizationId == null || body.QuantaId == null || body.Indicators == null)
+        {
+            status.Error = true;
+            status.MSG = "missing_params";
+            return await SerializeJSON(status);
+        }
+
+        QuantaProjectCacheId? cache = await _quantaRepository.GetQuantaProjectCache(body.QuantaId, body.ProcessId);
+        if(cache == null || cache.OrganizationId != body.OrganizationId)
+        {
+            status.Error = true;
+            status.MSG = "invalid_cache";
+            return await SerializeJSON(status);
+        }
+
+        List<QuantaIndicator> newIndicators = new List<QuantaIndicator>();
+        List<string> indicators = body.Indicators;
+        for(int i = 0; i < indicators.Count; i++)
+        {
+            string raw_indicator = indicators[i];
+            QuantaIndicator? indicator = JsonConvert.DeserializeObject<QuantaIndicator>(raw_indicator);
+            if(indicator == null || indicator.ChartData == null || indicator.Field == null)
+                continue;
+
+            newIndicators.Add(indicator);
+        }
+
+        //retreive and update the quanta project
+        QuantaRepositoryDefinition? project = await _quantaRepository.GetProject(body.QuantaId);
+        if(project == null)
+        {
+            status.Error = true;
+            status.MSG = "invalid_project";
+            return await SerializeJSON(status);
+        }
+
+        project.ProjectIndicators = newIndicators;
+        await _quantaRepository.UpdateProject(body.QuantaId, project);
+        return await SerializeJSON(status);
+    }
+
     [HttpGet("{organizationId}/{projectId}")]
     [MapToApiVersion("2.0")]
     public async Task<IActionResult> GetQuantaProject(string organizationId, string projectId)
@@ -92,6 +142,53 @@ public class QuantaController : OrganizationControllerBase
 
         resp.ProjectData = project;
         return await SerializeJSON(resp);
+    }
+
+    [HttpGet("{organizationId}/{projectId}/cache/create/{processId}")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> BuildExecutionCache(string organizationId, string projectId, string processId)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "cache_created";
+
+        string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
+        string lunarId = GetLunarID(accessToken);
+        Drive? drive = await GetDrive(lunarId, organizationId);
+
+        if(drive == null)
+        {
+            status.Error = true;
+            status.MSG = "invalid organization id";
+            return await SerializeJSON(status);
+        }
+
+        //create cache object
+        await _quantaRepository.CreateQuantaProjectCache(organizationId, projectId, processId);
+        return await SerializeJSON(status);
+    }
+
+    [HttpGet("{organizationId}/{projectId}/cache/delete/{processId}")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> DeleteExecutionCache(string organizationId, string projectId, string processId)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "cache_removed";
+
+        string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
+        string lunarId = GetLunarID(accessToken);
+        Drive? drive = await GetDrive(lunarId, organizationId);
+
+        if(drive == null)
+        {
+            status.Error = true;
+            status.MSG = "invalid organization id";
+            return await SerializeJSON(status);
+        }
+
+        await _quantaRepository.DeleteQuantaProjectCache(projectId, processId);
+        return await SerializeJSON(status);
     }
 
     [HttpPost("{organizationId}/{projectId}")]

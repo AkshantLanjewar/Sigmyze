@@ -1,7 +1,7 @@
 use actix_web::web;
 use basteh::Basteh;
 use serde::{Deserialize, Serialize};
-use crate::{handler::{functions::types, messages, Result, socket_response, socket_store::{get_store_value, set_store_value}}, sdmx_parser::sdmx_series::SDMXField};
+use crate::{handler::{functions::types::{self, QuantaString}, messages, Result, socket_response, socket_store::{get_store_value, set_store_value}}, sdmx_parser::sdmx_series::SDMXField};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct GetSDMXFieldKeyBody {
@@ -32,6 +32,9 @@ pub async fn get_sdmx_field_value(
     let input_value: SDMXField = serde_json::from_value(input_value)?;
 
     let field_val = input_value.field_documentation;
-    set_store_value(&process_id, &node_id, &String::from("field_value"), &field_val, data_store).await;
+    let field_string = QuantaString { value: field_val };
+    let field_string = serde_json::to_string(&field_string)?;
+
+    set_store_value(&process_id, &node_id, &String::from("field_value"), &field_string, data_store).await;
     Ok(socket_response(String::from("success"), false, request_id))
 }

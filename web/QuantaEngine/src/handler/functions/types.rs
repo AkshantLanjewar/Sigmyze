@@ -114,3 +114,8 @@ impl QuantaIndicator {
         }
     }
 }
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct QuantaString {
+    pub value: String
+}

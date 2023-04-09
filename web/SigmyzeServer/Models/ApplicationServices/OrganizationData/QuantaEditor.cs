@@ -163,6 +163,24 @@ public class QuantaRFEdge
     [JsonProperty("targetHandle")]
     [JsonPropertyName("targetHandle")]
     public string? TargetHandle { get; set; }
+
+    [BsonElement("style")]
+    [JsonProperty("style")]
+    [JsonPropertyName("style")]
+    public QuantaStyles? Style { get; set; }
+}
+
+public class QuantaStyles
+{
+    [BsonElement("stroke")]
+    [JsonProperty("stroke")]
+    [JsonPropertyName("stroke")]
+    public string? Stroke { get; set; }
+
+    [BsonElement("strokeWidth")]
+    [JsonProperty("strokeWidth")]
+    [JsonPropertyName("strokeWidth")]
+    public int? StrokeWidth { get; set; }
 }
 
 public class QuantaStore 
