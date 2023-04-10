@@ -1,6 +1,7 @@
 import { Tabs } from '@mantine/core'
 import { IconBinaryTree2, IconFileCode, IconTable } from '@tabler/icons'
 import styles from './overview-tabs.module.scss'
+import IndicatorViewer from '../indicator-viewer'
 
 const OverviewTabs: React.FC = ({ }) => {
     return (
@@ -9,6 +10,7 @@ const OverviewTabs: React.FC = ({ }) => {
                 defaultValue={'preview'} 
                 variant={'outline'}
                 radius={'md'}
+                sx={{ height: 500 }}
             >
                 <Tabs.List pl={"xl"}>
                     <Tabs.Tab 
@@ -41,7 +43,7 @@ const OverviewTabs: React.FC = ({ }) => {
                 </Tabs.List>
 
                 <Tabs.Panel value='preview'>
-
+                    <IndicatorViewer />
                 </Tabs.Panel>
 
                 <Tabs.Panel value='create'>

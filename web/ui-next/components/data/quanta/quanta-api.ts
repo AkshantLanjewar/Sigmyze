@@ -2,6 +2,7 @@ import { showNotification } from "@mantine/notifications"
 import { IStatus } from "../datasets/DatasetsTypes"
 import { GET_Cacheless, GenerateOptions, removeEmpty, server } from "../utils"
 import { IQuantaProjectData } from "./types/project"
+import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
 
 interface IProjectDataResponse {
     project_id?: string,
@@ -84,10 +85,36 @@ async function DeleteExecutionCache(token: string, organization_id: string, proj
     return true
 }
 
+interface IQuantaIndicatorsResp {
+    status?: IStatus,
+    indicators?: IQuantaIndicator[]
+}
+
+async function GetQuantaIndicators(token: string, organization_id: string, project_id: string) {
+    let url = `${server}/api/v2/quanta/${organization_id}/${project_id}/indicators`
+    let options = GenerateOptions("GET", token) 
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
+
+    let indicators = resp.indicators
+    if(indicators === undefined || resp.status?.error === true) {
+        showNotification({
+            title: "Indicator Error",
+            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return undefined
+    }
+
+    return indicators
+}
+
 export type { IProjectDataResponse }
 export { 
     GetProject, 
     UpdateProject,
     CreateExecutionCache,
-    DeleteExecutionCache 
+    DeleteExecutionCache,
+    GetQuantaIndicators 
 }

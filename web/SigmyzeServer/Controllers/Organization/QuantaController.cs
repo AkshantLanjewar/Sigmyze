@@ -46,6 +46,62 @@ public class QuantaController : OrganizationControllerBase
         return drive;
     }
 
+    [HttpGet("{organizationId}/{quantaId}/indicators")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> GetIndicators(string organizationId, string quantaId)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "retreived";
+
+        GetQuantaIndicatorsResp resp = new GetQuantaIndicatorsResp();
+        string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
+        string lunarId = GetLunarID(accessToken);
+
+        Drive? drive = await GetDrive(lunarId, organizationId);
+        if(drive == null)
+        {
+            status.Error = true;
+            status.MSG = "bad_config";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
+        if(utils.ValidateProject(drive, quantaId) == false)
+        {
+            status.Error = true;
+            status.MSG = "invalid_project";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        QuantaRepositoryDefinition? project = await _quantaRepository.GetProject(quantaId);
+        List<QuantaIndicator>? projectIndicators = project?.ProjectIndicators;
+        if(projectIndicators == null)
+        {
+            status.Error = true;
+            status.MSG = "no_indicators";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        List<QuantaIndicator> nIndicators = new List<QuantaIndicator>();
+        int count = 0;
+        while(count < projectIndicators.Count && count < 25)
+        {
+            nIndicators.Add(projectIndicators[count]);
+            count++;
+        }
+        
+        resp.Status = status;
+        resp.Indicators = nIndicators;
+        return await SerializeJSON(resp);
+    }
+
     [HttpPost("add_indicator")]
     [MapToApiVersion("2.0")]
     [AllowAnonymous]

@@ -19,3 +19,12 @@ public class GetQuantaProjectResp
     [JsonProperty("project_data")]
     public QuantaRepositoryDefinition? ProjectData { get; set; }
 }
+
+public class GetQuantaIndicatorsResp
+{
+    [JsonProperty("status")]
+    public APIStatusMsg? Status { get; set; }
+    
+    [JsonProperty("indicators")]
+    public List<QuantaIndicator>? Indicators { get; set; }
+}
