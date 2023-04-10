@@ -40,11 +40,12 @@ interface IUIDropdownProps {
     expand?: boolean,
     radius?: MantineSize,
     position?: FloatingPosition,
-    subscribeClose?: boolean
+    subscribeClose?: boolean,
+    disabled?: boolean
 }
 
 const UIDropdown: React.FC<IUIDropdownProps> = 
-    ({ size, items, value, emitChange, expand, radius, position, subscribeClose }) => {
+    ({ size, items, value, emitChange, expand, radius, position, subscribeClose, disabled}) => {
     const [opened, setOpened] = useState(false)
 
     function selectItem(id: string) {
@@ -78,6 +79,11 @@ const UIDropdown: React.FC<IUIDropdownProps> =
             
         setOpened(false)
     }, [subscribeClose])
+
+    useEffect(() => {
+        if(opened === true && disabled === true)
+            setOpened(false)
+    }, [opened, disabled])
 
     return (
         <>

@@ -43,6 +43,11 @@ interface IQuantaEditorGlobals {
     fileId: string,
 
     /**
+     * whether or not the editor is in view only mode
+     */
+    viewOnly: boolean,
+
+    /**
      * Function that creates a new node within the editor
      * 
      * @param parentId

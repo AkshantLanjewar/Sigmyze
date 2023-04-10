@@ -130,7 +130,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         value.project_data.dataset_schema = schemas
     if(value.project_data.store === undefined)
         value.project_data.store = { selectors: [] }
+
     value.project_data.store.editorProjects = editorProjects
+    value.editorProjects = editorProjects
 
     value.updateEditorIndicators
     value.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators

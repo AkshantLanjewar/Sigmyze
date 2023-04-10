@@ -56,7 +56,8 @@ import QuantaFlow from "./quanta-flow"
 
 interface IQuantaEditorProps {
     fileId: string,
-    fileName: string
+    fileName: string,
+    viewMode?: boolean
 }
 
 /**
@@ -64,7 +65,7 @@ interface IQuantaEditorProps {
  */
 const QuantaEditorContext = createContext<IQuantaEditorGlobals | null>(null)
 
-const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
+const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode }) => {
     /**
      * This is a list of nodes within the editor
      * State managed by both react flow and component
@@ -101,6 +102,11 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
      * whether or not the state has been loaded
      */
     const [projectLoaded, setProjectLoaded] = useState(false)
+
+    /**
+     * whether or not the project is in a view only mode
+     */
+    const [viewOnly, setViewOnly] = useState(false)
 
     //related to nodes within the editor
     /**
@@ -225,6 +231,11 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
         setDatasetTypes([ ...nDatasetTypes ])
     }, [quantaContext?.updateEditorSchema])
 
+    useEffect(() => {
+        if(viewMode === true)
+            setViewOnly(true)
+    }, [viewMode])
+
     let value = {} as IQuantaEditorGlobals
     value.focusToggle = focusToggle
     value.storeToggle = storeToggle
@@ -232,6 +243,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
     value.nodeToggle = nodeToggle
     value.editorType = editorType
     value.fileId = fileId
+    value.viewOnly = viewOnly
 
     value.getStoreValue = (storeKey: string) => 
         getStoreValue(storeKey, quantaStore)
@@ -300,6 +312,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName }) => {
         >
             <ContextButtons 
                 hasCache={requiresCache}
+                viewOnly={viewOnly}
                 toggleEngineWrapper={toggleEngineWrapper}
                 toggleEngineCache={toggleEngineCache}
             />

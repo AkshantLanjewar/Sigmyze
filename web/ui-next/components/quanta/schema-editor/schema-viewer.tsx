@@ -14,6 +14,7 @@ interface ISchemaViewerProps {
     schemaNode: IQuantaSchema,
     additionalPadding?: number,
     light?: boolean,
+    view: boolean
 }
 
 const color_table = {
@@ -21,7 +22,7 @@ const color_table = {
 }
 
 const SchemaViewer: React.FC<ISchemaViewerProps> = 
-    ({ parentId, schemaNode, additionalPadding, light }) => {
+    ({ parentId, schemaNode, additionalPadding, light, view }) => {
     const [opened, setOpened] = useState(schemaNode.hasChildren ? true : false)
     const [editing, setEditing] = useState(false)
     const [internalType, setInternalType] = useState<IQuantaTypeRef | undefined>(undefined)
@@ -155,11 +156,12 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                                     parentId={parentId}
                                     schemaNode={step}
                                     additionalPadding={additionalPadding ? additionalPadding + 30 : 30}
+                                    view={view}
                                 />
                             ))}
                         </Stack>
 
-                        {schemaNode.hasChildren && (
+                        {schemaNode.hasChildren && view === false && (
                             <Button
                                 variant={'subtle'}
                                 color={'gray'}

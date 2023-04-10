@@ -13,6 +13,17 @@
     padding-top: 50px;
     padding-bottom: 50px;
 
+    .schema__container {
+        width: 600px;
+
+        .title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+    }
+
     .overview__title__row {
         display: flex;
         justify-content: space-between;

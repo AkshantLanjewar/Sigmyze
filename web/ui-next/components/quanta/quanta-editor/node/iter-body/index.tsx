@@ -16,7 +16,16 @@ interface IIterBodyProps {
 const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) => {
     const [iterOutputs, setIterOutputs] = useState<IQuantaSocket[]>([])
     const [parentId, setParentId] = useState<string | undefined>(undefined)
+    const [internalFocused, setInternalFocused] = useState(false)
+
     const quantaContext = useContext(QuantaEditorContext)
+
+    useEffect(() => {
+        if(quantaContext?.viewOnly === true)
+            return
+
+        setInternalFocused(focused)
+    }, [focused])
 
     function getIterType() {
         if(nodeId === undefined)
@@ -113,7 +122,7 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
                 <OutputRenderer
                     output={step}
                     nodeId={nodeId}
-                    focused={focused}
+                    focused={internalFocused}
                     parentId={parentId}
                     unfocus={() => {  }}
                 />

@@ -36,6 +36,8 @@ interface IQuantaState {
 
     organizationId: string | null,
 
+    editorProjects: IQuantaEditorProject[],
+
     //tells the application to update the indicators
     toggleUpdateEditorIndicators: () => void,
 

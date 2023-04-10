@@ -24,12 +24,33 @@ interface IQuantaFlowProps {
 }
 
 const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, setNodes, setEdges, setReactFlowInstance, projectLoaded, fileId }) => {
-    const { getIterNodeType } = useContext(QuantaEditorContext) as IQuantaEditorGlobals
+    const { getIterNodeType, viewOnly } = useContext(QuantaEditorContext) as IQuantaEditorGlobals
     const { executionResults } = useContext(ExecutionContextData) as IExecutionEngineContext
     const { getSchema, setEditorProject } = useContext(QuantaContextData) as IQuantaState
     
-    const onNodesChange = useCallback((changes: any) => setNodes((nds: any) => applyNodeChanges(changes, nds) as any), [])
-    const onEdgesChange = useCallback((changes: any) => setEdges((ids: any) => applyEdgeChanges(changes, ids) as any), [])
+    useEffect(() => {
+        if(projectLoaded === false)
+            return
+        if(viewOnly === true)
+            return
+
+        setEditorProject(fileId, nodes, edges, quantaStore, executionResults)
+    }, [viewOnly, projectLoaded, fileId, nodes, edges, quantaStore, executionResults])
+
+    let onNodesChange: ((changes: any) => void) = useCallback((changes: any) => {
+        if(viewOnly === true)
+            return
+
+        setNodes((nds: any) => applyNodeChanges(changes, nds) as any)
+    }, [viewOnly])
+
+    let onEdgesChange: ((changes: any) => void) = useCallback((changes: any) => {
+        if(viewOnly === true)
+            return
+
+        setEdges((ids: any) => applyEdgeChanges(changes, ids) as any)
+    }, [viewOnly])
+
     const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode, quanta_group: QuantaGroup }), [])
 
     const onConnect = useCallback((params: Connection) => {
@@ -37,6 +58,8 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
         let sourceNode = params.source
         let targetNode = params.target
         if(sourceNode === null || targetNode === null)
+            return
+        if(viewOnly === true)
             return
 
         if(isNodeArray(nodes, sourceNode) || isNodeArray(nodes, targetNode))
@@ -93,13 +116,6 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
             setEdges([ ...nEdges ])
         }
     }, [nodes, quantaStore])
-
-    useEffect(() => {
-        if(projectLoaded === false)
-            return
-
-        setEditorProject(fileId, nodes, edges, quantaStore, executionResults)
-    }, [projectLoaded, fileId, nodes, edges, quantaStore, executionResults])
 
     return (
         <>

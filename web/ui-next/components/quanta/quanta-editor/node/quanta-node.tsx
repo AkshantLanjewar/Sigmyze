@@ -29,6 +29,9 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
     
     useEffect(() => {
         setFocused(selected)
+
+        if(quantaEditorContext?.viewOnly === true)
+            setFocused(false)
     }, [selected])
 
     useEffect(() => {

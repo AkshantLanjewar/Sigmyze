@@ -1,9 +1,10 @@
 import { Group } from "@mantine/core"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { IUIDropdownItem } from "../../../../ui/ui-dropdown/types"
 import UIDropdown from "../../../../ui/ui-dropdown/ui-dropdown"
-import { IQuantaSocket, IQuantaTypeRef } from "../../types/types"
+import { IQuantaEditorGlobals, IQuantaSocket, IQuantaTypeRef } from "../../types/types"
 import { convertTypesToDropdown } from "../../utils"
+import { QuantaEditorContext } from "../../quanta-editor"
 
 interface INodeTypeSelector {
     output?: IQuantaSocket,
@@ -16,6 +17,8 @@ const NodeTypeSelector: React.FC<INodeTypeSelector> = ({ output, focused, socket
     const [selectedId, setSelectedId] = useState<string | undefined>(undefined)
     const [dropdownItems, setDropdownItems] = useState<IUIDropdownItem[] | undefined>(undefined)
     const [subscribeClose, setSubscribeClose] = useState(false)
+
+    const { viewOnly } = useContext(QuantaEditorContext) as IQuantaEditorGlobals
 
     useEffect(() => {
         //typeid
@@ -72,6 +75,7 @@ const NodeTypeSelector: React.FC<INodeTypeSelector> = ({ output, focused, socket
                     value={selectedId}
                     subscribeClose={subscribeClose}
                     emitChange={(id) => emitChange(id)}
+                    disabled={viewOnly}
                 />
             )}
         </Group>
