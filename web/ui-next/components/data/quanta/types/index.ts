@@ -81,7 +81,10 @@ interface IQuantaState {
     //this section handles the functions relating to quanta editor projects
     getEditorProject: (fileId: string) => IQuantaEditorProject | undefined,
     setEditorProject: (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore, executionResults: INodeExecutionResult[]) => void,
-    setEditorExecution: (fileId: string, executionResults: INodeExecutionResult[]) => void
+    setEditorExecution: (fileId: string, executionResults: INodeExecutionResult[]) => void,
+
+    //section handles the selectors
+    newSelector: (selectorName: string, selectorId: string) => void
 }
 
 export type { IQuantaState }

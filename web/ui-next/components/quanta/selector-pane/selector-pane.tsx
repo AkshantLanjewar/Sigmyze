@@ -8,6 +8,7 @@ import FileInput from '../../ui/form-builder/form-elements/file-input/file-input
 import UIDropdown from '../../ui/ui-dropdown/ui-dropdown'
 import SchemaEditor from '../schema-editor/schema-editor'
 import styles from './selector-pane.module.scss'
+import SelectorCodeUpload from '../selector-code-upload'
 
 const SelectorPane: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
@@ -88,8 +89,7 @@ const SelectorPane: React.FC = ({ }) => {
                         </div>
 
                         <div className={styles.file__upload}>
-                            <FileInput />
-                            <FileInput />
+                            <SelectorCodeUpload />
                         </div>
                     </div>
 
@@ -108,12 +108,12 @@ const SelectorPane: React.FC = ({ }) => {
                         <div className={styles.schema__compare}>
                             <div className={styles.compare}>
                                 {selector && (
-                                    <SchemaEditor schemaId={selector.selectorId!} />
+                                    <SchemaEditor schemaId={selector.selectorId!} viewOnly={true} />
                                 )}
                             </div>
 
                             <div className={styles.compare}>
-                                <SchemaEditor schemaId={"dataset"} />
+                                <SchemaEditor schemaId={"dataset"} viewOnly={true} />
                             </div>
                         </div>
                     </div>

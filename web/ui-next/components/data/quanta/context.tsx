@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { IQuantaSchema } from "../../quanta/schema-editor/types"
 import ModalManager from "../../ui/modal-manager"
 import { IQuantaState } from "./types"
-import { IQuantaEditorProject, IQuantaProjectData, ProjectSchemas } from "./types/project"
+import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, ProjectSchemas } from "./types/project"
 import { IQuantaTab } from "./types/ui"
 import { DefaultQuantaProject } from "./utils"
 
@@ -25,7 +25,8 @@ import {
     SetEditorProjectData,
     SaveQuantaProject,
     SetEditorExecutionData,
-    rehydrateQuantaProject
+    rehydrateQuantaProject,
+    newSelector
 } from "./functions"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 import NewFieldForm from "./forms/new_field"
@@ -35,6 +36,7 @@ import { IUserContext } from "../user/types"
 import { INodeExecutionResult } from "../../quanta/quanta-editor/execution-engine/context/types"
 import { IconFileCode2, IconStack2 } from "@tabler/icons"
 import QuantaIndicatorManager from "../../quanta/quanta-indicator-manager"
+import NewSelectorForm from "./forms/new_selector"
 
 interface IQuantaContextProps {
     quantaId: string | null,
@@ -74,6 +76,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     const [editorProjects, setEditorProjects] = useState<IQuantaEditorProject[]>([])
     //counter to efficiently save data
     const [saveCounter, setSaveCounter] = useState(0)
+
+    //selectors within the project
+    const [selectors, setSelectors] = useState<IQuantaSelector[]>([])
 
     const { authData } = useContext(UserContextData) as IUserContext
 
@@ -132,6 +137,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         value.project_data.store = { selectors: [] }
 
     value.project_data.store.editorProjects = editorProjects
+    value.project_data.store.selectors = selectors
     value.editorProjects = editorProjects
 
     value.updateEditorIndicators
@@ -224,6 +230,10 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.setEditorExecution = (fileId: string, executionResults: INodeExecutionResult[]) =>
         SetEditorExecutionData(fileId, executionResults, editorProjects, setEditorProjects)
 
+    //selectors
+    value.newSelector = (selectorName: string, selectorId: string) =>
+        newSelector(selectorName, selectorId, selectors, setSelectors)
+
     //function that loads the quanta data
     function loadQuanta() {
         if(quantaId === null) {
@@ -281,7 +291,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
                                 id="new_selector"
                                 title="Create Selector"
                             >
-
+                                <NewSelectorForm closeModal={closeModal} />
                             </ModalManager.Modal>
 
                             <ModalManager.Modal

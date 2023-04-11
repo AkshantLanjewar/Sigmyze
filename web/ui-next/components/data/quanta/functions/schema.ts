@@ -11,7 +11,7 @@ const initSchema = (
     toggleUpdateEditorSchema: () => void
 ) => {
     let nSchema = {
-        name: "dataset_schema",
+        name: parentId,
         nodeId: v4(),
         children: [],
         quantaType: {
@@ -27,6 +27,7 @@ const initSchema = (
     let nSchemaObj = {} as ProjectSchemas
     nSchemaObj.schemaId = parentId
     nSchemaObj.schema = nSchema
+    nSchema.name = parentId
     setSchemas([ nSchemaObj, ...schemas ])
 }
 
