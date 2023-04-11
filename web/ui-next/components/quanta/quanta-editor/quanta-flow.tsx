@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useCallback, useMemo, useContext, useEffect } from "react"
-import { applyEdgeChanges, applyNodeChanges, Background, Connection, Controls, ReactFlow, ReactFlowInstance } from "reactflow"
+import { Dispatch, SetStateAction, useCallback, useMemo, useContext, useEffect, useRef } from "react"
+import { applyEdgeChanges, applyNodeChanges, Background, Connection, Controls, ReactFlow, ReactFlowInstance, updateEdge } from "reactflow"
 import { QuantaContextData } from "../../data/quanta/context"
 import { IQuantaState } from "../../data/quanta/types"
 import { ExecutionContextData } from "./execution-engine/context"
@@ -11,6 +11,7 @@ import { IQuantaRFEdge } from "./types/edges"
 import { IQuantaRFNode } from "./types/nodes"
 import { IQuantaEditorGlobals, IQuantaSocket, IQuantaStore } from "./types/types"
 import { arrayConnection, buildEdge, compareTypes, GetNodeSocket, isNodeArray } from "./utils"
+import ConnectionLine from "./connection-line"
 
 interface IQuantaFlowProps {
     nodes: IQuantaRFNode[],
@@ -27,6 +28,8 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
     const { getIterNodeType, viewOnly } = useContext(QuantaEditorContext) as IQuantaEditorGlobals
     const { executionResults } = useContext(ExecutionContextData) as IExecutionEngineContext
     const { getSchema, setEditorProject } = useContext(QuantaContextData) as IQuantaState
+
+    const edgeUpdateSuccessful = useRef(true)
     
     useEffect(() => {
         if(projectLoaded === false)
@@ -44,11 +47,36 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
         setNodes((nds: any) => applyNodeChanges(changes, nds) as any)
     }, [viewOnly])
 
+    //handlers relating towards edges
     let onEdgesChange: ((changes: any) => void) = useCallback((changes: any) => {
         if(viewOnly === true)
             return
 
         setEdges((ids: any) => applyEdgeChanges(changes, ids) as any)
+    }, [viewOnly])
+
+    const onEdgeUpdateStart = useCallback(() => {
+        if(viewOnly === true)
+            return
+
+        edgeUpdateSuccessful.current = false
+    }, [viewOnly])
+
+    const onEdgeUpdate = useCallback((oldEdge: any, newConnection: any) => {
+        if(viewOnly === true)
+            return
+        
+        edgeUpdateSuccessful.current = true
+        setEdges((els) => updateEdge(oldEdge, newConnection, els as any) as any)
+    }, [viewOnly])
+
+    const onEdgeUpdateEnd = useCallback((_: any, edge: any) => {
+        if(viewOnly === true)
+            return
+        if(!edgeUpdateSuccessful.current)
+            setEdges((eds: any) => eds.filter((e: any) => e.id !== edge.id))
+
+        edgeUpdateSuccessful.current = true
     }, [viewOnly])
 
     const nodeTypes = useMemo(() => ({ quanta_node: QuantaNode, quanta_group: QuantaGroup }), [])
@@ -128,6 +156,10 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
                 attributionPosition={'bottom-left'}
                 onInit={setReactFlowInstance}
                 onConnect={onConnect}
+                onEdgeUpdateStart={onEdgeUpdateStart}
+                onEdgeUpdate={onEdgeUpdate}
+                onEdgeUpdateEnd={onEdgeUpdateEnd}
+                connectionLineComponent={ConnectionLine as any}
             >
                 <Background />
                 <Controls />

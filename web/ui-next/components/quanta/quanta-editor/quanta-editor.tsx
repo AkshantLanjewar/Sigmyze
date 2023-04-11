@@ -309,6 +309,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
         <div 
             ref={ref}
             style={{ width: "100%", height: "100%", position: 'relative' }}
+            className={".editor__wrapper"}
         >
             <ContextButtons 
                 hasCache={requiresCache}

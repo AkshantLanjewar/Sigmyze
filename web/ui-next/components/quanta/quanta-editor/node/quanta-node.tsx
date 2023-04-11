@@ -8,6 +8,9 @@ import NodeControl from "./node-control"
 import NodeActionMenu from "./action-menu/action-menu"
 import InputRenderer from "./input/input-renderer"
 import IterBody from "./iter-body"
+import { ExecutionContextData } from "../execution-engine/context"
+import { IExecutionEngineContext } from "../execution-engine/context/types"
+import NodeLoader from "./node-loader"
 
 interface IQuantaNodeProps {
     data?: IQuantaRFNodeData,
@@ -19,6 +22,7 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
         return null
     const instructions = prebuildNodeDict[data.instructionId]
 
+    const [executing, setExecuting] = useState(false)
     const [focused, setFocused] = useState(false)
     const unfocus = () => setFocused(false)
     const ref = useRef<HTMLDivElement>(null)
@@ -26,7 +30,14 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
     const [parentId, setParentId] = useState<string | undefined>(undefined)
 
     const quantaEditorContext = useContext(QuantaEditorContext) as IQuantaEditorGlobals | null
+    const { activeNode } = useContext(ExecutionContextData) as IExecutionEngineContext
     
+    useEffect(() => {
+        setExecuting(false)
+        if(activeNode === data.nodeId)
+            setExecuting(true)
+    }, [activeNode])
+
     useEffect(() => {
         setFocused(selected)
 
@@ -68,6 +79,8 @@ const QuantaNode: React.FC<IQuantaNodeProps> = ({ data, selected }) => {
                 className={`${styles.node__wrapper} ${focused && styles.active}`}
                 ref={ref}
             >
+                <NodeLoader executing={executing} />
+
                 <div className={styles.node__title}>
                     {instructions.icon}
 

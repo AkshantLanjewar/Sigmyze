@@ -21,6 +21,7 @@ import addIndicator from "./nodes/add-indicator"
 import { UserContextData } from "../../../data/user/context"
 import { IUserContext } from "../../../data/user/types"
 import { CreateExecutionCache, DeleteExecutionCache } from "../../../data/quanta/quanta-api"
+import { showNotification } from "@mantine/notifications"
 
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
@@ -43,7 +44,10 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         getOutputValueSocket,
         executeSocketFunction,
         updateResults,
-        addExecutionResult 
+        addExecutionResult,
+        setNodeExecuting,
+        nodeFinished,
+        setActiveNode 
     } = useContext(ExecutionContextData) as IExecutionEngineContext
 
     interface IUnloadProcessBody {
@@ -80,6 +84,13 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             let stack = callStack[i]
             await executeNode(stack, cacheExecute)
         }
+
+        showNotification({
+            title: "Quanta Editor",
+            message: `Finished Executing Node Graph`,
+            color: 'green',
+            autoClose: 1000 * 5
+        })
 
         await unload_process()
     }
@@ -275,6 +286,9 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         }
 
         try {
+            setNodeExecuting(stack.nodeId)
+            setActiveNode(stack.nodeId)
+
             switch(stack.functionId) {
                 case "start":
                     await startNode(stack, setOutputValue)
@@ -291,7 +305,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
                     await sdmxDataMapper(stack, getInputEdge, executeFunction, isFailedNode, updateResults, addExecutionResult)
                     break
                 case "loop":
-                    await quantaLoop(stack, isCache, isFailedNode, executeFunction, executeNode)
+                    await quantaLoop(stack, isCache, isFailedNode, executeFunction, executeNode, setActiveNode)
                     break
                 case "iter":
                     await iterNode(stack, executeFunction, index, loop_id)
@@ -320,8 +334,12 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         } catch (error) {
             console.debug(`error in ${stack.functionId} -> ${error}`)
             internalAddFailedNode(stack.nodeId)
+            nodeFinished(stack.nodeId)
+            setActiveNode("")
         }
 
+        nodeFinished(stack.nodeId)
+        setActiveNode("")
         internalAddExecutedNode(executionId)
     }
 

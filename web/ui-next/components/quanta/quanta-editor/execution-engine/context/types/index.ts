@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react'
 import { IQuantaSocket } from '../../../types/types'
 import { INodeExecutionResult } from './node_data'
 import { ISocketResp } from './socket'
@@ -22,6 +23,12 @@ interface IExecutionEngineContext {
      * execution result data
      */
     executionResults: INodeExecutionResult[],
+
+    updateActiveNodes: boolean,
+
+    activeNodes: string[],
+
+    activeNode: string,
 
     setOutputValueSocket: (
         processId: string, 
@@ -51,7 +58,14 @@ interface IExecutionEngineContext {
 
     //functions relating to dynamic execution data
     updateResults: (nodeId: string, fieldId: string, data: string) => boolean,
-    addExecutionResult: (nodeId: string, fieldId: string, data: string, sockets: IQuantaSocket[]) => void
+    addExecutionResult: (nodeId: string, fieldId: string, data: string, sockets: IQuantaSocket[]) => void,
+
+    //functions relating to the node execution
+    setNodeExecuting: (nodeId: string) => void,
+    nodeFinished: (nodeId: string) => void,
+    isExecuting: (nodeId: string) => boolean,
+    toggleUpdateActiveNodes: () => void
+    setActiveNode: Dispatch<SetStateAction<string>>
 }
 
 export type { IExecutionEngineContext }

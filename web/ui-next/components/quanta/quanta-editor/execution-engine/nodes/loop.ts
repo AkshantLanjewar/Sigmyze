@@ -1,6 +1,7 @@
 import { v4 } from "uuid";
 import { ICallStackFunc } from "../types";
 import { IInternalStore } from "./types";
+import { Dispatch, SetStateAction } from "react";
 
 interface ILoadLoopData {
     loopId: string,
@@ -30,6 +31,7 @@ async function quantaLoop(
         _addExecutedNode?: (val: string) => void,
         _addFailedNode?: (val: string) => void
     ) => Promise<any>,
+    setActiveNode: Dispatch<SetStateAction<string>>
 ) {
     let connectedNode = stack.inputs[0].id
     let connectedSocket = stack.inputs[0].name
@@ -98,10 +100,14 @@ async function quantaLoop(
                     if(thread === undefined)
                         continue
 
+                    setActiveNode(thread.nodeId)
                     await executeNode(thread, isCache, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
+                    setActiveNode("")
                 }
 
+                setActiveNode(thread.nodeId)
                 await executeNode(thread, isCache, index, loopId, executedNodes, failedNodes, addExecutedNode, addFailedNode)
+                setActiveNode("")
             }
         } catch (error) {
             console.debug(`Received error -> ${error}`)
