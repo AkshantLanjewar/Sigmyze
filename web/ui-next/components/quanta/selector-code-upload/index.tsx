@@ -1,15 +1,19 @@
 import { ActionIcon, Group, Stack, UnstyledButton } from '@mantine/core'
 import styles from './selector-code.module.scss'
 import { IconCode, IconFileZip } from '@tabler/icons'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import ModalManager from '../../ui/modal-manager'
 import { IQuantaFormField } from '../quanta-editor/types/form'
 import FormBuilder from '../../ui/form-builder/form-builder'
 import { v4 } from 'uuid'
+import { SelectorPaneContextData } from '../selector-pane/context'
+import { ISelectorPaneState } from '../selector-pane/context/types'
 
 const SelectorCodeUpload: React.FC = ({ }) => {
     const [modalState, setModalState] = useState<string | null>(null)
     const closeModal = () => setModalState(null)
+
+    const { compileProject } = useContext(SelectorPaneContextData) as ISelectorPaneState
 
     const formComponents = [
         {
@@ -22,7 +26,16 @@ const SelectorCodeUpload: React.FC = ({ }) => {
     ] as IQuantaFormField[]
 
     const submit = (forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
+        async function main() {
+            let fileBytes = valStore['source']
+            if(typeof fileBytes !== 'string')
+                return
 
+            await compileProject(fileBytes)
+            closeModal()
+        }
+
+        main()
     }
     
     return (

@@ -3,7 +3,7 @@ import { ISelectorPaneState } from "./types"
 import { v4 } from "uuid"
 import { SocketHandlerData } from "../../../ui/socket-handler"
 import { ISocketHandlerState } from "../../../ui/socket-handler/types"
-import { initExecutionContext } from "./functions"
+import { compileProject, initExecutionContext } from "./functions"
 
 const SelectorPaneContextData = createContext<ISelectorPaneState | null>(null)
 
@@ -34,6 +34,9 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ children }) => {
 
     let value = {} as ISelectorPaneState
     value.initialized = initialized
+
+    value.compileProject = (projectData: string) =>
+        compileProject(compilationId, projectData, executeSocketFunction)
 
     return (
         <>

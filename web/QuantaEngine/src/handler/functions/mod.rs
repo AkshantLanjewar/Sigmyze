@@ -10,6 +10,7 @@ pub mod apply_data_rule;
 pub mod add_indicator;
 pub mod unload_process_id;
 pub mod load_process_id;
+pub mod compilation;
 
 pub type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 
