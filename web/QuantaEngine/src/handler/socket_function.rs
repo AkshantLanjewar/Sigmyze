@@ -7,6 +7,8 @@ use crate::handler::functions::sdmx::{sdmx_data_mapper, sdmx_data_parser};
 use super::functions::add_indicator::add_indicator;
 use super::functions::apply_data_rule::apply_data_rule;
 use super::functions::build_fields::build_fields;
+use super::functions::compilation::compile_project::compile_project;
+use super::functions::compilation::init_compilation::init_compilation;
 use super::functions::load_process_id::load_process_id;
 use super::functions::sdmx::get_sdmx_field_key;
 use super::functions::sdmx::get_sdmx_field_val::get_sdmx_field_value;
@@ -141,6 +143,20 @@ pub async fn parse_function_request(
         "add_indicator" => return add_indicator(
             request_id,
             node_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "init_compilation" => return init_compilation(
+            request_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "compile_project" => return compile_project(
+            request_id,
             process_id,
             function_data,
             data_store
