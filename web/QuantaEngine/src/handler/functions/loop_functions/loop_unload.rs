@@ -25,6 +25,6 @@ pub async fn unload_loop(
     }
 
     let loop_id = body.loop_id.unwrap();
-    data_store.set_expiring(loop_id, String::from("delete"), Duration::from_secs(5));
+    data_store.set_expiring(loop_id, String::from("delete"), Duration::from_secs(5)).await;
     Ok(socket_response(String::from("removed"), false, request_id))
 }

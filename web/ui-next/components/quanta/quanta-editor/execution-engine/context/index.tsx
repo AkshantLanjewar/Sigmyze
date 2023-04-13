@@ -70,8 +70,6 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children }
         newWebsocket.onmessage = msg => {
             let msgData = msg.data
             let parsed: ISocketResp = JSON.parse(msgData)
-
-            console.debug(`[Lunar Socket]: Received msg with id ${parsed.requestId}`)
             addMessage(parsed)
         }
 

@@ -1,14 +1,14 @@
-import { ActionIcon, Button, Group, Stack } from '@mantine/core'
-import { IconCode, IconPlus, IconSourceCode } from '@tabler/icons'
+import { Button, Group } from '@mantine/core'
+import { IconPlus } from '@tabler/icons'
 import { useContext, useEffect, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import { IQuantaSelector } from '../../data/quanta/types/project'
-import FileInput from '../../ui/form-builder/form-elements/file-input/file-input'
-import UIDropdown from '../../ui/ui-dropdown/ui-dropdown'
 import SchemaEditor from '../schema-editor/schema-editor'
 import styles from './selector-pane.module.scss'
 import SelectorCodeUpload from '../selector-code-upload'
+import SocketHandler from '../../ui/socket-handler'
+import SelectorPaneContext from './context'
 
 const SelectorPane: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
@@ -38,103 +38,107 @@ const SelectorPane: React.FC = ({ }) => {
     
     return (
         <>
-            {selector && (
-                <div className={styles.pane__wrapper}>
-                    <div className={styles.title__section}>
-                        <div className={styles.title__row}>
-                            <div className={styles.title}>
-                                {selector.selectorName}
+            <SocketHandler>
+                <SelectorPaneContext>
+                    {selector && (
+                        <div className={styles.pane__wrapper}>
+                            <div className={styles.title__section}>
+                                <div className={styles.title__row}>
+                                    <div className={styles.title}>
+                                        {selector.selectorName}
+                                    </div>
+
+                                    <Group spacing={7.5}>
+                                        <Button
+                                            variant={'outline'}
+                                            compact
+                                            size={'sm'}
+                                            radius={"xl"}
+                                            color={"teal"}
+                                        >
+                                            Linked Selector
+                                        </Button>
+
+                                        <Button
+                                            variant={'outline'}
+                                            compact
+                                            size={'sm'}
+                                            radius={"xl"}
+                                            color={"gray"}
+                                        >
+                                            <IconPlus size={10} stroke={"2"} />
+                                            Add
+                                        </Button>
+                                    </Group>
+                                </div>
+
+                                <div className={styles.description}>
+                                    {selector.selectorDescription}
+                                </div>
                             </div>
 
-                            <Group spacing={7.5}>
-                                <Button
-                                    variant={'outline'}
-                                    compact
-                                    size={'sm'}
-                                    radius={"xl"}
-                                    color={"teal"}
-                                >
-                                    Linked Selector
-                                </Button>
+                            <div className={styles.section}>
+                                <div className={styles.title__section}>
+                                    <div className={styles.title__row}>
+                                        <div className={styles.title}>Selector Code</div>
+                                    </div>
 
-                                <Button
-                                    variant={'outline'}
-                                    compact
-                                    size={'sm'}
-                                    radius={"xl"}
-                                    color={"gray"}
-                                >
-                                    <IconPlus size={10} stroke={"2"} />
-                                    Add
-                                </Button>
-                            </Group>
+                                    <div className={styles.title__description}>
+                                        This is the code for your selector. Either select a prebuilt selector made by us, 
+                                        or select the type of code you would like to construct your selector with. 
+                                        List of currently supported languages here
+                                    </div>
+                                </div>
+
+                                <div className={styles.file__upload}>
+                                    <SelectorCodeUpload />
+                                </div>
+                            </div>
+
+                            <div className={styles.section}>
+                                <div className={styles.title__section}>
+                                    <div className={styles.title__row}>
+                                        <div className={styles.title}>Selector Schema</div>
+                                    </div>
+
+                                    <div className={styles.title__description}>
+                                        This is the schema for your selector. Define the object that will be returned by your code, 
+                                        and link that object to the schema for the dataset.
+                                    </div>
+                                </div>
+
+                                <div className={styles.schema__compare}>
+                                    <div className={styles.compare}>
+                                        {selector && (
+                                            <SchemaEditor schemaId={selector.selectorId!} viewOnly={true} />
+                                        )}
+                                    </div>
+
+                                    <div className={styles.compare}>
+                                        <SchemaEditor schemaId={"dataset"} viewOnly={true} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={styles.section}>
+                                <div className={styles.title__section}>
+                                    <div className={styles.title__row}>
+                                        <div className={styles.title}>Selector Preview</div>
+                                    </div>
+
+                                    <div className={styles.title__description}>
+                                        This is a little preview of your selector
+                                    </div>
+                                </div>
+
+                                <div className={styles.preview}>
+                                    
+                                </div>
+                            </div>
                         </div>
-
-                        <div className={styles.description}>
-                            {selector.selectorDescription}
-                        </div>
-                    </div>
-
-                    <div className={styles.section}>
-                        <div className={styles.title__section}>
-                            <div className={styles.title__row}>
-                                <div className={styles.title}>Selector Code</div>
-                            </div>
-
-                            <div className={styles.title__description}>
-                                This is the code for your selector. Either select a prebuilt selector made by us, 
-                                or select the type of code you would like to construct your selector with. 
-                                List of currently supported languages here
-                            </div>
-                        </div>
-
-                        <div className={styles.file__upload}>
-                            <SelectorCodeUpload />
-                        </div>
-                    </div>
-
-                    <div className={styles.section}>
-                        <div className={styles.title__section}>
-                            <div className={styles.title__row}>
-                                <div className={styles.title}>Selector Schema</div>
-                            </div>
-
-                            <div className={styles.title__description}>
-                                This is the schema for your selector. Define the object that will be returned by your code, 
-                                and link that object to the schema for the dataset.
-                            </div>
-                        </div>
-
-                        <div className={styles.schema__compare}>
-                            <div className={styles.compare}>
-                                {selector && (
-                                    <SchemaEditor schemaId={selector.selectorId!} viewOnly={true} />
-                                )}
-                            </div>
-
-                            <div className={styles.compare}>
-                                <SchemaEditor schemaId={"dataset"} viewOnly={true} />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={styles.section}>
-                        <div className={styles.title__section}>
-                            <div className={styles.title__row}>
-                                <div className={styles.title}>Selector Preview</div>
-                            </div>
-
-                            <div className={styles.title__description}>
-                                This is a little preview of your selector
-                            </div>
-                        </div>
-
-                        <div className={styles.preview}>
-                            
-                        </div>
-                    </div>
-                </div>
-            )}
+                    )}
+                </SelectorPaneContext>
+            </SocketHandler>
         </>
     )
 }
