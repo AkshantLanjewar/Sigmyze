@@ -23,7 +23,7 @@ pub async fn init_compilation(
     };
 
     let input = body.input.expect("function requires input field");
-    let input_id = input.node_id.expect("malformed input data");
+    let input_id = input.socket_id.expect("malformed input data");
     if input_id != process_id {
         return Err("malformed initialization request".into())
     }

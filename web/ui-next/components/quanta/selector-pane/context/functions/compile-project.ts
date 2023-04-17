@@ -18,7 +18,8 @@ function compileProject(
 
     const promise = new Promise((resolve, reject) => {
         const handler = (val: string) => {
-            
+            console.log(val)
+            resolve(val)
         }
     
         executeSocketFunction(

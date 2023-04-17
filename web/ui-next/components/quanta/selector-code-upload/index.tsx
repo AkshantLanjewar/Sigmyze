@@ -13,7 +13,7 @@ const SelectorCodeUpload: React.FC = ({ }) => {
     const [modalState, setModalState] = useState<string | null>(null)
     const closeModal = () => setModalState(null)
 
-    const { compileProject } = useContext(SelectorPaneContextData) as ISelectorPaneState
+    const { compileProject, initialized } = useContext(SelectorPaneContextData) as ISelectorPaneState
 
     const formComponents = [
         {
@@ -21,11 +21,14 @@ const SelectorCodeUpload: React.FC = ({ }) => {
             fileType: "zip",
             name: "Source Code",
             linkedKey: "source",
-            id: v4()
+            id: "source"
         }
     ] as IQuantaFormField[]
 
     const submit = (forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
+        if(initialized !== true)
+            return
+
         async function main() {
             let fileBytes = valStore['source']
             if(typeof fileBytes !== 'string')

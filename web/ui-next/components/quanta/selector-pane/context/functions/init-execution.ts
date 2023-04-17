@@ -12,7 +12,7 @@ function initExecutionContext(
     executeSocketFunction: (processId: string, nodeId: string, functionId: string, outputIds: string[], functionData: any, cb: (val: string) => void) => string | undefined
 ) {
     const nodeId = v4()
-    const functionId = "init_execution_context"
+    const functionId = "init_compilation"
     const outputIds = [] as string[]
     const functionData: IInitExecutionContextBody = {
         input: {
