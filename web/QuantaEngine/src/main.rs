@@ -1,5 +1,6 @@
 use actix_web::{HttpResponse, Error, HttpServer, HttpRequest, web, App, middleware, rt};
 use basteh::Basteh;
+use tokio::fs;
 
 mod handler;
 mod sdmx_parser;
@@ -23,6 +24,9 @@ async fn main() -> std::io::Result<()> {
     let provider = basteh_memory::MemoryBackend::start_default();
     let data_store = Basteh::build().provider(provider).finish();
     let data_store = web::Data::new(data_store);
+
+    //create the data folder if it doesnt exist
+    fs::create_dir_all("./data").await?;
 
     let socket_keys: Vec<String> = Vec::new();
     data_store.set("keys", socket_keys).await.unwrap();

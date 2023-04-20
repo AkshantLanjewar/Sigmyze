@@ -65,7 +65,7 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly }) => {
 
         quantaSchema = hydrateSchema(quantaSchema, internalView)
         setInternalSchema({ ...quantaSchema })
-    }, [quantaContext, internalView])
+    }, [quantaContext, internalView, schemaId])
 
     useEffect(() => {
         if(viewOnly === undefined)

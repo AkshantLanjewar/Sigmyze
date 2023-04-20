@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
+use serde_json::{Value, json, Map};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BabelRc {
@@ -101,3 +101,95 @@ impl BabelRc {
     }
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct PackageJson {
+    pub name: Option<String>,
+    pub version: Option<String>,
+    pub scripts: Option<Map<String, Value>>,
+    pub dependencies: Option<Map<String, Value>>,
+
+    #[serde(rename="devDependencies")]
+    pub dev_dependencies: Option<Map<String, Value>>
+}
+
+impl PackageJson {
+    pub fn validate_package_json(&mut self) -> String {
+        if self.scripts.is_none() {
+            return "no_scripts".into()
+        } if self.dependencies.is_none() {
+            let mut dependencies_object: Map<String, Value> = Map::new();
+            dependencies_object.insert("parcel".into(), "^2.00".into());
+            self.dependencies = Some(dependencies_object);
+        }
+
+        //check the scripts
+        let scripts_object = self.scripts.clone().unwrap();
+        if scripts_object.contains_key("build") == false {
+            return "no_build".into()
+        }
+
+        let mut dependencies_object = self.dependencies.clone().unwrap();
+        if dependencies_object.contains_key("parcel") == false {
+            dependencies_object.insert("parcel".into(), "^2.00".into());
+        } if dependencies_object.contains_key("posthtml-inline-assets") == false {
+            dependencies_object.insert("posthtml-inline-assets".into(), "3.1.0".into());
+        } if dependencies_object.contains_key("@parcel/transformer-posthtml") == false {
+            dependencies_object.insert("@parcel/transformer-posthtml".into(), "2.8.3".into());
+        }
+
+        self.dependencies = Some(dependencies_object);
+        "no_build".into()
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct CompileProjectResult {
+    pub error: bool,
+
+    #[serde(rename="errorMessage")]
+    pub error_message: Option<String>,
+
+    #[serde(rename="htmlOutput")]
+    pub html_output: Option<String>
+}
+
+impl CompileProjectResult {
+    pub fn create_error_message(message: String) -> String {
+        let error_message = Self {
+            error: true,
+            error_message: Some(message),
+            html_output: None
+        };
+
+        let out_string = serde_json::to_string(&error_message).unwrap();
+        return out_string
+    }
+
+    pub fn successful_message(html: String) -> String {
+        let success_message = Self {
+            error: false,
+            error_message: None,
+            html_output: Some(html)
+        };
+        
+        let out_str = serde_json::to_string(&success_message).unwrap();
+        return out_str
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct PostHTMLConfig {
+    plugins: Value
+}
+
+impl PostHTMLConfig {
+    pub fn init_config() -> Self {
+        let mut plugins_object: Map<String, Value> = Map::new();
+        let inline_object: Map<String, Value> = Map::new();
+        plugins_object.insert("posthtml-inline-assets".into(), inline_object.into());
+
+        Self {
+            plugins: plugins_object.into()
+        }
+    }
+}

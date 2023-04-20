@@ -1,6 +1,7 @@
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
+import { ISchemaItem } from "../../../quanta/selector-pane/selector-frame-tester/types"
 
 interface IQuantaProjectData {
     /**
@@ -60,7 +61,16 @@ interface ProjectSchemas {
 interface IQuantaSelector {
     selectorId?: string,
     selectorName?: string,
-    selectorDescription?: string
+    selectorDescription?: string,
+    selectorCode?: IQuantaSelectorCode
+}
+
+interface IQuantaSelectorCode {
+    containerId: string,
+    schemaId: string,
+    schemaName: string,
+    schemaItems: ISchemaItem[],
+    sourceCode: string
 }
 
 interface IQuantaEditorProject {
@@ -77,5 +87,6 @@ export type {
     IQuantaDataStore,
     IQuantaSelector,
     ProjectSchemas,
-    IQuantaEditorProject 
+    IQuantaEditorProject,
+    IQuantaSelectorCode 
 }

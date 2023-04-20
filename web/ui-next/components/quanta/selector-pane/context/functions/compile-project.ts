@@ -4,6 +4,12 @@ interface ICompileProjectBody {
     data: string
 }
 
+interface ICompileProjectResult {
+    error: boolean,
+    errorMessage: string | null,
+    htmlOutput: string | null
+}
+
 function compileProject(
     compilationId: string,
     projectData: string,
@@ -18,8 +24,8 @@ function compileProject(
 
     const promise = new Promise((resolve, reject) => {
         const handler = (val: string) => {
-            console.log(val)
-            resolve(val)
+            let parsed: ICompileProjectResult = JSON.parse(val)
+            resolve(parsed)
         }
     
         executeSocketFunction(
@@ -35,4 +41,5 @@ function compileProject(
     return promise
 }
 
+export type { ICompileProjectResult }
 export { compileProject }

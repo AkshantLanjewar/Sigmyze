@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-import { IQuantaSelector } from "../types/project"
+import { IQuantaSelector, IQuantaSelectorCode } from "../types/project"
 
 const newSelector = (
     selectorName: string, 
@@ -17,4 +17,22 @@ const newSelector = (
     setSelectors([ ...nSelectors ])
 }
 
-export { newSelector }
+const addSelectorSource = (
+    selectorId: string,
+    selectorSource: IQuantaSelectorCode,
+    selectors: IQuantaSelector[],
+    setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>
+) => {
+    let nSelectors = []
+    for(let i = 0; i < selectors.length; i++) {
+        let selector = selectors[i]
+        if(selector.selectorId === selectorId)
+            selector.selectorCode = selectorSource
+
+        nSelectors.push(selector)
+    }
+
+    setSelectors([ ...nSelectors ])
+}
+
+export { newSelector, addSelectorSource }

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { IQuantaSchema } from "../../quanta/schema-editor/types"
 import ModalManager from "../../ui/modal-manager"
 import { IQuantaState } from "./types"
-import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, ProjectSchemas } from "./types/project"
+import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, ProjectSchemas } from "./types/project"
 import { IQuantaTab } from "./types/ui"
 import { DefaultQuantaProject } from "./utils"
 
@@ -26,7 +26,8 @@ import {
     SaveQuantaProject,
     SetEditorExecutionData,
     rehydrateQuantaProject,
-    newSelector
+    newSelector,
+    addSelectorSource
 } from "./functions"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 import NewFieldForm from "./forms/new_field"
@@ -80,6 +81,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     //selectors within the project
     const [selectors, setSelectors] = useState<IQuantaSelector[]>([])
 
+    const [selectorUpdated, setSelectorUpdated] = useState(false)
+    const toggleSelectorUpdate = () => setSelectorUpdated(!selectorUpdated)
+
     const { authData } = useContext(UserContextData) as IUserContext
 
     function saveFunc() {
@@ -98,6 +102,10 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     useEffect(() => {
         loadQuanta()
     }, [quantaId, organizationId])
+
+    useEffect(() => {
+        toggleSelectorUpdate()
+    }, [selectors])
 
     useEffect(() => {
         //update the editor
@@ -151,6 +159,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     value.organizationId = organizationId
     value.quantaId = quantaId
+    value.selectorsUpdated = selectorUpdated
 
     //NOTE: Theese are the functions relating to the context
     
@@ -233,6 +242,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     //selectors
     value.newSelector = (selectorName: string, selectorId: string) =>
         newSelector(selectorName, selectorId, selectors, setSelectors)
+
+    value.addSelectorSource = (selectorId: string, selectorSource: IQuantaSelectorCode) =>
+        addSelectorSource(selectorId, selectorSource, selectors, setSelectors)
 
     //function that loads the quanta data
     function loadQuanta() {

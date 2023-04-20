@@ -1,7 +1,7 @@
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
-import { IQuantaEditorProject, IQuantaProjectData } from "./project"
+import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelectorCode } from "./project"
 import { IQuantaTab } from "./ui"
 
 interface IQuantaState {
@@ -37,6 +37,8 @@ interface IQuantaState {
     organizationId: string | null,
 
     editorProjects: IQuantaEditorProject[],
+
+    selectorsUpdated: boolean,
 
     //tells the application to update the indicators
     toggleUpdateEditorIndicators: () => void,
@@ -84,7 +86,9 @@ interface IQuantaState {
     setEditorExecution: (fileId: string, executionResults: INodeExecutionResult[]) => void,
 
     //section handles the selectors
-    newSelector: (selectorName: string, selectorId: string) => void
+    newSelector: (selectorName: string, selectorId: string) => void,
+
+    addSelectorSource: (selectorId: string, selectorSource: IQuantaSelectorCode) => void
 }
 
 export type { IQuantaState }
