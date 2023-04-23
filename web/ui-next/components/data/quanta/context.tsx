@@ -91,7 +91,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         if(token === undefined || organizationId === null || quantaId === null)
             return
 
-        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects, schemas)
+        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects, schemas, selectors)
         setSaveCounter(0)
     }
 
@@ -148,7 +148,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.project_data.store.selectors = selectors
     value.editorProjects = editorProjects
 
-    value.updateEditorIndicators
+    value.updateEditorIndicators = updateEditorIndicators
     value.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators
 
     value.updateEditorSchema = updateEditorSchema
@@ -283,8 +283,13 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
             if(editorProjects !== undefined)
                 setEditorProjects([ ...editorProjects ])
 
+            let loadedSelectors = projectData.store?.selectors
+            if(loadedSelectors !== undefined)
+                setSelectors([ ...loadedSelectors ])
+
             toggleUpdateSchema()
             toggleUpdateEditorSchema()
+            toggleSelectorUpdate()
         }
 
         main()

@@ -8,9 +8,9 @@ use crate::{handler::{messages, socket_store::{get_store_value, set_store_value}
 use crate::handler::{Result, socket_response, functions::types};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct SDMXFunctionData {
-    xml_data: Option<types::InternalStore>,
-    xsd_data: Option<types::InternalStore>
+pub struct SDMXFunctionData {
+    pub xml_data: Option<types::InternalStore>,
+    pub xsd_data: Option<types::InternalStore>
 }
 
 pub async fn socket_sdmx_parser(
@@ -43,6 +43,7 @@ pub async fn socket_sdmx_parser(
     let xml_data = xml_data.to_string();
     let xml_data = xml_data.replace("\"", "");
     let xml_data = general_purpose::STANDARD.decode(xml_data).unwrap();
+
 
     let xsd_data = get_store_value(&process_id, &xsd_node, &xsd_socket, data_store).await?;
     let xsd_data = xsd_data.to_string();

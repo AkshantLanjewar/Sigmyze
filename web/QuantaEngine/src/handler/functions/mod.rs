@@ -11,6 +11,7 @@ pub mod add_indicator;
 pub mod unload_process_id;
 pub mod load_process_id;
 pub mod compilation;
+pub mod callstack;
 
 pub type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 

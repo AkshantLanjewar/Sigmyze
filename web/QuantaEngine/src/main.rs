@@ -1,3 +1,5 @@
+use std::env;
+
 use actix_web::{HttpResponse, Error, HttpServer, HttpRequest, web, App, middleware, rt};
 use basteh::Basteh;
 use tokio::fs;
@@ -27,6 +29,7 @@ async fn main() -> std::io::Result<()> {
 
     //create the data folder if it doesnt exist
     fs::create_dir_all("./data").await?;
+    env::set_var("RUST_BACKTRACE", "1");
 
     let socket_keys: Vec<String> = Vec::new();
     data_store.set("keys", socket_keys).await.unwrap();

@@ -13,7 +13,7 @@ interface IQuantaIndicatorManagerProps {
 }
 
 const QuantaIndicatorManager: React.FC<IQuantaIndicatorManagerProps> = ({ children }) => {
-    const { quantaId, organizationId, toggleUpdateEditorIndicators } = useContext(QuantaContextData) as IQuantaState
+    const { quantaId, organizationId, updateEditorIndicators } = useContext(QuantaContextData) as IQuantaState
     const { authData } = useContext(UserContextData) as IUserContext
 
     const [indicators, setIndicators] = useState<IQuantaIndicator[]>([])
@@ -36,7 +36,7 @@ const QuantaIndicatorManager: React.FC<IQuantaIndicatorManagerProps> = ({ childr
 
     useEffect(() => {
         main()
-    }, [toggleUpdateEditorIndicators])
+    }, [updateEditorIndicators])
 
     let value: IQuantaIndicatorManager = {
         indicators: indicators

@@ -4,11 +4,11 @@ use serde::{Deserialize, Serialize};
 use crate::handler::{functions::{types, Result, socket_response}, messages, socket_store::set_store_value};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct LoopIndexData {
+pub struct LoopIndexData {
     #[serde(rename="loopId")]
-    loop_id: Option<String>,
-    index: Option<usize>,
-    output: Option<types::InternalStore>,
+    pub loop_id: Option<String>,
+    pub index: Option<usize>,
+    pub output: Option<types::InternalStore>,
 }
 
 pub async fn get_loop_index(

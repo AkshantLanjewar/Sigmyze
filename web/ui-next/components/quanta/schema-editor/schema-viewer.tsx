@@ -8,6 +8,7 @@ import SchemaTypeSelector from "./schema-type-selector"
 import { QuantaContextData } from "../../data/quanta/context"
 import { v4 } from "uuid"
 import { IQuantaTypeRef } from "../quanta-editor/types/node-type"
+import SchemaLinker from "./schema-linker"
 
 interface ISchemaViewerProps {
     parentId: string,
@@ -110,7 +111,14 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                     />
                 </div>
 
-                <Group spacing={5} className={styles.flare}>
+                <Group spacing={8} className={styles.flare}>
+                    {schemaNode.linkable && (
+                        <SchemaLinker 
+                            schemaId={schemaNode.linkId} 
+                            schemaItemId={schemaNode.nodeId}
+                        />
+                    )}
+
                     {editing === false && (
                         <>
                             {schemaNode.mutableType

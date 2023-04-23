@@ -5,12 +5,12 @@ use serde::{Deserialize, Serialize};
 use crate::{handler::{messages, socket_response, Result,}};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct LoadProcessIdBody {
+pub struct LoadProcessIdBody {
     #[serde(rename="organizationId")]
-    organization_id: Option<String>,
+    pub organization_id: Option<String>,
 
     #[serde(rename="quantaId")]
-    quanta_id: Option<String>
+    pub quanta_id: Option<String>
 }
 
 pub async fn load_process_id(

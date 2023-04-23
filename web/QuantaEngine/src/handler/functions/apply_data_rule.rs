@@ -6,15 +6,15 @@ use crate::{handler::{messages, socket_response, Result, socket_store::{get_stor
 use super::types::{InternalStore, QuantaDate};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct ApplyDataRuleBody {
+pub struct ApplyDataRuleBody {
     #[serde(rename="dataRule")]
-    data_rule: Option<String>,
+    pub data_rule: Option<String>,
 
     #[serde(rename="dateSocket")]
-    date_socket: Option<InternalStore>,
+    pub date_socket: Option<InternalStore>,
 
     #[serde(rename="chartSocket")]
-    chart_socket: Option<InternalStore>
+    pub chart_socket: Option<InternalStore>
 }
 
 pub async fn apply_data_rule(

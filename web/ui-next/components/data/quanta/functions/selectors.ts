@@ -35,4 +35,14 @@ const addSelectorSource = (
     setSelectors([ ...nSelectors ])
 }
 
-export { newSelector, addSelectorSource }
+const editSelectorTitle = (
+
+) => {
+
+}
+
+export { 
+    newSelector, 
+    addSelectorSource,
+    editSelectorTitle 
+}

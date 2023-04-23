@@ -3,7 +3,7 @@ import { ISelectorPaneState } from "./types"
 import { v4 } from "uuid"
 import { SocketHandlerData } from "../../../ui/socket-handler"
 import { ISocketHandlerState } from "../../../ui/socket-handler/types"
-import { compileProject, initExecutionContext } from "./functions"
+import { compileProject, initExecutionContext, setSelectorLink } from "./functions"
 import SelectorFrameTester from "../selector-frame-tester"
 import { IQuantaSelectorCode } from "../../../data/quanta/types/project"
 import { QuantaContextData } from "../../../data/quanta/context"
@@ -69,6 +69,9 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ selectorId, extSele
 
     value.compileProject = (projectData: string) =>
         compileProject(compilationId, projectData, executeSocketFunction)
+    
+    value.setSelectorLink = (datasetId: string, selectorId: string) =>
+        setSelectorLink(datasetId, selectorId, selectorCode, setSelectorCode)
 
     return (
         <>

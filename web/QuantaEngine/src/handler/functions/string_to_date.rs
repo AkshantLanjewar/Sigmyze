@@ -8,8 +8,8 @@ use crate::handler::{messages, socket_response, Result, socket_store::set_store_
 use super::types::QuantaDate;
 
 #[derive(Debug, Deserialize, Serialize)]
-struct StringToDateBody {
-    timestamp: Option<i64>
+pub struct StringToDateBody {
+    pub timestamp: Option<i64>
 }
 
 pub async fn string_to_date(

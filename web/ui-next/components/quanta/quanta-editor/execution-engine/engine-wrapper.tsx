@@ -54,25 +54,19 @@ const EngineWrapper: React.FC<IEngineWrapperProps> = ({ subscribeExecute, engine
     useEffect(() => {
         if(internalStore === undefined)
             return
-        /*
-        comment out for debugging
         if(loaded === false || loggedIn === false)
             return
-        */
 
         let callStack = ExecuteNodeGraph(internalNodes, internalEdges, internalStore)
         setCallStack([ ...callStack ])
         toggleExecute()
-    }, [loggedIn, loaded, subscribeExecute])
+    }, [subscribeExecute])
 
     useEffect(() => {
         if(internalStore === undefined)
             return
-        /*
-        comment out for debugging
         if(loaded === false || loggedIn === false)
             return
-        */
 
         let callStack = ExecuteNodeGraph(internalNodes, internalEdges, internalStore)
         setCallStack([ ...callStack ])

@@ -10,9 +10,9 @@ use crate::{handler::{messages, socket_response, Result,}};
 use super::{SERVER_URL};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct UnloadProcessIdBody {
+pub struct UnloadProcessIdBody {
     #[serde(rename="processId")]
-    process_id: Option<String>
+    pub process_id: Option<String>
 }
 
 #[derive(Debug, Deserialize, Serialize)]

@@ -5,8 +5,8 @@ use crate::{handler::{messages, socket_store::{get_store_value, set_store_value}
 use crate::handler::{Result, socket_response, functions::types};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct SDMXDataMapperData {
-    input: Option<types::InternalStore>
+pub struct SDMXDataMapperData {
+    pub input: Option<types::InternalStore>
 }
 
 pub async fn sdmx_data_mapper(

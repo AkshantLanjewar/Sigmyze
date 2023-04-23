@@ -62,7 +62,7 @@ interface IQuantaSelector {
     selectorId?: string,
     selectorName?: string,
     selectorDescription?: string,
-    selectorCode?: IQuantaSelectorCode
+    selectorCode?: IQuantaSelectorCode,
 }
 
 interface IQuantaSelectorCode {
@@ -70,7 +70,12 @@ interface IQuantaSelectorCode {
     schemaId: string,
     schemaName: string,
     schemaItems: ISchemaItem[],
-    sourceCode: string
+    sourceCode: string,
+    selectorLinks?: ISelectorLinks
+}
+
+interface ISelectorLinks {
+    [key: string]: string
 }
 
 interface IQuantaEditorProject {
@@ -88,5 +93,6 @@ export type {
     IQuantaSelector,
     ProjectSchemas,
     IQuantaEditorProject,
-    IQuantaSelectorCode 
+    IQuantaSelectorCode,
+    ISelectorLinks 
 }

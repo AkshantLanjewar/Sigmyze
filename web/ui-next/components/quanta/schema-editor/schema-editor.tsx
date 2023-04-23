@@ -6,16 +6,18 @@ import { IQuantaSchema, IQuantaSchemaType } from "./types"
 
 interface ISchemaEditorProps {
     schemaId: string,
-    viewOnly?: boolean
+    viewOnly?: boolean,
+    linkedSchema?: string
 }
 
-const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly }) => {
+const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly, linkedSchema }) => {
     const [internalSchema, setInternalSchema] = useState<IQuantaSchema | undefined>(undefined)
     const [internalView, setInternalView] = useState(false)
+    const [internalLinked, setInternalLinked] = useState(false)
 
     const quantaContext = useContext(QuantaContextData)
 
-    function hydrateSchema(schema: IQuantaSchema, isView?: boolean) {
+    function hydrateSchema(schema: IQuantaSchema, isView?: boolean, isLinked?: boolean) {
         let nSchema = schema
         let schemaType = nSchema.quantaType
         if(schemaType === undefined)
@@ -33,6 +35,15 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly }) => {
             if(isView === true) {
                 nSchema.mutableType = false
                 nSchema.removeableType = false
+            } 
+            
+            if(isLinked === true) {
+                nSchema.linkable = true
+                nSchema.linkId = linkedSchema
+            } else {
+                nSchema.linkable = false
+                nSchema.linkId = undefined
+                nSchema.linkedTo = undefined
             }
         }
 
@@ -40,7 +51,7 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly }) => {
         if(schemaChildren !== undefined) {
             for(let i = 0; i < schemaChildren.length; i++) {
                 let schema_ = schemaChildren[i]
-                let hydrateChild = hydrateSchema(schema_, isView)
+                let hydrateChild = hydrateSchema(schema_, isView, isLinked)
                 if(hydrateChild === undefined)
                     continue
 
@@ -63,9 +74,9 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly }) => {
             return
         }
 
-        quantaSchema = hydrateSchema(quantaSchema, internalView)
+        quantaSchema = hydrateSchema(quantaSchema, internalView, internalLinked)
         setInternalSchema({ ...quantaSchema })
-    }, [quantaContext, internalView, schemaId])
+    }, [quantaContext, internalView, schemaId, internalLinked])
 
     useEffect(() => {
         if(viewOnly === undefined)
@@ -73,6 +84,13 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly }) => {
 
         setInternalView(viewOnly)
     }, [viewOnly])
+
+    useEffect(() => {
+        if(linkedSchema === undefined)
+            setInternalLinked(false)
+        else
+            setInternalLinked(true)
+    }, [linkedSchema])
     
     return (
         <div>

@@ -40,7 +40,22 @@ interface IQuantaSchema {
      */
     children?: IQuantaSchema[],
 
-    focusNode?: boolean
+    focusNode?: boolean,
+
+    /**
+     * whether or not the type can be linked to another
+     */
+    linkable?: boolean,
+
+    /**
+     * the schema id for the list of elements that the type can link to
+     */
+    linkId?: string,
+
+    /**
+     * if the type is linked, the id its linked to in the format linkId::schemaId
+     */
+    linkedTo?: string
 }
 
 interface IQuantaSchemaShort {

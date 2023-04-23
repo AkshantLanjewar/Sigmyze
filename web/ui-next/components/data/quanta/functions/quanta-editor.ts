@@ -2,7 +2,7 @@ import { IconFileCode2 } from "@tabler/icons"
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore } from "../../../quanta/quanta-editor/types/types"
 import { UpdateProject } from "../quanta-api"
-import { IQuantaEditorProject, IQuantaProjectData, ProjectSchemas } from "../types/project"
+import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, ProjectSchemas } from "../types/project"
 
 function GetEditorProjects(fileId: string, editorProjects: IQuantaEditorProject[]) {
     let editorProject = undefined
@@ -197,7 +197,8 @@ async function SaveQuantaProject(
     projectId: string,
     projectData: IQuantaProjectData | undefined,
     editorProjects: IQuantaEditorProject[],
-    schemas: ProjectSchemas[]
+    schemas: ProjectSchemas[],
+    selectors: IQuantaSelector[]
 ) {
     if(projectData === undefined)
         return
@@ -205,6 +206,7 @@ async function SaveQuantaProject(
         projectData.store = { selectors: [], editorProjects }
 
     projectData.store.editorProjects = editorProjects
+    projectData.store.selectors = selectors
     projectData.dataset_schema = schemas
     let dehydrated = dehydrateQuantaProject(projectData)
     await UpdateProject(token, organizationId, projectId, dehydrated)

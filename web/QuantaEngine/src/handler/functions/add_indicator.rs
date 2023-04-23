@@ -7,12 +7,12 @@ use crate::{handler::{messages, socket_response, Result, socket_store::{get_stor
 use super::types::{InternalStore, QuantaIndicator};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct AddIndicatorBody {
+pub struct AddIndicatorBody {
     #[serde(rename="fieldInput")]
-    field_input: Option<InternalStore>,
+    pub field_input: Option<InternalStore>,
 
     #[serde(rename="chartInput")]
-    chart_input: Option<InternalStore>
+    pub chart_input: Option<InternalStore>
 }
 
 pub async fn add_indicator(

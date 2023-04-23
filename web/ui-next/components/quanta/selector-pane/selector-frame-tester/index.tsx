@@ -7,6 +7,7 @@ import { IQuantaSchema } from "../../schema-editor/types"
 import { IQuantaSelectorCode } from "../../../data/quanta/types/project"
 import { SelectorPaneContextData } from "../context"
 import { ISelectorPaneState } from "../context/types"
+import { v4 } from "uuid"
 
 interface ISelectorFrameTesterProps {
     source: string | null,
@@ -57,6 +58,7 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
             let newChild = {} as IQuantaSchema
 
             newChild.name = schemaItem.name
+            newChild.nodeId = v4()
             if(schemaItem.type === "string") {
                 newChild.type = "string"
                 newChild.quantaType = { groupId: "schema", typeId: "string" }

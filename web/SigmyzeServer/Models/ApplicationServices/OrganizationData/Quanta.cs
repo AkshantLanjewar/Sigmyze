@@ -140,7 +140,58 @@ public class QuantaSelector
     [BsonElement("selectorDescription")]
     [JsonProperty("selectorDescription")]
     [JsonPropertyName("selectorDescription")]
-    public string? selectorDescription { get; set; }
+    public string? SelectorDescription { get; set; }
+
+    [BsonElement("selectorCode")]
+    [JsonProperty("selectorCode")]
+    [JsonPropertyName("selectorCode")]
+    public QuantaSelectorCode? SelectorCode { get; set; }
+}
+
+public class QuantaSelectorCode
+{
+    [BsonElement("containerId")]
+    [JsonProperty("containerId")]
+    [JsonPropertyName("containerId")]
+    public string? ContainerId { get; set; }
+
+    [BsonElement("schemaId")]
+    [JsonProperty("schemaId")]
+    [JsonPropertyName("schemaId")]
+    public string? SchemaId { get; set; }
+
+    [BsonElement("schemaName")]
+    [JsonProperty("schemaName")]
+    [JsonPropertyName("schemaName")]
+    public string? SchemaName { get; set; }
+
+    [BsonElement("sourceCode")]
+    [JsonProperty("sourceCode")]
+    [JsonPropertyName("sourceCode")]
+    public string? SourceCode { get; set; }
+
+    [BsonElement("selectorLinks")]
+    [JsonProperty("selectorLinks")]
+    [JsonPropertyName("selectorLinks")]
+    public Dictionary<string, string>? SelectorLinks { get; set; }
+
+    [BsonElement("schemaItems")]
+    [JsonProperty("schemaItems")]
+    [JsonPropertyName("schemaItems")]
+    public List<QuantaSchemaItem>? SchemaItems { get; set; }
+}
+
+public class QuantaSchemaItem
+{
+    [BsonElement("name")]
+    [JsonProperty("name")]
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [BsonElement("type")]
+    [JsonProperty("type")]
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
 }
 
 public class QuantaSchemas

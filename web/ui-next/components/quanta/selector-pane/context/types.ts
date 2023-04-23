@@ -11,7 +11,9 @@ interface ISelectorPaneState {
 
     setTestSource: (source: string | null) => void,
 
-    setSelectorCode: Dispatch<SetStateAction<IQuantaSelectorCode | null>>
+    setSelectorCode: Dispatch<SetStateAction<IQuantaSelectorCode | null>>,
+
+    setSelectorLink: (datasetId: string, selectorId: string) => void
 }
 
 export type { ISelectorPaneState }

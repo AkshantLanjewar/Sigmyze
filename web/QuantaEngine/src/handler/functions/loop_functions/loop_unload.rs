@@ -5,9 +5,9 @@ use serde::{Deserialize, Serialize};
 use crate::handler::{messages, functions::{Result, socket_response}};
 
 #[derive(Debug, Deserialize, Serialize)]
-struct UnloadLoopData {
+pub struct UnloadLoopData {
     #[serde(rename="loopId")]
-    loop_id: Option<String>,
+    pub loop_id: Option<String>,
 }
 
 pub async fn unload_loop(

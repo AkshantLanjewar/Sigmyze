@@ -22,6 +22,8 @@ import { UserContextData } from "../../../data/user/context"
 import { IUserContext } from "../../../data/user/types"
 import { CreateExecutionCache, DeleteExecutionCache } from "../../../data/quanta/quanta-api"
 import { showNotification } from "@mantine/notifications"
+import { IFileUploadOutput, input_file_upload } from "./input-nodes"
+import { IExecuteStackBody, IInternalStore, IInternalStorePreload } from "./nodes/types"
 
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
@@ -57,6 +59,70 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
     interface ILoadProcessBody {
         organizationId: string,
         quantaId: string
+    }
+
+    async function execute_node_server() {
+        let token = authData?.token
+        if(callStack === undefined || token === undefined)
+            return
+        if(quantaId === null || organizationId === null)
+            return
+
+        //grab all the input nodes
+        let preloadedInputs = [] as IInternalStorePreload[]
+        try {
+            for(let i = 0; i < callStack.length; i++) {
+                let stack = callStack[i]
+                if(stack.functionId === "file_upload") {
+                    let file_upload_val = await input_file_upload(stack)
+                    let parsed_file_upload: IFileUploadOutput = JSON.parse(file_upload_val)
+                    let parsed_file_keys = Object.keys(parsed_file_upload)
+
+                    for(let x = 0; x < parsed_file_keys.length; x++) {
+                        let parsed_key = parsed_file_keys[x]
+                        if(parsed_key === "pError")
+                            continue
+
+                        let parsedVal = parsed_file_upload[parsed_key]
+                        if(typeof parsedVal !== 'string')
+                            continue
+
+                        let store: IInternalStore = { nodeId: stack.nodeId, socketId: parsed_key }
+                        preloadedInputs.push({
+                            store: store,
+                            value: parsedVal
+                        })
+                    }
+                }
+            }
+        } catch (error) {
+            return
+        }
+
+        let schema = getSchema("dataset")
+        const functionId = "execute_stack"
+        const nodeId = quantaId
+        const outputIds = [] as string[]
+        
+        const body: IExecuteStackBody = {
+            preloadedData: preloadedInputs,
+            stack: callStack,
+            edges: edges,
+            organizationId: organizationId,
+            schema: schema
+        }
+
+        await CreateExecutionCache(token, organizationId, quantaId, processId)
+        let result = await executeFunction(nodeId, functionId, outputIds, body)
+        if(result !== 'background') {
+            //handle error
+            showNotification({
+                title: "Quanta Editor",
+                message: `Error with executing graph -> ${result}`,
+                color: 'red',
+                autoClose: 1000 * 5
+            })
+        }
     }
 
     async function execute_nodes(isCache?: boolean) {
@@ -126,7 +192,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         setExecutedNodes([])
         setFailedNodes([])
 
-        execute_nodes()
+        execute_node_server()
     }, [execute])
 
     useEffect(() => {

@@ -7,6 +7,7 @@ use crate::handler::functions::sdmx::{sdmx_data_mapper, sdmx_data_parser};
 use super::functions::add_indicator::add_indicator;
 use super::functions::apply_data_rule::apply_data_rule;
 use super::functions::build_fields::build_fields;
+use super::functions::callstack::execute_stack::execute_stack_wrapper;
 use super::functions::compilation::compile_project::compile_project;
 use super::functions::compilation::init_compilation::init_compilation;
 use super::functions::load_process_id::load_process_id;
@@ -157,6 +158,14 @@ pub async fn parse_function_request(
 
         "compile_project" => return compile_project(
             request_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "execute_stack" => return execute_stack_wrapper(
+            request_id,
+            node_id,
             process_id,
             function_data,
             data_store

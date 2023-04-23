@@ -17,7 +17,7 @@ public class QuantaController : OrganizationControllerBase
     private readonly IProjectRepository _projectRepository;
     private readonly IQuantaRepository _quantaRepository;
     private readonly IUserServiceRepository _userServiceRepository;
-    private readonly IDriveRepository _driveRepository;
+    private readonly IDriveRepository _driveRepository; 
     public QuantaController(
         IOrganizationRepository organizationRepository,
         IProjectRepository projectRepository,
@@ -52,7 +52,7 @@ public class QuantaController : OrganizationControllerBase
     {
         APIStatusMsg status = new APIStatusMsg();
         status.Error = false;
-        status.MSG = "retreived";
+        status.MSG = "retreive";
 
         GetQuantaIndicatorsResp resp = new GetQuantaIndicatorsResp();
         string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;

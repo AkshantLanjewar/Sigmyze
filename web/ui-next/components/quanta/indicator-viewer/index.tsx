@@ -8,6 +8,8 @@ import { IChartData, IQuantaIndicatorManager } from '../quanta-indicator-manager
 import { validateIndicator } from '../quanta-indicator-manager/utils'
 import { capitalizeFirstLetter } from '../../data/utils'
 import SparkView from '../../ui/visualization/spark-view'
+import { QuantaContextData } from '../../data/quanta/context'
+import { IQuantaState } from '../../data/quanta/types'
 
 interface ITableHeader {
     fieldName: string,
@@ -31,6 +33,11 @@ const IndicatorViewer: React.FC = ({ }) => {
     const [headers, setHeaders] = useState<ITableHeader[]>([])
 
     const { indicators } = useContext(QuantaIndicatorManagerData) as IQuantaIndicatorManager
+    const { toggleUpdateEditorIndicators } = useContext(QuantaContextData) as IQuantaState
+
+    useEffect(() => {
+        toggleUpdateEditorIndicators()
+    }, [])
 
     // construct the table from the indicators list we receive
     useEffect(() => {

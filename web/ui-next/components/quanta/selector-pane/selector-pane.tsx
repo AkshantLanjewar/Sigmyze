@@ -53,29 +53,6 @@ const SelectorPane: React.FC = ({ }) => {
                                         <div className={styles.title}>
                                             {selector.selectorName}
                                         </div>
-
-                                        <Group spacing={7.5}>
-                                            <Button
-                                                variant={'outline'}
-                                                compact
-                                                size={'sm'}
-                                                radius={"xl"}
-                                                color={"teal"}
-                                            >
-                                                Linked Selector
-                                            </Button>
-
-                                            <Button
-                                                variant={'outline'}
-                                                compact
-                                                size={'sm'}
-                                                radius={"xl"}
-                                                color={"gray"}
-                                            >
-                                                <IconPlus size={10} stroke={"2"} />
-                                                Add
-                                            </Button>
-                                        </Group>
                                     </div>
 
                                     <div className={styles.description}>
@@ -116,7 +93,11 @@ const SelectorPane: React.FC = ({ }) => {
                                     <div className={styles.schema__compare}>
                                         <div className={styles.compare}>
                                             {selector && (
-                                                <SchemaEditor schemaId={selector.selectorId!} viewOnly={true} />
+                                                <SchemaEditor 
+                                                    schemaId={selector.selectorId!} 
+                                                    viewOnly={true} 
+                                                    linkedSchema='dataset'
+                                                />
                                             )}
                                         </div>
 

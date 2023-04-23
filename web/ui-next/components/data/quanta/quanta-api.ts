@@ -1,6 +1,6 @@
 import { showNotification } from "@mantine/notifications"
 import { IStatus } from "../datasets/DatasetsTypes"
-import { GET_Cacheless, GenerateOptions, removeEmpty, server } from "../utils"
+import { GET, GET_Cacheless, GenerateOptions, removeEmpty, server } from "../utils"
 import { IQuantaProjectData } from "./types/project"
 import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
 
@@ -93,7 +93,7 @@ interface IQuantaIndicatorsResp {
 async function GetQuantaIndicators(token: string, organization_id: string, project_id: string) {
     let url = `${server}/api/v2/quanta/${organization_id}/${project_id}/indicators`
     let options = GenerateOptions("GET", token) 
-    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {

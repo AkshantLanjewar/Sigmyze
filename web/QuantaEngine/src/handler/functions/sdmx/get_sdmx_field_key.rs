@@ -8,8 +8,8 @@ use crate::{
 };
 
 #[derive(Debug, Deserialize, Serialize)]
-struct GetSDMXFieldKeyBody {
-    input: Option<types::InternalStore>
+pub struct GetSDMXFieldKeyBody {
+    pub input: Option<types::InternalStore>
 }
 
 pub async fn get_sdmx_field_key(

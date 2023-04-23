@@ -6,10 +6,11 @@ use crate::handler::{messages, socket_store::get_store_value, functions::{types,
 use super::loop_response;
 
 #[derive(Debug, Deserialize, Serialize)]
-struct LoadLoopData {
+pub struct LoadLoopData {
     #[serde(rename="loopId")]
-    loop_id: Option<String>,
-    connected: Option<types::InternalStore>,
+    pub loop_id: Option<String>,
+
+    pub connected: Option<types::InternalStore>,
 }
 
 pub async fn load_loop(

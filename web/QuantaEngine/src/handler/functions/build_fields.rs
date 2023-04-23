@@ -8,7 +8,7 @@ use crate::{handler::{messages, socket_response, Result, socket_store::{set_stor
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BuildFieldsBody {
     #[serde(rename="fields")]
-    fields: Option<Vec<QuantaFieldParam>>
+    pub fields: Option<Vec<QuantaFieldParam>>
 }
 
 pub async fn build_fields(
