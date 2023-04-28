@@ -136,4 +136,5 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
     )
 }
 
+export { NodeCreateMenuInner }
 export default NodeCreateMenu

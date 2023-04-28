@@ -27,7 +27,7 @@ function compileProject(
             let parsed: ICompileProjectResult = JSON.parse(val)
             resolve(parsed)
         }
-    
+        
         executeSocketFunction(
             compilationId,
             nodeId,

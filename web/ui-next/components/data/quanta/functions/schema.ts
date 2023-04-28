@@ -179,6 +179,19 @@ const getSchema = (parentId: string, schemas: ProjectSchemas[]) : IQuantaSchema 
     return schema
 }
 
+const eraseSchema = (parentId: string, schemas: ProjectSchemas[], setSchemas: Dispatch<SetStateAction<ProjectSchemas[]>>) => {
+    let nSchemas = [] as ProjectSchemas[]
+    for(let i = 0; i < schemas.length; i++) {
+        let schema = schemas[i]
+        if(schema.schemaId === parentId)
+            continue
+
+        nSchemas.push(schema)
+    }
+
+    setSchemas([ ...nSchemas ])
+}
+
 const changeSchema = (
     parentId: string, 
     nSchema: IQuantaSchema,
@@ -207,5 +220,6 @@ export {
     getSchema,
     changeSchema,
     deleteSchemaObject,
-    unfocusAllSchema
+    unfocusAllSchema,
+    eraseSchema
 }

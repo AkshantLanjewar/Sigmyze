@@ -1,7 +1,8 @@
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
-import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelectorCode } from "./project"
+import { IPipelineAnalysis, IPipelinedData } from "../../../quanta/selector-pane/context/types"
+import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode } from "./project"
 import { IQuantaTab } from "./ui"
 
 interface IQuantaState {
@@ -38,7 +39,11 @@ interface IQuantaState {
 
     editorProjects: IQuantaEditorProject[],
 
+    selectors: IQuantaSelector[],
+
     selectorsUpdated: boolean,
+
+    dataLoaded: boolean,
 
     //tells the application to update the indicators
     toggleUpdateEditorIndicators: () => void,
@@ -77,6 +82,8 @@ interface IQuantaState {
     ) => void
     //deletes an element within the schema
     deleteElement: (parentId: string, nodeId: string) => void,
+    //erases a schema from memory
+    eraseSchema: (parentId: string) => void,
 
     unfocusAll: (parentId: string) => void,
 
@@ -87,8 +94,18 @@ interface IQuantaState {
 
     //section handles the selectors
     newSelector: (selectorName: string, selectorId: string) => void,
+    
+    //adds source to the selector
+    addSelectorSource: (selectorId: string, selectorSource: IQuantaSelectorCode) => void,
 
-    addSelectorSource: (selectorId: string, selectorSource: IQuantaSelectorCode) => void
+    //adds analysis to selector pipeline
+    editSelectorAnalysis: (selectorId: string, analysis: IPipelineAnalysis[]) => void,
+
+    //edits pipelined objects in selector 
+    editPipelineObjects: (selectorId: string, data: IPipelinedData[]) => void,
+
+    //deletes the schema
+    deleteSelector: (selectorId: string) => void
 }
 
 export type { IQuantaState }

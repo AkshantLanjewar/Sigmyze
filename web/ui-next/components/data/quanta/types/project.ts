@@ -1,6 +1,7 @@
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
+import { IPipelineAnalysis, IPipelinedData } from "../../../quanta/selector-pane/context/types"
 import { ISchemaItem } from "../../../quanta/selector-pane/selector-frame-tester/types"
 
 interface IQuantaProjectData {
@@ -63,6 +64,12 @@ interface IQuantaSelector {
     selectorName?: string,
     selectorDescription?: string,
     selectorCode?: IQuantaSelectorCode,
+    selectorPipeline?: ISelectorPipeline
+}
+
+interface ISelectorPipeline {
+    pipelinedObjects?: IPipelinedData[],
+    pipelineAnalysis?: IPipelineAnalysis[]
 }
 
 interface IQuantaSelectorCode {
@@ -94,5 +101,6 @@ export type {
     ProjectSchemas,
     IQuantaEditorProject,
     IQuantaSelectorCode,
-    ISelectorLinks 
+    ISelectorLinks,
+    ISelectorPipeline 
 }

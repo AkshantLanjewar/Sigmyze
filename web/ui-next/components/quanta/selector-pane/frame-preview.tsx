@@ -4,12 +4,18 @@ import { ISelectorPaneState } from "./context/types"
 import SelectorFrame from "../selector-frame"
 
 const FramePreview: React.FC = ({ }) => {
-    const { selectorCode } = useContext(SelectorPaneContextData) as ISelectorPaneState
+    const { selectorCode, analyzePipelineLoading, pipelineAnalysis } = useContext(SelectorPaneContextData) as ISelectorPaneState
 
     return (
         <div>
             {selectorCode
-                ? <SelectorFrame source={selectorCode} />
+                ? (
+                    <SelectorFrame 
+                        source={selectorCode} 
+                        pipelineLoading={analyzePipelineLoading}
+                        pipelineAnalysis={pipelineAnalysis}
+                    />
+                )
                 : null
             }
         </div>

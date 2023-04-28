@@ -3,6 +3,7 @@ import { IStatus } from "../datasets/DatasetsTypes"
 import { GET, GET_Cacheless, GenerateOptions, removeEmpty, server } from "../utils"
 import { IQuantaProjectData } from "./types/project"
 import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
+import { IQuantaQuery } from "../../quanta/selector-frame/types"
 
 interface IProjectDataResponse {
     project_id?: string,
@@ -110,11 +111,38 @@ async function GetQuantaIndicators(token: string, organization_id: string, proje
     return indicators
 }
 
+async function SelectIndicator(token: string, quantaId: string, params: IQuantaQuery[]) {
+    const body = {
+        params: params,
+        quantaId: quantaId
+    }
+
+    let url = `${server}/api/v2/quanta/select/indicator`
+    let options = GenerateOptions("POST", token, body)
+    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+
+    let indicators = resp.indicators
+    if(indicators === undefined || resp.status?.error === true) {
+        showNotification({
+            title: "Indicator Error",
+            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return undefined
+    }
+
+    return indicators
+    
+}
+
 export type { IProjectDataResponse }
 export { 
     GetProject, 
     UpdateProject,
     CreateExecutionCache,
     DeleteExecutionCache,
-    GetQuantaIndicators 
+    GetQuantaIndicators,
+    SelectIndicator 
 }

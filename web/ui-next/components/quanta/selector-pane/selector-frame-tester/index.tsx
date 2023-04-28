@@ -32,7 +32,7 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
 
     //quanta context
     const { getSchema, changeSchema } = useContext(QuantaContextData) as IQuantaState
-    const { setSelectorCode } = useContext(SelectorPaneContextData) as ISelectorPaneState
+    const { setSelectorCode, initialized } = useContext(SelectorPaneContextData) as ISelectorPaneState
 
     function reset() {
         setPingStatus(null)
@@ -89,6 +89,9 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
     useEffect(() => {
         if(source === null)
             return
+        if(initialized === false)
+            return
+        
 
         setInternalSource(source)
         reset()

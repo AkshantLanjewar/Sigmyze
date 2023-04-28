@@ -66,6 +66,8 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly, linked
     useEffect(() => {
         if(quantaContext === null)
             return
+        if(quantaContext.dataLoaded === false)
+            return
 
         let quantaSchema = quantaContext.getSchema(schemaId)
         if(quantaSchema === undefined)
@@ -74,9 +76,17 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly, linked
             return
         }
 
-        quantaSchema = hydrateSchema(quantaSchema, internalView, internalLinked)
+        let nInternalView = false
+        if(viewOnly === true)
+            nInternalView = true
+
+        let nInternalLinked = false
+        if(linkedSchema !== undefined)
+            nInternalLinked = true
+        
+        quantaSchema = hydrateSchema(quantaSchema, nInternalView, nInternalLinked)
         setInternalSchema({ ...quantaSchema })
-    }, [quantaContext, internalView, schemaId, internalLinked])
+    }, [quantaContext?.selectors])
 
     useEffect(() => {
         if(viewOnly === undefined)

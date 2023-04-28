@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import { IQuantaSelector, IQuantaSelectorCode } from "../types/project"
+import { IPipelineAnalysis, IPipelinedData } from "../../../quanta/selector-pane/context/types"
 
 const newSelector = (
     selectorName: string, 
@@ -13,6 +14,54 @@ const newSelector = (
         selectorId,
         selectorDescription: "This is your selectors description. Click to edit."
     })
+
+    setSelectors([ ...nSelectors ])
+}
+
+const deleteSelector = (
+    selectorId: string,
+    selectors: IQuantaSelector[],
+    eraseSchema: (id: string) => void,
+    setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>,
+    setActiveSelector: Dispatch<SetStateAction<string | null>>
+) => {
+    eraseSchema(selectorId)
+    let index: number | undefined = undefined
+    let nSelectors = [] as IQuantaSelector[]
+
+    for(let i = 0; i < selectors.length; i++) {
+        let selector = selectors[i]
+        if(selector.selectorId === selectorId) {
+            index = i
+            continue
+        }
+
+        nSelectors.push(selector)
+    }
+
+    if(index === undefined)
+        return
+
+    let updateActiveSelector = false
+    if(index > nSelectors.length - 1) {
+        index = nSelectors.length - 1
+        updateActiveSelector = true
+    } else {
+        updateActiveSelector = true
+    }
+    
+    if(nSelectors.length === 0) {
+        updateActiveSelector = false
+        setActiveSelector(null)
+    }
+
+    if(updateActiveSelector === true) {
+        let selectorId = nSelectors[index].selectorId
+        if(selectorId === undefined)
+            return
+
+        setActiveSelector(selectorId)
+    }
 
     setSelectors([ ...nSelectors ])
 }
@@ -35,6 +84,56 @@ const addSelectorSource = (
     setSelectors([ ...nSelectors ])
 }
 
+const editSelectorAnalysis = (
+    selectorId: string,
+    analysis: IPipelineAnalysis[],
+    selectors: IQuantaSelector[],
+    setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>
+) => {
+    let index: number | undefined = undefined
+    for(let i = 0; i < selectors.length; i++) {
+        let selector = selectors[i]
+        if(selector.selectorId === selectorId)
+            index = i
+    }
+
+    if(index === undefined)
+        return
+
+    let selector = selectors[index]
+    if(selector.selectorPipeline === undefined)
+        selector.selectorPipeline = { pipelinedObjects: [], pipelineAnalysis: [] }
+
+    selector.selectorPipeline.pipelineAnalysis = analysis
+    selectors[index] = selector
+    setSelectors([ ...selectors ])
+}
+
+const editPipelineObjects = (
+    selectorId: string,
+    data: IPipelinedData[],
+    selectors: IQuantaSelector[],
+    setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>
+) => {
+    let index: number | undefined = undefined
+    for(let i = 0; i < selectors.length; i++) {
+        let selector = selectors[i]
+        if(selector.selectorId === selectorId)
+            index = i
+    }
+
+    if(index === undefined)
+        return
+
+    let selector = selectors[index]
+    if(selector.selectorPipeline === undefined)
+        selector.selectorPipeline = { pipelinedObjects: [], pipelineAnalysis: [] }
+
+    selector.selectorPipeline.pipelinedObjects = data
+    selectors[index] = selector
+    setSelectors([ ...selectors ])
+}
+
 const editSelectorTitle = (
 
 ) => {
@@ -44,5 +143,8 @@ const editSelectorTitle = (
 export { 
     newSelector, 
     addSelectorSource,
-    editSelectorTitle 
+    editSelectorTitle ,
+    editSelectorAnalysis,
+    editPipelineObjects,
+    deleteSelector
 }

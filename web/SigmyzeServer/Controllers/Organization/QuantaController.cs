@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.ApplicationServices;
+using SigmyzeServer.Models.ApplicationServices.UserData;
 using SigmyzeServer.Services.OrganizationServices;
 
 namespace SigmyzeServer.Controllers;
@@ -46,6 +47,75 @@ public class QuantaController : OrganizationControllerBase
         return drive;
     }
 
+    [HttpPost("select/indicator")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> GetSelectedIndicator([FromBody]QuantaQueryBody body)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "fetched";
+
+        GetQuantaIndicatorsResp resp = new GetQuantaIndicatorsResp();
+        if(body.QuantaId == null || body.Params == null)
+        {
+            status.Error = true;
+            status.MSG = "bad_query";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        GetIndicatorsQuery? queryRes = await _quantaRepository.SelectProjectIndicator(body.QuantaId, body.Params);
+        if(queryRes == null)
+        {
+            status.Error = true;
+            status.MSG = "bad_db_query";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        resp.Status = status;
+        resp.Indicators = queryRes.Indicators;
+        return await SerializeJSON(resp);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("indicators_all/{organizationId}/{quantaId}/{processId}")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> GetAllIndicators(string organizationId, string quantaId, string processId)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "retreived";
+
+        GetQuantaIndicatorsResp resp = new GetQuantaIndicatorsResp();
+        QuantaProjectCacheId? cache = await _quantaRepository.GetQuantaProjectCache(quantaId, processId);
+        
+        if(cache == null || cache.OrganizationId != organizationId)
+        {
+            status.Error = true;
+            status.MSG = "invalid_cache";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        GetIndicatorsQuery? query = await _quantaRepository.GetAllProjectIndicators(quantaId);
+        if(query == null || query.Indicators == null)
+        {
+            status.Error = true;
+            status.MSG = "invalid_cache";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        resp.Indicators = query.Indicators;
+        resp.Status = status;
+        return await SerializeJSON(resp);
+    }
+
     [HttpGet("{organizationId}/{quantaId}/indicators")]
     [MapToApiVersion("2.0")]
     public async Task<IActionResult> GetIndicators(string organizationId, string quantaId)
@@ -68,37 +138,20 @@ public class QuantaController : OrganizationControllerBase
             return await SerializeJSON(resp);
         }
 
-        DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
-        if(utils.ValidateProject(drive, quantaId) == false)
+        GetIndicatorsQuery? indicatorsRes = await _quantaRepository.GetProjectIndicators(quantaId, 0);
+        List<QuantaIndicator>? indicators = indicatorsRes?.Indicators;
+        if (indicators == null)
         {
             status.Error = true;
-            status.MSG = "invalid_project";
+            status.MSG = "invalid_quanta";
             resp.Status = status;
 
             return await SerializeJSON(resp);
         }
 
-        QuantaRepositoryDefinition? project = await _quantaRepository.GetProject(quantaId);
-        List<QuantaIndicator>? projectIndicators = project?.ProjectIndicators;
-        if(projectIndicators == null)
-        {
-            status.Error = true;
-            status.MSG = "no_indicators";
-            resp.Status = status;
-
-            return await SerializeJSON(resp);
-        }
-
-        List<QuantaIndicator> nIndicators = new List<QuantaIndicator>();
-        int count = 0;
-        while(count < projectIndicators.Count && count < 25)
-        {
-            nIndicators.Add(projectIndicators[count]);
-            count++;
-        }
         
         resp.Status = status;
-        resp.Indicators = nIndicators;
+        resp.Indicators = indicators;
         return await SerializeJSON(resp);
     }
 
@@ -139,16 +192,7 @@ public class QuantaController : OrganizationControllerBase
         }
 
         //retreive and update the quanta project
-        QuantaRepositoryDefinition? project = await _quantaRepository.GetProject(body.QuantaId);
-        if(project == null)
-        {
-            status.Error = true;
-            status.MSG = "invalid_project";
-            return await SerializeJSON(status);
-        }
-
-        project.ProjectIndicators = newIndicators;
-        await _quantaRepository.UpdateProject(body.QuantaId, project);
+        await _quantaRepository.UpdateIndicators(body.QuantaId, newIndicators);
         return await SerializeJSON(status);
     }
 
@@ -176,17 +220,7 @@ public class QuantaController : OrganizationControllerBase
             return await SerializeJSON(resp);
         }
 
-        DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
-        if(utils.ValidateProject(drive, projectId) == false)
-        {
-            msg.Error = true;
-            msg.MSG = "invalid_project";
-            resp.Status = msg;
-
-            return await SerializeJSON(resp);
-        }
-
-        QuantaRepositoryDefinition? project = await _quantaRepository.GetProject(projectId);
+        GetProjectDataQuery? project = await _quantaRepository.GetProjectData(projectId);
         if(project == null)
         {
             msg.Error = true;
@@ -196,7 +230,12 @@ public class QuantaController : OrganizationControllerBase
             return await SerializeJSON(resp);
         }
 
-        resp.ProjectData = project;
+        QuantaRepositoryDefinition phantomRepository = new QuantaRepositoryDefinition();
+        phantomRepository.ProjectId = project.ProjectId;
+        phantomRepository.ProjectName = project.ProjectName;
+        phantomRepository.ProjectData = project.ProjectData;
+
+        resp.ProjectData = phantomRepository;
         return await SerializeJSON(resp);
     }
 
@@ -275,25 +314,7 @@ public class QuantaController : OrganizationControllerBase
             return await SerializeJSON(msg);
         }
 
-        DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
-        if(utils.ValidateProject(drive, projectId) == false)
-        {
-            msg.Error = true;
-            msg.MSG = "invalid_project";
-            return await SerializeJSON(msg);
-        }
-
-        QuantaRepositoryDefinition? project = await _quantaRepository.GetProject(projectId);
-        if(project == null)
-        {
-            msg.Error = true;
-            msg.MSG = "bad_project";
-            return await SerializeJSON(msg);
-        }
-
-        project.ProjectData = body.Data;
-
-        await _quantaRepository.UpdateProject(project.ProjectId!, project);
+        await _quantaRepository.UpdateProjectData(projectId, body.Data);
         return await SerializeJSON(msg);
     }
 }

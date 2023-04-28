@@ -119,3 +119,15 @@ impl QuantaIndicator {
 pub struct QuantaString {
     pub value: String
 }
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct APIStatusMessage {
+    pub error: bool,
+    pub msg: String
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct GetIndicatorsResp {
+    pub status: Option<APIStatusMessage>,
+    pub indicators: Option<Vec<QuantaIndicator>>
+}

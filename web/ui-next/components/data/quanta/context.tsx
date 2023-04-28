@@ -27,7 +27,11 @@ import {
     SetEditorExecutionData,
     rehydrateQuantaProject,
     newSelector,
-    addSelectorSource
+    addSelectorSource,
+    editSelectorAnalysis,
+    editPipelineObjects,
+    eraseSchema,
+    deleteSelector
 } from "./functions"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 import NewFieldForm from "./forms/new_field"
@@ -38,6 +42,8 @@ import { INodeExecutionResult } from "../../quanta/quanta-editor/execution-engin
 import { IconFileCode2, IconStack2 } from "@tabler/icons"
 import QuantaIndicatorManager from "../../quanta/quanta-indicator-manager"
 import NewSelectorForm from "./forms/new_selector"
+import { IPipelineAnalysis, IPipelinedData } from "../../quanta/selector-pane/context/types"
+import { useEffectDebugger, usePrevious } from "../../ui/debug"
 
 interface IQuantaContextProps {
     quantaId: string | null,
@@ -63,6 +69,8 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     //the datasets schema
     const [schemas, setSchemas] = useState<ProjectSchemas[]>([])
+    const prevSchemas = usePrevious(schemas, [])
+    const [schemaLoad, setSchemaLoad] = useState(false)
 
     const [updateSchema, setUpdateSchema] = useState(false)
     const toggleUpdateSchema = () => setUpdateSchema(!updateSchema)
@@ -80,15 +88,19 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     //selectors within the project
     const [selectors, setSelectors] = useState<IQuantaSelector[]>([])
+    const [selectorLoad, setSelectorLoad] = useState(false)
 
+    const [dataLoaded, setDataLoaded] = useState(false)
     const [selectorUpdated, setSelectorUpdated] = useState(false)
     const toggleSelectorUpdate = () => setSelectorUpdated(!selectorUpdated)
 
     const { authData } = useContext(UserContextData) as IUserContext
 
-    function saveFunc() {
+    function saveFunc(caller?: string) {
         let token = authData?.token
         if(token === undefined || organizationId === null || quantaId === null)
+            return
+        if(dataLoaded === false)
             return
 
         SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects, schemas, selectors)
@@ -104,7 +116,15 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     }, [quantaId, organizationId])
 
     useEffect(() => {
+        if(dataLoaded === false)
+            return
+        if(selectorLoad === true) {
+            setSelectorLoad(false)
+            return
+        }
+
         toggleSelectorUpdate()
+        setSaveCounter(saveCounter + 1)
     }, [selectors])
 
     useEffect(() => {
@@ -117,17 +137,32 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     }, [editorProjects])
 
     useEffect(() => {
-        saveFunc()
+        if(dataLoaded === false)
+            return
+        if(schemaLoad === true) {
+            setSchemaLoad(false)
+            return
+        }
+
+        let oldJson = JSON.stringify(prevSchemas)
+        let newJson = JSON.stringify(schemas)
+        if(oldJson === newJson)
+            return
+
+        saveFunc("caller_schema")
     }, [schemas])
 
-    useEffect(() => {        
+    useEffect(() => {    
+        if(dataLoaded === false)
+            return
+        
         let interval: NodeJS.Timer | undefined = undefined
         if(saveCounter !== 50 && saveCounter > 0)
             interval = setInterval(() => {
-                saveFunc()
-            }, 1000 * 60)
-        else
-            saveFunc()
+                saveFunc("caller_save_1")
+            }, 1000 * 15)
+        else if (saveCounter === 50)
+            saveFunc("caller_save_2")
 
         return () => {
             if(interval === undefined)
@@ -147,6 +182,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.project_data.store.editorProjects = editorProjects
     value.project_data.store.selectors = selectors
     value.editorProjects = editorProjects
+    value.selectors = selectors
 
     value.updateEditorIndicators = updateEditorIndicators
     value.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators
@@ -156,6 +192,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.tabId = activeTab
     value.tabs = tabs
     value.activeSelectorId = activeSelector
+    value.dataLoaded = dataLoaded
 
     value.organizationId = organizationId
     value.quantaId = quantaId
@@ -227,6 +264,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.deleteElement = (parentId: string, nodeId: string) =>
         deleteSchema(parentId, nodeId, value.getSchema(parentId), value.changeSchema, toggleUpdateEditorSchema)
 
+    value.eraseSchema = (parentId: string) =>
+        eraseSchema(parentId, schemas, setSchemas)
+
     value.unfocusAll = (parentId: string) =>
         unfocusAllSchema(parentId, value.getSchema(parentId), value.changeSchema)
 
@@ -246,6 +286,15 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.addSelectorSource = (selectorId: string, selectorSource: IQuantaSelectorCode) =>
         addSelectorSource(selectorId, selectorSource, selectors, setSelectors)
 
+    value.editSelectorAnalysis = (selectorId: string, analysis: IPipelineAnalysis[]) =>
+        editSelectorAnalysis(selectorId, analysis, selectors, setSelectors)
+    
+    value.editPipelineObjects = (selectorId: string, data: IPipelinedData[]) =>
+        editPipelineObjects(selectorId, data, selectors, setSelectors)
+
+    value.deleteSelector = (selectorId: string) =>
+        deleteSelector(selectorId, selectors, value.eraseSchema, setSelectors, setActiveSelector)
+    
     //function that loads the quanta data
     function loadQuanta() {
         if(quantaId === null) {
@@ -276,20 +325,26 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
             projectData = rehydrateQuantaProject(projectData, icon_dict)
             setProjectData({ ...projectData })
             let schema = projectData.dataset_schema
-            if(schema !== undefined)
+            if(schema !== undefined) {
                 setSchemas([ ...schema ])
+                setSchemaLoad(true)
+            }
 
             let editorProjects = projectData.store?.editorProjects
             if(editorProjects !== undefined)
                 setEditorProjects([ ...editorProjects ])
 
             let loadedSelectors = projectData.store?.selectors
-            if(loadedSelectors !== undefined)
+            if(loadedSelectors !== undefined) {
                 setSelectors([ ...loadedSelectors ])
+                setSelectorLoad(true)
+            }
 
             toggleUpdateSchema()
             toggleUpdateEditorSchema()
             toggleSelectorUpdate()
+
+            setDataLoaded(true)
         }
 
         main()

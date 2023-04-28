@@ -146,6 +146,85 @@ public class QuantaSelector
     [JsonProperty("selectorCode")]
     [JsonPropertyName("selectorCode")]
     public QuantaSelectorCode? SelectorCode { get; set; }
+
+    [BsonElement("selectorPipeline")]
+    [JsonProperty("selectorPipeline")]
+    [JsonPropertyName("selectorPipeline")]
+    public QuantaSelectorPipeline? SelectorPipeline { get; set; }
+}
+
+public class QuantaSelectorPipeline
+{
+    [BsonElement("pipelinedObjects")]
+    [JsonProperty("pipelinedObjects")]
+    [JsonPropertyName("pipelinedObjects")]
+    public List<QuantaPipelinedObjects>? PipelinedObjects { get; set; }
+
+    [BsonElement("pipelineAnalysis")]
+    [JsonProperty("pipelineAnalysis")]
+    [JsonPropertyName("pipelineAnalysis")]
+    public List<QuantaPipelineAnalysis>? PipelineAnalyses { get; set; }
+}
+
+public class QuantaPipelinedObjects
+{
+    [BsonElement("pipeline_id")]
+    [JsonProperty("pipeline_id")]
+    [JsonPropertyName("pipeline_id")]
+    public string? PipelineId { get; set; }
+
+    [BsonElement("pipeline_type")]
+    [JsonProperty("pipeline_type")]
+    [JsonPropertyName("pipeline_type")]
+    public string? PipelineType { get; set; }
+
+    [BsonElement("pipeline_name")]
+    [JsonProperty("pipeline_name")]
+    [JsonPropertyName("pipeline_name")]
+    public string? PipelineName { get; set; }
+
+    [BsonElement("dataset_id")]
+    [JsonProperty("dataset_id")]
+    [JsonPropertyName("dataset_id")]
+    public string? DatasetId { get; set; }
+}
+
+public class QuantaPipelineAnalysis
+{
+    [BsonElement("objectId")]
+    [JsonProperty("objectId")]
+    [JsonPropertyName("objectId")]
+    public string? ObjectId { get; set; }
+
+    [BsonElement("objectType")]
+    [JsonProperty("objectType")]
+    [JsonPropertyName("objectType")]
+    public string? ObjectType { get; set; }
+
+    [BsonElement("isArray")]
+    [JsonProperty("isArray")]
+    [JsonPropertyName("isArray")]
+    public bool? IsArray { get; set; }
+
+    [BsonElement("stringValue")]
+    [JsonProperty("stringValue")]
+    [JsonPropertyName("stringValue")]
+    public string? StringValue { get; set; }
+
+    [BsonElement("stringArray")]
+    [JsonProperty("stringArray")]
+    [JsonPropertyName("stringArray")]
+    public List<string>? StringArray { get; set; }
+
+    [BsonElement("dateValue")]
+    [JsonProperty("dateValue")]
+    [JsonPropertyName("dateValue")]
+    public int? DateValue { get; set; }
+
+    [BsonElement("dateArray")]
+    [JsonProperty("dateArray")]
+    [JsonPropertyName("dateArray")]
+    public List<int>? DateArray { get; set; }
 }
 
 public class QuantaSelectorCode

@@ -1,4 +1,6 @@
-type QuantaFormType = "text" | "dropdown" | "additional" | "file"
+import { MantineColor } from "@mantine/core"
+
+type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert"
 
 /**
  * Form field definitions
@@ -48,6 +50,26 @@ interface IQuantaFormField {
      * this is the name for the file we want uploaded
      */
     fileName?: string,
+
+    /**
+     * the icon for the alert section
+     */
+    alertIcon?: JSX.Element,
+
+    /**
+     * the title for the alert section
+     */
+    alertTitle?: string,
+
+    /**
+     * the content for the alert section
+     */
+    alertContent?: string,
+
+    /**
+     * the color of the alert
+     */
+    alertColor?: MantineColor
 }
 
 /**

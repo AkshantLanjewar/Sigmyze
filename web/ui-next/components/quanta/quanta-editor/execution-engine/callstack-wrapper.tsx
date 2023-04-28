@@ -169,7 +169,6 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         }
 
         let res = await executeFunction(v4(), functionId, outputIds, functionData)
-        console.debug(res)
 
         //delete the cache form the server
         let token = authData?.token

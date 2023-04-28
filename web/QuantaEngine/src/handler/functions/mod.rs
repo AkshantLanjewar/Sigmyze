@@ -12,6 +12,7 @@ pub mod unload_process_id;
 pub mod load_process_id;
 pub mod compilation;
 pub mod callstack;
+pub mod analysis;
 
 pub type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
 

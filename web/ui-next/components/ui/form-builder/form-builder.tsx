@@ -1,4 +1,4 @@
-import { Button, Group, Stack } from "@mantine/core"
+import { Alert, Button, Group, LoadingOverlay, Stack } from "@mantine/core"
 import { useEffect, useState } from "react"
 import { IQuantaFormField } from "../../quanta/quanta-editor/types/types"
 import { convertTypesToDropdown } from "../../quanta/quanta-editor/utils"
@@ -10,11 +10,16 @@ interface IFormBuilderProps {
     forms: IQuantaFormField[],
     closeModal: () => void,
     submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => void,
-    defaultValue?: {[key: string]: any}
+    defaultValue?: {[key: string]: any},
+    loading?: boolean,
+    loadingStr?: string
 }
 
-const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, defaultValue }) => {
+const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, defaultValue, loadingStr }) => {
     const [valStore, setValStore] = useState<{[key: string]: any}>({})
+    const [internalLoading, setInternalLoading] = useState(false)
+
+    console.log(loadingStr)
 
     useEffect(() => {
         if(defaultValue === undefined)
@@ -44,7 +49,12 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
     }
 
     return (
-        <div>
+        <div style={{ position: 'relative' }}>
+            <LoadingOverlay
+                visible={loadingStr ? true : false}
+                overlayBlur={2}
+            />
+
             <Stack spacing={"md"}>
                 {forms.map((step) => {
                     let inputType = step.type
@@ -77,6 +87,26 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
                                 value={getValue(step.id!)}
                                 setValue={(value: string) => setValue(step.id!, value)}
                             />
+                        )
+                    }
+
+                    if(inputType === "alert") {
+                        let alertIcon = step.alertIcon
+                        let alertTitle = step.alertTitle
+                        let alertContent = step.alertContent
+                        let alertColor = step.alertColor
+
+                        if(alertIcon === undefined || alertTitle === undefined || alertContent === undefined || alertColor === undefined)
+                            return
+
+                        return (
+                            <Alert
+                                icon={alertIcon}
+                                color={alertColor}
+                                title={alertTitle}
+                            >
+                                {alertContent}
+                            </Alert>
                         )
                     }
 

@@ -67,7 +67,6 @@ function SetEditorExecutionData(
         nEditorProjects.push({ ..._editorProject })
     }
 
-    console.log(executionResults)
     setEditorProjects([ ...nEditorProjects ])
 }
 

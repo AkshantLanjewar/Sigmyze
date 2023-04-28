@@ -9,14 +9,14 @@ import { v4 } from 'uuid'
 import { SelectorPaneContextData } from '../selector-pane/context'
 import { ISelectorPaneState } from '../selector-pane/context/types'
 import { ICompileProjectResult } from '../selector-pane/context/functions'
+import UploadModal from './upload-modal'
 
 const SelectorCodeUpload: React.FC = ({ }) => {
     const [modalState, setModalState] = useState<string | null>(null)
     const closeModal = () => setModalState(null)
 
     const [codeTitle, setCodeTitle] = useState<string | null>(null)
-
-    const { compileProject, initialized, setTestSource, selectorCode } = useContext(SelectorPaneContextData) as ISelectorPaneState
+    const { selectorCode } = useContext(SelectorPaneContextData) as ISelectorPaneState
 
     useEffect(() => {
         if(selectorCode === null) {
@@ -28,41 +28,7 @@ const SelectorCodeUpload: React.FC = ({ }) => {
         setCodeTitle(title)
     }, [selectorCode])
 
-    const formComponents = [
-        {
-            type: "file",
-            fileType: "zip",
-            name: "Source Code",
-            linkedKey: "source",
-            id: "source"
-        }
-    ] as IQuantaFormField[]
-
-    const submit = (forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
-        if(initialized !== true)
-            return
-
-        async function main() {
-            let fileBytes = valStore['source']
-            if(typeof fileBytes !== 'string')
-                return
-
-            let result: ICompileProjectResult = await compileProject(fileBytes)
-            if(result.error === true) {
-
-            } else {
-                let htmlSource = result.htmlOutput
-                setTestSource(htmlSource)
-
-                htmlSource = null
-                result.htmlOutput = null
-            }
-
-            closeModal()
-        }
-
-        main()
-    }
+    
     
     return (
         <>
@@ -74,11 +40,7 @@ const SelectorCodeUpload: React.FC = ({ }) => {
                     id={"upload"}
                     title={"Upload Source Code"}
                 >
-                    <FormBuilder
-                        forms={formComponents}
-                        submit={submit}
-                        closeModal={closeModal}
-                    />
+                    <UploadModal closeModal={closeModal} />
                 </ModalManager.Modal>
             </ModalManager>
 

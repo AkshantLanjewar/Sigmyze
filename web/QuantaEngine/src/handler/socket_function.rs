@@ -5,6 +5,8 @@ use basteh::Basteh;
 use crate::handler::functions::sdmx::{sdmx_data_mapper, sdmx_data_parser};
 
 use super::functions::add_indicator::add_indicator;
+use super::functions::analysis::analyze_fields::analyze_fields;
+use super::functions::analysis::load_indicators_analysis::load_indicators_analysis;
 use super::functions::apply_data_rule::apply_data_rule;
 use super::functions::build_fields::build_fields;
 use super::functions::callstack::execute_stack::execute_stack_wrapper;
@@ -49,7 +51,7 @@ pub async fn parse_function_request(
 
     let output_ids = body.output_ids.unwrap();
     let node_id = body.node_id.unwrap();
-
+    
     match function_id {
         "sdmx_data_parser" => return sdmx_data_parser::socket_sdmx_parser(
             request_id,
@@ -166,6 +168,20 @@ pub async fn parse_function_request(
         "execute_stack" => return execute_stack_wrapper(
             request_id,
             node_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "load_indicators_analysis" => return load_indicators_analysis(
+            request_id,
+            process_id,
+            function_data,
+            data_store
+        ).await,
+
+        "analyze_fields" => return analyze_fields(
+            request_id,
             process_id,
             function_data,
             data_store
