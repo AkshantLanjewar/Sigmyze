@@ -17,9 +17,15 @@ interface ISchemaItem {
     type: "string" | "date"
 }
 
+interface ISelectedMessage {
+    id: string,
+    data: any
+}
+
 export type { 
     IIFrameMessage,
     IPingFrameData,
     ISetSchemaMessage,
-    ISchemaItem 
+    ISchemaItem,
+    ISelectedMessage 
 }

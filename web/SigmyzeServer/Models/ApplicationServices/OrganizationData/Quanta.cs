@@ -164,6 +164,11 @@ public class QuantaSelectorPipeline
     [JsonProperty("pipelineAnalysis")]
     [JsonPropertyName("pipelineAnalysis")]
     public List<QuantaPipelineAnalysis>? PipelineAnalyses { get; set; }
+
+    [BsonElement("pipelineLinks")]
+    [JsonProperty("pipelineLinks")]
+    [JsonPropertyName("pipelineLinks")]
+    public Dictionary<string, string>? PipelineLinks { get; set; }
 }
 
 public class QuantaPipelinedObjects
@@ -187,6 +192,11 @@ public class QuantaPipelinedObjects
     [JsonProperty("dataset_id")]
     [JsonPropertyName("dataset_id")]
     public string? DatasetId { get; set; }
+
+    [BsonElement("reservable")]
+    [JsonProperty("reservable")]
+    [JsonPropertyName("reservable")]
+    public bool? Reservable { get; set; }
 }
 
 public class QuantaPipelineAnalysis
@@ -258,6 +268,11 @@ public class QuantaSelectorCode
     [JsonProperty("schemaItems")]
     [JsonPropertyName("schemaItems")]
     public List<QuantaSchemaItem>? SchemaItems { get; set; }
+
+    [BsonElement("defaultValue")]
+    [JsonProperty("defaultValue")]
+    [JsonPropertyName("defaultValue")]
+    public string? DefaultValue { get; set; }
 }
 
 public class QuantaSchemaItem

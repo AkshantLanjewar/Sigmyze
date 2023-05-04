@@ -68,6 +68,7 @@ namespace SigmyzeServer
             services.AddSingleton<IDriveRepository, DriveRepository>();
             services.AddSingleton<IProjectRepository, ProjectRepository>();
             services.AddSingleton<IQuantaRepository, QuantaRepository>(); 
+            services.AddSingleton<IQuantaIndicatorRepository, QuantaIndicatorRepository>();
             services.AddSingleton<IUserServiceRepository, UserServiceRepository>();
 
             services.AddAuthentication(auth => {

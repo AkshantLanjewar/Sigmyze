@@ -19,8 +19,6 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
     const [valStore, setValStore] = useState<{[key: string]: any}>({})
     const [internalLoading, setInternalLoading] = useState(false)
 
-    console.log(loadingStr)
-
     useEffect(() => {
         if(defaultValue === undefined)
             return

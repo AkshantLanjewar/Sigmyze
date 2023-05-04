@@ -7,7 +7,7 @@ function getMonthShortName(monthNo: number) {
     date.setMonth(monthNo - 1);
   
     return date.toLocaleString('en-US', { month: 'short' });
-  }
+}
 
 function convertQuantaChartDataAnt(data: IChartData[]) {
     let convertedData = [] as IANTParsedChartData[]

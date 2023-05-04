@@ -101,14 +101,24 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                         : null
                     }
 
-                    <EditableText
-                        className={styles.text}
-                        value={schemaNode.name}
-                        defaultValue={schemaNode.focusNode}
-                        emitBlur={() => emitEditBlur()}
-                        setValue={(val) => setNodeName(val)}
-                        emitEditState={setEditing}
-                    />
+                    {schemaNode.mutableType
+                        ? (
+                            <EditableText
+                                className={styles.text}
+                                value={schemaNode.name}
+                                defaultValue={schemaNode.focusNode}
+                                emitBlur={() => emitEditBlur()}
+                                setValue={(val) => setNodeName(val)}
+                                emitEditState={setEditing}
+                            />
+                        )
+
+                        : (
+                            <div className={styles.text}>
+                                {schemaNode.name}
+                            </div>
+                        )
+                    }
                 </div>
 
                 <Group spacing={8} className={styles.flare}>

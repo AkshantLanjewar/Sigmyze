@@ -2,7 +2,7 @@ use actix_web::web;
 use basteh::Basteh;
 use serde::{Deserialize, Serialize};
 
-use crate::handler::{messages, Result, functions::{socket_response, SERVER_URL, types::GetIndicatorsResp}};
+use crate::handler::{messages, Result, functions::{socket_response, SERVER_URL, types::{GetIndicatorsResp, GetIndicatorLengthResp, QuantaIndicator}}};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct LoadIndicatorsAnalysisBody {
@@ -12,6 +12,8 @@ struct LoadIndicatorsAnalysisBody {
     #[serde(rename="quantaId")]
     pub quanta_id: Option<String>
 }
+
+const PAGE_LENGTH: i32 = 1000;
 
 pub async fn load_indicators_analysis(
     request_id: String,
@@ -26,23 +28,52 @@ pub async fn load_indicators_analysis(
 
     let organization_id = body.organization_id.expect("bad_organization_id");
     let quanta_id = body.quanta_id.expect("bad_quanta_id");
-
-    let url = format!("{}/api/v2/quanta/indicators_all/{}/{}/{}", SERVER_URL, organization_id, quanta_id, process_id);
     let client = reqwest::Client::new();
-    let res = client.get(url)
+
+    let length_url = format!(
+        "{}/api/v2/quanta/public/indicators_length/{}/{}/{}", 
+        SERVER_URL, 
+        organization_id, 
+        quanta_id, 
+        process_id
+    );
+
+    let length_res = client.get(length_url)
         .send()
         .await?
         .text()
         .await?;
 
-    let indicator_resp: GetIndicatorsResp = serde_json::from_str(res.as_str()).expect("bad_resp");
-    let resp_status = indicator_resp.status.unwrap();
-    if resp_status.error == true {
-        return Ok(socket_response(String::from("bad_resp_status"), false, request_id))
+    let length_resp: GetIndicatorLengthResp = serde_json::from_str(&length_res).expect("length_parse_err");
+    let indicators_length = length_resp.length.expect("malformed_req");
+
+    let mut collected_indicators: Vec<QuantaIndicator> = Vec::new();
+    let mut curr_page = 0;
+
+    while (curr_page) * PAGE_LENGTH < indicators_length {
+        let indicator_url = format!(
+            "{}/api/v2/quanta/public/indicators_paged/{}/{}/{}/{}/{}", 
+            SERVER_URL, 
+            PAGE_LENGTH,
+            curr_page,
+            organization_id, 
+            quanta_id, 
+            process_id
+        );
+
+        let indicator_res = client.get(indicator_url)
+            .send()
+            .await?
+            .text()
+            .await?;
+
+        let indicator_resp: GetIndicatorsResp = serde_json::from_str(&indicator_res).expect("indicator_parse_error");
+        let mut indicators = indicator_resp.indicators.expect("malformed_indicator");
+        collected_indicators.append(&mut indicators);
+        curr_page = curr_page + 1;
     }
 
-    let indicators = indicator_resp.indicators.unwrap();
-    let indicator_str = serde_json::to_string(&indicators)?;
+    let indicator_str = serde_json::to_string(&collected_indicators)?;
     let storage_loc = format!("{}::indicators", &process_id);
     data_store.set(storage_loc, indicator_str).await.unwrap();
 

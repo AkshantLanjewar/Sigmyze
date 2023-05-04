@@ -27,8 +27,6 @@ const SelectorCodeUpload: React.FC = ({ }) => {
         let title = selectorCode.schemaName
         setCodeTitle(title)
     }, [selectorCode])
-
-    
     
     return (
         <>

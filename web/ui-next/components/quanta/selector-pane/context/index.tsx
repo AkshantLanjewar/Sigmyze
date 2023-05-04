@@ -3,13 +3,22 @@ import { IPipelineAnalysis, IPipelinedData, ISelectorPaneState } from "./types"
 import { v4 } from "uuid"
 import { SocketHandlerData } from "../../../ui/socket-handler"
 import { ISocketHandlerState } from "../../../ui/socket-handler/types"
-import { addPipelineObject, compileProject, initExecutionContext, removePipelineObject, setSelectorLink } from "./functions"
 import SelectorFrameTester from "../selector-frame-tester"
-import { IQuantaSelectorCode, ISelectorPipeline } from "../../../data/quanta/types/project"
+import { IQuantaSelector, IQuantaSelectorCode, ISelectorPipeline } from "../../../data/quanta/types/project"
 import { QuantaContextData } from "../../../data/quanta/context"
 import { IQuantaState } from "../../../data/quanta/types"
 import { ISelectorPipelineOptions } from "../selector-pipeline"
 import PipelineAnalyzer from "../selector-pipeline-analysis"
+import { buildQuery } from "../../selector-frame"
+import { IQuantaQuery } from "../../selector-frame/types"
+import { 
+    addPipelineObject, 
+    compileProject, 
+    initExecutionContext, 
+    removePipelineObject, 
+    setReservedLink, 
+    setSelectorLink 
+} from "./functions"
 
 const SelectorPaneContextData = createContext<ISelectorPaneState | null>(null)
 
@@ -29,6 +38,7 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ selectorId, extSele
     const [selectorCode, setSelectorCode] = useState<IQuantaSelectorCode | null>(null)
     //this is pipelined object within the data
     const [pipelinedObjects, setPipelinedObject] = useState<IPipelinedData[]>([])
+    const [pipelineLinks, setPipelineLinks] = useState<{[key: string]: string}>({})
 
     const [analyzePipeline, setAnalyzePipeline] = useState(false)
     const toggleAnalyzePipeline = () => setAnalyzePipeline(true)
@@ -39,10 +49,75 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ selectorId, extSele
 
     const [extPipelineObjectLoaded, setExtPipelineObjectLoaded] = useState(false)
     const [extPipelineAnalysisLoaded, setExtPipelineAnalysisLoaded] = useState(false)
+    const [extLinksLoaded, setExtLinksLoaded] = useState(false)
+
+    const [previousQuery, setPreviousQuery] = useState<IQuantaQuery[] | undefined>(undefined)
 
     const { socketCreated, executeSocketFunction } = useContext(SocketHandlerData) as ISocketHandlerState
-    const { addSelectorSource, editPipelineObjects, editSelectorAnalysis } = useContext(QuantaContextData) as IQuantaState
+    const { 
+        addSelectorSource, 
+        editPipelineObjects, 
+        editSelectorAnalysis,
+        editPipelineLinks,
+        selectorsUpdated,
+        selectors,
+        getSchema 
+    } = useContext(QuantaContextData) as IQuantaState
+
+    //we need to build an example query based on the default value of all the other selectors
+    useEffect(() => {
+        setPreviousQuery([])
+        let prevSelectors = [] as IQuantaSelector[]
+        let datasetSchema = getSchema('dataset')
+        
+        if(datasetSchema === undefined)
+            return
+
+        for(let i = 0; i < selectors.length; i++) {
+            let tmpSelector = selectors[i]
+            if(tmpSelector.selectorId === selectorId)
+                break
+
+            prevSelectors.push(tmpSelector)
+        }
+
+        //for each selector we need three things
+        // its schema, the collected data(string) and the links between its schema and the dataset overall
+        let query = [] as IQuantaQuery[]
+        for(let i = 0; i < prevSelectors.length; i++) {
+            let querySelector = prevSelectors[i]
+            if(querySelector.selectorCode === undefined)
+                continue
+
+            let queryData = querySelector.selectorCode.defaultValue
+            let links = querySelector.selectorCode.selectorLinks
+            let schemaId = querySelector.selectorId
+            if(schemaId === undefined)
+                continue
+            
+            let schema = getSchema(schemaId)
+            if(schema === undefined || links === undefined)
+                continue
+
+            let resQuery = buildQuery(queryData, links, schema, datasetSchema)
+            if(resQuery === undefined)
+                continue
+
+            query = [ ...query, ...resQuery ]
+        }
+
+        setPreviousQuery([ ...query ])
+    }, [selectorsUpdated, selectorId])
     
+    useEffect(() => {
+        if(extLinksLoaded === true) {
+            setExtLinksLoaded(false)
+            return
+        }
+
+        editPipelineLinks(selectorId, pipelineLinks)
+    }, [pipelineLinks])
+
     useEffect(() => {
         if(extPipelineObjectLoaded === true) {
             setExtPipelineObjectLoaded(false)
@@ -91,13 +166,17 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ selectorId, extSele
 
         let _pipelinedObjects = extSelectorPipeline.pipelinedObjects
         let analysisObjects = extSelectorPipeline.pipelineAnalysis
+        let _pipelineLinks = extSelectorPipeline.pipelineLinks 
 
         if(_pipelinedObjects !== undefined && pipelinedObjects.length === 0) {
             setPipelinedObject([ ..._pipelinedObjects ])
             setExtPipelineObjectLoaded(true)
-        } else if (analysisObjects !== undefined && pipelineAnalysis.length === 0) {
+        } if (analysisObjects !== undefined && pipelineAnalysis.length === 0) {
             setPipelineAnalysis([ ...analysisObjects ])
             setExtPipelineAnalysisLoaded(true)
+        } if(_pipelineLinks !== undefined) {
+            setPipelineLinks({ ..._pipelineLinks })
+            setExtLinksLoaded(true)
         }
     }, [extSelectorPipeline])
 
@@ -109,6 +188,49 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ selectorId, extSele
         addSelectorSource(selectorId, selectorCode)
     }, [selectorCode])
 
+    //HANDLE THE CHANGING OF THE SELECTOR ID
+    useEffect(() => {
+        let newSelector = undefined
+        for(let i = 0; i < selectors.length; i++) {
+            let selector = selectors[i]
+            if(selector.selectorId === selectorId)
+                newSelector = selector
+        }
+
+        if(newSelector === undefined)
+            return
+
+        let nSelectorCode: IQuantaSelectorCode | undefined | null = newSelector.selectorCode
+        if(nSelectorCode === undefined)
+            nSelectorCode = null
+
+        let selectorPipeline = newSelector.selectorPipeline
+        let nObjects = selectorPipeline?.pipelinedObjects
+        let nAnalysis = selectorPipeline?.pipelineAnalysis
+        let nLinks = selectorPipeline?.pipelineLinks
+
+        let nPipelineObjects = [] as IPipelinedData[]
+        let nPipelineAnalysis = [] as IPipelineAnalysis[]
+        let nPipelineLinks = {} as {[key: string]: string}
+
+        //set the ext's so we dont needlesly update the quanta struct
+        setExtLinksLoaded(true)
+        setExtPipelineAnalysisLoaded(true)
+        setExtPipelineObjectLoaded(true)
+
+        if(nObjects !== undefined)
+            nPipelineObjects = nObjects
+        if(nAnalysis !== undefined)
+            nPipelineAnalysis = nAnalysis
+        if(nLinks !== undefined)
+            nPipelineLinks = nLinks
+
+        setPipelinedObject([ ...nPipelineObjects ])
+        setPipelineAnalysis([ ...nPipelineAnalysis ])
+        setPipelineLinks({ ...nPipelineLinks })
+        setSelectorCode(nSelectorCode)
+    }, [selectorId])
+
     let value = {} as ISelectorPaneState
     value.initialized = initialized
     value.selectorCode = selectorCode
@@ -116,6 +238,7 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ selectorId, extSele
     value.analyzePipeline = analyzePipeline
     value.analyzePipelineLoading = analysisLoading
     value.pipelineAnalysis = pipelineAnalysis
+    value.pipelineLinks = pipelineLinks
 
     value.setTestSource = setTestSource
     value.setSelectorCode = setSelectorCode
@@ -125,6 +248,9 @@ const SelectorPaneContext: React.FC<ISelectorPaneProps> = ({ selectorId, extSele
     
     value.setSelectorLink = (datasetId: string, selectorId: string) =>
         setSelectorLink(datasetId, selectorId, selectorCode, setSelectorCode)
+
+    value.setPipelineLink = (reservedId: string, selectorId: string) =>
+        setReservedLink(reservedId, selectorId, pipelineLinks, setPipelineLinks)
 
     value.addPipelineObject = (object: ISelectorPipelineOptions) =>
         addPipelineObject(object, pipelinedObjects, setPipelinedObject, toggleAnalyzePipeline)

@@ -6,7 +6,8 @@ const newSelector = (
     selectorName: string, 
     selectorId: string,
     selectors: IQuantaSelector[],
-    setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>
+    setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>,
+    toggleSelectorsUpdated: () => void
 ) => {
     let nSelectors = selectors
     nSelectors.push({
@@ -16,6 +17,7 @@ const newSelector = (
     })
 
     setSelectors([ ...nSelectors ])
+    toggleSelectorsUpdated()
 }
 
 const deleteSelector = (
@@ -23,7 +25,8 @@ const deleteSelector = (
     selectors: IQuantaSelector[],
     eraseSchema: (id: string) => void,
     setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>,
-    setActiveSelector: Dispatch<SetStateAction<string | null>>
+    setActiveSelector: Dispatch<SetStateAction<string | null>>,
+    toggleSelectorsUpdated: () => void
 ) => {
     eraseSchema(selectorId)
     let index: number | undefined = undefined
@@ -64,6 +67,7 @@ const deleteSelector = (
     }
 
     setSelectors([ ...nSelectors ])
+    toggleSelectorsUpdated()
 }
 
 const addSelectorSource = (
@@ -134,6 +138,31 @@ const editPipelineObjects = (
     setSelectors([ ...selectors ])
 }
 
+const editPipelineLinks = (
+    selectorId: string,
+    links: {[key: string]: string},
+    selectors: IQuantaSelector[],
+    setSelectors: Dispatch<SetStateAction<IQuantaSelector[]>>
+) => {
+    let index: number | undefined = undefined
+    for(let i = 0; i < selectors.length; i++) {
+        let selector = selectors[i]
+        if(selector.selectorId === selectorId)
+            index = i
+    }
+
+    if(index === undefined)
+        return
+
+    let selector = selectors[index]
+    if(selector.selectorPipeline === undefined)
+        selector.selectorPipeline = { pipelinedObjects: [], pipelineAnalysis: [] }
+
+    selector.selectorPipeline.pipelineLinks = links
+    selectors[index] = selector
+    setSelectors([ ...selectors ])
+}
+
 const editSelectorTitle = (
 
 ) => {
@@ -146,5 +175,6 @@ export {
     editSelectorTitle ,
     editSelectorAnalysis,
     editPipelineObjects,
-    deleteSelector
+    deleteSelector,
+    editPipelineLinks
 }

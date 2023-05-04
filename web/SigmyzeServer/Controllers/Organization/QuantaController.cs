@@ -17,12 +17,14 @@ public class QuantaController : OrganizationControllerBase
 {
     private readonly IProjectRepository _projectRepository;
     private readonly IQuantaRepository _quantaRepository;
+    private readonly IQuantaIndicatorRepository _quantaIndicatorRepository;
     private readonly IUserServiceRepository _userServiceRepository;
     private readonly IDriveRepository _driveRepository; 
     public QuantaController(
         IOrganizationRepository organizationRepository,
         IProjectRepository projectRepository,
         IQuantaRepository quantaRepository,
+        IQuantaIndicatorRepository quantaIndicatorRepository,
         IUserServiceRepository userServiceRepository,
         IDriveRepository driveRepository
     ) : base(organizationRepository)
@@ -31,6 +33,7 @@ public class QuantaController : OrganizationControllerBase
         _quantaRepository = quantaRepository;
         _userServiceRepository = userServiceRepository;
         _driveRepository = driveRepository;
+        _quantaIndicatorRepository = quantaIndicatorRepository;
     }
 
     private async Task<Drive?> GetDrive(string lunarId, string organizationId)
@@ -47,6 +50,31 @@ public class QuantaController : OrganizationControllerBase
         return drive;
     }
 
+    [HttpGet("select/indicator/{quantaId}/{indicatorId}")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> GetIndicatorById(string quantaId, string indicatorId)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "retreived";
+
+        QuantaIndicator? indicator = await _quantaIndicatorRepository.SelectProjectIndicatorId(quantaId, indicatorId);
+        GetQuantaIndicatorResp resp = new GetQuantaIndicatorResp();
+        if(indicator == null)
+        {
+            status.Error = true;
+            status.MSG = "bad_req";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        resp.Indicator = indicator;
+        resp.Status = status;
+        return await SerializeJSON(resp);
+    }
+    
+    //implemented in ts
     [HttpPost("select/indicator")]
     [MapToApiVersion("2.0")]
     public async Task<IActionResult> GetSelectedIndicator([FromBody]QuantaQueryBody body)
@@ -65,7 +93,7 @@ public class QuantaController : OrganizationControllerBase
             return await SerializeJSON(resp);
         }
 
-        GetIndicatorsQuery? queryRes = await _quantaRepository.SelectProjectIndicator(body.QuantaId, body.Params);
+        GetIndicatorsQuery? queryRes = await _quantaIndicatorRepository.SelectProjectIndicator(body.QuantaId, body.Params);
         if(queryRes == null)
         {
             status.Error = true;
@@ -80,42 +108,124 @@ public class QuantaController : OrganizationControllerBase
         return await SerializeJSON(resp);
     }
 
-    [AllowAnonymous]
-    [HttpGet("indicators_all/{organizationId}/{quantaId}/{processId}")]
+    //implemented in ts
+    [HttpPost("select/indicator/{pageLength}/{page}")]
     [MapToApiVersion("2.0")]
-    public async Task<IActionResult> GetAllIndicators(string organizationId, string quantaId, string processId)
+    public async Task<IActionResult> PageSelectedIndicators(int pageLength, int page, [FromBody]QuantaQueryBody body)
     {
         APIStatusMsg status = new APIStatusMsg();
         status.Error = false;
-        status.MSG = "retreived";
+        status.MSG = "paged";
 
         GetQuantaIndicatorsResp resp = new GetQuantaIndicatorsResp();
-        QuantaProjectCacheId? cache = await _quantaRepository.GetQuantaProjectCache(quantaId, processId);
-        
-        if(cache == null || cache.OrganizationId != organizationId)
+        if(body.QuantaId == null || body.Params == null)
         {
             status.Error = true;
-            status.MSG = "invalid_cache";
+            status.MSG = "bad_query";
             resp.Status = status;
 
             return await SerializeJSON(resp);
         }
 
-        GetIndicatorsQuery? query = await _quantaRepository.GetAllProjectIndicators(quantaId);
-        if(query == null || query.Indicators == null)
+        GetIndicatorsQuery? query = await _quantaIndicatorRepository.PageSelectedIndicators(body.QuantaId, body.Params, page, pageLength);
+        if(query == null)
         {
             status.Error = true;
-            status.MSG = "invalid_cache";
+            status.MSG = "invalid_quanta";
             resp.Status = status;
 
             return await SerializeJSON(resp);
         }
 
+        resp.Status = status;
         resp.Indicators = query.Indicators;
+        return await SerializeJSON(resp);
+    }
+
+    //implemented in ts
+    [HttpPost("select/indicator_length")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> GetSelectorIndicatorsLength([FromBody]QuantaQueryBody body)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "fetched";
+
+        GetQuantaIndicatorsLengthResp resp = new GetQuantaIndicatorsLengthResp();
+        if(body.QuantaId == null || body.Params == null)
+        {
+            status.Error = true;
+            status.MSG = "bad_query";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        GetIndicatorsLength? query = await _quantaIndicatorRepository.SelectProjectIndicatorLength(body.QuantaId, body.Params);
+        if(query == null)
+        {
+            status.Error = true;
+            status.MSG = "quanta_not_found";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        resp.Status = status;
+        resp.Length = query.IndicatorsLength;
+        return await SerializeJSON(resp);
+    }
+
+    //implemented in ts
+    [HttpGet("{quantaId}/indicators_length")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> GetIndicatorsLength(string organizationId, string quantaId)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "length";
+
+        GetQuantaIndicatorsLengthResp resp = new GetQuantaIndicatorsLengthResp();
+        GetIndicatorsLength? indicatorLength = await _quantaIndicatorRepository.GetProjectIndicatorsLength(quantaId);
+        if(indicatorLength == null)
+        {
+            status.Error = true;
+            status.MSG = "quanta_not_found";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        resp.Length = indicatorLength.IndicatorsLength;
         resp.Status = status;
         return await SerializeJSON(resp);
     }
 
+    [HttpGet("{quantaId}/{pageLength}/indicators/{page}")]
+    [MapToApiVersion("2.0")]
+    public async Task<IActionResult> GetIndicatorPage(string quantaId, int pageLength, int page)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "paged";
+
+        GetQuantaIndicatorsResp resp = new GetQuantaIndicatorsResp();
+        GetIndicatorsQuery? query = await _quantaRepository.GetProjectIndicators(quantaId, page, pageLength);
+        if(query == null)
+        {
+            status.Error = true;
+            status.MSG = "invalid_quanta";
+            resp.Status = status;
+
+            return await SerializeJSON(resp);
+        }
+
+        resp.Status = status;
+        resp.Indicators = query.Indicators;
+        return await SerializeJSON(resp);
+    }
+
+    //implemented in ts
     [HttpGet("{organizationId}/{quantaId}/indicators")]
     [MapToApiVersion("2.0")]
     public async Task<IActionResult> GetIndicators(string organizationId, string quantaId)
@@ -125,20 +235,7 @@ public class QuantaController : OrganizationControllerBase
         status.MSG = "retreive";
 
         GetQuantaIndicatorsResp resp = new GetQuantaIndicatorsResp();
-        string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
-        string lunarId = GetLunarID(accessToken);
-
-        Drive? drive = await GetDrive(lunarId, organizationId);
-        if(drive == null)
-        {
-            status.Error = true;
-            status.MSG = "bad_config";
-            resp.Status = status;
-
-            return await SerializeJSON(resp);
-        }
-
-        GetIndicatorsQuery? indicatorsRes = await _quantaRepository.GetProjectIndicators(quantaId, 0);
+        GetIndicatorsQuery? indicatorsRes = await _quantaRepository.GetProjectIndicators(quantaId, 0, 20);
         List<QuantaIndicator>? indicators = indicatorsRes?.Indicators;
         if (indicators == null)
         {
@@ -206,19 +303,6 @@ public class QuantaController : OrganizationControllerBase
 
         GetQuantaProjectResp resp = new GetQuantaProjectResp();
         resp.Status = msg;
-
-        string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
-        string lunarId = GetLunarID(accessToken);
-
-        Drive? drive = await GetDrive(lunarId, organizationId);
-        if(drive == null)
-        {
-            msg.Error = true;
-            msg.MSG = "bad_config";
-            resp.Status = msg;
-
-            return await SerializeJSON(resp);
-        }
 
         GetProjectDataQuery? project = await _quantaRepository.GetProjectData(projectId);
         if(project == null)
@@ -301,16 +385,6 @@ public class QuantaController : OrganizationControllerBase
         {
             msg.Error = true;
             msg.MSG = "bad_param";
-            return await SerializeJSON(msg);
-        }
-
-        string accessToken = (await HttpContext.GetTokenAsync("access_token"))!;
-        string lunarId = GetLunarID(accessToken);
-        Drive? drive = await GetDrive(lunarId, organizationId);
-        if(drive == null)
-        {
-            msg.Error = true;
-            msg.MSG = "bad_config";
             return await SerializeJSON(msg);
         }
 

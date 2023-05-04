@@ -2,22 +2,23 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { IQuantaSelectorCode } from "../../data/quanta/types/project"
 import { IPipelineAnalysis } from "../selector-pane/context/types"
 import { LoadingOverlay } from "@mantine/core"
-import { showNotification } from "@mantine/notifications"
 import { IIFrameMessage } from "../selector-pane/selector-frame-tester/types"
-import { IIndicatorBody, IPipelineMessage, IQueryIndicator, IResolverBody } from "./types"
+import { IPipelineMessage, IQuantaQuery } from "./types"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import { QuantaContextData } from "../../data/quanta/context"
 import { IQuantaState } from "../../data/quanta/types"
-import { SelectIndicator } from "../../data/quanta/quanta-api"
+import { messageHandler } from "./handler"
 
 interface ISelectorFrameProps {
     source: IQuantaSelectorCode,
     pipelineAnalysis?: IPipelineAnalysis[],
-    pipelineLoading?: boolean
+    pipelineLoading?: boolean,
+    pipelineLinks?: {[key: string]: string},
+    query?: IQuantaQuery[]
 }
 
-const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading, pipelineAnalysis }) => {
+const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading, pipelineAnalysis, pipelineLinks, query }) => {
     const [dims, setDims] = useState({ width: 0, height: 0 })
     const iframeRef = useRef<HTMLIFrameElement | null>(null)
 
@@ -43,41 +44,8 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
                         throw Error("bad_request")
     
                     let func = parsedMessage.function
-                    if(func === "query_indicator") {
-                        let parsedQuery: IQueryIndicator = JSON.parse(parsedMessage.data)
-                        let query = parsedQuery.query
-
-                        let token = authData?.token
-                        if(token === undefined)
-                            throw Error("no_token")
-                        if(quantaId === undefined || quantaId === null)
-                            throw Error("no_quanta")
-
-                        let indicators = await SelectIndicator(token, quantaId, query)
-                        if(indicators === undefined)
-                            throw Error("no_indicator")
-
-                        let resolveBody = { indicators: indicators } as IIndicatorBody
-                        let resolverBody = {
-                            requestId: parsedQuery.requestId,
-                            requestData: JSON.stringify(resolveBody)
-                        } as IResolverBody
-
-                        let frameMessage: IIFrameMessage = {
-                            function: "queryIndicator",
-                            data: JSON.stringify(resolverBody)
-                        }
-
-                        postMessage(JSON.stringify(frameMessage))
-                    }
-                } catch(e) {
-                    showNotification({
-                        title: "Analysis Error",
-                        message: `Error parsing selector message -> ${e}`,
-                        color: 'red',
-                        autoClose: 1000 * 5
-                    })
-                }
+                    await messageHandler(func, parsedMessage.data, authData, quantaId, postMessage)
+                } catch(e) { }
             }
 
             main()
@@ -95,23 +63,68 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         setInternalLoading(pipelineLoading)
     }, [pipelineLoading])
 
+    //updates the internal analysis of the selector
     useEffect(() => {
         if(internalLoading === true)
             return
         if(pipelineAnalysis === undefined)
             return
 
-        let pipelineMessage: IPipelineMessage = {
-            analysis: pipelineAnalysis
+        function isReserved(id: string) : string | undefined {
+            if(pipelineLinks === undefined)
+                return
+
+            let keys = Object.keys(pipelineLinks)
+            for(let i = 0; i < keys.length; i++) {
+                let key = keys[i]
+                let val = pipelineLinks[key]
+
+                if(val === id)
+                    return key
+            }
+
+            return undefined
         }
 
-        let frameMessage: IIFrameMessage = {
+        let nAnalysis = [] as IPipelineAnalysis[]
+        for(let i = 0; i < pipelineAnalysis.length; i++) {
+            let analysis = pipelineAnalysis[i]
+            let reserved = isReserved(analysis.objectId)
+            if(reserved !== undefined)
+                analysis.objectId = reserved
+
+            nAnalysis.push(analysis)
+        }
+
+        //build the final portions of analysis based on retreived queries now
+        let internalQuery = [] as IQuantaQuery[]
+        if(query !== undefined)
+            internalQuery = query
+
+        for(let i = 0; i < internalQuery.length; i++) {
+            let queryItem = internalQuery[i]
+            let analysis = {} as IPipelineAnalysis
+            if(queryItem.fieldType === "string")
+                analysis.objectType = "string"
+
+            analysis.objectId = `query::${queryItem.fieldKey}`
+            analysis.stringValue = queryItem.stringField
+            analysis.dateValue = queryItem.dateField
+            nAnalysis.push(analysis)
+        }
+
+        //push the data to the frame
+        const pipelineMessage: IPipelineMessage = {
+            analysis: nAnalysis
+        }
+
+        const frameMessage: IIFrameMessage = {
             function: "pipeline",
             data: JSON.stringify(pipelineMessage)
         }
 
         postMessage(JSON.stringify(frameMessage))
-    }, [pipelineAnalysis])
+    }, [pipelineAnalysis, internalLoading, pipelineLinks, query])
 
     const onLoad = () => {
         if(iframeRef.current === null)
@@ -168,4 +181,5 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
     )
 }
 
+export * from './query-builder'
 export default SelectorFrame

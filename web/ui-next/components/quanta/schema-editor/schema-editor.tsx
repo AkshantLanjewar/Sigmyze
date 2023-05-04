@@ -75,18 +75,10 @@ const SchemaEditor: React.FC<ISchemaEditorProps> = ({ schemaId, viewOnly, linked
             quantaContext.initSchema(schemaId)
             return
         }
-
-        let nInternalView = false
-        if(viewOnly === true)
-            nInternalView = true
-
-        let nInternalLinked = false
-        if(linkedSchema !== undefined)
-            nInternalLinked = true
         
-        quantaSchema = hydrateSchema(quantaSchema, nInternalView, nInternalLinked)
+        quantaSchema = hydrateSchema(quantaSchema, internalView, internalLinked)
         setInternalSchema({ ...quantaSchema })
-    }, [quantaContext?.selectors])
+    }, [quantaContext?.selectors, internalView, internalLinked, schemaId])
 
     useEffect(() => {
         if(viewOnly === undefined)

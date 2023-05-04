@@ -16,6 +16,8 @@ interface ISelectorPaneState {
 
     pipelineAnalysis: IPipelineAnalysis[],
 
+    pipelineLinks: {[key: string]: string},
+
     //funcs
     compileProject: (projectData: string) => Promise<any>,
 
@@ -24,6 +26,8 @@ interface ISelectorPaneState {
     setSelectorCode: Dispatch<SetStateAction<IQuantaSelectorCode | null>>,
 
     setSelectorLink: (datasetId: string, selectorId: string) => void,
+
+    setPipelineLink: (reservedId: string, selectorId: string) => void,
 
     addPipelineObject: (object: ISelectorPipelineOptions) => void,
 
@@ -61,6 +65,11 @@ interface IPipelinedData {
      * this is the id of the object within the dataset object
      */
     dataset_id?: string,
+
+    /**
+     * whether or not the object can be reserved by a keyword
+     */
+    reservable?: boolean,
 }
 
 interface IPipelineAnalysis {

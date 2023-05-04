@@ -49,9 +49,6 @@ const SelectorPipeline: React.FC = ({ }) => {
 
     function loadPipelineOptions() {
         let nOptions = [] as ISelectorPipelineOptions[]
-        if(!pipelinedHasSelected())
-            nOptions.push({ displayType: 'selected', optionName: "Selected Object" })
-
         let schema = getSchema('dataset')?.children
         if(schema === undefined)
             return

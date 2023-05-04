@@ -9,7 +9,6 @@ const addPipelineObject = (
     setPipelinedObject: Dispatch<SetStateAction<IPipelinedData[]>>,
     toggleAnalyzePipeline: () => void
 ) => {
-    let pipelineType = object.displayType
     let newPipelinedObject = {} as IPipelinedData
     if(object.displayType === "dataset" && object.linkedItemId === undefined)
         return
@@ -18,6 +17,8 @@ const addPipelineObject = (
     newPipelinedObject.pipeline_name = object.optionName
     newPipelinedObject.pipeline_type = object.displayType
     newPipelinedObject.dataset_id = object.linkedItemId
+    if(object.displayType !== "selected")
+        newPipelinedObject.reservable = true
 
     let nPipelined = pipelinedObjects
     nPipelined.push(newPipelinedObject)

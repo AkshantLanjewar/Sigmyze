@@ -50,17 +50,22 @@ const PipelineAnalyzer: React.FC<IPipelineAnalyzerProps> = ({ selectorId, setPip
     }
 
     async function analyze() {
-        if(socketCreated === false)
-            return
+        function exit() {
+            setAnalyzePipeline(false)
+            setPipelineLoading(false)
+        }
 
-        clearAnalysis()
         setPipelineLoading(true)
+        clearAnalysis()
+        if(socketCreated === false || pipelinedObjects.length === 0) {
+            exit()
+            return
+        }
 
         const processId = v4()
-        let token = authData?.token
+        const token = authData?.token
         if(token === undefined || quantaId === null || organizationId === null) {
-            setPipelineLoading(false)
-            setAnalyzePipeline(false)
+            exit()
             return
         }
 
@@ -133,6 +138,8 @@ const PipelineAnalyzer: React.FC<IPipelineAnalyzerProps> = ({ selectorId, setPip
             setAnalyzePipeline(false)
             setPipelineLoading(false)
         }
+
+        exit()
     }
 
     useEffect(() => {

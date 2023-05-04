@@ -69,7 +69,8 @@ interface IQuantaSelector {
 
 interface ISelectorPipeline {
     pipelinedObjects?: IPipelinedData[],
-    pipelineAnalysis?: IPipelineAnalysis[]
+    pipelineAnalysis?: IPipelineAnalysis[],
+    pipelineLinks?: {[key: string]: string}
 }
 
 interface IQuantaSelectorCode {
@@ -78,7 +79,8 @@ interface IQuantaSelectorCode {
     schemaName: string,
     schemaItems: ISchemaItem[],
     sourceCode: string,
-    selectorLinks?: ISelectorLinks
+    selectorLinks?: ISelectorLinks,
+    defaultValue: string
 }
 
 interface ISelectorLinks {

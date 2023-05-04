@@ -3,6 +3,7 @@ import schema_styles from '../../schema-editor/schema-viewer.module.scss'
 import { IPipelinedData, ISelectorPaneState } from '../context/types'
 import { useContext } from 'react'
 import { SelectorPaneContextData } from '../context'
+import PipelineLinker from './pipeline-linker'
 
 interface IPipelinedObjectProps {
     step: IPipelinedData
@@ -22,6 +23,10 @@ const PipelineObject: React.FC<IPipelinedObjectProps> = ({ step }) => {
             </div>
 
             <Group spacing={8} className={schema_styles.flare}>
+                {step.reservable === true && (
+                    <PipelineLinker pipelineId={step.pipeline_name} />
+                )}
+
                 <Badge
                     variant={"filled"}
                     color={"grape"}

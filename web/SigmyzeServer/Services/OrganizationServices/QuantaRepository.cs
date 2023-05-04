@@ -10,17 +10,15 @@ namespace SigmyzeServer.Services.OrganizationServices;
 public interface IQuantaRepository
 {
     Task InitQuantaProject(string projectId, string projectName, string organizationId);
-    Task<QuantaRepositoryDefinition?> GetProject(string projectId);
     Task DeleteProject(string projectId);
     Task<QuantaProjectCacheId?> GetQuantaProjectCache(string projectId, string processId);
     Task DeleteQuantaProjectCache(string projectId, string processId);
     Task CreateQuantaProjectCache(string organizationId, string projectId, string processId);
-    Task<GetIndicatorsQuery?> GetProjectIndicators(string projectId, int page);
+    Task<GetIndicatorsQuery?> GetProjectIndicators(string projectId, int page, int pageLen);
     Task UpdateIndicators(string projectId, List<QuantaIndicator> newIndicators);
     Task<GetProjectDataQuery?> GetProjectData(string projectId);
     Task UpdateProjectData(string projectId, QuantaProjectData data);
     Task<GetIndicatorsQuery?> GetAllProjectIndicators(string projectId);
-    Task<GetIndicatorsQuery?> SelectProjectIndicator(string projectId, List<QuantaQuery> query);
 }
 
 public class QuantaRepository : IQuantaRepository
@@ -89,9 +87,6 @@ public class QuantaRepository : IQuantaRepository
         await _quantaProjectCache.InsertOneAsync(quantaCache);
     }
 
-    public async Task<QuantaRepositoryDefinition?> GetProject(string projectId) =>
-        await _quantaRepository.Find(x => x.ProjectId == projectId).FirstOrDefaultAsync();
-
     public async Task UpdateIndicators(string projectId, List<QuantaIndicator> newIndicators)
     {   
         var filter = Builders<QuantaRepositoryDefinition>.Filter.Eq(x => x.ProjectId, projectId);
@@ -108,117 +103,6 @@ public class QuantaRepository : IQuantaRepository
             .Set(x => x.ProjectData, data);
 
         await _quantaRepository.UpdateOneAsync(filter, update);
-    }
-
-    private bool validateQuery(QuantaQuery query)
-    {
-        if(query.FieldKey == null || query.FieldType == null)
-            return false;
-
-        string fieldType = query.FieldType;
-        if(fieldType == "string" && query.StringField == null)
-            return false;
-        if(fieldType == "date" && query.DateField == null)
-            return false;
-
-        return true;
-    }
-
-    public async Task<GetIndicatorsQuery?> SelectProjectIndicator(string projectId, List<QuantaQuery> query)
-    {
-        BsonDocument matchStage = new BsonDocument {
-            {
-                "$match", new BsonDocument {
-                    { "project_id", projectId }
-                }
-            }
-        };
-
-        BsonDocument unwindStage = new BsonDocument {
-            {
-                "$unwind", "$project_indicators"
-            }
-        };
-
-        BsonArray andArray = new BsonArray {};
-        for(int i = 0; i < query.Count; i++)
-        {
-            QuantaQuery obj = query[i];
-            if(validateQuery(obj) == false)
-                continue;
-
-            string fieldType = obj.FieldType!;
-            BsonDocument matchObject = new BsonDocument{};
-            matchObject.Add(new BsonElement("fieldKey", obj.FieldKey!));
-
-            if(fieldType == "string")
-                matchObject.Add("stringField", obj.StringField!);
-            else
-                matchObject.Add("dateField", obj.DateField!);
-
-            BsonDocument queryBson = new BsonDocument {
-                {
-                    "project_indicators.field.datasetFields", new BsonDocument {
-                        {
-                            "$elemMatch", matchObject
-                        }
-                    }
-                }
-            };
-
-            andArray.Add(queryBson);
-        }
-
-        BsonDocument matchArrStage = new BsonDocument {
-            {
-                "$match", new BsonDocument {
-                    {
-                        "$and", andArray
-                    }
-                }
-            }
-        };
-
-        BsonDocument groupStage = new BsonDocument {
-            {
-                "indicators", new BsonDocument {
-                    {
-                        "$push", "$project_indicators"
-                    },
-                    {
-                        "_id", null
-                    }
-                }
-            }
-        };
-
-        BsonDocument finProject = new BsonDocument {
-            {
-                "$project", new BsonDocument {
-                    {
-                        "_id", 0
-                    },
-                    {
-                        "indicators", "$indicators"
-                    }
-                }
-            }
-        };
-
-        BsonDocument[] pipeline = new BsonDocument[]
-        {
-            matchStage,
-            unwindStage,
-            matchArrStage,
-            groupStage,
-            finProject
-        };
-
-        List<GetIndicatorsQuery> results = await _quantaRepository.Aggregate<GetIndicatorsQuery>(pipeline).ToListAsync();
-        if(results.Count == 0)
-            return null;
-
-        return results[0];
     }
 
     public async Task<GetProjectDataQuery?> GetProjectData(string projectId)
@@ -299,9 +183,9 @@ public class QuantaRepository : IQuantaRepository
         return results[0];
     }
 
-    public async Task<GetIndicatorsQuery?> GetProjectIndicators(string projectId, int page)
+    public async Task<GetIndicatorsQuery?> GetProjectIndicators(string projectId, int page, int pageLen)
     {
-        page = page * 25;
+        page = page * pageLen;
 
         BsonDocument matchStage = new BsonDocument{
             {
@@ -320,7 +204,7 @@ public class QuantaRepository : IQuantaRepository
                                 "$slice", new BsonArray {
                                     "$project_indicators",
                                     page,
-                                    25
+                                    pageLen
                                 }
                             }
                         }

@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc, serde::ts_seconds};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 use crate::quanta_dataset::{DatasetField, ChartData};
 
@@ -103,14 +104,18 @@ pub struct QuantaIndicator {
     pub field: DatasetField,
 
     #[serde(rename="chartData")]
-    pub chart_data: Vec<ChartData>
+    pub chart_data: Vec<ChartData>,
+
+    #[serde(rename="indicatorId")]
+    pub indicator_id: Option<String>
 }
 
 impl QuantaIndicator {
     pub fn new(field: DatasetField, chart_data: Vec<ChartData>) -> Self {
         Self {
             field,
-            chart_data
+            chart_data,
+            indicator_id: Some(Uuid::new_v4().to_string())
         }
     }
 }
@@ -130,4 +135,10 @@ pub struct APIStatusMessage {
 pub struct GetIndicatorsResp {
     pub status: Option<APIStatusMessage>,
     pub indicators: Option<Vec<QuantaIndicator>>
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct GetIndicatorLengthResp {
+    pub status: Option<APIStatusMessage>,
+    pub length: Option<i32>
 }

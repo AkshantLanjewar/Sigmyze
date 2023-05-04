@@ -6,6 +6,12 @@ interface IQueryIndicator {
     query: IQuantaQuery[]
 }
 
+interface IQueryIndicatorPage {
+    requestId: string,
+    page: number,
+    pageLength: number
+}
+
 interface IQuantaQuery {
     fieldKey?: string,
     fieldType?: string,
@@ -31,5 +37,6 @@ export type {
     IQuantaQuery,
     IResolverBody,
     IIndicatorBody,
-    IPipelineMessage 
+    IPipelineMessage,
+    IQueryIndicatorPage 
 }

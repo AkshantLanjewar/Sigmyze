@@ -31,7 +31,8 @@ import {
     editSelectorAnalysis,
     editPipelineObjects,
     eraseSchema,
-    deleteSelector
+    deleteSelector,
+    editPipelineLinks
 } from "./functions"
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
 import NewFieldForm from "./forms/new_field"
@@ -89,6 +90,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     //selectors within the project
     const [selectors, setSelectors] = useState<IQuantaSelector[]>([])
     const [selectorLoad, setSelectorLoad] = useState(false)
+
+    const [selectorsUpdated, setSelectorsUpdated] = useState(false)
+    const toggleSelectorsUpdated = () => setSelectorsUpdated(!selectorsUpdated)
 
     const [dataLoaded, setDataLoaded] = useState(false)
     const [selectorUpdated, setSelectorUpdated] = useState(false)
@@ -281,7 +285,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     //selectors
     value.newSelector = (selectorName: string, selectorId: string) =>
-        newSelector(selectorName, selectorId, selectors, setSelectors)
+        newSelector(selectorName, selectorId, selectors, setSelectors, toggleSelectorsUpdated)
 
     value.addSelectorSource = (selectorId: string, selectorSource: IQuantaSelectorCode) =>
         addSelectorSource(selectorId, selectorSource, selectors, setSelectors)
@@ -292,8 +296,11 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.editPipelineObjects = (selectorId: string, data: IPipelinedData[]) =>
         editPipelineObjects(selectorId, data, selectors, setSelectors)
 
+    value.editPipelineLinks = (selectorId: string, links: {[key: string]: string}) =>
+        editPipelineLinks(selectorId, links, selectors, setSelectors)
+
     value.deleteSelector = (selectorId: string) =>
-        deleteSelector(selectorId, selectors, value.eraseSchema, setSelectors, setActiveSelector)
+        deleteSelector(selectorId, selectors, value.eraseSchema, setSelectors, setActiveSelector, toggleSelectorsUpdated)
     
     //function that loads the quanta data
     function loadQuanta() {

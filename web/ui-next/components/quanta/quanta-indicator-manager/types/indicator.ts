@@ -1,6 +1,7 @@
 interface IQuantaIndicator {
     field?: IDatasetField,
-    chartData?: IChartData[]
+    chartData?: IChartData[],
+    indicatorId?: string
 }
 
 interface IDatasetField {

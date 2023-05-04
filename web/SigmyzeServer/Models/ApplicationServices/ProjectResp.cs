@@ -28,3 +28,21 @@ public class GetQuantaIndicatorsResp
     [JsonProperty("indicators")]
     public List<QuantaIndicator>? Indicators { get; set; }
 }
+
+public class GetQuantaIndicatorResp
+{
+    [JsonProperty("status")]
+    public APIStatusMsg? Status { get; set; }
+    
+    [JsonProperty("indicator")]
+    public QuantaIndicator? Indicator { get; set; }
+}
+
+public class GetQuantaIndicatorsLengthResp
+{
+    [JsonProperty("status")]
+    public APIStatusMsg? Status { get; set; }
+
+    [JsonProperty("length")]
+    public int? Length { get; set; }
+}

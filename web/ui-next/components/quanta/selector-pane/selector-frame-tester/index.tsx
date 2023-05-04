@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { IIFrameMessage, IPingFrameData, ISchemaItem, ISetSchemaMessage } from "./types"
+import { IIFrameMessage, IPingFrameData, ISchemaItem, ISelectedMessage, ISetSchemaMessage } from "./types"
 import { showNotification } from "@mantine/notifications"
 import { QuantaContextData } from "../../../data/quanta/context"
 import { IQuantaState } from "../../../data/quanta/types"
@@ -17,6 +17,9 @@ interface ISelectorFrameTesterProps {
 const PING_ERROR_CODE = 200
 const PING_SUCCESS_CODE = 350
 
+const DEFAULT_SUCCESS_CODE = 120
+const DEFAULT_ERROR_CODE = 910
+
 const SCHEMA_ERROR_CODE = 190
 const SCHEMA_SUCCESS_CODE = 982
 
@@ -24,11 +27,13 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
     const [internalSource, setInternalSource] = useState("")
     const [pingStatus, setPingStatus] = useState<number | null>(null)
     const [schemaStatus, setSchemaStatus] = useState<number | null>(null)
+    const [defaultStatus, setDefaultStatus] = useState<number | null>(null)
 
     //internal data for a successful selector
     const [newSchemaName, setNewSchemaName] = useState<string | null>(null)
     const [containerId, setContainerId] = useState<string | null>(null)
     const [schemaItems, setSchemaItems] = useState<ISchemaItem[] | null>(null)
+    const [initialValue, setInitialValue] = useState<any | undefined>(undefined)
 
     //quanta context
     const { getSchema, changeSchema } = useContext(QuantaContextData) as IQuantaState
@@ -43,7 +48,7 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
     }
 
     useEffect(() => {
-        if(pingStatus !== PING_SUCCESS_CODE || schemaStatus !== SCHEMA_SUCCESS_CODE)
+        if(pingStatus !== PING_SUCCESS_CODE || schemaStatus !== SCHEMA_SUCCESS_CODE || defaultStatus !== DEFAULT_SUCCESS_CODE)
             return
         if(newSchemaName === null || containerId === null || schemaItems === null)
             return
@@ -79,12 +84,14 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
             schemaId: selectorId,
             schemaName: newSchemaName,
             schemaItems: schemaItems,
-            sourceCode: internalSource
+            sourceCode: internalSource,
+            selectorLinks: {},
+            defaultValue: JSON.stringify(initialValue)
         }
 
         setSelectorCode(selectorCode)
         setInternalSource("")
-    }, [pingStatus, schemaStatus])
+    }, [pingStatus, schemaStatus, defaultStatus])
     
     useEffect(() => {
         if(source === null)
@@ -118,6 +125,17 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
             setSchemaStatus(SCHEMA_ERROR_CODE)
         }, 1000 * 90)
 
+        const defaultTimer = setTimeout(() => {
+            showNotification({
+                title: "Invalid Schema",
+                message: "This schema didnt return a default value",
+                color: 'red',
+                autoClose: 1000 * 10
+            })
+
+            setDefaultStatus(DEFAULT_ERROR_CODE)
+        }, 1000 * 120)
+
         const frameHandler = (event: MessageEvent<any>) => {
             try {
                 let parsedMessage: IIFrameMessage = JSON.parse(event.data)
@@ -125,36 +143,46 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
                     return
 
                 let func = parsedMessage.function
-                if(func === "ping") {
-                    let funcData = parsedMessage.data
-                    let parsedFunc: IPingFrameData = JSON.parse(funcData)
-                    if(parsedFunc.sourceId === undefined)
-                        return
+                let funcData = parsedMessage.data
+                let parsedFunc: any = JSON.parse(funcData)
 
-                    clearTimeout(pingTimer)
-                    setPingStatus(PING_SUCCESS_CODE)
+                switch(func) {
+                    case "ping":
+                        let pingData = parsedFunc as IPingFrameData
+                        if(pingData.sourceId === undefined)
+                            return
 
-                    let sourceId = parsedFunc.sourceId
-                    if(sourceId === undefined)
-                        return
+                        let sourceId = pingData.sourceId
+                        if(sourceId === undefined)
+                            return
 
-                    setContainerId(sourceId)
-                } if (func === "setSchema") {
-                    let funcData = parsedMessage.data
-                    let parsedFunc: ISetSchemaMessage = JSON.parse(funcData)
-                    if(parsedFunc.schemaItems === undefined || parsedFunc.schemaName === undefined)
-                        return
+                        clearTimeout(pingTimer)
+                        setPingStatus(PING_SUCCESS_CODE)
+                        setContainerId(sourceId)
+                    case "setSchema":
+                        let schemaData = parsedFunc as ISetSchemaMessage
+                        if(schemaData.schemaItems === undefined || schemaData.schemaName === undefined)
+                            return
 
-                    clearTimeout(schemaTimer)
-                    setSchemaStatus(SCHEMA_SUCCESS_CODE)
+                        let schemaName = schemaData.schemaName
+                        let schemaComponents = schemaData.schemaItems
+                        if(schemaName === undefined)
+                            return
 
-                    let schemaName = parsedFunc.schemaName
-                    let schemaComponents = parsedFunc.schemaItems
-                    if(schemaName === undefined)
-                        return
+                        clearTimeout(schemaTimer)
+                        setSchemaStatus(SCHEMA_SUCCESS_CODE)
 
-                    setSchemaItems([ ...schemaComponents ])
-                    setNewSchemaName(schemaName)
+                        setSchemaItems([ ...schemaComponents ])
+                        setNewSchemaName(schemaName)
+                    case "selected":
+                        let selectedData = parsedFunc as ISelectedMessage
+                        let defaultVal = selectedData.data
+
+                        clearTimeout(defaultTimer)
+                        setDefaultStatus(DEFAULT_SUCCESS_CODE)
+                        setInitialValue(defaultVal)
+                    default:
+                        break
                 }
             } catch {
                 console.debug("[skipping msg]")

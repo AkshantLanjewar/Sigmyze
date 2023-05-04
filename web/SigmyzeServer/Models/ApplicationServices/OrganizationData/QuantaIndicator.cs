@@ -15,6 +15,11 @@ public class QuantaIndicator
     [JsonProperty("chartData")]
     [JsonPropertyName("chartData")]
     public List<ChartData>? ChartData { get; set; }
+
+    [BsonElement("indicatorId")]
+    [JsonProperty("indicatorId")]
+    [JsonPropertyName("indicatorId")]
+    public string? IndicatorId { get; set; }
 }
 
 public class DatasetField

@@ -104,6 +104,9 @@ interface IQuantaState {
     //edits pipelined objects in selector 
     editPipelineObjects: (selectorId: string, data: IPipelinedData[]) => void,
 
+    //edits pipeline links
+    editPipelineLinks: (selectorId: string, links: {[key: string]: string}) => void,
+
     //deletes the schema
     deleteSelector: (selectorId: string) => void
 }
