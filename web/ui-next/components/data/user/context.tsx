@@ -117,12 +117,16 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
     useEffect(() => {
         async function main() {
             let token = authData?.token
-            if(token === undefined)
+            if(token === undefined || contextValue.logout === undefined)
                 return
             if(authData?.logged_in !== true)
                 return
 
-            await FetchUserData(token, setUserData)
+            try {
+                await FetchUserData(token, setUserData)
+            } catch {
+                await contextValue.logout(token)
+            }
         }
 
         main()

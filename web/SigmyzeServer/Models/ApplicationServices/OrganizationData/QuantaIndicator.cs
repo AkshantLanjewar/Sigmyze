@@ -1,8 +1,26 @@
 using System.Text.Json.Serialization;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 
 namespace SigmyzeServer.Models.ApplicationServices;
+
+public class QuantaIndicatorRepositoryDef
+{
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    [Newtonsoft.Json.JsonIgnore]
+    public string? Id { get; set; }
+
+    [BsonElement("project_id")]
+    [JsonProperty("project_id")]
+    [JsonPropertyName("project_id")]
+    public string? QuantaId { get; set; }
+
+    [BsonElement("project_indicators")]
+    [Newtonsoft.Json.JsonIgnore]
+    public List<QuantaIndicator>? ProjectIndicators { get; set; }
+}
 
 public class QuantaIndicator
 {

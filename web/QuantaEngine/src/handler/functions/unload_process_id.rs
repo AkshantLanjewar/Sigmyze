@@ -94,8 +94,7 @@ pub async fn unload_process_id(
         .await?;
 
     data_store.set_expiring(process_fmt, "delete", Duration::from_secs(5)).await?;
-    data_store.set_expiring(&process_id, "delete", Duration::from_secs(5)).await?;
-
     data_store.set("keys", new_keys).await.unwrap();
+    
     Ok(socket_response(String::from("success"), false, request_id))
 }

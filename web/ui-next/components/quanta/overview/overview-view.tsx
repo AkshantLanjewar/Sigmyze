@@ -8,6 +8,7 @@ import OverviewSelectors from '../overview-selectors/overview-selectors'
 import OverviewTabs from '../overview-tabs/overview-tabs'
 import styles from './overview-view.module.scss'
 import SchemaEditor from '../schema-editor/schema-editor'
+import CategoryMapper from '../category-mapper'
 
 const QuantaOverviewView: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
@@ -87,6 +88,11 @@ const QuantaOverviewView: React.FC = ({ }) => {
                 <div className={styles.schema__container}>
                     <div className={styles.title}>Dataset Schema</div>
                     <SchemaEditor schemaId='dataset' viewOnly={true} />
+                </div>
+
+                <div className={styles.schema__container}>
+                    <div className={styles.title}>Dataset Categories</div>
+                    <CategoryMapper />
                 </div>
             </div>
 

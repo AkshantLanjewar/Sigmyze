@@ -51,7 +51,15 @@ interface IQuantaFile {
 
 interface IQuantaDataStore {
     selectors: IQuantaSelector[],
-    editorProjects?: IQuantaEditorProject[]
+    editorProjects?: IQuantaEditorProject[],
+    categorization?: IQuantaCategorization
+}
+
+interface IQuantaCategorization {
+    fileName?: string,
+    mapsTo?: string, // this is the field that the category maps to in the dataset
+    categories?: string[], // this is the actual list of categories that are extracted
+    categoriesMap?: { [key: string]: string[] } //
 }
 
 interface ProjectSchemas {
@@ -104,5 +112,6 @@ export type {
     IQuantaEditorProject,
     IQuantaSelectorCode,
     ISelectorLinks,
-    ISelectorPipeline 
+    ISelectorPipeline,
+    IQuantaCategorization 
 }

@@ -3,12 +3,8 @@ import styles from './selector-code.module.scss'
 import { IconCode, IconFileZip } from '@tabler/icons'
 import { useContext, useEffect, useState } from 'react'
 import ModalManager from '../../ui/modal-manager'
-import { IQuantaFormField } from '../quanta-editor/types/form'
-import FormBuilder from '../../ui/form-builder/form-builder'
-import { v4 } from 'uuid'
 import { SelectorPaneContextData } from '../selector-pane/context'
 import { ISelectorPaneState } from '../selector-pane/context/types'
-import { ICompileProjectResult } from '../selector-pane/context/functions'
 import UploadModal from './upload-modal'
 
 const SelectorCodeUpload: React.FC = ({ }) => {

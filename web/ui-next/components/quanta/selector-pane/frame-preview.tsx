@@ -12,7 +12,7 @@ const FramePreview: React.FC = ({ }) => {
     } = useContext(SelectorPaneContextData) as ISelectorPaneState
 
     return (
-        <div>
+        <div style={{ width: "100%", height: "100%" }}>
             {selectorCode
                 ? (
                     <SelectorFrame 

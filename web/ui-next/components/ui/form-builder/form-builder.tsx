@@ -70,11 +70,15 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
                         )
 
                     if(inputType === "dropdown") {
-                        let dropdownGroup = step.dropdownField
-                        if(dropdownGroup === undefined)
-                            return
+                        let dropdownItems = undefined
+                        if(step.dropdownField !== undefined) {
+                            let dropdownGroup = step.dropdownField
+                            dropdownItems = convertTypesToDropdown(dropdownGroup)
+                        } if(step.manualDropdownItems !== undefined) {
+                            dropdownItems = step.manualDropdownItems
+                        }
 
-                        let dropdownItems = convertTypesToDropdown(dropdownGroup)
+
                         if(dropdownItems === undefined)
                             return
 

@@ -50,6 +50,7 @@ public class QuantaController : OrganizationControllerBase
         return drive;
     }
 
+    //implemented in ts
     [HttpGet("select/indicator/{quantaId}/{indicatorId}")]
     [MapToApiVersion("2.0")]
     public async Task<IActionResult> GetIndicatorById(string quantaId, string indicatorId)
@@ -289,7 +290,8 @@ public class QuantaController : OrganizationControllerBase
         }
 
         //retreive and update the quanta project
-        await _quantaRepository.UpdateIndicators(body.QuantaId, newIndicators);
+        await _quantaIndicatorRepository.ClearIndicators(body.QuantaId);
+        await _quantaIndicatorRepository.SetIndicators(body.QuantaId, newIndicators);
         return await SerializeJSON(status);
     }
 

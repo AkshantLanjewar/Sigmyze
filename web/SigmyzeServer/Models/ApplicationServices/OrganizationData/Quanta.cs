@@ -51,10 +51,6 @@ public class QuantaRepositoryDefinition
     [Newtonsoft.Json.JsonIgnore]
     public string? OrganizationId { get; set; }
 
-    [BsonElement("project_indicators")]
-    [Newtonsoft.Json.JsonIgnore]
-    public List<QuantaIndicator>? ProjectIndicators { get; set; }
-
     [BsonElement("project_data")]
     [JsonProperty("project_data")]
     [JsonPropertyName("project_data")]

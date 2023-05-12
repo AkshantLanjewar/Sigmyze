@@ -1,4 +1,5 @@
 import { MantineColor } from "@mantine/core"
+import { IUIDropdownItem } from "../../../ui/ui-dropdown/types"
 
 type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert"
 
@@ -30,6 +31,11 @@ interface IQuantaFormField {
      * this is the related dropdown field in the quanta_types file
      */
     dropdownField?: string,
+
+    /**
+     * if we want to manually add dropdown items that are not present within the quanta_types
+     */
+    manualDropdownItems?: IUIDropdownItem[],
 
     /**
      * additional fields that need to be added to the dynamic object

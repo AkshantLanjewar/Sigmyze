@@ -9,6 +9,8 @@ import { IUserContext } from "../../data/user/types"
 import { QuantaContextData } from "../../data/quanta/context"
 import { IQuantaState } from "../../data/quanta/types"
 import { messageHandler } from "./handler"
+import { buildAnalysis } from "./analysis"
+import { v4 } from "uuid"
 
 interface ISelectorFrameProps {
     source: IQuantaSelectorCode,
@@ -19,39 +21,77 @@ interface ISelectorFrameProps {
 }
 
 const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading, pipelineAnalysis, pipelineLinks, query }) => {
-    const [dims, setDims] = useState({ width: 0, height: 0 })
+    const [dims, setDims] = useState({ width: 200, height: 0 })
+    const [containerDims, setContainerDims] = useState({ width: 0, height: 0 })
+
+    const [key, setKey] = useState(v4())
+    const [pingReceived, setPingReceived] = useState(false)
+    const [msgCache, setMsgCache] = useState<string[]>([])
+
     const iframeRef = useRef<HTMLIFrameElement | null>(null)
+    const containerRef = useRef<HTMLDivElement | null>(null)
 
     const [internalLoading, setInternalLoading] = useState(false)
 
     const { authData } = useContext(UserContextData) as IUserContext
-    const { quantaId } = useContext(QuantaContextData) as IQuantaState
+    const { quantaId, categorization, updateCategorization, getSchema } = useContext(QuantaContextData) as IQuantaState
 
     const postMessage = (msg: string) => {
         if(iframeRef.current === null)
             return
+        if(pingReceived === false) {
+            let nMessageCache = msgCache
+            nMessageCache.push(msg)
+
+            setMsgCache([ ...nMessageCache ])
+            return
+        }
 
         iframeRef.current.contentWindow?.postMessage(msg)
+    }
+
+    useEffect(() => {
+        if(containerRef.current === null)
+            return
+
+        let contDims = containerRef.current.getBoundingClientRect()
+        let width = contDims.width
+        let height = contDims.height
+
+        setContainerDims({ width, height })
+    }, [])
+
+    //handler
+    async function main(event: MessageEvent<any>) {
+        try {
+            let parsedMessage: IIFrameMessage = JSON.parse(event.data)
+            if(parsedMessage.data === undefined || parsedMessage.function === undefined)
+                throw Error("bad_request")
+
+            let func = parsedMessage.function
+            await messageHandler(
+                func, 
+                parsedMessage.data, 
+                authData, 
+                quantaId, 
+                postMessage,
+                setPingReceived,
+                categorization,
+                pipelineLinks,
+                getSchema
+            )
+        } catch(e) { }
     }
 
     //setup the loader
     useEffect(() => {
         const handler = (event: MessageEvent<any>) => {
-            async function main() {
-                try {
-                    let parsedMessage: IIFrameMessage = JSON.parse(event.data)
-                    if(parsedMessage.data === undefined || parsedMessage.function === undefined)
-                        throw Error("bad_request")
-    
-                    let func = parsedMessage.function
-                    await messageHandler(func, parsedMessage.data, authData, quantaId, postMessage)
-                } catch(e) { }
-            }
-
-            main()
+            main(event)
         }
 
         window.addEventListener("message", handler)
+        setKey(v4())
+        setPingReceived(false)
 
         return () => window.removeEventListener("message", handler)
     }, [source.sourceCode])
@@ -63,6 +103,19 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         setInternalLoading(pipelineLoading)
     }, [pipelineLoading])
 
+    //flush the cache when we receive ping
+    useEffect(() => {
+        if(pingReceived === false)
+            return
+        if(iframeRef.current === null)
+            return
+
+        for(let i = 0; i < msgCache.length; i++) {
+            let msg = msgCache[i]
+            iframeRef.current.contentWindow?.postMessage(msg)
+        }
+    }, [pingReceived, msgCache])
+
     //updates the internal analysis of the selector
     useEffect(() => {
         if(internalLoading === true)
@@ -70,50 +123,9 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         if(pipelineAnalysis === undefined)
             return
 
-        function isReserved(id: string) : string | undefined {
-            if(pipelineLinks === undefined)
-                return
-
-            let keys = Object.keys(pipelineLinks)
-            for(let i = 0; i < keys.length; i++) {
-                let key = keys[i]
-                let val = pipelineLinks[key]
-
-                if(val === id)
-                    return key
-            }
-
-            return undefined
-        }
-
-        let nAnalysis = [] as IPipelineAnalysis[]
-        for(let i = 0; i < pipelineAnalysis.length; i++) {
-            let analysis = pipelineAnalysis[i]
-            let reserved = isReserved(analysis.objectId)
-            if(reserved !== undefined)
-                analysis.objectId = reserved
-
-            nAnalysis.push(analysis)
-        }
-
-        //build the final portions of analysis based on retreived queries now
-        let internalQuery = [] as IQuantaQuery[]
-        if(query !== undefined)
-            internalQuery = query
-
-        for(let i = 0; i < internalQuery.length; i++) {
-            let queryItem = internalQuery[i]
-            let analysis = {} as IPipelineAnalysis
-            if(queryItem.fieldType === "string")
-                analysis.objectType = "string"
-
-            analysis.objectId = `query::${queryItem.fieldKey}`
-            analysis.stringValue = queryItem.stringField
-            analysis.dateValue = queryItem.dateField
-            nAnalysis.push(analysis)
-        }
-
         //push the data to the frame
+        let nAnalysis = buildAnalysis(pipelineLinks, pipelineAnalysis, query, categorization)
+        console.log(nAnalysis)  
         const pipelineMessage: IPipelineMessage = {
             analysis: nAnalysis
         }
@@ -124,7 +136,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         }
 
         postMessage(JSON.stringify(frameMessage))
-    }, [pipelineAnalysis, internalLoading, pipelineLinks, query])
+    }, [pipelineAnalysis, internalLoading, pipelineLinks, query, updateCategorization, source.sourceCode])
 
     const onLoad = () => {
         if(iframeRef.current === null)
@@ -149,6 +161,11 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
                 let width = entry.contentRect.width
                 let height = entry.contentRect.height
 
+                if(width < containerDims.width)
+                    width = containerDims.width
+                if(height < containerDims.height)
+                    height = containerDims.height
+
                 setDims({ width: width, height: height })
             })
         })
@@ -163,19 +180,28 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
     }
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
+        <div 
+            ref={containerRef}
+            style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                position: 'relative',
+                height: '100%' 
+            }}
+        >
             <LoadingOverlay
                 visible={internalLoading}
                 overlayBlur={2}
             />
 
             <iframe
+                key={key}
                 srcDoc={source.sourceCode}
                 width={dims.width}
-                frameBorder={0}
                 height={dims.height}
                 ref={iframeRef}
                 onLoad={onLoad}
+                style={{ border: 0 }}
             />
         </div>
     )

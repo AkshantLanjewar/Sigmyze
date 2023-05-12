@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { IQuantaSchema } from "../../quanta/schema-editor/types"
 import ModalManager from "../../ui/modal-manager"
 import { IQuantaState } from "./types"
-import { IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, ProjectSchemas } from "./types/project"
+import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, ProjectSchemas } from "./types/project"
 import { IQuantaTab } from "./types/ui"
 import { DefaultQuantaProject } from "./utils"
 
@@ -98,6 +98,14 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     const [selectorUpdated, setSelectorUpdated] = useState(false)
     const toggleSelectorUpdate = () => setSelectorUpdated(!selectorUpdated)
 
+    //state relating to the categorization of the dataset
+    const [categorize, setCategorize] = useState<IQuantaCategorization | undefined>(undefined)
+    const [categorizeLoad, setCategorizeLoad] = useState(false)
+    const [categorizeUpdated, setCategorizeUpdated] = useState(false)
+
+    const clearCategorize = () => setCategorize(undefined)
+    const toggleCategorizeUpdated = () => setCategorizeUpdated(!categorizeUpdated)
+
     const { authData } = useContext(UserContextData) as IUserContext
 
     function saveFunc(caller?: string) {
@@ -107,8 +115,17 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         if(dataLoaded === false)
             return
 
-        SaveQuantaProject(token, organizationId, quantaId, projectData, editorProjects, schemas, selectors)
         setSaveCounter(0)
+        SaveQuantaProject(
+            token, 
+            organizationId, 
+            quantaId, 
+            projectData, 
+            editorProjects, 
+            schemas, 
+            selectors,
+            categorize
+        )
     }
 
     useEffect(() => {
@@ -118,6 +135,18 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     useEffect(() => {
         loadQuanta()
     }, [quantaId, organizationId])
+
+    useEffect(() => {
+        if(dataLoaded === false)
+            return
+        if(categorizeLoad === true) {
+            setCategorizeLoad(false)
+            return
+        }
+
+        toggleCategorizeUpdated()
+        setSaveCounter(saveCounter + 1)
+    }, [categorize])
 
     useEffect(() => {
         if(dataLoaded === false)
@@ -187,6 +216,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.project_data.store.selectors = selectors
     value.editorProjects = editorProjects
     value.selectors = selectors
+
+    value.categorization = categorize
+    value.updateCategorization = categorizeUpdated
 
     value.updateEditorIndicators = updateEditorIndicators
     value.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators
@@ -302,6 +334,19 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     value.deleteSelector = (selectorId: string) =>
         deleteSelector(selectorId, selectors, value.eraseSchema, setSelectors, setActiveSelector, toggleSelectorsUpdated)
     
+    value.clearCategorization = clearCategorize
+
+    value.setCategorization = (mapsTo: string, categoriesMap: { [key: string]: string[] }) => {
+        const nCategorization = {
+            fileName: "categories.json",
+            mapsTo: mapsTo,
+            categories: Object.keys(categoriesMap),
+            categoriesMap: categoriesMap
+        } as IQuantaCategorization
+
+        setCategorize({ ...nCategorization })
+    }
+
     //function that loads the quanta data
     function loadQuanta() {
         if(quantaId === null) {
@@ -345,6 +390,12 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
             if(loadedSelectors !== undefined) {
                 setSelectors([ ...loadedSelectors ])
                 setSelectorLoad(true)
+            }
+
+            let loadedCategorize = projectData.store?.categorization
+            if(loadedCategorize !== undefined) {
+                setCategorize({ ...loadedCategorize })
+                setCategorizeLoad(true)
             }
 
             toggleUpdateSchema()

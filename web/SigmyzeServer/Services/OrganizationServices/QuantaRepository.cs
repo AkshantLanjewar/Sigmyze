@@ -15,16 +15,16 @@ public interface IQuantaRepository
     Task DeleteQuantaProjectCache(string projectId, string processId);
     Task CreateQuantaProjectCache(string organizationId, string projectId, string processId);
     Task<GetIndicatorsQuery?> GetProjectIndicators(string projectId, int page, int pageLen);
-    Task UpdateIndicators(string projectId, List<QuantaIndicator> newIndicators);
     Task<GetProjectDataQuery?> GetProjectData(string projectId);
     Task UpdateProjectData(string projectId, QuantaProjectData data);
-    Task<GetIndicatorsQuery?> GetAllProjectIndicators(string projectId);
 }
 
 public class QuantaRepository : IQuantaRepository
 {
     private readonly IMongoCollection<QuantaRepositoryDefinition> _quantaRepository;
     private readonly IMongoCollection<QuantaProjectCacheId> _quantaProjectCache;
+    private readonly IMongoCollection<QuantaIndicatorRepositoryDef> _quantaIndicators;
+
     public QuantaRepository(IOptions<AuthDatabaseSettings> authDatabaseSettings)
     {
         var mongoClient = new MongoClient(authDatabaseSettings.Value.ConnectionString);
@@ -32,6 +32,7 @@ public class QuantaRepository : IQuantaRepository
 
         _quantaRepository = mongoDatabse.GetCollection<QuantaRepositoryDefinition>("quanta_projects");
         _quantaProjectCache = mongoDatabse.GetCollection<QuantaProjectCacheId>("quanta_project_cache");
+        _quantaIndicators = mongoDatabse.GetCollection<QuantaIndicatorRepositoryDef>("quanta_indicators");
 
         //build the index's
         var quantaIdIndex = Builders<QuantaRepositoryDefinition>.IndexKeys.Ascending(x => x.ProjectId);
@@ -65,6 +66,13 @@ public class QuantaRepository : IQuantaRepository
 
         newProject.ProjectData = projectData;
         await _quantaRepository.InsertOneAsync(newProject);
+
+        //create the indicators document
+        QuantaIndicatorRepositoryDef newIndicators = new QuantaIndicatorRepositoryDef();
+        newIndicators.QuantaId = projectId;
+        newIndicators.ProjectIndicators = new List<QuantaIndicator>();
+
+        await _quantaIndicators.InsertOneAsync(newIndicators);
     }
 
     public async Task<QuantaProjectCacheId?> GetQuantaProjectCache(string projectId, string processId) =>
@@ -85,15 +93,6 @@ public class QuantaRepository : IQuantaRepository
         quantaCache.ProcessId = processId;
 
         await _quantaProjectCache.InsertOneAsync(quantaCache);
-    }
-
-    public async Task UpdateIndicators(string projectId, List<QuantaIndicator> newIndicators)
-    {   
-        var filter = Builders<QuantaRepositoryDefinition>.Filter.Eq(x => x.ProjectId, projectId);
-        var repoUpdate = Builders<QuantaRepositoryDefinition>.Update
-            .Set(x => x.ProjectIndicators, newIndicators);
-
-        await _quantaRepository.UpdateOneAsync(filter, repoUpdate);
     }
 
     public async Task UpdateProjectData(string projectId, QuantaProjectData data)
@@ -147,42 +146,6 @@ public class QuantaRepository : IQuantaRepository
         return results[0];
     }
 
-    public async Task<GetIndicatorsQuery?> GetAllProjectIndicators(string projectId)
-    {
-        BsonDocument matchStage = new BsonDocument{
-            {
-                "$match", new BsonDocument{
-                    { "project_id", projectId }
-                }
-            }
-        };
-
-        BsonDocument projectStage = new BsonDocument {
-            {
-                "$project", new BsonDocument {
-                    {
-                        "_id", 0
-                    },
-                    {
-                        "indicators", "$project_indicators"
-                    }
-                }
-            }
-        };
-
-        BsonDocument[] pipeline = new BsonDocument[]
-        {
-            matchStage,
-            projectStage
-        };
-
-        List<GetIndicatorsQuery> results = await _quantaRepository.Aggregate<GetIndicatorsQuery>(pipeline).ToListAsync();
-        if(results.Count == 0)
-            return null;
-
-        return results[0];
-    }
-
     public async Task<GetIndicatorsQuery?> GetProjectIndicators(string projectId, int page, int pageLen)
     {
         page = page * pageLen;
@@ -222,15 +185,18 @@ public class QuantaRepository : IQuantaRepository
             projectStage
         };
 
-        List<GetIndicatorsQuery> results = await _quantaRepository.Aggregate<GetIndicatorsQuery>(pipeline).ToListAsync();
+        List<GetIndicatorsQuery> results = await _quantaIndicators.Aggregate<GetIndicatorsQuery>(pipeline).ToListAsync();
         if(results.Count == 0)
             return null;
 
         return results[0];
     }
 
-    public async Task DeleteProject(string projectId) =>
+    public async Task DeleteProject(string projectId) 
+    {
         await _quantaRepository.DeleteOneAsync(x => x.ProjectId == projectId);
+        await _quantaIndicators.DeleteOneAsync(x => x.QuantaId == projectId);
+    }
 
     private QuantaFile buildFile(string name, string type)
     {

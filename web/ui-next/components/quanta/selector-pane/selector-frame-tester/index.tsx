@@ -78,6 +78,10 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
         schema.children = schemaChildren
         changeSchema(selectorId, schema)
 
+        let internalInitialValue = initialValue
+        if(internalInitialValue === undefined)
+            internalInitialValue = {}
+
         //build the selector object
         const selectorCode: IQuantaSelectorCode = {
             containerId: containerId,
@@ -86,7 +90,7 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
             schemaItems: schemaItems,
             sourceCode: internalSource,
             selectorLinks: {},
-            defaultValue: JSON.stringify(initialValue)
+            defaultValue: JSON.stringify(internalInitialValue)
         }
 
         setSelectorCode(selectorCode)
@@ -184,9 +188,7 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
                     default:
                         break
                 }
-            } catch {
-                console.debug("[skipping msg]")
-            }
+            } catch { }
         }
 
         window.addEventListener("message", (e) => frameHandler(e))

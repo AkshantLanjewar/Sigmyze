@@ -6,17 +6,32 @@ interface IQueryIndicator {
     query: IQuantaQuery[]
 }
 
+interface IQueryIndicatorId {
+    requestId: string,
+    indicatorId: string
+}
+
 interface IQueryIndicatorPage {
     requestId: string,
     page: number,
     pageLength: number
 }
 
+interface IQueryPagedIndicators {
+    requestId: string,
+    page: number,
+    pageLength: number,
+    query: IQuantaQuery[]
+}
+
 interface IQuantaQuery {
     fieldKey?: string,
     fieldType?: string,
     stringField?: string,
-    dateField?: number
+    dateField?: number,
+    multiValue?: boolean,
+    stringFields?: string[],
+    dateFields?: number[]
 }
 
 interface IResolverBody{
@@ -26,6 +41,14 @@ interface IResolverBody{
 
 interface IIndicatorBody {
     indicators?: IQuantaIndicator[]
+}
+
+interface IIndicatorSBody {
+    indicator?: IQuantaIndicator
+}
+
+interface IIndicatorLengthResponse {
+    length?: number
 }
 
 interface IPipelineMessage {
@@ -38,5 +61,9 @@ export type {
     IResolverBody,
     IIndicatorBody,
     IPipelineMessage,
-    IQueryIndicatorPage 
+    IQueryIndicatorPage,
+    IQueryPagedIndicators,
+    IIndicatorLengthResponse,
+    IQueryIndicatorId,
+    IIndicatorSBody 
 }

@@ -18,7 +18,7 @@ async function GetQuantaIndicators(token: string, organization_id: string, proje
     if(indicators === undefined || resp.status?.error === true) {
         showNotification({
             title: "Indicator Error",
-            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            message: `Server Error, unable to retreive indicators because -> ${resp.status?.msg}`,
             color: 'red',
             autoClose: 1000 * 10
         })
@@ -43,7 +43,7 @@ async function SelectIndicator(token: string, quantaId: string, params: IQuantaQ
     if(indicators === undefined || resp.status?.error === true) {
         showNotification({
             title: "Indicator Error",
-            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            message: `Server Error, unable to retreive indicators because -> ${resp.status?.msg}`,
             color: 'red',
             autoClose: 1000 * 10
         })
@@ -68,7 +68,7 @@ async function PageSelectedIndicators(token: string, quantaId: string, pageLengt
     if(indicators === undefined || resp.status?.error === true) {
         showNotification({
             title: "Indicator Error",
-            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            message: `Server Error, unable to retreive indicators because -> ${resp.status?.msg}`,
             color: 'red',
             autoClose: 1000 * 10
         })
@@ -88,7 +88,7 @@ async function GetIndicatorsPage(token: string, quantaId: string, pageLength: nu
     if(indicators === undefined || resp.status?.error === true) {
         showNotification({
             title: "Indicator Error",
-            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            message: `Server Error, unable to retreive indicators because -> ${resp.status?.msg}`,
             color: 'red',
             autoClose: 1000 * 10
         })
@@ -118,7 +118,7 @@ async function SelectIndicatorsLength(token: string, quantaId: string, params: I
     if(length === undefined || resp.status?.error === true) {
         showNotification({
             title: "Indicator Error",
-            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            message: `Server Error, unable to retreive indicators because -> ${resp.status?.msg}`,
             color: 'red',
             autoClose: 1000 * 10
         })
@@ -138,7 +138,7 @@ async function IndicatorsLength(token: string, quantaId: string) {
     if(length === undefined || resp.status?.error === true) {
         showNotification({
             title: "Indicator Error",
-            message: `Server Error, unable to retreive indicatores because -> ${resp.status?.msg}`,
+            message: `Server Error, unable to retreive indicators because -> ${resp.status?.msg}`,
             color: 'red',
             autoClose: 1000 * 10
         })
@@ -149,11 +149,37 @@ async function IndicatorsLength(token: string, quantaId: string) {
     return length
 }
 
+interface IQuantaIndicatorResp {
+    status?: IStatus,
+    indicator?: IQuantaIndicator
+}
+
+async function GetIndicatorById(token: string, quantaId: string, indicatorId: string) {
+    let url = `${server}/api/v2/quanta/select/indicator/${quantaId}/${indicatorId}`
+    let options = GenerateOptions("GET", token)
+    let resp = await GET<IQuantaIndicatorResp>(url, options)
+
+    let indicator = resp.indicator
+    if(indicator === undefined || resp.status?.error === true) {
+        showNotification({
+            title: "Indicator Error",
+            message: `Server Error, unable to retreive indicator because -> ${resp.status?.msg}`,
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return
+    }
+
+    return indicator
+}
+
 export {
     GetQuantaIndicators,
     SelectIndicator,
     PageSelectedIndicators,
     SelectIndicatorsLength,
     IndicatorsLength,
-    GetIndicatorsPage 
+    GetIndicatorsPage,
+    GetIndicatorById 
 }

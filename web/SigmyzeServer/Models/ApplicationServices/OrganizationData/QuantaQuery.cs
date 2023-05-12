@@ -25,6 +25,21 @@ public class QuantaQuery
     [JsonProperty("dateField")]
     [JsonPropertyName("dateField")]
     public int? DateField { get; set; }
+
+    [BsonElement("multiValue")]
+    [JsonProperty("multiValue")]
+    [JsonPropertyName("multiValue")]
+    public bool? MultiValue { get; set; }
+
+    [BsonElement("stringFields")]
+    [JsonProperty("stringFields")]
+    [JsonPropertyName("stringFields")]
+    public List<string>? StringFields { get; set; }
+
+    [BsonElement("dateFields")]
+    [JsonProperty("dateFields")]
+    [JsonPropertyName("dateFields")]
+    public List<int>? DateFields { get; set; }
 }
 
 public class QuantaQueryBody
