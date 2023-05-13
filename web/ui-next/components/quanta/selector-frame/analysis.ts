@@ -30,20 +30,10 @@ const parseIncomingQuery = (
                     if(mapKeys.includes(category) === false || schemaChildren === undefined)
                         continue
 
-                    let objName = undefined
-                    for(let x = 0; x < schemaChildren.length; x++) {
-                        let schema = schemaChildren[x]
-                        if(schema.nodeId === mapsTo)
-                            objName = schema.name
-                    }
-
-                    if(objName === undefined)
-                        continue
-
                     let subcategories = categoriesMap[category]
                     queryObject.multiValue = true
                     queryObject.stringFields = subcategories
-                    queryObject.fieldKey = objName
+                    queryObject.fieldKey = mapsTo
                 }
 
                 break

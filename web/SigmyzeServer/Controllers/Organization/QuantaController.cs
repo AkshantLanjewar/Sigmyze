@@ -376,7 +376,7 @@ public class QuantaController : OrganizationControllerBase
     public async Task<IActionResult> UpdateProject(
         string organizationId, 
         string projectId,
-        [FromBody]UpdateQuantaDataBody body
+        [FromBody]UpdateQuantaDataBody body 
     )
     {
         APIStatusMsg msg = new APIStatusMsg();

@@ -26,6 +26,7 @@ namespace SigmyzeServer
         {
             services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
 
+            Console.WriteLine("test");
             services.AddControllers();
             services.AddApiVersioning(config => {
                 config.DefaultApiVersion = new ApiVersion(1, 0);

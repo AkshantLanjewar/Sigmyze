@@ -58,8 +58,8 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         let width = contDims.width
         let height = contDims.height
 
-        setContainerDims({ width, height })
-    }, [])
+        setContainerDims({ width, height }) 
+    }, []) 
 
     //handler
     async function main(event: MessageEvent<any>) {
@@ -125,7 +125,6 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
 
         //push the data to the frame
         let nAnalysis = buildAnalysis(pipelineLinks, pipelineAnalysis, query, categorization)
-        console.log(nAnalysis)  
         const pipelineMessage: IPipelineMessage = {
             analysis: nAnalysis
         }

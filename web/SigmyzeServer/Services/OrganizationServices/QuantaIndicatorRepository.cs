@@ -194,12 +194,16 @@ public class QuantaIndicatorRepository : IQuantaIndicatorRepository
         BsonDocument matchArrStage = matchQueryStage(query);
         BsonDocument groupStage = new BsonDocument {
             {
-                "indicators", new BsonDocument {
+                "$group", new BsonDocument {
                     {
-                        "$push", "$project_indicators"
+                        "indicators", new BsonDocument {
+                            {
+                                "$push", "$project_indicators"
+                            }
+                        }
                     },
                     {
-                        "_id", null
+                        "_id", 0
                     }
                 }
             }
@@ -231,6 +235,7 @@ public class QuantaIndicatorRepository : IQuantaIndicatorRepository
             finProject
         };
 
+        Console.WriteLine(pipeline.ToString());
         List<GetIndicatorsLength> results = await _quantaRepository.Aggregate<GetIndicatorsLength>(pipeline).ToListAsync();
         if(results.Count == 0)
             return null;

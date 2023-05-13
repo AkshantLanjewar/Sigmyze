@@ -119,6 +119,34 @@ public class QuantaDataStore
     [JsonProperty("editorProjects")]
     [JsonPropertyName("editorProjects")]
     public List<QuantaEditorProject>? EditorProjects { get; set; }
+
+    [BsonElement("categorization")]
+    [JsonProperty("categorization")]
+    [JsonPropertyName("categorization")]
+    public QuantaCategorization? Categorization { get; set; }
+}
+
+public class QuantaCategorization
+{
+    [BsonElement("fileName")]
+    [JsonProperty("fileName")]
+    [JsonPropertyName("fileName")]
+    public string? FileName { get; set; }
+
+    [BsonElement("mapsTo")]
+    [JsonProperty("mapsTo")]
+    [JsonPropertyName("mapsTo")]
+    public string? MapsTo { get; set; }
+
+    [BsonElement("categories")]
+    [JsonProperty("categories")]
+    [JsonPropertyName("categories")]
+    public List<string>? Categories { get; set; }
+
+    [BsonElement("categoriesMap")]
+    [JsonProperty("categoriesMap")]
+    [JsonPropertyName("categoriesMap")]
+    public Dictionary<string, List<string>>? CategoriesMap { get; set; }
 }
 
 public class QuantaSelector

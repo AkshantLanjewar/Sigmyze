@@ -24,8 +24,17 @@ const messageHandler = async (
                 //the app is ready to be loaded
                 setPingReceived(true)
                 break
-            case "query_indicator_length":
-                console.log(data)
+            case "query_indicator_length": 
+                await queryIndicatorLength(
+                    data, 
+                    authData, 
+                    quantaId, 
+                    postMessage,
+                    categorization,
+                    pipelineLinks,
+                    getSchema
+                )
+
                 break
             default:
                 break
