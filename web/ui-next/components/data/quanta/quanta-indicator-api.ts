@@ -2,7 +2,7 @@ import { showNotification } from "@mantine/notifications"
 import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
 import { IQuantaQuery } from "../../quanta/selector-frame/types"
 import { IStatus } from "../datasets/DatasetsTypes"
-import { server, GenerateOptions, GET } from "../utils"
+import { server, GenerateOptions, GET, GET_Cacheless } from "../utils"
 
 interface IQuantaIndicatorsResp {
     status?: IStatus,
@@ -112,10 +112,13 @@ async function SelectIndicatorsLength(token: string, quantaId: string, params: I
 
     let url = `${server}/api/v2/quanta/select/indicator_length`
     let options = GenerateOptions("POST", token, body)
-    let resp = await GET<IGetIndicatorsLength>(url, options)
+    let resp = await GET_Cacheless<IGetIndicatorsLength>(url, options)
 
     let length = resp.length
     if(length === undefined || resp.status?.error === true) {
+        if(resp.status?.msg === "quanta_not_found")
+            return
+
         showNotification({
             title: "Indicator Error",
             message: `Server Error, unable to retreive indicators because -> ${resp.status?.msg}`,

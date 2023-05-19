@@ -11,6 +11,7 @@ import { IQuantaState } from "../../data/quanta/types"
 import { messageHandler } from "./handler"
 import { buildAnalysis } from "./analysis"
 import { v4 } from "uuid"
+import { useEffectDebugger } from "../../ui/debug"
 
 interface ISelectorFrameProps {
     source: IQuantaSelectorCode,
@@ -90,7 +91,6 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         }
 
         window.addEventListener("message", handler)
-        setKey(v4())
         setPingReceived(false)
 
         return () => window.removeEventListener("message", handler)
@@ -117,7 +117,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
     }, [pingReceived, msgCache])
 
     //updates the internal analysis of the selector
-    useEffect(() => {
+    useEffectDebugger(() => {
         if(internalLoading === true)
             return
         if(pipelineAnalysis === undefined)

@@ -20,6 +20,32 @@ public class QuantaIndicatorRepositoryDef
     [BsonElement("project_indicators")]
     [Newtonsoft.Json.JsonIgnore]
     public List<QuantaIndicator>? ProjectIndicators { get; set; }
+
+    [BsonElement("indicator_chunks")]
+    [Newtonsoft.Json.JsonIgnore]
+    public List<string>? IndicatorChunks { get; set; }
+}
+
+public class QuantaIndicatorChunk
+{
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    [Newtonsoft.Json.JsonIgnore]
+    public string? Id { get; set; }
+
+    [BsonElement("project_id")]
+    [JsonProperty("project_id")]
+    [JsonPropertyName("project_id")]
+    public string? QuantaId { get; set; }
+
+    [BsonElement("chunk_id")]
+    [JsonProperty("chunk_id")]
+    [JsonPropertyName("chunk_id")]
+    public string? ChunkId { get; set; }
+
+    [BsonElement("chunk_indicators")]
+    [Newtonsoft.Json.JsonIgnore]
+    public List<QuantaIndicator>? ProjectIndicators { get; set; }
 }
 
 public class QuantaIndicator

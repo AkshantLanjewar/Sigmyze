@@ -12,6 +12,10 @@ namespace SigmyzeServer.Models.ApplicationServices.UserData
 
     public class GetIndicatorsLength
     {
+        [BsonElement("_id")]
+        [Newtonsoft.Json.JsonIgnore]
+        public int? Id { get; set; }
+
         [BsonElement("indicators_length")]
         [JsonProperty("indicators_length")]
         public int? IndicatorsLength { get; set; }

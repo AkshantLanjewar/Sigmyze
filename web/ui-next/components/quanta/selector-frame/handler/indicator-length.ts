@@ -24,15 +24,11 @@ const queryIndicatorLength = async (
     if(quantaId === undefined || quantaId === null)
         throw Error("no_quanta")
 
-    console.log(query)
     query = parseIncomingQuery(query, categorization, pipelineLinks, getSchema)
-    console.log(query)
-    
     let length = await SelectIndicatorsLength(token, quantaId, query)
     if(length === undefined)
-        throw Error("no_length")
-
-    console.log(length)
+        length = 0
+    
     const resolveBody: IIndicatorLengthResponse = { length }
     const resolverBody: IResolverBody = {
         requestId: parsed.requestId,
