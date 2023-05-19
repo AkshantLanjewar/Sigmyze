@@ -1,0 +1,63 @@
+$dark9: var(--mantine-color-dark-9);
+$dark7: var(--mantine-color-dark-7);
+
+.schema__node {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    padding: 10px;
+    background-color: $dark9;
+    border-radius: 4px;
+
+    min-height: 48px;
+    max-height: 48px;
+    overflow: hidden;
+
+    &.dark {
+        background-color: $dark9;
+    }
+
+    &.light {
+        background-color: $dark7;
+    }
+
+    .name {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        .chevron {
+            transform: rotate(-90deg);
+            transition: transform 150ms ease;
+
+            &.active {
+                transform: rotate(0);
+            }
+        }
+
+        .text {
+            font-weight: 700;
+            font-size: 18px;
+            max-height: 20px;
+
+            display: flex;
+            align-items: center;
+
+            min-height: 0;
+            padding: 0px;
+
+            width: auto!important;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+    }
+
+    .flare {
+        flex-grow: 1;
+        display: flex;
+        justify-content: flex-end;
+    }
+}

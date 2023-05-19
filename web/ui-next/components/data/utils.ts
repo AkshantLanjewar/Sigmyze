@@ -45,13 +45,20 @@ const removeEmpty = (obj: any) => {
     return obj
 }
 
+function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 const dev = process.env.NODE_ENV !== 'production';
 const server = dev ? 'http://localhost:3000' : 'https://sigmyze.com'
+const wsServer = dev ? "ws://127.0.0.1:5025" : 'wss://sigmyze.com'
 
 export { 
     GET,
     server,
     GenerateOptions,
     GET_Cacheless,
-    removeEmpty
+    removeEmpty,
+    wsServer,
+    capitalizeFirstLetter
 }

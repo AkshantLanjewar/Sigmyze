@@ -23,7 +23,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
                 <div className={`${styles.elements} ${location === '/lunar' && styles.border}`}>
                     {location === '/drive' && (
                         <>
-                            <DriveCreateItem />
+                            <DriveCreateItem /> 
                         </>
                     )}
 

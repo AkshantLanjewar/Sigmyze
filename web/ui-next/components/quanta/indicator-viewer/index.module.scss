@@ -1,0 +1,74 @@
+$dark-7: var(--mantine-color-dark-7);
+$dark-3: var(--mantine-color-dark-3);
+
+.table__wrapper {
+    width: 100%;
+    padding-top: 20px;
+
+    display: flex;
+    justify-content: center;
+
+    .table {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .table__header {
+        position: sticky;
+        top: 0;
+        background-color: $dark-7;
+        transition: box-shadow 150ms ease;
+        height: 55px;
+
+        display: flex;
+        align-items: center;
+        z-index: 99;
+
+        .row {
+            display: flex;
+            width: 100%;
+
+            th {
+                width: 100%;
+
+                &:last-child {
+                    width: 170px;
+                }
+            }
+
+            .text {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                border-bottom: none;
+
+                .muted {
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+            }
+        }
+
+        
+    }
+
+    .body {
+        display: flex;
+        flex-direction: column;
+
+        tr {
+            display: flex;
+        }
+    }
+
+    .table__d {
+        border-top: none;
+        width: 100%;
+        display: flex;
+        align-items: center;
+
+        &:last-child {
+            width: 140px;
+        }
+    }
+}

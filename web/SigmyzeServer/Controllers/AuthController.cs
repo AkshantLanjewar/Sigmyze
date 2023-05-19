@@ -22,7 +22,7 @@ namespace SigmyzeServer.Controllers
         private readonly IUserAuth _userAuth;
         private readonly IHashService _hashService;
         private readonly IEmailService _emailService;
-        private string generatedToken = null;
+        private string? generatedToken = null;
 
         public AuthController(
             IConfiguration config, IUserAuth userAuth, IUserService userService, IHashService hashService, IEmailService emailService)
@@ -243,7 +243,7 @@ namespace SigmyzeServer.Controllers
             if(Request.Headers.ContainsKey("X-Forwarded-For"))
                 return Request.Headers["X-Forwarded-For"];
             else
-                return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+                return HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
         }
 
         private RegisterResp BadResp(string msg)

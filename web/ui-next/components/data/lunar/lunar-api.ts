@@ -22,7 +22,7 @@ async function GetProject(token: string, organization_id: string, project_id: st
         })
         
         setTimeout(() => {
-            window.location.replace('/lunar')
+            window.location.replace('/quanta')
         }, 1000 * 3)
         return
     }
@@ -34,8 +34,6 @@ async function UpdateProject(token: string, organization_id: string, project_id:
     let body = {
         data: data
     }
-
-    console.log(data.documents)
 
     let url = `${server}/api/v2/projects/${organization_id}/${project_id}`
     let options = GenerateOptions("POST", token, body)

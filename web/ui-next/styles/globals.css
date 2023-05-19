@@ -106,3 +106,20 @@ a {
 		color-scheme: dark;
 	}
 }
+
+.react-flow__edge-interaction {
+	z-index: 20;
+}
+
+.react-flow__edge  {
+	z-index: 20;
+	position: absolute;
+}
+
+.react-flow__edges {
+	z-index: 20!important;
+}
+
+.react-flow__viewport {
+	z-index: 20;
+}

@@ -60,8 +60,15 @@ const DriveData: React.FC<IDriveDataProps> = ({ setModalState, setDriveData }) =
         setItems([ ...data.items ])
     }, [respData, activeDirectory])
 
-    function openProject(id: string) {
-        window.open(`/lunar/${selectedOrganization}/${id}`, "_blank")
+    function openProject(id: string, type?: string) {
+        if(selectedOrganization === null)
+            return
+
+        let url = `/lunar/${selectedOrganization}/${id}`
+        if(type === "quanta")
+            url = `/quanta/${selectedOrganization}/${id}`
+
+        window.open(url, "_blank")
     }
 
     return (

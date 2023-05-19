@@ -10,6 +10,7 @@ using SigmyzeServer.Services.DatabaseServices;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using SigmyzeServer.Services.OrganizationServices;
+using System.Net.WebSockets;
 
 namespace SigmyzeServer
 {
@@ -25,6 +26,7 @@ namespace SigmyzeServer
         {
             services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
 
+            Console.WriteLine("test");
             services.AddControllers();
             services.AddApiVersioning(config => {
                 config.DefaultApiVersion = new ApiVersion(1, 0);
@@ -66,6 +68,8 @@ namespace SigmyzeServer
             services.AddSingleton<IOrganizationRepository, OrganizationRepository>();
             services.AddSingleton<IDriveRepository, DriveRepository>();
             services.AddSingleton<IProjectRepository, ProjectRepository>();
+            services.AddSingleton<IQuantaRepository, QuantaRepository>(); 
+            services.AddSingleton<IQuantaIndicatorRepository, QuantaIndicatorRepository>();
             services.AddSingleton<IUserServiceRepository, UserServiceRepository>();
 
             services.AddAuthentication(auth => {

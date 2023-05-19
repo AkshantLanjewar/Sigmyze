@@ -51,6 +51,9 @@ public class CreateProjectBody
 
     [JsonPropertyName("project_name")]
     public string? ProjectName { get; set; }
+
+    [JsonPropertyName("project_type")]
+    public string? ProjectType { get; set; }
 }
 
 public class DeleteProjectBody
@@ -63,6 +66,9 @@ public class DeleteProjectBody
 
     [JsonPropertyName("project_id")]
     public string? ProjectId { get; set; }
+
+    [JsonPropertyName("project_type")]
+    public string? ProjectType { get; set; }
 }
 
 public class UpdateProjectBody
@@ -78,4 +84,7 @@ public class UpdateProjectBody
 
     [JsonPropertyName("project_name")]
     public string? ProjectName { get; set; }
+
+    [JsonPropertyName("project_type")]
+    public string? ProjectType { get; set; }
 }

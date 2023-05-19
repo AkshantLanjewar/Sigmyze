@@ -6,6 +6,9 @@ import styles from './viewport.module.scss'
 import { icon_table } from '../../tree/node'
 import { RxCross2 } from 'react-icons/rx'
 import QuantaOverviewView from '../../quanta/overview/overview-view'
+import QuantaSelectorsView from '../../quanta/selectors/selectors-view'
+import QuantaEditor from '../../quanta/quanta-editor/quanta-editor'
+import SocketHandler from '../../ui/socket-handler'
 
 const QuantaViewport: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
@@ -39,15 +42,24 @@ const QuantaViewport: React.FC = ({ }) => {
 
         tabBody = quantaTabs.map((step) => {
             let viewPanel = null
+            if(step.connected_file === undefined || step.tabName === undefined)
+                return
+
             if(step.tabType === "overview")
                 viewPanel = <QuantaOverviewView />
+            if(step.tabType === "selectors")
+                viewPanel = <QuantaSelectorsView />
+            if(step.tabType === "node_editor")
+                viewPanel = <QuantaEditor fileId={step.connected_file} fileName={step.tabName} />
 
             return (
                 <Tabs.Panel
                     value={step.tabId!}
-                    sx={{ flexGrow: 1 }}
+                    sx={{ flexGrow: 1, position: 'relative' }}
                 >
-                    {viewPanel}
+                    <div className={styles.viewportScroll}>
+                        {viewPanel}
+                    </div>
                 </Tabs.Panel>
             )
         })
@@ -56,27 +68,29 @@ const QuantaViewport: React.FC = ({ }) => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.viewport}>
-                {activeTab && (
-                    <Tabs
-                        color={"indigo"}
-                        radius={"sm"}
-                        value={activeTab}
-                        onTabChange={(val) => { quantaContext.changeTab(val!) }}
-                        sx={{ 
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}
-                    >
-                        <Tabs.List
-                            sx={(theme) => ({ backgroundColor: theme.colors.dark[9], borderTopLeftRadius: 4 })}
+                <SocketHandler>
+                    {activeTab && (
+                        <Tabs
+                            color={"indigo"}
+                            radius={"sm"}
+                            value={activeTab}
+                            onTabChange={(val) => { quantaContext.changeTab(val!) }}
+                            sx={{ 
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column'
+                            }}
                         >
-                            {tabHeaders}
-                        </Tabs.List>
+                            <Tabs.List
+                                sx={(theme) => ({ backgroundColor: theme.colors.dark[9], borderTopLeftRadius: 4 })}
+                            >
+                                {tabHeaders}
+                            </Tabs.List>
 
-                        {tabBody}
-                    </Tabs>
-                )}
+                            {tabBody}
+                        </Tabs>
+                    )}
+                </SocketHandler>
             </div>
         </div>
     )

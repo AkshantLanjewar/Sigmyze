@@ -11,7 +11,7 @@ interface IFileExplorerProps {
     setActiveItem: (id: string | null) => void,
     setActiveDirectory: (id: string) => void,
     setModalState: (id: string | null) => void,
-    openItem: (id: string) => void
+    openItem: (id: string, type?: string) => void
 }
 
 const FileExplorer: React.FC<IFileExplorerProps> = 

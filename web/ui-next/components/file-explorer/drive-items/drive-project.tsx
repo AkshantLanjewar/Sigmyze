@@ -1,7 +1,7 @@
 import { IExplorerItem } from "../types"
 import styles from '../file-explorer.module.scss'
 import { Card, Title, Text, Group, UnstyledButton } from "@mantine/core"
-import { IconBox, IconSettings, IconTrash } from "@tabler/icons"
+import { IconAtom2, IconBox, IconSettings, IconTrash } from "@tabler/icons"
 import { useEffect, useState } from "react"
 import { v4 } from "uuid"
 
@@ -12,17 +12,20 @@ import {
     Item,
     useContextMenu 
 } from 'react-contexify'
+import { useRouter } from "next/router"
+import { capitalizeFirstLetter } from "../../data/utils"
 
 interface IDriveProjectProps {
     item: IExplorerItem,
     activeItem: string | null,
     setActiveItem: (id: string | null) => void,
     setModalState: (id: string | null) => void,
-    openItem: (id: string) => void
+    openItem: (id: string, type?: string) => void
 }
 
 const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiveItem, setModalState, openItem }) => {
     const [menuId, setMenuId] = useState("")
+    const router = useRouter()
 
     useEffect(() => {
         setMenuId(v4())
@@ -32,12 +35,29 @@ const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiv
         id: menuId
     })
 
+    let projectIcon = <IconBox />
+    if(item.item_type === "quanta_project")
+        projectIcon = <IconAtom2 />
+
+    let projectType = "Quanta Project"
+    if(item.item_type !== null) {
+        projectType = ""
+        let typeSplit = item.item_type.split("_")
+        for(let i = 0; i < typeSplit.length; i++)
+            projectType += `${capitalizeFirstLetter(typeSplit[i])} `
+    }
+
     return (
         <>
             <div 
                 className={styles.file}
                 onClick={() => { setActiveItem(item.item_id) }}
-                onDoubleClick={() => { openItem(item.item_id) }}
+                onDoubleClick={() => { 
+                    if(item.item_type === "lunar_project")
+                        openItem(item.item_id)
+                    if(item.item_type === "quanta_project")
+                        openItem(item.item_id, "quanta")
+                }}
                 onContextMenu={(e) => {
                     setActiveItem(item.item_id)
                     show({ event: e })
@@ -52,7 +72,7 @@ const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiv
                 >
                     <Card.Section className={styles.icon}>
                         <div className={styles.inner}>
-                            <IconBox />
+                            {projectIcon}
                         </div>
                     </Card.Section>
 
@@ -64,7 +84,7 @@ const DriveProject: React.FC<IDriveProjectProps> = ({ item, activeItem, setActiv
                             transform={"uppercase"}
                             className={styles.subtitle}
                         >
-                            Lunar Project
+                            {projectType}
                         </Text>
                     </Card.Section>
                 </Card>
