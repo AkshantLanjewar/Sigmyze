@@ -2,7 +2,7 @@ import { showNotification } from "@mantine/notifications"
 import { queryIndicatorHandler, queryIndicatorId, queryIndicatorsPage, querySelectedIndicatorsPage } from "./indicator-data"
 import { IAuthenticationData } from "../../../data/user/types"
 import { indicatorsLength, queryIndicatorLength } from "./indicator-length"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, MutableRefObject, SetStateAction } from "react"
 import { IQuantaCategorization } from "../../../data/quanta/types/project"
 import { IQuantaSchema } from "../../schema-editor/types"
 
@@ -15,13 +15,15 @@ const messageHandler = async (
     setPingReceived: Dispatch<SetStateAction<boolean>>,
     categorization: IQuantaCategorization | undefined,
     pipelineLinks: {[key: string]: string} | undefined,
-    getSchema: (parentId: string) => IQuantaSchema | undefined
+    getSchema: (parentId: string) => IQuantaSchema | undefined,
+    pingRef: MutableRefObject<boolean>
 ) => {
     try {
         //rebuild a switch to make it useful
         switch(func) {
             case "ping":
                 //the app is ready to be loaded
+                pingRef.current = true
                 setPingReceived(true)
                 break
             case "query_indicator_length": 

@@ -29,6 +29,9 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
     const [pingReceived, setPingReceived] = useState(false)
     const [msgCache, setMsgCache] = useState<string[]>([])
 
+    //data refs
+    const pingRef = useRef<boolean>(false)
+
     const iframeRef = useRef<HTMLIFrameElement | null>(null)
     const containerRef = useRef<HTMLDivElement | null>(null)
 
@@ -40,7 +43,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
     const postMessage = (msg: string) => {
         if(iframeRef.current === null)
             return
-        if(pingReceived === false) {
+        if(pingRef.current === false) {
             let nMessageCache = msgCache
             nMessageCache.push(msg)
 
@@ -48,6 +51,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
             return
         }
 
+        console.log(msg)
         iframeRef.current.contentWindow?.postMessage(msg)
     }
 
@@ -79,7 +83,8 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
                 setPingReceived,
                 categorization,
                 pipelineLinks,
-                getSchema
+                getSchema,
+                pingRef
             )
         } catch(e) { }
     }
@@ -117,7 +122,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
     }, [pingReceived, msgCache])
 
     //updates the internal analysis of the selector
-    useEffectDebugger(() => {
+    useEffect(() => {
         if(internalLoading === true)
             return
         if(pipelineAnalysis === undefined)

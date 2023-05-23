@@ -19,7 +19,11 @@ fn socket_response(msg: String, error: bool, request_id: String) -> SocketRespon
     }
 }
 
-async fn parse_request(request: messages::SocketMessage, request_id: String, data_store: &web::Data<Basteh>) -> Result<messages::SocketResponse> {
+async fn parse_request(
+    request: messages::SocketMessage, 
+    request_id: String, 
+    data_store: &web::Data<Basteh>
+) -> Result<messages::SocketResponse> {
     let function = match &request.socket_func {
         Some(func) => func.to_string(),
         None => return Err("Socket Parsing Error, please define what function to run".into())
@@ -68,7 +72,12 @@ async fn parse_request(request: messages::SocketMessage, request_id: String, dat
     exec_value
 }
 
-pub async fn ws_connection(mut session: actix_ws::Session, mut msg_stream: actix_ws::MessageStream, data_store: web::Data<Basteh>) {
+
+pub async fn ws_connection(
+    mut session: actix_ws::Session, 
+    mut msg_stream: actix_ws::MessageStream, 
+    data_store: web::Data<Basteh>
+) {
     log::info!("made connection");
 
     let close_reason = loop {
@@ -96,7 +105,8 @@ pub async fn ws_connection(mut session: actix_ws::Session, mut msg_stream: actix
                     }
 
                     Message::Continuation(_) => {
-                        log::warn!("no support for continuation");
+                        let _ = session.close(None).await;
+                        return;
                     }
 
                     Message::Ping(_bytes) => {}
