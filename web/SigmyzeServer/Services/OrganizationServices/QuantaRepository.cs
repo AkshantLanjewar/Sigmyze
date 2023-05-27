@@ -24,6 +24,7 @@ public class QuantaRepository : IQuantaRepository
     private readonly IMongoCollection<QuantaRepositoryDefinition> _quantaRepository;
     private readonly IMongoCollection<QuantaProjectCacheId> _quantaProjectCache;
     private readonly IMongoCollection<QuantaIndicatorRepositoryDef> _quantaIndicators;
+    private readonly IMongoCollection<QuantaIndicatorChunk> _quantaIndicatorChunks;
 
     public QuantaRepository(IOptions<AuthDatabaseSettings> authDatabaseSettings)
     {
@@ -33,6 +34,7 @@ public class QuantaRepository : IQuantaRepository
         _quantaRepository = mongoDatabse.GetCollection<QuantaRepositoryDefinition>("quanta_projects");
         _quantaProjectCache = mongoDatabse.GetCollection<QuantaProjectCacheId>("quanta_project_cache");
         _quantaIndicators = mongoDatabse.GetCollection<QuantaIndicatorRepositoryDef>("quanta_indicators");
+        _quantaIndicatorChunks = mongoDatabse.GetCollection<QuantaIndicatorChunk>("quanta_chunks");
 
         //build the index's
         var quantaIdIndex = Builders<QuantaRepositoryDefinition>.IndexKeys.Ascending(x => x.ProjectId);
@@ -158,7 +160,7 @@ public class QuantaRepository : IQuantaRepository
             }
         };
 
-        BsonDocument projectStage = new BsonDocument {
+        BsonDocument pojectStage = new BsonDocument {
             { 
                 "$project", new BsonDocument {
                     {
@@ -182,7 +184,7 @@ public class QuantaRepository : IQuantaRepository
         BsonDocument[] pipeline = new BsonDocument[]
         {
             matchStage,
-            projectStage
+            pojectStage
         };
 
         List<GetIndicatorsQuery> results = await _quantaIndicators.Aggregate<GetIndicatorsQuery>(pipeline).ToListAsync();

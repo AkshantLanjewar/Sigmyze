@@ -1,12 +1,12 @@
-use self::sdmx_series::SDMXSeries;
+use crate::sdmx_parser::types::SDMXSeries;
+use crate::sdmx_parser::xml::parse_xml;
+use crate::sdmx_parser::xsd::parse_xsd;
 
-mod sdmx_xsd;
-mod sdmx_xml;
-mod sdmx_xsd_data;
-pub mod sdmx_series;
+mod xsd;
+pub mod types;
+mod xml;
 
-//function that parses sdmx and returns a list of our SDMXSeries structure
-pub fn parse_sdml_ml(xml_path: String, xsd_path: String) -> Vec<SDMXSeries> {
-    let xsd_defs = sdmx_xsd::parse_xsd(xsd_path);
-    sdmx_xml::parse_xml(&xml_path, &xsd_defs)
+pub fn sdmx_data_parser(xml_path: String, xsd_path: String) -> Result<Vec<SDMXSeries>, String> {
+	let xsd_defs = parse_xsd(xsd_path);
+	Ok(parse_xml(&xml_path, &xsd_defs))
 }

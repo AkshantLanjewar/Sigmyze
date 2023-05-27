@@ -1,46 +1,72 @@
-use std::env;
-
-use actix_web::{HttpResponse, Error, HttpServer, HttpRequest, web, App, middleware, rt};
-use basteh::Basteh;
-use tokio::fs;
+use std::{net::SocketAddr, sync::Arc, path::Path};
 
 mod handler;
+mod data_store;
 mod sdmx_parser;
-mod quanta_dataset;
 
-#[actix_web::get("/")]
-async fn handle_ws(req: HttpRequest, stream: web::Payload, data_store: web::Data<Basteh>) -> Result<HttpResponse, Error> {
-    let (res, session, msg_stream) = actix_ws::handle(&req, stream)?;
+use data_store::{QuantaDataStore, DATA_PATH};
+use log::*;
+use tokio::{net::{TcpListener, TcpStream}, sync::Mutex, fs};
+use tokio_tungstenite::{tungstenite::{Result, Error}, accept_async};
+use futures_util::stream::StreamExt;
+use tokio_tungstenite::tungstenite::protocol::WebSocketConfig;
 
-    //spwan the socket handler
-    rt::spawn(handler::ws_connection(session, msg_stream, data_store));
+use crate::handler::handle_text_msg;
 
-    Ok(res)
+#[tokio::main(flavor = "multi_thread")]
+async fn main() {
+    env_logger::init();
+    let server = TcpListener::bind("127.0.0.1:5025").await;
+    let server = server.expect("failed to bind");
+    let store = Arc::new(Mutex::new(QuantaDataStore::init()));
+
+    //initialize the data folder
+    if Path::new(DATA_PATH).is_dir() == false {
+        fs::create_dir(DATA_PATH).await.unwrap();
+    }
+
+    //handle the websockets
+    println!("accepting connections on {:?}", server.local_addr().unwrap().to_string());
+    while let Ok((stream, _)) = server.accept().await {
+        let store_clone = store.clone();
+        let peer = stream.peer_addr().expect("requires_peer");
+        tokio::spawn(async move {
+            accept_connection(peer, stream, &store_clone).await;
+        });
+    }
 }
 
-#[tokio::main(flavor = "current_thread")]
-async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-    log::info!("starting the quanta socket service");
+async fn accept_connection(
+    peer: SocketAddr, 
+    stream: TcpStream, 
+    store: &Arc<Mutex<QuantaDataStore>>
+) {
+    if let Err(e) = handle_connection(peer, stream, store).await {
+        match e {
+            Error::ConnectionClosed | Error::Protocol(_) | Error::Utf8 => (),            
+            err => error!("Error in connection: {}", err)
+        }
+    }
+}
 
-    let provider = basteh_memory::MemoryBackend::start_default();
-    let data_store = Basteh::build().provider(provider).finish();
-    let data_store = web::Data::new(data_store);
+async fn handle_connection(
+    peer: SocketAddr, 
+    stream: TcpStream,
+    store: &Arc<Mutex<QuantaDataStore>>
+) -> Result<()> {
+    let mut ws_stream = accept_async(stream).await.expect("failed_accept");
+    info!("New Connection {}", peer);
 
-    //create the data folder if it doesnt exist
-    fs::create_dir_all("./data").await?;
-    env::set_var("RUST_BACKTRACE", "1");
+    while let Some(msg) = ws_stream.next().await {
+        let msg = msg?;
+        if msg.is_text() == false {
+            continue;
+        }
 
-    let socket_keys: Vec<String> = Vec::new();
-    data_store.set("keys", socket_keys).await.unwrap();
+        let msg_text = msg.to_text()?;
+        let store_clone = store.clone();
+        handle_text_msg(&mut ws_stream, &store_clone, msg_text).await?;
+    }
 
-    HttpServer::new(move || {
-        App::new()
-            .app_data(data_store.clone())
-            .service(handle_ws)
-            .wrap(middleware::Logger::default())
-    })
-    .bind(("127.0.0.1", 5025))?
-    .run()
-    .await
+    Ok(())
 }

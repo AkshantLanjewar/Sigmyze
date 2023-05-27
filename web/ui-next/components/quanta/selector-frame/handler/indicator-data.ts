@@ -1,13 +1,19 @@
 import { GetIndicatorById, GetIndicatorsPage, PageSelectedIndicators, SelectIndicator } from "../../../data/quanta/quanta-api"
+import { IQuantaCategorization } from "../../../data/quanta/types/project"
 import { IAuthenticationData } from "../../../data/user/types"
+import { IQuantaSchema } from "../../schema-editor/types"
 import { IIFrameMessage } from "../../selector-pane/selector-frame-tester/types"
+import { parseIncomingQuery } from "../analysis"
 import { IIndicatorBody, IIndicatorSBody, IQueryIndicator, IQueryIndicatorId, IQueryIndicatorPage, IQueryPagedIndicators, IResolverBody } from "../types"
 
 const queryIndicatorHandler = async (
     data: string,
     authData: IAuthenticationData | null | undefined,
     quantaId: string | null,
-    postMessage: (msg: string) => void
+    postMessage: (msg: string) => void,
+    categorization: IQuantaCategorization | undefined,
+    pipelineLinks: {[key: string]: string} | undefined,
+    getSchema: (parentId: string) => IQuantaSchema | undefined
 ) => {
     let parsed: IQueryIndicator = JSON.parse(data)
     let query = parsed.query
@@ -18,6 +24,7 @@ const queryIndicatorHandler = async (
     if(quantaId === undefined || quantaId === null)
         throw Error("no_quanta")
 
+    query = parseIncomingQuery(query, categorization, pipelineLinks, getSchema)
     let indicators = await SelectIndicator(token, quantaId, query)
     if(indicators === undefined)
         throw Error("no_indicator")
@@ -72,16 +79,21 @@ const querySelectedIndicatorsPage = async (
     data: string,
     authData: IAuthenticationData | null | undefined,
     quantaId: string | null,
-    postMessage: (msg: string) => void
+    postMessage: (msg: string) => void,
+    categorization: IQuantaCategorization | undefined,
+    pipelineLinks: {[key: string]: string} | undefined,
+    getSchema: (parentId: string) => IQuantaSchema | undefined
 ) => {
     let parsed: IQueryPagedIndicators = JSON.parse(data)
     let token = authData?.token
+    let query = parsed.query
 
     if(token === undefined)
         throw Error("no_token")
     if(quantaId === undefined || quantaId === null)
         throw Error("no_quanta")
 
+    query = parseIncomingQuery(query, categorization, pipelineLinks, getSchema)
     let indicators = await PageSelectedIndicators(token, quantaId, parsed.pageLength, parsed.page, parsed.query)
     if(indicators === undefined)
         throw Error("no_indicator")

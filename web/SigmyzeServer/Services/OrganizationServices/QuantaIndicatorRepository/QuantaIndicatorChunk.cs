@@ -31,10 +31,21 @@ public partial class QuantaIndicatorRepository
             breakPoint++;
         }
 
+        //add the default tmp chunk
+        if(tmpChunk.Count > 0)
+        {
+            QuantaIndicatorChunk nChunk = new QuantaIndicatorChunk();
+            nChunk.QuantaId = quantaId;
+            nChunk.ProjectIndicators = tmpChunk;
+
+            newChunks.Add(nChunk);
+        }
+
         QuantaIndicatorRepositoryDef? indicatorRoot = await _quantaRepository
             .Find(x => x.QuantaId == quantaId)
             .FirstOrDefaultAsync();
 
+        Console.WriteLine(indicators.Count);
         List<string> collectedChunks = new List<string>();
         if(indicatorRoot?.IndicatorChunks != null)
             collectedChunks = indicatorRoot.IndicatorChunks;

@@ -51,7 +51,6 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
             return
         }
 
-        console.log(msg)
         iframeRef.current.contentWindow?.postMessage(msg)
     }
 

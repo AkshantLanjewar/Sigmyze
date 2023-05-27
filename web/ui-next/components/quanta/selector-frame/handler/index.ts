@@ -38,30 +38,61 @@ const messageHandler = async (
                 )
 
                 break
+            case "query_paged_indicators":
+                await querySelectedIndicatorsPage(
+                    data, 
+                    authData, 
+                    quantaId, 
+                    postMessage,
+                    categorization,
+                    pipelineLinks,
+                    getSchema
+                )
+
+                break
+            case "query_indicator":
+                await queryIndicatorHandler(
+                    data, 
+                    authData, 
+                    quantaId, 
+                    postMessage,
+                    categorization,
+                    pipelineLinks,
+                    getSchema
+                )
+
+                break
+            case "query_indicator_page":
+                await queryIndicatorsPage(
+                    data, 
+                    authData, 
+                    quantaId, 
+                    postMessage
+                )
+
+                break
+            case "indicators_length":
+                await indicatorsLength(
+                    data, 
+                    authData, 
+                    quantaId, 
+                    postMessage
+                )
+
+                break
+
+            case "query_indicator_by_id":
+                await queryIndicatorId(
+                    data, 
+                    authData, 
+                    quantaId, 
+                    postMessage
+                )   
+
+                break
             default:
                 break
         }
-        /*switch(func) {
-            case "query_indicator":
-                await queryIndicatorHandler(data, authData, quantaId, postMessage)
-                break
-            case "query_indicator_page":
-                await queryIndicatorsPage(data, authData, quantaId, postMessage)
-                break
-            case "query_paged_indicators":
-                await querySelectedIndicatorsPage(data, authData, quantaId, postMessage)
-                break
-            case "query_indicator_length":
-                await queryIndicatorLength(data, authData, quantaId, postMessage)
-                break
-            case "indicators_length":
-                await indicatorsLength(data, authData, quantaId, postMessage)
-                break
-            case "query_indicator_by_id":
-                await queryIndicatorId(data, authData, quantaId, postMessage)
-            default:
-                break
-        } */
     } catch (error) {
         showNotification({
             title: "Selector Error",

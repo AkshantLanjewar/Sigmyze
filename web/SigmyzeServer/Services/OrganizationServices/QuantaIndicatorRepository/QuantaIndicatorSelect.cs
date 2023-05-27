@@ -52,7 +52,11 @@ public partial class QuantaIndicatorRepository
             .Aggregate<GetIndicatorsQuery>(pipeline).ToListAsync();
             
         if(results.Count == 0)
-            return null;
+        {
+            GetIndicatorsQuery phantom = new GetIndicatorsQuery();
+            phantom.Indicators = new List<QuantaIndicator>();
+            return phantom;
+        }
 
         return results[0];
     }
@@ -184,7 +188,11 @@ public partial class QuantaIndicatorRepository
         List<GetIndicatorsQuery> results = await _quantaIndicatorChunks
             .Aggregate<GetIndicatorsQuery>(pipeline).ToListAsync();
         if(results.Count == 0)
-            return null;
+        {
+            GetIndicatorsQuery phantom = new GetIndicatorsQuery();
+            phantom.Indicators = new List<QuantaIndicator>();
+            return phantom;
+        }
 
         return results[0];
     }
