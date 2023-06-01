@@ -56,5 +56,5 @@ const Tree: React.FC<ITreeProps> = ({ nodes, setActive }): JSX.Element => {
     )
 }
 
-export type { ITreeNode, IContextMenuItem, ITreeNodeData }
+export type { ITreeNode, IContextMenuItem, ITreeNodeData, ITreeAction }
 export default Tree

@@ -5,9 +5,12 @@ import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import OverviewSelector from './overview-selector'
 import styles from './overview-selectors.module.scss'
+import { QuantaUIContextData } from '../../data/quanta/ui-context'
+import { IQuantaUIState } from '../../data/quanta/ui-context/state'
 
 const OverviewSelectors: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
+    const { openModal } = useContext(QuantaUIContextData) as IQuantaUIState
     const selectors = quantaContext.project_data?.store?.selectors
     
     return (
@@ -25,7 +28,7 @@ const OverviewSelectors: React.FC = ({ }) => {
                 >
                     <ActionIcon 
                         className={styles.selector__icon} 
-                        onClick={() => quantaContext.openModal("new_selector")}
+                        onClick={() => openModal("new_selector")}
                         radius={"md"}
                     >
                         <IconCodePlus size={48} stroke={"2"} />

@@ -6,9 +6,12 @@ import { IQuantaState } from '../../data/quanta/types'
 import SelectorPane from '../selector-pane/selector-pane'
 import SelectorPicker from '../selector-picker/selector-picker'
 import styles from './selectors-view.module.scss'
+import { QuantaUIContextData } from '../../data/quanta/ui-context'
+import { IQuantaUIState } from '../../data/quanta/ui-context/state'
 
 const QuantaSelectorsView: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
+    const { openModal } = useContext(QuantaUIContextData) as IQuantaUIState
     const selectors = quantaContext.project_data?.store?.selectors
     
     return (
@@ -27,7 +30,7 @@ const QuantaSelectorsView: React.FC = ({ }) => {
                 <Button
                     color={"indigo"}
                     radius={"xl"}
-                    onClick={() => { quantaContext.openModal("new_selector") }}
+                    onClick={() => { openModal("new_selector") }}
                 >
                     <Group spacing={5}>
                         <IconAdjustments size={16} stroke={"2"} />

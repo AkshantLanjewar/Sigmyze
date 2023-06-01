@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { IQuantaSelectorCode } from "../../data/quanta/types/project"
 import { IPipelineAnalysis } from "../selector-pane/context/types"
 import { LoadingOverlay } from "@mantine/core"
@@ -141,7 +141,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         postMessage(JSON.stringify(frameMessage))
     }, [pipelineAnalysis, internalLoading, pipelineLinks, query, updateCategorization, source.sourceCode])
 
-    const onLoad = () => {
+    const onLoad = useCallback(() => {
         if(iframeRef.current === null)
             return
 
@@ -158,7 +158,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
             contentWindow!.document.querySelector("body")!.style.background = "#101113"
         }
 
-        const body = contentWindow?.document.querySelector(`#${source.containerId}`)!
+        const body = contentWindow?.document.querySelector(`#${source.containerId}`)
         const resizeObserver = new ResizeObserver((entries) => {
             entries.forEach((entry) => {
                 let width = entry.contentRect.width
@@ -173,6 +173,9 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
             })
         })
 
+        if(body === null || body === undefined)
+            return
+
         resizeObserver.observe(body)
 
         const onVisibilityChange = () => {
@@ -180,7 +183,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         }
 
         contentWindow?.addEventListener("beforeunload", onVisibilityChange)
-    }
+    }, [])
 
     return (
         <div 

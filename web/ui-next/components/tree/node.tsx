@@ -15,6 +15,7 @@ import {
     IconBinaryTree2,
     IconChevronDown,
     IconChevronRight,
+    IconCodeDots,
     IconShadow,
 } from '@tabler/icons'
 
@@ -41,7 +42,8 @@ const icon_table = {
     "overview": <IconShadow size={18} stroke={"2"} />,
     "node_editor": <IconBinaryTree2 size={18} stroke={"2"} />,
     "selectors": <IconAdjustments size={18} stroke={"2"} />,
-    "dataset": <IconAtom2 size={18} stroke={"2"} />
+    "dataset": <IconAtom2 size={18} stroke={"2"} />,
+    "code::selector": <IconCodeDots size={18} stroke={2} />
 }
 
 interface INodeProps {
@@ -99,8 +101,11 @@ const Node: React.FC<INodeProps> = ({ node, additional_padding, root, setActive,
                 withArrow
             >
                 <ActionIcon
-                    onClick={() => { step.cb() }}
                     value={'side-ico'}
+                    onClick={(e) => { 
+                        e.stopPropagation()
+                        step.cb() 
+                    }}
                 >
                     {step.icon}
                 </ActionIcon>

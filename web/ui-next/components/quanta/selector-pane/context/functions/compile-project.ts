@@ -24,6 +24,7 @@ function compileProject(
 
     const promise = new Promise((resolve, reject) => {
         const handler = (val: string) => {
+            console.log(val)
             let parsed: ICompileProjectResult = JSON.parse(val)
             resolve(parsed)
         }

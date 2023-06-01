@@ -20,6 +20,10 @@ const messageHandler = async (
 ) => {
     try {
         //rebuild a switch to make it useful
+        console.log(func)
+        console.log(data)
+        console.log()
+
         switch(func) {
             case "ping":
                 //the app is ready to be loaded

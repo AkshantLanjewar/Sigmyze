@@ -1,10 +1,10 @@
 import { Button, Group } from "@mantine/core"
 import React, { useContext } from "react"
-import { QuantaContextData } from "../../../data/quanta/context"
-import { IQuantaState } from "../../../data/quanta/types"
 import { QuantaEditorContext } from "../quanta-editor"
 import { IQuantaControl } from "../types/types"
 import { buildStoreKey } from '../utils'
+import { QuantaUIContextData } from "../../../data/quanta/ui-context"
+import { IQuantaUIState } from "../../../data/quanta/ui-context/state"
 
 interface INodeControlProps {
     control: IQuantaControl,
@@ -13,7 +13,7 @@ interface INodeControlProps {
 
 const NodeControl: React.FC<INodeControlProps> = ({ control, nodeId }) => {
     const quantaContext = useContext(QuantaEditorContext)
-    const { openModal } = useContext(QuantaContextData) as IQuantaState
+    const { openModal } = useContext(QuantaUIContextData) as IQuantaUIState
 
     function controlClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         e.preventDefault()

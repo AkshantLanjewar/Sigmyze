@@ -53,7 +53,6 @@ const openSelector = (
         return
     
     setActiveSelector(selectorId)
-    value.focusTab(file.id!, file.type!)
 }
 
 export { 

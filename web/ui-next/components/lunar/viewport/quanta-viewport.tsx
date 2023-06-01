@@ -9,11 +9,16 @@ import QuantaOverviewView from '../../quanta/overview/overview-view'
 import QuantaSelectorsView from '../../quanta/selectors/selectors-view'
 import QuantaEditor from '../../quanta/quanta-editor/quanta-editor'
 import SocketHandler from '../../ui/socket-handler'
+import { QuantaUIContextData } from '../../data/quanta/ui-context'
+import { IQuantaUIState } from '../../data/quanta/ui-context/state'
+import CodeEditor from '../../ui/code-editor'
 
 const QuantaViewport: React.FC = ({ }) => {
     const quantaContext = useContext(QuantaContextData) as IQuantaState
-    let quantaTabs = quantaContext.tabs
-    let activeTab = quantaContext.tabId
+    const { tabId, changeTab, closeTab, tabs } = useContext(QuantaUIContextData) as IQuantaUIState
+
+    let quantaTabs = tabs
+    let activeTab = tabId
 
     let tabHeaders = undefined
     let tabBody = undefined
@@ -32,7 +37,7 @@ const QuantaViewport: React.FC = ({ }) => {
                         size={"sm"}
                         variant={"transparent"}
                         className={styles.icon}
-                        onClick={() => { quantaContext.closeTab(step.tabId!) }}
+                        onClick={() => { closeTab(step.tabId!) }}
                     >
                         <RxCross2 size={14} />
                     </ActionIcon>
@@ -51,6 +56,8 @@ const QuantaViewport: React.FC = ({ }) => {
                 viewPanel = <QuantaSelectorsView />
             if(step.tabType === "node_editor")
                 viewPanel = <QuantaEditor fileId={step.connected_file} fileName={step.tabName} />
+            if(step.tabType === "code::selector")
+                viewPanel = <CodeEditor codeId={step.connected_file} />
 
             return (
                 <Tabs.Panel
@@ -74,7 +81,7 @@ const QuantaViewport: React.FC = ({ }) => {
                             color={"indigo"}
                             radius={"sm"}
                             value={activeTab}
-                            onTabChange={(val) => { quantaContext.changeTab(val!) }}
+                            onTabChange={(val) => { changeTab(val!) }}
                             sx={{ 
                                 height: '100%',
                                 display: 'flex',

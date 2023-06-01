@@ -4,16 +4,24 @@ import { Text } from '@mantine/core'
 import { useContext, useEffect, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
-import Tree, { ITreeNode } from '../../tree/tree'
+import Tree, { ITreeAction, ITreeNode } from '../../tree/tree'
 import { v4 } from 'uuid'
+import { IconApps } from '@tabler/icons'
+import { QuantaUIContextData } from '../../data/quanta/ui-context'
+import { IQuantaUIState } from '../../data/quanta/ui-context/state'
+import { QuantaCodeContextData } from '../../data/quanta/quanta-code-context'
+import { IQuantaCodeContext } from '../../data/quanta/quanta-code-context/state'
 
 const QuantaToolbar: React.FC = ({ }) => {
     const [nodes, setNodes] = useState<Array<ITreeNode>>([])
+    const [displayNodes, setDisplayNodes] = useState<ITreeNode[]>([])
 
     const quantaContext = useContext(QuantaContextData) as IQuantaState
+    const { tabId, focusTab, tabs, openModal } = useContext(QuantaUIContextData) as IQuantaUIState
+    const { codeItems } = useContext(QuantaCodeContextData) as IQuantaCodeContext
+
     let quantaData = quantaContext.project_data
     let quantaFiles = quantaData?.files
-    let tabId = quantaContext.tabId
 
     useEffect(() => {
         buildToolbar()
@@ -21,10 +29,31 @@ const QuantaToolbar: React.FC = ({ }) => {
     
     useEffect(() => {
         buildToolbar()
-    }, [quantaFiles])
+    }, [quantaFiles, codeItems])
 
     useEffect(() => {
-        let tabs = quantaContext.tabs
+        if(nodes.length === 0)
+            return
+
+        let nodeChildren = nodes[0].children
+        for(let i = 0; i < codeItems.length; i++) {
+            let codeItem = codeItems[i]
+            let fileNode = {
+                node_id: codeItem.code_id,
+                node_title: codeItem.short,
+                node_type: "code::selector",
+                children: []
+            } as ITreeNode
+
+            nodeChildren.push(fileNode)
+        }
+
+        let nDisplayNodes = [ ...nodes ]
+        nDisplayNodes[0].children = nodeChildren
+        setDisplayNodes([ ...nDisplayNodes ])
+    }, [nodes, codeItems])
+
+    useEffect(() => {
         if(tabs === undefined)
             return
         if(tabId === undefined) {
@@ -53,17 +82,33 @@ const QuantaToolbar: React.FC = ({ }) => {
         if(quantaFiles === undefined)
             return
 
+        //build the actions
+        let project_actions = [
+            {
+                name: "Create Selector",
+                icon: <IconApps fill='#c1c2c5' size={16} />,
+                cb: () => {
+                    openModal("new_code_selector")
+                }
+            }
+        ] as ITreeAction[]
+
+
         let nNodes = [] as ITreeNode[]
         nNodes.push({
             node_id: v4(),
             node_title: quantaData?.dataset_name,
             node_type: "dataset",
             children: [],
-            opened: true
+            opened: true,
+            actions: project_actions
         } as ITreeNode)
 
         for(let i = 0; i < quantaFiles.length; i++) {
             let file = quantaFiles[i]
+            if(file.type === "selectors")
+                continue
+
             let fileNode = {
                 node_id: file.id,
                 node_title: file.name,
@@ -75,6 +120,17 @@ const QuantaToolbar: React.FC = ({ }) => {
             nNodes[0].children.push(fileNode)
         }
 
+        //prune the items
+        let newNodes = [] as ITreeNode[]
+        for(let i = 0; i < nNodes[0].children.length; i++) {
+            let child = nNodes[0].children[i]
+            if(child.node_type === "code::selector")
+                continue
+
+            newNodes.push(child)
+        }
+
+        nNodes[0].children = newNodes
         setNodes([ ...nNodes ])
     }
 
@@ -95,7 +151,7 @@ const QuantaToolbar: React.FC = ({ }) => {
     //function that handles the setActive event from the tree
     //focuses the tab on the viewport if it is a quanta file
     function setActive(id: string, type: string) {
-        let nTreeNodes = nodes
+        let nTreeNodes = displayNodes
         nTreeNodes = deactivateNodes(nTreeNodes)
 
         if(type === "dataset")
@@ -104,14 +160,14 @@ const QuantaToolbar: React.FC = ({ }) => {
         for(let i = 0; i < nTreeNodes[0].children.length; i++) {
             let node = nTreeNodes[0].children[i]
             if(node.node_id === id) {
-                quantaContext.focusTab(id, type)
+                focusTab(id, type)
                 node.active = true
             }
 
             nTreeNodes[0].children[i] = node
         }
 
-        setNodes([ ...nTreeNodes ])
+        setDisplayNodes([ ...nTreeNodes ])
     }
 
     return (
@@ -131,7 +187,7 @@ const QuantaToolbar: React.FC = ({ }) => {
                 <div style={{ marginTop: 0, position: 'relative', height: '100%' }}>
                     <div className={dropdownStyles['scroll-wrapper']}>
                         <div className={dropdownStyles.content}>
-                            <Tree nodes={nodes} setActive={setActive} />
+                            <Tree nodes={displayNodes} setActive={setActive} />
                         </div>
                     </div>
                 </div>

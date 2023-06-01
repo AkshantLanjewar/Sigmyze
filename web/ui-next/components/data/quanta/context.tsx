@@ -45,6 +45,8 @@ import QuantaIndicatorManager from "../../quanta/quanta-indicator-manager"
 import NewSelectorForm from "./forms/new_selector"
 import { IPipelineAnalysis, IPipelinedData } from "../../quanta/selector-pane/context/types"
 import { useEffectDebugger, usePrevious } from "../../ui/debug"
+import QuantaUIContext from "./ui-context"
+import QuantaCodeContex from "./quanta-code-context"
 
 interface IQuantaContextProps {
     quantaId: string | null,
@@ -56,14 +58,6 @@ const QuantaContextData = createContext<IQuantaState | null>(null)
 
 const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId, children }) => {
     const [projectData, setProjectData] = useState<IQuantaProjectData | undefined>(undefined)
-    
-    //state relating to the tabs
-    const [activeTab, setActiveTab] = useState<string | undefined>(undefined)
-    const [tabs, setTabs] = useState<IQuantaTab[]>([] as IQuantaTab[])
-
-    //state for the modal managaer
-    const [modalState, setModalState] = useState<string | null>(null)
-    const closeModal = () => setModalState(null)
 
     //state for the selector
     const [activeSelector, setActiveSelector] = useState<string | null>(null)
@@ -225,8 +219,6 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     value.updateEditorSchema = updateEditorSchema
     value.updateSchema = updateSchema
-    value.tabId = activeTab
-    value.tabs = tabs
     value.activeSelectorId = activeSelector
     value.dataLoaded = dataLoaded
 
@@ -237,26 +229,10 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     //NOTE: Theese are the functions relating to the context
     
     //NOTE: This function changes the tab to the specified tabs string
-    // meant to be used by the mantine component only
-    value.changeTab = ( tabId: string ) => 
-        changeTab(tabId, activeTab, setActiveTab)
-
     //Note this function focuses to a tab within the editor
-    // creates a tab if it does not exist
-    value.focusTab = (fileId: string, fileType: string) => 
-        focusTab(fileId, fileType, tabs, projectData, setTabs, setActiveTab)
-
-    //this function closes a tab and context switches appropriately
-    value.closeTab = (tabId: string) => 
-        closeTab(tabId, tabs, activeTab, setTabs, setActiveTab)
-
     //this function handles changing a text field
     value.changeText = (text: string, field: "title" | "id" | "desc") =>
         changeText(text, field, projectData, setProjectData)
-
-    //this function opens a modal
-    value.openModal = (modalId: string) => 
-        openModal(modalId, setModalState)
 
     //this function activates a selector
     value.activateSelector = (selectorId: string) => 
@@ -412,28 +388,13 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         <>
             <QuantaContextData.Provider value={value}>
                 <QuantaIndicatorManager>
-                    <div style={{ width: "100%", height: "100%" }}>
-                        <ModalManager
-                            modalState={modalState}
-                            close={closeModal}
-                        >
-                            <ModalManager.Modal
-                                id="new_selector"
-                                title="Create Selector"
-                            >
-                                <NewSelectorForm closeModal={closeModal} />
-                            </ModalManager.Modal>
-
-                            <ModalManager.Modal
-                                id="new_field"
-                                title="Add Dataset Field"
-                            >
-                                <NewFieldForm closeModal={closeModal} />
-                            </ModalManager.Modal>
-                        </ModalManager>
-
-                        {children}
-                    </div>
+                    <QuantaCodeContex quantaId={quantaId}>
+                        <QuantaUIContext projectData={projectData}>
+                                <div style={{ width: "100%", height: "100%" }}>
+                                    {children}
+                                </div>
+                        </QuantaUIContext>
+                    </QuantaCodeContex>
                 </QuantaIndicatorManager>
             </QuantaContextData.Provider>
         </>
