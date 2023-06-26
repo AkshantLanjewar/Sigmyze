@@ -1,18 +1,21 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { IQuantaSchema } from "../../quanta/schema-editor/types"
-import ModalManager from "../../ui/modal-manager"
 import { IQuantaState } from "./types"
-import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, ProjectSchemas } from "./types/project"
-import { IQuantaTab } from "./types/ui"
-import { DefaultQuantaProject } from "./utils"
+import { DefaultQuantaProject, SaveCounterUtil } from "./utils"
+
+import { 
+    IQuantaCategorization, 
+    IQuantaEditorProject, 
+    IQuantaProjectData, 
+    IQuantaSelector, 
+    IQuantaSelectorCode, 
+    IQuantaTextStore, 
+    ProjectSchemas 
+} from "./types/project"
 
 import { 
     activateSelector, 
-    changeTab, 
     changeText, 
-    closeTab, 
-    focusTab, 
-    openModal, 
     openSelector, 
     createElement, 
     initSchema, 
@@ -32,19 +35,19 @@ import {
     editPipelineObjects,
     eraseSchema,
     deleteSelector,
-    editPipelineLinks
+    editPipelineLinks,
+    setTextValue
 } from "./functions"
+
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
-import NewFieldForm from "./forms/new_field"
 import { GetProject } from "./quanta-api"
 import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"
 import { INodeExecutionResult } from "../../quanta/quanta-editor/execution-engine/context/types"
 import { IconFileCode2, IconStack2 } from "@tabler/icons"
 import QuantaIndicatorManager from "../../quanta/quanta-indicator-manager"
-import NewSelectorForm from "./forms/new_selector"
 import { IPipelineAnalysis, IPipelinedData } from "../../quanta/selector-pane/context/types"
-import { useEffectDebugger, usePrevious } from "../../ui/debug"
+import { usePrevious } from "../../ui/debug"
 import QuantaUIContext from "./ui-context"
 import QuantaCodeContex from "./quanta-code-context"
 
@@ -92,6 +95,11 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     const [selectorUpdated, setSelectorUpdated] = useState(false)
     const toggleSelectorUpdate = () => setSelectorUpdated(!selectorUpdated)
 
+    //state relating to the text formatters
+    const [textStore, setTextStore] = useState<IQuantaTextStore>({})
+    const [textLoad, setTextLoad] = useState(false)
+    const [textUpdated, setTextUpdated] = useState(false)
+
     //state relating to the categorization of the dataset
     const [categorize, setCategorize] = useState<IQuantaCategorization | undefined>(undefined)
     const [categorizeLoad, setCategorizeLoad] = useState(false)
@@ -99,6 +107,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     const clearCategorize = () => setCategorize(undefined)
     const toggleCategorizeUpdated = () => setCategorizeUpdated(!categorizeUpdated)
+    const toggleTextUpdated = () => setTextUpdated(!textUpdated)
 
     const { authData } = useContext(UserContextData) as IUserContext
 
@@ -118,7 +127,8 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
             editorProjects, 
             schemas, 
             selectors,
-            categorize
+            categorize,
+            textStore
         )
     }
 
@@ -131,27 +141,36 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     }, [quantaId, organizationId])
 
     useEffect(() => {
-        if(dataLoaded === false)
-            return
-        if(categorizeLoad === true) {
-            setCategorizeLoad(false)
-            return
-        }
+        SaveCounterUtil(
+            dataLoaded,
+            textLoad,
+            saveCounter,
+            setTextLoad,
+            toggleTextUpdated,
+            setSaveCounter
+        )
+    }, [textStore])
 
-        toggleCategorizeUpdated()
-        setSaveCounter(saveCounter + 1)
+    useEffect(() => {
+        SaveCounterUtil(
+            dataLoaded, 
+            categorizeLoad, 
+            saveCounter, 
+            setCategorizeLoad, 
+            toggleCategorizeUpdated, 
+            setSaveCounter
+        )
     }, [categorize])
 
     useEffect(() => {
-        if(dataLoaded === false)
-            return
-        if(selectorLoad === true) {
-            setSelectorLoad(false)
-            return
-        }
-
-        toggleSelectorUpdate()
-        setSaveCounter(saveCounter + 1)
+        SaveCounterUtil(
+            dataLoaded, 
+            selectorLoad,
+            saveCounter,
+            setSelectorLoad,
+            toggleSelectorUpdate,
+            setSaveCounter
+        )
     }, [selectors])
 
     useEffect(() => {
@@ -199,120 +218,133 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         }
     }, [saveCounter])
 
-    let value: IQuantaState = {} as IQuantaState
-    value.project_data = { ...projectData }
-    if(value.project_data !== undefined)
-        value.project_data.dataset_schema = schemas
-    if(value.project_data.store === undefined)
-        value.project_data.store = { selectors: [] }
-
-    value.project_data.store.editorProjects = editorProjects
-    value.project_data.store.selectors = selectors
-    value.editorProjects = editorProjects
-    value.selectors = selectors
-
-    value.categorization = categorize
-    value.updateCategorization = categorizeUpdated
-
-    value.updateEditorIndicators = updateEditorIndicators
-    value.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators
-
-    value.updateEditorSchema = updateEditorSchema
-    value.updateSchema = updateSchema
-    value.activeSelectorId = activeSelector
-    value.dataLoaded = dataLoaded
-
-    value.organizationId = organizationId
-    value.quantaId = quantaId
-    value.selectorsUpdated = selectorUpdated
-
     //NOTE: Theese are the functions relating to the context
     
     //NOTE: This function changes the tab to the specified tabs string
     //Note this function focuses to a tab within the editor
-    //this function handles changing a text field
-    value.changeText = (text: string, field: "title" | "id" | "desc") =>
-        changeText(text, field, projectData, setProjectData)
 
-    //this function activates a selector
-    value.activateSelector = (selectorId: string) => 
-        activateSelector(selectorId, setActiveSelector)
+    const changeTextCallback = useCallback((text: string, field: "title" | "id" | "desc") => {
+        return changeText(text, field, projectData, setProjectData)
+    }, [projectData])
 
-    //this function opens a selector in the selector view
-    value.openSelector = (selectorId: string) => 
-        openSelector(selectorId, value, projectData, setActiveSelector)
+    const activateSelectorCallback = useCallback((selectorId: string) => {
+        return activateSelector(selectorId, setActiveSelector)
+    }, [])
 
-    value.getSchema = (parentId: string) =>
-        getSchema(parentId, schemas)
+    const openSelectorCallback = useCallback((selectorId: string) => {
+        return openSelector(selectorId, projectData, setActiveSelector)
+    }, [projectData])
 
-    value.changeSchema = (parentId: string, nSchema: IQuantaSchema) =>
-        changeSchema(parentId, nSchema, schemas, setSchemas, toggleUpdateEditorSchema)
+    const getSchemaCallback = useCallback((parentId: string) => {
+        return getSchema(parentId, schemas)
+    }, [schemas])
 
-    value.initSchema = (parentId: string) =>
-        initSchema(parentId, schemas, setSchemas, toggleUpdateEditorSchema)
+    const changeSchemaCallback = useCallback((parentId: string, nSchema: IQuantaSchema) => {
+        return changeSchema(parentId, nSchema, schemas, setSchemas, toggleUpdateEditorSchema)
+    }, [schemas, toggleUpdateEditorSchema])
 
-    value.createElement = (parentId: string, nodeId: string, fieldName?: string) =>
-        createElement(parentId, nodeId, value.getSchema(parentId), fieldName, value.changeSchema, toggleUpdateEditorSchema)
+    const initSchemaCallback = useCallback((parentId: string) => {
+        return initSchema(parentId, schemas, setSchemas, toggleUpdateEditorSchema) 
+    }, [schemas, toggleUpdateEditorSchema])
 
-    value.editSchema = (
+    const createElementCallback = useCallback((parentId: string, nodeId: string, fieldName?: string) => {
+        return createElement(
+            parentId, 
+            nodeId, 
+            getSchemaCallback(parentId), 
+            fieldName, 
+            changeSchemaCallback, 
+            toggleUpdateEditorSchema
+        )
+    }, [getSchemaCallback, changeSchemaCallback, toggleUpdateEditorSchema])
+
+    const editSchemaCallback = useCallback((
         parentId: string,
         nodeId: string, 
         type: "edit_text" | "edit_type", 
         text: string, 
         node_type: IQuantaTypeRef | undefined
-    ) =>
-        editSchema(
+    ) => {
+        return editSchema(
             parentId, 
             nodeId, 
             type, 
             text, 
             node_type, 
-            value.getSchema(parentId), 
-            value.changeSchema, 
+            getSchemaCallback(parentId), 
+            changeSchemaCallback, 
             toggleUpdateSchema,
             toggleUpdateEditorSchema
         )
+    }, [getSchemaCallback, changeSchemaCallback, toggleUpdateSchema, toggleUpdateEditorSchema])
 
-    value.deleteElement = (parentId: string, nodeId: string) =>
-        deleteSchema(parentId, nodeId, value.getSchema(parentId), value.changeSchema, toggleUpdateEditorSchema)
+    const deleteElementCallback = useCallback((parentId: string, nodeId: string) => {
+        return deleteSchema(parentId, nodeId, getSchemaCallback(parentId), changeSchemaCallback, toggleUpdateEditorSchema)
+    }, [getSchemaCallback, changeSchemaCallback, toggleUpdateEditorSchema])
 
-    value.eraseSchema = (parentId: string) =>
-        eraseSchema(parentId, schemas, setSchemas)
+    const eraseSchemaCallback = useCallback((parentId: string) => {
+        return eraseSchema(parentId, schemas, setSchemas)
+    }, [schemas])
 
-    value.unfocusAll = (parentId: string) =>
-        unfocusAllSchema(parentId, value.getSchema(parentId), value.changeSchema)
+    const unfocusAllCallback = useCallback((parentId: string) => {
+        return unfocusAllSchema(parentId, getSchemaCallback(parentId), changeSchemaCallback)
+    }, [getSchemaCallback, changeSchemaCallback])
 
-    value.getEditorProject = (fileId: string) =>
-        GetEditorProjects(fileId, editorProjects)
+    const getEditorProjectCallback = useCallback((fileId: string) => {
+        return GetEditorProjects(fileId, editorProjects)
+    }, [editorProjects])
 
-    value.setEditorProject = (fileId: string, nodes: IQuantaRFNode[], edges: IQuantaRFEdge[], quantaStore: IQuantaStore, executionResults: INodeExecutionResult[],) =>
-        SetEditorProjectData(fileId, nodes, edges, quantaStore, editorProjects, executionResults, setEditorProjects)
+    const setEditorProjectCallback = useCallback((
+        fileId: string, 
+        nodes: IQuantaRFNode[], 
+        edges: IQuantaRFEdge[], 
+        quantaStore: IQuantaStore, 
+        executionResults: INodeExecutionResult[]
+    ) => {
+        return SetEditorProjectData(fileId, nodes, edges, quantaStore, editorProjects, executionResults, setEditorProjects)
+    }, [editorProjects])
 
-    value.setEditorExecution = (fileId: string, executionResults: INodeExecutionResult[]) =>
-        SetEditorExecutionData(fileId, executionResults, editorProjects, setEditorProjects)
+    const setEditorExecutionCallback = useCallback((fileId: string, executionResults: INodeExecutionResult[]) => {
+        return SetEditorExecutionData(fileId, executionResults, editorProjects, setEditorProjects)
+    }, [editorProjects])
 
-    //selectors
-    value.newSelector = (selectorName: string, selectorId: string) =>
-        newSelector(selectorName, selectorId, selectors, setSelectors, toggleSelectorsUpdated)
+    const newSelectorCallback = useCallback((selectorName: string, selectorId: string) => {
+        return newSelector(selectorName, selectorId, selectors, setSelectors, toggleSelectorsUpdated)
+    }, [toggleSelectorsUpdated, selectors])
 
-    value.addSelectorSource = (selectorId: string, selectorSource: IQuantaSelectorCode) =>
-        addSelectorSource(selectorId, selectorSource, selectors, setSelectors)
+    const addSelectorSourceCallback = useCallback((selectorId: string, selectorSource: IQuantaSelectorCode) => {
+        return addSelectorSource(selectorId, selectorSource, selectors, setSelectors)
+    }, [selectors])
 
-    value.editSelectorAnalysis = (selectorId: string, analysis: IPipelineAnalysis[]) =>
-        editSelectorAnalysis(selectorId, analysis, selectors, setSelectors)
-    
-    value.editPipelineObjects = (selectorId: string, data: IPipelinedData[]) =>
-        editPipelineObjects(selectorId, data, selectors, setSelectors)
+    const editSelectorAnalysisCallback = useCallback((selectorId: string, analysis: IPipelineAnalysis[]) => {
+        return editSelectorAnalysis(selectorId, analysis, selectors, setSelectors)
+    }, [selectors])
 
-    value.editPipelineLinks = (selectorId: string, links: {[key: string]: string}) =>
-        editPipelineLinks(selectorId, links, selectors, setSelectors)
+    const editPipelineObjectsCallback = useCallback((selectorId: string, data: IPipelinedData[]) => {
+        return editPipelineObjects(selectorId, data, selectors, setSelectors)
+    }, [selectors])
 
-    value.deleteSelector = (selectorId: string) =>
-        deleteSelector(selectorId, selectors, value.eraseSchema, setSelectors, setActiveSelector, toggleSelectorsUpdated)
-    
-    value.clearCategorization = clearCategorize
+    const editPipelineLinksCallback = useCallback((selectorId: string, links: {[key: string]: string}) => {
+        return editPipelineLinks(selectorId, links, selectors, setSelectors)
+    }, [selectors])
 
-    value.setCategorization = (mapsTo: string, categoriesMap: { [key: string]: string[] }) => {
+    const deleteSelectorCallback = useCallback((selectorId: string) => {
+        return deleteSelector(
+            selectorId, 
+            selectors, 
+            eraseSchemaCallback, 
+            setSelectors, 
+            setActiveSelector, 
+            toggleSelectorsUpdated
+        )
+    }, [selectors, toggleSelectorsUpdated])
+
+    const editTextCallback = useCallback((id: string, val: string) => {
+        setTextValue(id, val, textStore, setTextStore)
+        toggleTextUpdated()
+    }, [textStore])
+
+    const setCategorizationCallback = useCallback((mapsTo: string, categoriesMap: { [key: string]: string[] }) => {
         const nCategorization = {
             fileName: "categories.json",
             mapsTo: mapsTo,
@@ -321,7 +353,127 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         } as IQuantaCategorization
 
         setCategorize({ ...nCategorization })
-    }
+    }, [])
+
+    const memoValue: IQuantaState = useMemo(() => {
+        let internalValue: IQuantaState = {} as IQuantaState
+        internalValue.project_data = { ...projectData }
+        if(internalValue.project_data !== undefined)
+            internalValue.project_data.dataset_schema = schemas
+        if(internalValue.project_data.store === undefined)
+            internalValue.project_data.store = { selectors: [] }
+
+        internalValue.project_data.store.editorProjects = editorProjects
+        internalValue.project_data.store.selectors = selectors
+        internalValue.editorProjects = editorProjects
+        internalValue.selectors = selectors
+
+        internalValue.textStore = textStore
+        internalValue.textUpdated = textUpdated
+        internalValue.categorization = categorize
+        internalValue.updateCategorization = categorizeUpdated
+        internalValue.updateEditorIndicators = updateEditorIndicators
+        internalValue.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators
+
+        internalValue.updateEditorSchema = updateEditorSchema
+        internalValue.updateSchema = updateSchema
+        internalValue.activeSelectorId = activeSelector
+        internalValue.dataLoaded = dataLoaded
+        internalValue.organizationId = organizationId
+        internalValue.quantaId = quantaId
+        internalValue.selectorsUpdated = selectorUpdated
+
+        //NOTE: Theese are the functions relating to the context
+        //this function handles changing a text field
+        internalValue.changeText = changeTextCallback
+        //this function activates a selector
+        internalValue.activateSelector = activateSelectorCallback
+        //this function opens a selector in the selector view
+        internalValue.openSelector = openSelectorCallback
+        //this function retreives a schema from the list of schemas
+        internalValue.getSchema = getSchemaCallback
+        //this function edits a schema within the context
+        internalValue.changeSchema = changeSchemaCallback
+        //this function initializes a schema
+        internalValue.initSchema = initSchemaCallback
+        //this function adds an item to the schema
+        internalValue.createElement = createElementCallback
+        //this function edits a schemas value
+        internalValue.editSchema = editSchemaCallback
+        //deletes an element from the schema
+        internalValue.deleteElement = deleteElementCallback
+        //erases an entire schema from the project
+        internalValue.eraseSchema = eraseSchemaCallback
+        //unfocuses all schemas in their UI view
+        internalValue.unfocusAll = unfocusAllCallback
+        //gets an editor project
+        internalValue.getEditorProject = getEditorProjectCallback
+        //updates an editor project
+        internalValue.setEditorProject = setEditorProjectCallback
+        //sets the execution result within the project
+        internalValue.setEditorExecution = setEditorExecutionCallback
+        //creates a selector in the project
+        internalValue.newSelector = newSelectorCallback
+        //sets the source code of a selector
+        internalValue.addSelectorSource = addSelectorSourceCallback
+        //edits the saved analysis for a selector
+        internalValue.editSelectorAnalysis = editSelectorAnalysisCallback
+        //persists the pipelined data to project
+        internalValue.editPipelineObjects = editPipelineObjectsCallback
+        //changes a selector's pipeline links
+        internalValue.editPipelineLinks = editPipelineLinksCallback
+        //deletes a selector
+        internalValue.deleteSelector = deleteSelectorCallback
+        //clears the categories from the project
+        internalValue.clearCategorization = clearCategorize
+        //sets the categories for the project
+        internalValue.setCategorization = setCategorizationCallback
+        //edits a text store in the project
+        internalValue.editText = editTextCallback
+
+        return internalValue
+    }, [
+        projectData, 
+        schemas, 
+        editorProjects, 
+        selectors, 
+        textStore, 
+        textUpdated, 
+        categorize, 
+        categorizeUpdated,
+        updateEditorIndicators,
+        toggleUpdateEditorIndicators,
+        updateEditorSchema,
+        updateSchema,
+        activeSelector,
+        dataLoaded,
+        organizationId,
+        quantaId,
+        selectorUpdated,
+        editTextCallback,
+        setCategorizationCallback,
+        clearCategorize,
+        deleteSelectorCallback,
+        editPipelineLinksCallback,
+        editPipelineObjectsCallback,
+        editSelectorAnalysisCallback,
+        addSelectorSourceCallback,
+        newSelectorCallback,
+        setEditorExecutionCallback,
+        setEditorProjectCallback,
+        getEditorProjectCallback,
+        unfocusAllCallback,
+        eraseSchemaCallback,
+        deleteElementCallback,
+        editSchemaCallback,
+        createElementCallback,
+        initSchemaCallback,
+        changeSchemaCallback,
+        getSchemaCallback,
+        openSelectorCallback,
+        activateSelectorCallback,
+        changeTextCallback
+    ])
 
     //function that loads the quanta data
     function loadQuanta() {
@@ -352,10 +504,17 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
             projectData = rehydrateQuantaProject(projectData, icon_dict)
             setProjectData({ ...projectData })
+
             let schema = projectData.dataset_schema
             if(schema !== undefined) {
                 setSchemas([ ...schema ])
                 setSchemaLoad(true)
+            }
+
+            let projectTextStore = projectData.store?.textStore
+            if(projectTextStore !== undefined) {
+                setTextStore({ ...projectTextStore })
+                setTextLoad(true)
             }
 
             let editorProjects = projectData.store?.editorProjects
@@ -386,13 +545,13 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     return (
         <>
-            <QuantaContextData.Provider value={value}>
+            <QuantaContextData.Provider value={memoValue}>
                 <QuantaIndicatorManager>
                     <QuantaCodeContex quantaId={quantaId}>
                         <QuantaUIContext projectData={projectData}>
-                                <div style={{ width: "100%", height: "100%" }}>
-                                    {children}
-                                </div>
+                            <div style={{ width: "100%", height: "100%" }}>
+                                {children}
+                            </div>
                         </QuantaUIContext>
                     </QuantaCodeContex>
                 </QuantaIndicatorManager>

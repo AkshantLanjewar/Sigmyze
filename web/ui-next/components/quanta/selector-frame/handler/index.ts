@@ -19,11 +19,6 @@ const messageHandler = async (
     pingRef: MutableRefObject<boolean>
 ) => {
     try {
-        //rebuild a switch to make it useful
-        console.log(func)
-        console.log(data)
-        console.log()
-
         switch(func) {
             case "ping":
                 //the app is ready to be loaded
@@ -107,4 +102,5 @@ const messageHandler = async (
     }
 }
 
+export * from './utils'
 export { messageHandler }

@@ -1,4 +1,4 @@
-import styles   from './toolbar.module.scss'
+import styles from './toolbar.module.scss'
 import dropdownStyles from '../explorer/explorer.module.scss'
 import { Text } from '@mantine/core'
 import { useContext, useEffect, useState } from 'react'
@@ -18,7 +18,6 @@ const QuantaToolbar: React.FC = ({ }) => {
 
     const quantaContext = useContext(QuantaContextData) as IQuantaState
     const { tabId, focusTab, tabs, openModal } = useContext(QuantaUIContextData) as IQuantaUIState
-    const { codeItems } = useContext(QuantaCodeContextData) as IQuantaCodeContext
 
     let quantaData = quantaContext.project_data
     let quantaFiles = quantaData?.files
@@ -29,29 +28,18 @@ const QuantaToolbar: React.FC = ({ }) => {
     
     useEffect(() => {
         buildToolbar()
-    }, [quantaFiles, codeItems])
+    }, [quantaFiles])
 
     useEffect(() => {
         if(nodes.length === 0)
             return
 
         let nodeChildren = nodes[0].children
-        for(let i = 0; i < codeItems.length; i++) {
-            let codeItem = codeItems[i]
-            let fileNode = {
-                node_id: codeItem.code_id,
-                node_title: codeItem.short,
-                node_type: "code::selector",
-                children: []
-            } as ITreeNode
-
-            nodeChildren.push(fileNode)
-        }
 
         let nDisplayNodes = [ ...nodes ]
         nDisplayNodes[0].children = nodeChildren
         setDisplayNodes([ ...nDisplayNodes ])
-    }, [nodes, codeItems])
+    }, [nodes])
 
     useEffect(() => {
         if(tabs === undefined)
@@ -82,17 +70,6 @@ const QuantaToolbar: React.FC = ({ }) => {
         if(quantaFiles === undefined)
             return
 
-        //build the actions
-        let project_actions = [
-            {
-                name: "Create Selector",
-                icon: <IconApps fill='#c1c2c5' size={16} />,
-                cb: () => {
-                    openModal("new_code_selector")
-                }
-            }
-        ] as ITreeAction[]
-
 
         let nNodes = [] as ITreeNode[]
         nNodes.push({
@@ -100,15 +77,11 @@ const QuantaToolbar: React.FC = ({ }) => {
             node_title: quantaData?.dataset_name,
             node_type: "dataset",
             children: [],
-            opened: true,
-            actions: project_actions
+            opened: true
         } as ITreeNode)
 
         for(let i = 0; i < quantaFiles.length; i++) {
             let file = quantaFiles[i]
-            if(file.type === "selectors")
-                continue
-
             let fileNode = {
                 node_id: file.id,
                 node_title: file.name,

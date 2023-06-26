@@ -1,6 +1,6 @@
 import { ActionIcon, Button } from '@mantine/core'
 import { IconPhotoPlus, IconPlayerPlay } from '@tabler/icons'
-import { useContext } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import EditableText from '../../ui/editable-text/editable-text'
@@ -9,13 +9,23 @@ import OverviewTabs from '../overview-tabs/overview-tabs'
 import styles from './overview-view.module.scss'
 import SchemaEditor from '../schema-editor/schema-editor'
 import CategoryMapper from '../category-mapper'
+import Formatters from '../formatters'
+import SelectorViewModal from '../selector-view/modal'
 
 const QuantaOverviewView: React.FC = ({ }) => {
+    const [previewOpen, setPreviewOpen] = useState(false)
+    const closePreview = useCallback(() => setPreviewOpen(false), [])
+
     const quantaContext = useContext(QuantaContextData) as IQuantaState
     const quantaProject = quantaContext.project_data
 
     return (
         <div className={styles.overviewWrapper}>
+            <SelectorViewModal
+                opened={previewOpen}
+                close={closePreview}
+            />
+
             <div className={styles.overview__content}>
                 <div className={styles.overview__title__row}>
                     <div className={styles.text}>
@@ -48,11 +58,16 @@ const QuantaOverviewView: React.FC = ({ }) => {
                         <Button
                             radius={"xl"}
                             color={"indigo"}
-                            disabled
+                            onClick={() => setPreviewOpen(true)}
                         >
-                            <IconPlayerPlay size={14} style={{ marginRight: 2.5 }} />
+                            <IconPlayerPlay 
+                                size={14} 
+                                style={{ marginRight: 2.5 }} 
+                                fill='white'
+                                fillOpacity={1}
+                            />
 
-                            Update
+                            Preview
                         </Button>
 
                         <Button
@@ -62,7 +77,7 @@ const QuantaOverviewView: React.FC = ({ }) => {
                         >
                             <IconPlayerPlay  size={14} style={{ marginRight: 2.5 }} />
 
-                            Create
+                            Run Script
                         </Button>
                     </div>
                 </div>
@@ -88,6 +103,18 @@ const QuantaOverviewView: React.FC = ({ }) => {
                 <div className={styles.schema__container}>
                     <div className={styles.title}>Dataset Schema</div>
                     <SchemaEditor schemaId='dataset' viewOnly={true} />
+                </div>
+
+                <div className={styles.overview__selectors__row}>
+                    <div className={styles.selector__title}>
+                        <div className={styles.title}>Text Formatters</div>
+                        <div className={styles.desc}>
+                            How fields such as the display title and indicator id are constructed
+                            from the indicator fields
+                        </div>
+                    </div>
+
+                    <Formatters />
                 </div>
 
                 <div className={styles.schema__container}>

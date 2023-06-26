@@ -4,7 +4,7 @@ import { CodeEditorContextData } from '..'
 import { ICodeEditorState } from '../state'
 
 import { ActionIcon, Text, Tooltip } from '@mantine/core'
-import { IconFile, IconFolder, IconTrash } from '@tabler/icons'
+import { IconFile, IconFolder, IconPlayerPlay, IconTrash } from '@tabler/icons'
 
 const FileTitleBar: React.FC = ({ }) => {
     const { activeDirectory, openModal, name } = useContext(CodeEditorContextData) as ICodeEditorState
@@ -26,23 +26,6 @@ const FileTitleBar: React.FC = ({ }) => {
             </Text>
 
             <div className={styles.actions}>
-                <Tooltip
-                    label={activeDirectory ? null : "Delete Selector"}
-                    position={'bottom-start'}
-                    color={'black'}
-                    withArrow
-                >
-                    <ActionIcon
-                        size={28}
-                        color={"red"}
-                        variant={"outline"}
-                        radius={"xs"}
-                        onClick={(e) => openModalWrapper(e, "delete-selector")}
-                    >
-                        <IconTrash size={18} />
-                    </ActionIcon>
-                </Tooltip>
-
                 <Tooltip
                     label={"Create Folder"}
                     position={'bottom-start'}
@@ -66,7 +49,7 @@ const FileTitleBar: React.FC = ({ }) => {
 
                 <Tooltip
                     label={"Create File"}
-                    position={'bottom-end'}
+                    position={'bottom-start'}
                     color={'black'}
                     withArrow
                 >
@@ -81,6 +64,43 @@ const FileTitleBar: React.FC = ({ }) => {
                             fill='#c1c2c5'
                             color={"#c1c2c5"} 
                             fillOpacity={1} 
+                        />
+                    </ActionIcon>
+                </Tooltip>
+
+                <Tooltip
+                    label={activeDirectory ? null : "Delete Selector"}
+                    position={'bottom-start'}
+                    color={'black'}
+                    withArrow
+                >
+                    <ActionIcon
+                        size={28}
+                        color={"red"}
+                        variant={"outline"}
+                        radius={"xs"}
+                        onClick={(e) => openModalWrapper(e, "delete-selector")}
+                    >
+                        <IconTrash size={18} />
+                    </ActionIcon>
+                </Tooltip>
+
+                <Tooltip
+                    label={"Execute Selector"}
+                    position={'bottom-end'}
+                    color={'black'}
+                    withArrow
+                >
+                    <ActionIcon
+                        size={28}
+                        color={"green"}
+                        variant={"outline"}
+                        radius={"xs"}
+                    >
+                        <IconPlayerPlay 
+                            fillOpacity={1} 
+                            fill='#51cf66' 
+                            size={16}
                         />
                     </ActionIcon>
                 </Tooltip>

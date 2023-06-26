@@ -2,7 +2,7 @@ import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-en
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 import { IPipelineAnalysis, IPipelinedData } from "../../../quanta/selector-pane/context/types"
-import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode } from "./project"
+import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, IQuantaTextStore } from "./project"
 import { IQuantaTab } from "./ui"
 
 interface IQuantaState {
@@ -38,6 +38,10 @@ interface IQuantaState {
     categorization: IQuantaCategorization | undefined,
 
     updateCategorization: boolean,
+
+    textStore: IQuantaTextStore,
+
+    textUpdated: boolean
 
     //tells the application to update the indicators
     toggleUpdateEditorIndicators: () => void,
@@ -100,7 +104,9 @@ interface IQuantaState {
     //clears out the categorization
     clearCategorization: () => void
 
-    setCategorization: (mapsTo: string, categoriesMap: { [key: string]: string[] }) => void
+    setCategorization: (mapsTo: string, categoriesMap: { [key: string]: string[] }) => void,
+
+    editText: (id: string, val: string) => void
 }
 
 export type { IQuantaState }

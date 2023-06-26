@@ -32,4 +32,31 @@ async function GetCodeRepository(token: string, codeId: string) {
     }
 }
 
-export { GetCodeRepository }
+async function GetCodeTemplate(templateId: string) {
+    let url = `${server}/api/v2/code/get/template/${templateId}`
+    let options = GenerateOptions("GET", null)
+
+    try {
+        let resp = await GET_Cacheless<IGetCodeFilesystemResp>(url, options)
+        if(resp.status?.error === true)
+            throw Error(resp.status.msg)
+        if(resp.filesystem === undefined)
+            throw Error("no_filesystem_received")
+
+        return resp.filesystem
+    } catch(e) {
+        showNotification({
+            title: "Code Error",
+            message: `Error when trying to access code, ${e}`,
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return undefined
+    }
+}
+
+export { 
+    GetCodeRepository,
+    GetCodeTemplate 
+}

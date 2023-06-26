@@ -5,6 +5,8 @@ using SigmyzeServer.Models.ApplicationServices;
 using SigmyzeServer.Models.ApplicationServices.UserData;
 using SigmyzeServer.Services.OrganizationServices;
 using Microsoft.AspNetCore.Authentication;
+using SigmyzeServer.Services.DatasetShared;
+using SigmyzeServer.Services.DatabaseServices;
 
 namespace SigmyzeServer.Controllers;
 
@@ -19,6 +21,7 @@ public partial class QuantaController : OrganizationControllerBase
     private readonly IQuantaIndicatorRepository _quantaIndicatorRepository;
     private readonly IUserServiceRepository _userServiceRepository;
     private readonly IDriveRepository _driveRepository; 
+    private readonly DatasetShared _sharedDataset;
     
     public QuantaController(
         IOrganizationRepository organizationRepository,
@@ -26,7 +29,8 @@ public partial class QuantaController : OrganizationControllerBase
         IQuantaRepository quantaRepository,
         IQuantaIndicatorRepository quantaIndicatorRepository,
         IUserServiceRepository userServiceRepository,
-        IDriveRepository driveRepository
+        IDriveRepository driveRepository,
+        IQuantaDatasetService _quantaDatasetService
     ) : base(organizationRepository)
     {
         _projectRepository = projectRepository;
@@ -34,6 +38,8 @@ public partial class QuantaController : OrganizationControllerBase
         _quantaIndicatorRepository = quantaIndicatorRepository;
         _userServiceRepository = userServiceRepository;
         _driveRepository = driveRepository;
+
+        _sharedDataset = new DatasetShared(_quantaDatasetService, _quantaIndicatorRepository, quantaRepository);
     }
 
     private async Task<Drive?> GetDrive(string lunarId, string organizationId)

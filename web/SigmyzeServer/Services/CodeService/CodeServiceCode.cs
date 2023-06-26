@@ -12,24 +12,6 @@ public partial class CodeRepository
         if(filesystem == null || filesystem.Files == null || filesystem.Folders == null)
             return null;
 
-        //remove any hidden files
-        List<CodeFile> newFiles = new List<CodeFile>();
-        for(int i = 0; i < filesystem.Files.Count; i++)
-        {
-            CodeFile file = filesystem.Files[i];
-            if(file.Hidden == true)
-                continue;
-
-            newFiles.Add(file);
-        }
-
-        //recurse thru the folders to check aswell
-        List<CodeFolder> newFolders = new List<CodeFolder>();
-        for(int i = 0; i < filesystem.Folders.Count; i++)
-            newFolders.Add(RemoveHiddenFiles(filesystem.Folders[i]));
-
-        filesystem.Files = newFiles;
-        filesystem.Folders = newFolders;
         return filesystem;
     }
 

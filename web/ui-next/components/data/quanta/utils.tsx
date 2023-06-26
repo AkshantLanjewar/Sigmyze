@@ -1,5 +1,6 @@
 import { v4 } from "uuid"
 import { IQuantaDataStore, IQuantaFile, IQuantaProjectData } from "./types/project"
+import { SetStateAction } from "react"
 
 function buildQuantaFile(name: string, type: string) : IQuantaFile {
     let file = {} as IQuantaFile
@@ -41,4 +42,26 @@ function DefaultQuantaProject() : IQuantaProjectData {
     return defaultProject
 }
 
-export { DefaultQuantaProject }
+function SaveCounterUtil(
+    dataLoaded: boolean,
+    itemLoaded: boolean,
+    saveCounter: number,
+    setItemLoaded: (val: boolean) => void,
+    toggleUpdated: () => void,
+    setSaveCounter: (value: SetStateAction<number>) => void
+) {
+    if(dataLoaded === false)
+        return
+    if(itemLoaded === true) {
+        setItemLoaded(false)
+        return
+    }
+
+    toggleUpdated()
+    setSaveCounter(saveCounter + 1)
+}
+
+export { 
+    DefaultQuantaProject,
+    SaveCounterUtil 
+}

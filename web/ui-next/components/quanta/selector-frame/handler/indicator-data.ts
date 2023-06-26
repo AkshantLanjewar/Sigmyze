@@ -2,9 +2,9 @@ import { GetIndicatorById, GetIndicatorsPage, PageSelectedIndicators, SelectIndi
 import { IQuantaCategorization } from "../../../data/quanta/types/project"
 import { IAuthenticationData } from "../../../data/user/types"
 import { IQuantaSchema } from "../../schema-editor/types"
-import { IIFrameMessage } from "../../selector-pane/selector-frame-tester/types"
 import { parseIncomingQuery } from "../analysis"
-import { IIndicatorBody, IIndicatorSBody, IQueryIndicator, IQueryIndicatorId, IQueryIndicatorPage, IQueryPagedIndicators, IResolverBody } from "../types"
+import { IIndicatorBody, IIndicatorSBody, IQueryIndicator, IQueryIndicatorId, IQueryIndicatorPage, IQueryPagedIndicators } from "../types"
+import { buildFrameMessage } from "./utils"
 
 const queryIndicatorHandler = async (
     data: string,
@@ -30,17 +30,7 @@ const queryIndicatorHandler = async (
         throw Error("no_indicator")
 
     const resolveBody: IIndicatorBody = { indicators }
-    const resolverBody: IResolverBody = {
-        requestId: parsed.requestId,
-        requestData: JSON.stringify(resolveBody)
-    }
-
-    const frameMessage: IIFrameMessage = {
-        function: "queryIndicator",
-        data: JSON.stringify(resolverBody)
-    }
-
-    postMessage(JSON.stringify(frameMessage))
+    postMessage(buildFrameMessage(parsed.requestId, resolveBody))
 }
 
 const queryIndicatorsPage = async (
@@ -62,17 +52,7 @@ const queryIndicatorsPage = async (
         throw Error("no_indicator")
 
     const resolveBody: IIndicatorBody = { indicators }
-    const resolverBody: IResolverBody = {
-        requestId: parsed.requestId,
-        requestData: JSON.stringify(resolveBody)
-    }
-
-    const frameMessage: IIFrameMessage = {
-        function: "queryIndicator",
-        data: JSON.stringify(resolverBody)
-    }
-
-    postMessage(JSON.stringify(frameMessage))
+    postMessage(buildFrameMessage(parsed.requestId, resolveBody))
 }
 
 const querySelectedIndicatorsPage = async (
@@ -99,17 +79,7 @@ const querySelectedIndicatorsPage = async (
         throw Error("no_indicator")
 
     const resolveBody: IIndicatorBody = { indicators }
-    const resolverBody: IResolverBody = {
-        requestId: parsed.requestId,
-        requestData: JSON.stringify(resolveBody)
-    }
-
-    const frameMessage: IIFrameMessage = {
-        function: "queryIndicator",
-        data: JSON.stringify(resolverBody)
-    }
-
-    postMessage(JSON.stringify(frameMessage))
+    postMessage(buildFrameMessage(parsed.requestId, resolveBody))
 }
 
 const queryIndicatorId = async (
@@ -131,17 +101,7 @@ const queryIndicatorId = async (
         throw Error("no_indicator")
 
     const resolveBody: IIndicatorSBody = { indicator }
-    const resolverBody: IResolverBody = {
-        requestId: parsed.requestId,
-        requestData: JSON.stringify(resolveBody)
-    }
-
-    const frameMessage: IIFrameMessage = {
-        function: "queryIndicator",
-        data: JSON.stringify(resolverBody)
-    }
-
-    postMessage(JSON.stringify(frameMessage))
+    postMessage(buildFrameMessage(parsed.requestId, resolveBody))
 }
 
 export { 

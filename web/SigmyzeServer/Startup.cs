@@ -26,7 +26,6 @@ namespace SigmyzeServer
         {
             services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
 
-            Console.WriteLine("test");
             services.AddControllers();
             services.AddApiVersioning(config => {
                 config.DefaultApiVersion = new ApiVersion(1, 0);
@@ -63,6 +62,9 @@ namespace SigmyzeServer
             services.AddTransient<IHashService, HashService>();
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<ITokenDataService, TokenDataService>();
+
+            //data services
+            services.AddSingleton<IQuantaDatasetService, QuantaDatasetService>();
 
             //organization services
             services.AddSingleton<IOrganizationRepository, OrganizationRepository>();

@@ -87,7 +87,7 @@ public class QuantaProjectData
     [BsonElement("dataset_schema")]
     [JsonProperty("dataset_schema")]
     [JsonPropertyName("dataset_schema")]
-    public List<QuantaSchemas>? DatasetSchema { get; set; }    
+    public List<QuantaSchemas>? DatasetSchema { get; set; }  
 }
 
 public class QuantaFile
@@ -124,6 +124,11 @@ public class QuantaDataStore
     [JsonProperty("categorization")]
     [JsonPropertyName("categorization")]
     public QuantaCategorization? Categorization { get; set; }
+
+    [BsonElement("textStore")]
+    [JsonProperty("textStore")]
+    [JsonPropertyName("textStore")]
+    public Dictionary<string, string>? TextStore { get; set; }
 }
 
 public class QuantaCategorization

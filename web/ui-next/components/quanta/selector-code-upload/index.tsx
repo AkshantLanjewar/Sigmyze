@@ -1,11 +1,14 @@
 import { ActionIcon, Group, Stack, UnstyledButton } from '@mantine/core'
 import styles from './selector-code.module.scss'
 import { IconCode, IconFileZip } from '@tabler/icons'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import ModalManager from '../../ui/modal-manager'
 import { SelectorPaneContextData } from '../selector-pane/context'
 import { ISelectorPaneState } from '../selector-pane/context/types'
-import UploadModal from './upload-modal'
+import dynamic from 'next/dynamic'
+import { WebContainer } from '@webcontainer/api'
+
+const UploadModal = dynamic(() => import('./upload-modal'), { ssr: false })
 
 const SelectorCodeUpload: React.FC = ({ }) => {
     const [modalState, setModalState] = useState<string | null>(null)
@@ -13,6 +16,27 @@ const SelectorCodeUpload: React.FC = ({ }) => {
 
     const [codeTitle, setCodeTitle] = useState<string | null>(null)
     const { selectorCode } = useContext(SelectorPaneContextData) as ISelectorPaneState
+
+    const iframeRef = useRef<HTMLIFrameElement | null>(null)
+    const containerRef = useRef<WebContainer | null>(null)
+
+    useEffect(() => {
+        async function main() {
+            if(iframeRef.current === null)
+                return
+
+            try {
+                const container = await WebContainer.boot()
+                containerRef.current = container
+            } catch {}
+        }
+
+        main()
+
+        return () => {
+            containerRef.current?.teardown()
+        }
+    }, [])
 
     useEffect(() => {
         if(selectorCode === null) {
@@ -34,7 +58,7 @@ const SelectorCodeUpload: React.FC = ({ }) => {
                     id={"upload"}
                     title={"Upload Source Code"}
                 >
-                    <UploadModal closeModal={closeModal} />
+                    <UploadModal closeModal={closeModal} containerRef={containerRef} />
                 </ModalManager.Modal>
             </ModalManager>
 
@@ -65,6 +89,8 @@ const SelectorCodeUpload: React.FC = ({ }) => {
                     </Group>
                 </Stack>
             </UnstyledButton>
+
+            <iframe style={{ display: 'none' }} ref={iframeRef} />
         </>
     )
 }

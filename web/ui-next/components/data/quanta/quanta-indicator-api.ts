@@ -177,6 +177,12 @@ async function GetIndicatorById(token: string, quantaId: string, indicatorId: st
     return indicator
 }
 
+
+export type {
+    IQuantaIndicatorsResp,
+    IGetIndicatorsLength,
+    IQuantaIndicatorResp
+}
 export {
     GetQuantaIndicators,
     SelectIndicator,

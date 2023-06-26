@@ -11,8 +11,10 @@ import { UserContextData } from '../../data/user/context'
 import { IUserContext } from '../../data/user/types'
 import { GetCodeRepository } from './code-api'
 import { IFilesystem } from './types'
-import InternalEditor from './editor'
 import { getFile, openFile, selectDirectory, unselectItems } from './functions'
+import { SocketHandlerData } from '../socket-handler'
+import { ISocketHandlerState } from '../socket-handler/types'
+import InternalSandpack from './sandpack'
 
 interface ICodeEditorProps {
     codeId: string
@@ -23,6 +25,7 @@ const CodeEditorContextData = createContext<ICodeEditorState | null>(null)
 const CodeEditor: React.FC<ICodeEditorProps> = ({ codeId }) => { 
     const { codeItems } = useContext(QuantaCodeContextData) as IQuantaCodeContext
     const { authData } = useContext(UserContextData) as IUserContext
+    const { socketCreated, executeSocketFunction } = useContext(SocketHandlerData) as ISocketHandlerState
 
     //state relating to the editor, and the active source behind it
     const [activeFile, setActiveFile] = useState<string | undefined>(undefined)
@@ -34,6 +37,9 @@ const CodeEditor: React.FC<ICodeEditorProps> = ({ codeId }) => {
 
     //state relating to the filesystem data structure
     const [editorFilesystem, setEditorFilesystem] = useState<IFilesystem | undefined>(undefined)
+    //typings from the file system
+    const [lspPID, setLspPID] = useState<string | null>(null)
+    const [mappings, setMappings] = useState<{ [key: string]: string } | null>(null)
 
     //state whether or not a directory is selected in the explorer
     const [activeDirectory, setActiveDirectory] = useState<string | undefined>(undefined)
@@ -99,6 +105,7 @@ const CodeEditor: React.FC<ICodeEditorProps> = ({ codeId }) => {
     const value: ICodeEditorState = {
         activeDirectory: activeDirectory,
         code_id: codeId,
+        editorFilesystem: editorFilesystem,
 
         name: projectName,
         short_id: projectId,
@@ -112,7 +119,10 @@ const CodeEditor: React.FC<ICodeEditorProps> = ({ codeId }) => {
         openFile: openFileCallback,
         unselectAll: unselectItemsCallback,
         selectDirectory: selectDirectoryCallback,
-        getFile: getFileCallback
+        getFile: getFileCallback,
+
+        lspUrl: lspPID,
+        mappings: mappings
     }
 
     return (
@@ -143,7 +153,7 @@ const CodeEditor: React.FC<ICodeEditorProps> = ({ codeId }) => {
                     </div>
 
                     <div className={styles.editor__wrapper}>
-                        <InternalEditor />
+                        <InternalSandpack />
                     </div>
                 </div> 
             </CodeEditorContextData.Provider>

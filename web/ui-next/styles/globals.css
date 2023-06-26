@@ -125,3 +125,15 @@ a {
 .react-flow__viewport {
 	z-index: 20;
 }
+
+.JSXElement.JSXIdentifier {
+    color: #3dc9b0!important;
+}
+
+.JSXElement.JSXBracket {
+    color: #d4d4d4!important;
+}
+
+.JSXElement.JSXText {
+    color: #d4d4d4!important;
+}

@@ -40,7 +40,7 @@ interface IQuantaProjectData {
     /**
      * this is the schemas stored by the quanta context
      */
-    schemas?: ProjectSchemas[]
+    schemas?: ProjectSchemas[],
 }
 
 interface IQuantaFile {
@@ -52,7 +52,12 @@ interface IQuantaFile {
 interface IQuantaDataStore {
     selectors: IQuantaSelector[],
     editorProjects?: IQuantaEditorProject[],
-    categorization?: IQuantaCategorization
+    categorization?: IQuantaCategorization,
+    textStore?: IQuantaTextStore
+}
+
+interface IQuantaTextStore {
+    [key: string]: string
 }
 
 interface IQuantaCategorization {
@@ -113,5 +118,6 @@ export type {
     IQuantaSelectorCode,
     ISelectorLinks,
     ISelectorPipeline,
-    IQuantaCategorization 
+    IQuantaCategorization,
+    IQuantaTextStore 
 }

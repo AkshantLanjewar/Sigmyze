@@ -1,8 +1,9 @@
-import { IFile } from "./types"
+import { IFile, IFilesystem } from "./types"
 
 interface ICodeEditorState {
     activeDirectory: string | undefined,
     code_id: string,
+    editorFilesystem: IFilesystem | undefined,
 
     //state relating to the project
     name: string | undefined,
@@ -24,7 +25,11 @@ interface ICodeEditorState {
     //selects a directory from the sidebar
     selectDirectory: (id: string) => void,
     //gets a files content
-    getFile: (id: string) => IFile | undefined
+    getFile: (id: string) => IFile | undefined,
+
+    //state relating to the monaco editor
+    lspUrl: string | null // this is the LSP servers process id within its container
+    mappings: { [key: string]: string; } | null //mappings between id and file location
 }
 
 export type { ICodeEditorState }

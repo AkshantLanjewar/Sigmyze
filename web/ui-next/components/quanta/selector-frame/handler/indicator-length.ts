@@ -5,6 +5,7 @@ import { IQuantaSchema } from "../../schema-editor/types";
 import { IIFrameMessage } from "../../selector-pane/selector-frame-tester/types";
 import { parseIncomingQuery } from "../analysis";
 import { IIndicatorLengthResponse, IQueryIndicator, IResolverBody } from "../types";
+import { buildFrameMessage } from "./utils";
 
 const queryIndicatorLength = async (
     data: string,
@@ -30,17 +31,7 @@ const queryIndicatorLength = async (
         length = 0
     
     const resolveBody: IIndicatorLengthResponse = { length }
-    const resolverBody: IResolverBody = {
-        requestId: parsed.requestId,
-        requestData: JSON.stringify(resolveBody)
-    }
-
-    const frameMessage: IIFrameMessage = {
-        function: "queryIndicator",
-        data: JSON.stringify(resolverBody)
-    }
-
-    postMessage(JSON.stringify(frameMessage))
+    postMessage(buildFrameMessage(parsed.requestId, resolveBody))
 }
 
 const indicatorsLength = async (
@@ -62,17 +53,7 @@ const indicatorsLength = async (
         throw Error("no_length")
 
     const resolveBody: IIndicatorLengthResponse = { length }
-    const resolverBody: IResolverBody = {
-        requestId: parsed.requestId,
-        requestData: JSON.stringify(resolveBody)
-    }
-
-    const frameMessage: IIFrameMessage = {
-        function: "queryIndicator",
-        data: JSON.stringify(resolverBody)
-    }
-
-    postMessage(JSON.stringify(frameMessage))
+    postMessage(buildFrameMessage(parsed.requestId, resolveBody))
 }
 
 export { queryIndicatorLength, indicatorsLength }

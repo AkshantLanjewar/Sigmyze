@@ -38,7 +38,14 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
     const [internalLoading, setInternalLoading] = useState(false)
 
     const { authData } = useContext(UserContextData) as IUserContext
-    const { quantaId, categorization, updateCategorization, getSchema } = useContext(QuantaContextData) as IQuantaState
+    const { 
+        quantaId, 
+        categorization, 
+        updateCategorization, 
+        getSchema, 
+        textStore, 
+        textUpdated 
+    } = useContext(QuantaContextData) as IQuantaState
 
     const postMessage = (msg: string) => {
         if(iframeRef.current === null)
@@ -128,7 +135,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
             return
 
         //push the data to the frame
-        let nAnalysis = buildAnalysis(pipelineLinks, pipelineAnalysis, query, categorization)
+        let nAnalysis = buildAnalysis(pipelineLinks, pipelineAnalysis, query, categorization, textStore)
         const pipelineMessage: IPipelineMessage = {
             analysis: nAnalysis
         }
@@ -139,7 +146,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         }
 
         postMessage(JSON.stringify(frameMessage))
-    }, [pipelineAnalysis, internalLoading, pipelineLinks, query, updateCategorization, source.sourceCode])
+    }, [pipelineAnalysis, internalLoading, pipelineLinks, query, updateCategorization, source.sourceCode, textUpdated])
 
     const onLoad = useCallback(() => {
         if(iframeRef.current === null)
@@ -183,7 +190,7 @@ const SelectorFrame: React.FC<ISelectorFrameProps> = ({ source, pipelineLoading,
         }
 
         contentWindow?.addEventListener("beforeunload", onVisibilityChange)
-    }, [])
+    }, [containerDims])
 
     return (
         <div 

@@ -13,6 +13,8 @@ public interface ICodeRepository
     Task DeleteQuantaSuppositoryProject(string quantaId, string codeId);
     //CodeServiceCode.cs
     Task<CodeFilesystem?> GetCode(string codeId);
+    //CodeServiceQuanta.cs
+    CodeFilesystem TemplateWalk(string templateDir);
 }
 
 public partial class CodeRepository : ICodeRepository

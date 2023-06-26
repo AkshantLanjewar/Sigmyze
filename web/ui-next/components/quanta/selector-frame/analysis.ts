@@ -1,4 +1,4 @@
-import { IQuantaCategorization } from "../../data/quanta/types/project"
+import { IQuantaCategorization, IQuantaTextStore } from "../../data/quanta/types/project"
 import { IQuantaSchema } from "../schema-editor/types"
 import { IPipelineAnalysis } from "../selector-pane/context/types"
 import { IQuantaQuery } from "./types"
@@ -51,7 +51,8 @@ const buildAnalysis = (
     pipelineLinks: {[key: string]: string} | undefined,
     pipelineAnalysis: IPipelineAnalysis[],
     query: IQuantaQuery[] | undefined,
-    categorization: IQuantaCategorization | undefined
+    categorization: IQuantaCategorization | undefined,
+    textStore: IQuantaTextStore
 ) => {
     function isReserved(id: string) : string | undefined {
         if(pipelineLinks === undefined)
@@ -114,6 +115,19 @@ const buildAnalysis = (
         categoriesAnalysis.stringArray = categorization.categories
 
         analysis.push(categoriesAnalysis)
+    }
+
+    //add the formatter items into the analysis
+    let storeKeys = Object.keys(textStore)
+    for(let i = 0; i < storeKeys.length; i++) {
+        let key = storeKeys[i]
+        let analysisObj = {} as IPipelineAnalysis
+
+        analysisObj.objectId = key
+        analysisObj.objectType = "string"
+        analysisObj.isArray = false
+        analysisObj.stringValue = textStore[key]
+        analysis.push(analysisObj)
     }
 
     return analysis

@@ -32,7 +32,6 @@ const activateSelector = (selectorId: string, setActiveSelector: Dispatch<SetSta
 
 const openSelector = (
     selectorId: string, 
-    value: IQuantaState,
     projectData: IQuantaProjectData | undefined,
     setActiveSelector: Dispatch<SetStateAction<string | null>>
 
