@@ -97,7 +97,7 @@ interface IQuantaSelectorCode {
 }
 
 interface ISelectorLinks {
-    [key: string]: string
+    [key: string]: string //key is the id of the object in the dataset schema, value is the id in the selector schema
 }
 
 interface IQuantaEditorProject {

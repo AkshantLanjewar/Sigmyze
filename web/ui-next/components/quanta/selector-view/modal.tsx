@@ -10,25 +10,19 @@ interface ISelectorViewModalProps {
     close: () => void
 }
 
-const SelectorViewModal: React.FC<ISelectorViewModalProps> = ({ opened, close }) => {
-    const [schemas, setSchemas] = useState<IQuantaSchema[]>([])
-    
+const SelectorViewModal: React.FC<ISelectorViewModalProps> = ({ opened, close }) => {    
     const { 
         quantaId, 
         categorization, 
-        getSchema, 
         textStore, 
-        selectors 
+        selectors,
+        schemas 
     } = useContext(QuantaContextData) as IQuantaState
 
+    //grab the public token based on the quanta id
     useEffect(() => {
-        let nSchemas = [] as IQuantaSchema[]
-        let datasetSchema = getSchema('dataset')
-        if(datasetSchema !== undefined)
-            nSchemas.push(datasetSchema)
 
-        setSchemas([ ...nSchemas ])
-    }, [])
+    }, [quantaId])
     
     return (
         <Modal
@@ -44,7 +38,6 @@ const SelectorViewModal: React.FC<ISelectorViewModalProps> = ({ opened, close })
             })}
         >
             <DatasetSelectionView
-                quantaId={quantaId}
                 categorization={categorization}
                 schemas={schemas}
                 textStore={textStore}

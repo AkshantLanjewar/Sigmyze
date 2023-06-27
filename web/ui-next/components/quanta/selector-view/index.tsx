@@ -1,18 +1,15 @@
-import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore } from "../../data/quanta/types/project"
-import { IQuantaSchema } from "../schema-editor/types"
-import { useContext, useEffect, useState } from "react"
+import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../data/quanta/types/project"
+import { useCallback, useContext, useEffect, useState } from "react"
 import View from "./view"
 
 interface IDatasetSelectionViewProps {
-    quantaId: string | null,
     categorization: IQuantaCategorization | undefined,
-    schemas: IQuantaSchema[],
+    schemas: ProjectSchemas[],
     textStore: IQuantaTextStore,
     selectors: IQuantaSelector[]
 }
 
 const DatasetSelectionView: React.FC<IDatasetSelectionViewProps> = ({ 
-    quantaId, 
     categorization, 
     schemas, 
     textStore, 
@@ -22,6 +19,16 @@ const DatasetSelectionView: React.FC<IDatasetSelectionViewProps> = ({
     //display selectors, since we hide selectors that have an index greater than the selected index
     const [displaySelectors, setDisplaySelectors] = useState<IQuantaSelector[]>([])
     const [publicToken, setPublicToken] = useState<string | undefined>(undefined)
+
+    //function that sets a selection value in the selected values
+    const setSelectorValue = useCallback((selectorId: string, value: string) => { 
+        let nSelectedValues = selectedValues
+        if(Object.keys(nSelectedValues).includes(selectorId) === false)
+            return
+
+        nSelectedValues[selectorId] = value
+        setSelectedValues({ ...nSelectedValues })
+    }, [selectedValues])
 
     //this effect is done to setup the intial values for the selected values object
     useEffect(() => {
@@ -68,10 +75,11 @@ const DatasetSelectionView: React.FC<IDatasetSelectionViewProps> = ({
     return (
         <View 
             selectors={displaySelectors} 
-            quantaId={quantaId}
             publicToken={publicToken}
             categorization={categorization}
             schemas={schemas}
+            textStore={textStore}
+            setSelectorValue={setSelectorValue}
         />
     )
 }

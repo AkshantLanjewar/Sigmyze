@@ -1,18 +1,25 @@
 import React from "react"
-import { IQuantaCategorization, IQuantaSelector } from "../../data/quanta/types/project"
+import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../data/quanta/types/project"
 import { Stack } from "@mantine/core"
 import ProductionSelectorFrame from "./production-frame"
-import { IQuantaSchema } from "../schema-editor/types"
 
 interface IViewProps {
     selectors: IQuantaSelector[],
-    quantaId: string | null,
     publicToken: string | undefined,
     categorization: IQuantaCategorization | undefined,
-    schemas: IQuantaSchema[]
+    schemas: ProjectSchemas[],
+    textStore: IQuantaTextStore,
+    setSelectorValue: (selectorId: string, value: string) => void
 }
 
-const View: React.FC<IViewProps> = React.memo(({ selectors, quantaId, publicToken, categorization, schemas }) => {
+const View: React.FC<IViewProps> = React.memo(({ 
+    selectors, 
+    publicToken, 
+    categorization, 
+    schemas, 
+    textStore,
+    setSelectorValue
+}) => {
     return (
         <>
             <Stack spacing={"md"}>
@@ -21,9 +28,10 @@ const View: React.FC<IViewProps> = React.memo(({ selectors, quantaId, publicToke
                         <ProductionSelectorFrame 
                             selector={step}
                             publicToken={publicToken}
-                            quantaId={quantaId}
                             categorization={categorization}
                             schemas={schemas}
+                            textStore={textStore}
+                            setSelectorValue={setSelectorValue}
                         />
                     </div>
                 ))}

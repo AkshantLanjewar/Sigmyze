@@ -382,6 +382,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         internalValue.organizationId = organizationId
         internalValue.quantaId = quantaId
         internalValue.selectorsUpdated = selectorUpdated
+        internalValue.schemas = schemas
 
         //NOTE: Theese are the functions relating to the context
         //this function handles changing a text field
@@ -450,6 +451,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         organizationId,
         quantaId,
         selectorUpdated,
+        schemas,
         editTextCallback,
         setCategorizationCallback,
         clearCategorize,

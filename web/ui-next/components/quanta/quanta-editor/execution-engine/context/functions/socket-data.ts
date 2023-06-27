@@ -1,5 +1,23 @@
 import { v4 } from "uuid"
 import { ISocketMessage } from "../types"
+import { showNotification } from "@mantine/notifications"
+
+//util to get the size of the message in bytes, if its too big, tell user to switch to chromuim browser (firefox is ass)
+const byteSize = (str: string) => new Blob([str]).size
+
+const errorMessage = () => {
+    let msg = "Unfortunately, Your message is too big to handle in Firefox, "
+    msg += "please switch to a chromium based browser instead"
+
+    showNotification({
+        title: "Quanta Editor",
+        message: msg,
+        color: 'red',
+        autoClose: 1000 * 5
+    })
+}
+
+const isFirefox = () => navigator.userAgent.indexOf("Firefox") > 0
 
 interface ISetOutputValueSocketData {
     value: any,
@@ -31,8 +49,12 @@ function setOutputValueSocket(
     message.socketData = messageData
 
     let messageString = JSON.stringify(message)
-    webSocket.send(messageString)
+    if(byteSize(messageString) > 16777200 && isFirefox()) {
+        errorMessage()
+        return
+    }
 
+    webSocket.send(messageString)
     addHandler(message.requestId, callback)
     return message.requestId
 }
@@ -64,8 +86,12 @@ function getOutputValueSocket(
     message.socketData = messageData
 
     let messageString = JSON.stringify(message)
-    webSocket.send(messageString)
+    if(byteSize(messageString) > 16777200 && isFirefox()) {
+        errorMessage()
+        return
+    }
 
+    webSocket.send(messageString)
     addHandler(message.requestId, callback)
     return message.requestId
 }
@@ -103,8 +129,12 @@ function executeSocketFunction(
     
     message.socketData = messageData
     let messageString = JSON.stringify(message)
-    webSocket.send(messageString)
+    if(byteSize(messageString) > 16777200 && isFirefox()) {
+        errorMessage()
+        return
+    }
 
+    webSocket.send(messageString)
     addHandler(message.requestId, callback)
     return message.requestId
 }

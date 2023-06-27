@@ -11,7 +11,6 @@ import { IQuantaState } from "../../data/quanta/types"
 import { messageHandler } from "./handler"
 import { buildAnalysis } from "./analysis"
 import { v4 } from "uuid"
-import { useEffectDebugger } from "../../ui/debug"
 
 interface ISelectorFrameProps {
     source: IQuantaSelectorCode,

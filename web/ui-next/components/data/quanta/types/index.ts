@@ -2,7 +2,7 @@ import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-en
 import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 import { IPipelineAnalysis, IPipelinedData } from "../../../quanta/selector-pane/context/types"
-import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, IQuantaTextStore } from "./project"
+import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, IQuantaTextStore, ProjectSchemas } from "./project"
 import { IQuantaTab } from "./ui"
 
 interface IQuantaState {
@@ -41,7 +41,9 @@ interface IQuantaState {
 
     textStore: IQuantaTextStore,
 
-    textUpdated: boolean
+    textUpdated: boolean,
+
+    schemas: ProjectSchemas[]
 
     //tells the application to update the indicators
     toggleUpdateEditorIndicators: () => void,
