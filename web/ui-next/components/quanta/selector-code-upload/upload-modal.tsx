@@ -1,5 +1,5 @@
 import { MutableRefObject, useContext, useEffect, useRef, useState } from "react"
-import { IQuantaFormField } from "../quanta-editor/types/types"
+import { IQuantaFormField } from "../../ui/einstein/types/types"
 import { ICompileProjectResult } from "../selector-pane/context/functions"
 import { SelectorPaneContextData } from "../selector-pane/context"
 import { ISelectorPaneState } from "../selector-pane/context/types"

@@ -1,5 +1,5 @@
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
-import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../quanta/quanta-editor/types/types"
+import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../ui/einstein/types/types"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 import { IPipelineAnalysis, IPipelinedData } from "../../../quanta/selector-pane/context/types"
 import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, IQuantaTextStore, ProjectSchemas } from "./project"

@@ -1,10 +1,10 @@
 import { Alert, Button, Group, LoadingOverlay, Stack } from "@mantine/core"
 import { useEffect, useState } from "react"
-import { IQuantaFormField } from "../../quanta/quanta-editor/types/types"
-import { convertTypesToDropdown } from "../../quanta/quanta-editor/utils"
 import DropdownInput from "./form-elements/dropdown-input"
 import FileInput from "./form-elements/file-input/file-input"
 import TextInputQuanta from "./form-elements/text-input"
+import { IQuantaFormField } from "../../quanta/quanta-editor/types/form"
+import { convertTypesToDropdown } from "../../quanta/quanta-editor/utils"
 
 interface IFormBuilderProps {
     forms: IQuantaFormField[],

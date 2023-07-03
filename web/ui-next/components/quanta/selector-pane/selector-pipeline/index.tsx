@@ -8,8 +8,9 @@ import { ISelectorPaneState } from '../context/types'
 import { QuantaContextData } from '../../../data/quanta/context'
 import { IQuantaState } from '../../../data/quanta/types'
 import { v4 } from 'uuid'
-import { NodeCreateMenuInner } from '../../quanta-editor/node/node-create-menu'
+
 import PipelineObject from './pipeline-object'
+import { NodeCreateMenuInner } from '../../quanta-editor/node/node-create-menu'
 
 interface ISelectorPipelineOptions {
     displayType: 'dataset' | 'selected',

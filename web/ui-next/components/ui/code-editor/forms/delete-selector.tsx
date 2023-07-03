@@ -1,5 +1,5 @@
 import { IconAlertCircle, IconWriting } from "@tabler/icons"
-import { IQuantaFormField } from "../../../quanta/quanta-editor/types/form"
+import { IQuantaFormField } from "../../einstein/types/form"
 import FormBuilder from "../../form-builder/form-builder"
 import { useContext } from "react"
 import { CodeEditorContextData } from ".."

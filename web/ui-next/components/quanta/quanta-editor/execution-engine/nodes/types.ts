@@ -13,7 +13,7 @@ interface IInternalStorePreload {
 }
 
 interface IExecuteStackBody {
-    preloadedData: IInternalStorePreload[],
+    preloadedData: string,
     stack: ICallStackFunc[],
     edges: IQuantaRFEdge[],
     organizationId: string,

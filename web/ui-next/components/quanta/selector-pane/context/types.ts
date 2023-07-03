@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 import { IQuantaSelectorCode } from "../../../data/quanta/types/project"
 import { ISelectorPipelineOptions } from "../selector-pipeline"
-import { IQuantaTypeRef } from "../../quanta-editor/types/node-type"
+import { IQuantaTypeRef } from "../../../ui/einstein/types/node-type"
 
 interface ISelectorPaneState {
     initialized: boolean,

@@ -1,5 +1,5 @@
 import { IconBoxMargin, IconWriting } from "@tabler/icons"
-import { IQuantaFormField } from "../../../quanta/quanta-editor/types/form"
+import { IQuantaFormField } from "../../../ui/einstein/types/form"
 import FormBuilder from "../../../ui/form-builder/form-builder"
 import { useContext } from "react"
 import { UserContextData } from "../../user/context"

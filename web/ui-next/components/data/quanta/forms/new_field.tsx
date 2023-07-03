@@ -1,7 +1,7 @@
 import { IconAnalyze, IconSignature } from "@tabler/icons"
 import { useContext } from "react"
 import { v4 } from "uuid"
-import { IQuantaFormField } from "../../../quanta/quanta-editor/types/types"
+import { IQuantaFormField } from "../../../ui/einstein/types/types"
 import FormBuilder from "../../../ui/form-builder/form-builder"
 import { QuantaContextData } from "../context"
 import { IQuantaState } from "../types"

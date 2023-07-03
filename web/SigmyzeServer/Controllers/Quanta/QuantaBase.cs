@@ -22,6 +22,7 @@ public partial class QuantaController : OrganizationControllerBase
     private readonly IUserServiceRepository _userServiceRepository;
     private readonly IDriveRepository _driveRepository; 
     private readonly DatasetShared _sharedDataset;
+    private readonly IQuantaExecutionService _quantaExecutionService;
     
     public QuantaController(
         IOrganizationRepository organizationRepository,
@@ -30,7 +31,8 @@ public partial class QuantaController : OrganizationControllerBase
         IQuantaIndicatorRepository quantaIndicatorRepository,
         IUserServiceRepository userServiceRepository,
         IDriveRepository driveRepository,
-        IQuantaDatasetService _quantaDatasetService
+        IQuantaDatasetService _quantaDatasetService,
+        IQuantaExecutionService quantaExecutionService
     ) : base(organizationRepository)
     {
         _projectRepository = projectRepository;
@@ -38,6 +40,7 @@ public partial class QuantaController : OrganizationControllerBase
         _quantaIndicatorRepository = quantaIndicatorRepository;
         _userServiceRepository = userServiceRepository;
         _driveRepository = driveRepository;
+        _quantaExecutionService = quantaExecutionService;
 
         _sharedDataset = new DatasetShared(_quantaDatasetService, _quantaIndicatorRepository, quantaRepository);
     }

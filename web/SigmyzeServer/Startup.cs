@@ -74,6 +74,7 @@ namespace SigmyzeServer
             services.AddSingleton<IQuantaIndicatorRepository, QuantaIndicatorRepository>();
             services.AddSingleton<IUserServiceRepository, UserServiceRepository>();
             services.AddSingleton<ICodeRepository, CodeRepository>();
+            services.AddSingleton<IQuantaExecutionService, QuantaExecutionService>();
 
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

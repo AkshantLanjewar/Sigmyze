@@ -1,11 +1,11 @@
 import { Button, Group, Menu } from "@mantine/core"
 import { IconLink } from "@tabler/icons"
 import { RESERVED_LINKS } from "./reserved-links"
-import { NodeCreateMenuInner } from "../../quanta-editor/node/node-create-menu"
 import { v4 } from "uuid"
 import { useContext, useEffect, useState } from "react"
 import { SelectorPaneContextData } from "../context"
 import { ISelectorPaneState } from "../context/types"
+import { NodeCreateMenuInner } from "../../quanta-editor/node/node-create-menu"
 
 interface IPipelineLinkerProps {
     pipelineId: string

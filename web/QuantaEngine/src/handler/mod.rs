@@ -1,4 +1,5 @@
 use std::{sync::{Arc}};
+use serde::{Deserialize, Serialize};
 use tokio::net::TcpStream;
 use tokio::sync::Mutex;
 use tokio_tungstenite::{WebSocketStream, tungstenite::{Result, Message}};
@@ -26,6 +27,32 @@ pub const SERVER_URL: &str = "https://sigmyze.com";
 pub const NPM_COMMAND: &str = "yarn.cmd";
 #[cfg(not(target_os = "windows"))]
 pub const NPM_COMMAND: &str = "yarn";
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct IStatus {
+    pub error: Option<bool>,
+    pub msg: Option<String>   
+}
+
+impl IStatus {
+    pub fn validate_status(&self) -> Option<String> {
+        let error = match self.error {
+            Some(v) => v,
+            None => return None
+        };
+
+        if error == true {
+            return None
+        }
+
+        let msg = match self.msg.as_ref() {
+            Some(v) => v.clone(),
+            None => return None
+        };
+        
+        Some(msg)
+    }
+}
 
 async fn handler(
     request: messages::SocketMessage,

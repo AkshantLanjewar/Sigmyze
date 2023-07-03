@@ -39,7 +39,7 @@ import {
     setTextValue
 } from "./functions"
 
-import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../quanta/quanta-editor/types/types"
+import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../ui/einstein/types/types"
 import { GetProject } from "./quanta-api"
 import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"

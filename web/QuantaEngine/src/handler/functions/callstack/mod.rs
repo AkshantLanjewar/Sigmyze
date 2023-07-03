@@ -2,6 +2,7 @@ pub mod types;
 mod executor;
 mod spawner;
 mod utils;
+mod request;
 pub mod stack;
 
 use std::sync::Arc;
@@ -12,6 +13,8 @@ use crate::handler::functions::callstack::spawner::{StackSpawner, Task};
 use crate::handler::functions::callstack::types::{ExecuteStackWrapperBody, QuantaEdge, QuantaSchema, StackFunction};
 use crate::handler::functions::load::{load_process_id, LoadProcessIdBody};
 use crate::handler::QuantaResult;
+
+use self::request::{fetch_preload_data, delete_preload_data};
 
 pub async fn execute_stack_wrapper(
 	process_id: String,
@@ -24,7 +27,15 @@ pub async fn execute_stack_wrapper(
 
 	//load the preloaded data
 	if body.preloaded_data.is_some() {
-		let preloaded_data = body.preloaded_data.unwrap();
+		let preloaded_data_token = body.preloaded_data.unwrap();
+		let preloaded_data = fetch_preload_data(preloaded_data_token.clone()).await;
+		let preloaded_data = match preloaded_data {
+			Some(v) => v,
+			None => Vec::new()
+		};
+
+		//delete the entry within the database
+		delete_preload_data(preloaded_data_token).await;
 		for preload in preloaded_data.iter() {
 			let preload_store = match &preload.store {
 				Some(v) => v,

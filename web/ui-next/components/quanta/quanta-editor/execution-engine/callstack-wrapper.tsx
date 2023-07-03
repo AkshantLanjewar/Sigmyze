@@ -24,6 +24,7 @@ import { CreateExecutionCache, DeleteExecutionCache } from "../../../data/quanta
 import { showNotification } from "@mantine/notifications"
 import { IFileUploadOutput, input_file_upload } from "./input-nodes"
 import { IExecuteStackBody, IInternalStore, IInternalStorePreload } from "./nodes/types"
+import { UploadProjectData } from "./callstack-api"
 
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
@@ -99,13 +100,17 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             return
         }
 
+        let preloadToken = await UploadProjectData(token, preloadedInputs)
+        if(preloadToken === undefined)
+            return
+
         let schema = getSchema("dataset")
         const functionId = "execute_stack"
         const nodeId = quantaId
         const outputIds = [] as string[]
         
         const body: IExecuteStackBody = {
-            preloadedData: preloadedInputs,
+            preloadedData: preloadToken,
             stack: callStack,
             edges: edges,
             organizationId: organizationId,

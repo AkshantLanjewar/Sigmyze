@@ -5,7 +5,7 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ExecuteStackWrapperBody {
 	#[serde(rename="preloadedData")]
-	pub preloaded_data: Option<Vec<InternalStorePreload>>,
+	pub preloaded_data: Option<String>,
 
 	#[serde(rename="stack")]
 	pub call_stack: Option<Vec<StackFunction>>,
@@ -65,7 +65,7 @@ impl QuantaEdge {
 pub struct InternalStorePreload {
 	pub store: Option<InternalStore>,
 
-	pub value: Option<Value>
+	pub value: Option<String>
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

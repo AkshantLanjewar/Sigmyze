@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { IQuantaFormField } from "../quanta-editor/types/types"
+import { IQuantaFormField } from "../../ui/einstein/types/types"
 import FormBuilder from "../../ui/form-builder/form-builder"
 import { QuantaContextData } from "../../data/quanta/context"
 import { IQuantaState } from "../../data/quanta/types"

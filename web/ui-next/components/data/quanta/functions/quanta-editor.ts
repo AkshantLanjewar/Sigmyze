@@ -1,6 +1,6 @@
 import { IconFileCode2 } from "@tabler/icons"
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
-import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore } from "../../../quanta/quanta-editor/types/types"
+import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore } from "../../../ui/einstein/types/types"
 import { UpdateProject } from "../quanta-api"
 import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../types/project"
 

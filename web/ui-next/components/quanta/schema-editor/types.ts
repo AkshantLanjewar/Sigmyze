@@ -1,4 +1,4 @@
-import { IQuantaTypeRef } from "../quanta-editor/types/types"
+import { IQuantaTypeRef } from "../../ui/einstein/types/types"
 
 type IQuantaSchemaType = "schema" | "string"
 
