@@ -68,8 +68,15 @@ pub async fn call_stack_executor(
 		"sdmx_data_mapper" => sdmx_data_mapper_wrapper(&function, edges, &failed_nodes).await,
 		"loop" => quanta_loop_wrapper(process_id.clone(), &function, edges, &failed_nodes, store, schema).await,
 		"iter" => quanta_iter(&function, edges, &failed_nodes, loop_id, index).await,
-		_ => Ok(json!(null))
+		_ => Ok(json!({ "phantom": true }))
 	};
+
+	let mut function_id = function_id.clone();
+	if function_id == "iter" {
+		function_id = String::from("get_loop_index");
+	} else if function_id == "get_sdmx_field_value" {
+		function_id = String::from("get_sdmx_field_val");
+	}
 
 	let function_data = match function_data {
 		Ok(v) => v,

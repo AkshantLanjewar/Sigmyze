@@ -100,7 +100,8 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             return
         }
 
-        let preloadToken = await UploadProjectData(token, preloadedInputs)
+        let preloadStr = JSON.stringify(preloadedInputs)
+        let preloadToken = await UploadProjectData(token, preloadStr)
         if(preloadToken === undefined)
             return
 
@@ -109,6 +110,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         const nodeId = quantaId
         const outputIds = [] as string[]
         
+        console.log(callStack)
         const body: IExecuteStackBody = {
             preloadedData: preloadToken,
             stack: callStack,

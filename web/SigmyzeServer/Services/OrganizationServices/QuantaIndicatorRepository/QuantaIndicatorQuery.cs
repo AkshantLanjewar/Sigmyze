@@ -168,8 +168,6 @@ public partial class QuantaIndicatorRepository
                                 }
                             }
                         };
-
-                        orArray.Add(queryBson);
                     }
 
                     break;

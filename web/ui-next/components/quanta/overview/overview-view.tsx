@@ -1,5 +1,5 @@
 import { ActionIcon, Button } from '@mantine/core'
-import { IconPhotoPlus, IconPlayerPlay } from '@tabler/icons'
+import { IconPhotoPlus, IconPlayerPlay, IconWorldUpload } from '@tabler/icons'
 import { useCallback, useContext, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
@@ -11,10 +11,14 @@ import SchemaEditor from '../schema-editor/schema-editor'
 import CategoryMapper from '../category-mapper'
 import Formatters from '../formatters'
 import SelectorViewModal from '../selector-view/modal'
+import PublishModal from './publish-modal'
 
 const QuantaOverviewView: React.FC = ({ }) => {
     const [previewOpen, setPreviewOpen] = useState(false)
     const closePreview = useCallback(() => setPreviewOpen(false), [])
+
+    const [publishOpen, setPublishOpen] = useState(false)
+    const closePublish = useCallback(() => setPublishOpen(false), [])
 
     const quantaContext = useContext(QuantaContextData) as IQuantaState
     const quantaProject = quantaContext.project_data
@@ -24,6 +28,11 @@ const QuantaOverviewView: React.FC = ({ }) => {
             <SelectorViewModal
                 opened={previewOpen}
                 close={closePreview}
+            />
+
+            <PublishModal
+                opened={publishOpen}
+                close={closePublish}
             />
 
             <div className={styles.overview__content}>
@@ -73,11 +82,16 @@ const QuantaOverviewView: React.FC = ({ }) => {
                         <Button
                             radius={"xl"}
                             color={"indigo"}
-                            disabled
+                            onClick={() => setPublishOpen(true)}
                         >
-                            <IconPlayerPlay  size={14} style={{ marginRight: 2.5 }} />
+                            <IconWorldUpload  
+                                size={14} 
+                                style={{ marginRight: 2.5 }} 
+                                fill='white'
+                                fillOpacity={1}
+                            />
 
-                            Run Script
+                            Publish
                         </Button>
                     </div>
                 </div>

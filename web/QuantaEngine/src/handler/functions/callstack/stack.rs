@@ -38,20 +38,27 @@ pub async fn stack_list_executor(
 			None => continue
 		};
 
+		if executed_nodes.contains(&node_id) || failed_nodes.contains(&node_id) {
+			continue;
+		}
+
 		let dependencies = match stack.dependencies.as_ref() {
 			Some(v) => v.clone(),
 			None => Vec::new()
 		};
 
 		for dependency in dependencies.iter() {
+			if executed_nodes.contains(dependency) || failed_nodes.contains(dependency) {
+				continue;
+			}
+
 			let dependent_stack = match get_stack(dependency, &callstack) {
 				Some(v) => v,
 				None => continue
 			};
 
-			//execute the function
 			let process_id = process_id.clone();
-			let node_id = dependent_stack.node_id.as_ref().unwrap();
+			let dependent_node_id = dependent_stack.node_id.as_ref().unwrap();
 
 			match call_stack_executor(
 				process_id,
@@ -64,12 +71,15 @@ pub async fn stack_list_executor(
 				loop_id.clone(),
 				index
 			).await {
-				Ok(_) => executed_nodes.push(node_id.into()),
-				Err(_) => failed_nodes.push(node_id.into())
+				Ok(_) => executed_nodes.push(dependent_node_id.into()),
+				Err(_) => failed_nodes.push(dependent_node_id.into())
 			}
 		}
 
+
 		let process_id = process_id.clone();
+		let _stack_func = stack.function_id.as_ref().unwrap();
+
 		match call_stack_executor(
 			process_id,
 			stack.clone(),
@@ -82,7 +92,9 @@ pub async fn stack_list_executor(
 			index
 		).await {
 			Ok(_) => executed_nodes.push(node_id.into()),
-			Err(_) => failed_nodes.push(node_id.into())
+			Err(_) => {
+				failed_nodes.push(node_id.into());
+			}
 		}
 	}
 

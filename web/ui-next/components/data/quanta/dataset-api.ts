@@ -1,5 +1,5 @@
 import { showNotification } from "@mantine/notifications"
-import { GET, GenerateOptions, server } from "../utils"
+import { GET_Cacheless, GenerateOptions, server } from "../utils"
 import { IGetIndicatorsLength, IQuantaIndicatorResp, IQuantaIndicatorsResp } from "./quanta-indicator-api"
 import { IQuantaQuery } from "../../quanta/selector-frame/types"
 import { IStatus } from "../datasets/DatasetsTypes"
@@ -7,7 +7,7 @@ import { IStatus } from "../datasets/DatasetsTypes"
 async function GetDatasetIndicators(token: string) {
     let url = `${server}/api/v2/dataset/${token}/indicators`
     let options = GenerateOptions("GET", null)
-    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {
@@ -27,7 +27,7 @@ async function GetDatasetIndicators(token: string) {
 async function GetDatasetIndicatorsPaged(token: string, pageLength: number, page: number) {
     let url = `${server}/api/v2/dataset/${token}/${pageLength}/indicators/${page}`
     let options = GenerateOptions("GET", null)
-    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {
@@ -47,7 +47,7 @@ async function GetDatasetIndicatorsPaged(token: string, pageLength: number, page
 async function DatasetIndicatorsLength(token: string) {
     let url = `${server}/api/v2/dataset/${token}/indicators_length`
     let options = GenerateOptions("GET", null)
-    let resp = await GET<IGetIndicatorsLength>(url, options)
+    let resp = await GET_Cacheless<IGetIndicatorsLength>(url, options)
 
     let length = resp.length
     if(length === undefined || resp.status?.error === true) {
@@ -72,7 +72,7 @@ async function SelectDatasetIndicatorsLength(token: string, params: IQuantaQuery
 
     let url = `${server}/api/v2/dataset/select/indicator_length`
     let options = GenerateOptions("POST", null, body)
-    let resp = await GET<IGetIndicatorsLength>(url, options)
+    let resp = await GET_Cacheless<IGetIndicatorsLength>(url, options)
 
     let length = resp.length
     if(length === undefined || resp.status?.error === true) {
@@ -100,7 +100,7 @@ async function SelectDatasetIndicator(token: string, params: IQuantaQuery[]) {
 
     let url = `${server}/api/v2/dataset/select/indicator`
     let options = GenerateOptions("POST", null, body)
-    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {
@@ -125,7 +125,7 @@ async function SelectPagedDatasetIndicators(token: string, params: IQuantaQuery[
 
     let url = `${server}/api/v2/dataset/select/indicator/${pageLength}/${page}`
     let options = GenerateOptions("POST", null, body)
-    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {
@@ -145,7 +145,7 @@ async function SelectPagedDatasetIndicators(token: string, params: IQuantaQuery[
 async function GetDatasetIndicatorById(token: string, indicatorId: string) {
     let url = `${server}/api/v2/dataset/select/indicator/${token}/${indicatorId}`
     let options = GenerateOptions("GET", null)
-    let resp = await GET<IQuantaIndicatorResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorResp>(url, options)
 
     let indicator = resp.indicator
     if(indicator === undefined || resp.status?.error === true) {
@@ -171,7 +171,7 @@ interface ICreateMappingResponse {
 async function CreateQuantaMapping(quantaId: string) {
     let url = `${server}/api/v2/dataset/map/create/${quantaId}`
     let options = GenerateOptions("GET", null)
-    let resp = await GET<ICreateMappingResponse>(url, options)
+    let resp = await GET_Cacheless<ICreateMappingResponse>(url, options)
 
     let token = resp.token
     if(token === undefined || resp.status.msg === "mapping_exists") {
@@ -184,13 +184,13 @@ async function CreateQuantaMapping(quantaId: string) {
 async function DeleteQuantaMapping(token: string) {
     let url = `${server}/api/v2/dataset/map/delete/${token}`
     let options = GenerateOptions("GET", null)
-    await GET<IStatus>(url, options)
+    await GET_Cacheless<IStatus>(url, options)
 }
 
 async function GetQuantaMapping(quantaId: string) {
     let url = `${server}/api/v2/dataset/map/get/${quantaId}`
     let options = GenerateOptions("GET", null)
-    let resp = await GET<ICreateMappingResponse>(url, options)
+    let resp = await GET_Cacheless<ICreateMappingResponse>(url, options)
 
     if(resp.token === undefined || resp.status.error === true) {
         showNotification({

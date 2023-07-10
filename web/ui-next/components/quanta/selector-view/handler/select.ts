@@ -1,4 +1,4 @@
-import { MutableRefObject } from "react"
+import { Dispatch, MutableRefObject, SetStateAction } from "react"
 import { ISelectedMessage } from "../../selector-pane/selector-frame-tester/types"
 import { IQuantaSchema } from "../../schema-editor/types"
 import { ISelectorLinks } from "../../../data/quanta/types/project"
@@ -10,7 +10,8 @@ const selectedPublicHandler = async (
     selectorLinks: ISelectorLinks,
     intialSelection: MutableRefObject<boolean>,
     getSchema: (id: string) => IQuantaSchema | undefined,
-    setSelectorValue: (selectorId: string, value: string) => void
+    setSelectorValue: (selectorId: string, value: string) => void,
+    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>,
 ) => {
     if(intialSelection.current === false) {
         intialSelection.current = true
@@ -20,6 +21,17 @@ const selectedPublicHandler = async (
     let parsed: ISelectedMessage = JSON.parse(data)
     let schema = getSchema(selectorId)
     let datasetSchema = getSchema('dataset')
+
+    let parsed_data = parsed.data as { [key: string]: any }
+    let parsed_data_keys = Object.keys(parsed_data)
+    if(parsed_data_keys.includes('indicator_id')) {
+        let indicator_id = parsed_data['indicator_id']
+        if(typeof indicator_id !== 'string')
+            return
+
+        setSelectedIndicator(indicator_id)
+        return
+    }
 
     if(schema === undefined || datasetSchema === undefined)
         throw Error("no_schema")

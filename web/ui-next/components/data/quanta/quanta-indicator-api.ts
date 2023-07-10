@@ -12,7 +12,7 @@ interface IQuantaIndicatorsResp {
 async function GetQuantaIndicators(token: string, organization_id: string, project_id: string) {
     let url = `${server}/api/v2/quanta/${organization_id}/${project_id}/indicators`
     let options = GenerateOptions("GET", token) 
-    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {
@@ -37,7 +37,7 @@ async function SelectIndicator(token: string, quantaId: string, params: IQuantaQ
 
     let url = `${server}/api/v2/quanta/select/indicator`
     let options = GenerateOptions("POST", token, body)
-    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {
@@ -62,7 +62,7 @@ async function PageSelectedIndicators(token: string, quantaId: string, pageLengt
 
     let url = `${server}/api/v2/quanta/select/indicator/${pageLength}/${page}`
     let options = GenerateOptions("POST", token, body)
-    let resp = await GET<IQuantaIndicatorsResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorsResp>(url, options)
 
     let indicators = resp.indicators
     if(indicators === undefined || resp.status?.error === true) {
@@ -135,7 +135,7 @@ async function SelectIndicatorsLength(token: string, quantaId: string, params: I
 async function IndicatorsLength(token: string, quantaId: string) {
     let url = `${server}/api/v2/quanta/${quantaId}/indicators_length`
     let options = GenerateOptions("GET", token)
-    let resp = await GET<IGetIndicatorsLength>(url, options)
+    let resp = await GET_Cacheless<IGetIndicatorsLength>(url, options)
 
     let length = resp.length
     if(length === undefined || resp.status?.error === true) {
@@ -160,7 +160,7 @@ interface IQuantaIndicatorResp {
 async function GetIndicatorById(token: string, quantaId: string, indicatorId: string) {
     let url = `${server}/api/v2/quanta/select/indicator/${quantaId}/${indicatorId}`
     let options = GenerateOptions("GET", token)
-    let resp = await GET<IQuantaIndicatorResp>(url, options)
+    let resp = await GET_Cacheless<IQuantaIndicatorResp>(url, options)
 
     let indicator = resp.indicator
     if(indicator === undefined || resp.status?.error === true) {

@@ -95,6 +95,7 @@ pub async fn sdmx_parser(
 	let series_str = serde_json::to_string(&sdmx_series).unwrap();
 	let socket_id = output_ids[0].clone();
 	let series_key = format!("{}::{}::{}", process_id, node_id, socket_id);
+	println!("{}", &series_key);
 	set_store_value(series_key, series_str, store).await;
 
 	//delete the files

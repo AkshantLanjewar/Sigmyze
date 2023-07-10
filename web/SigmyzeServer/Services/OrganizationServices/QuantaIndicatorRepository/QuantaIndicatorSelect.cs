@@ -58,6 +58,7 @@ public partial class QuantaIndicatorRepository
             return phantom;
         }
 
+        Console.WriteLine(pipeline.ToString());
         return results[0];
     }
 

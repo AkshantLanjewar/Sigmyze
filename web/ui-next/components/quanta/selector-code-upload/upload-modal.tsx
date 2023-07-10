@@ -1,11 +1,11 @@
 import { MutableRefObject, useContext, useEffect, useRef, useState } from "react"
-import { IQuantaFormField } from "../../ui/einstein/types/types"
 import { ICompileProjectResult } from "../selector-pane/context/functions"
 import { SelectorPaneContextData } from "../selector-pane/context"
 import { ISelectorPaneState } from "../selector-pane/context/types"
 import FormBuilder from "../../ui/form-builder/form-builder"
 import { ZipArchive } from "@shortercode/webzip"
 import { WebContainer } from '@webcontainer/api'
+import { IQuantaFormField } from "../quanta-editor/types/form"
 
 const base64ToBlob = async (base64: string, type = 'application/octet-stream') => 
   fetch(`data:${type};base64,${base64}`)

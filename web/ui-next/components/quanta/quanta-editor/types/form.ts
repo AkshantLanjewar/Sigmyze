@@ -1,7 +1,7 @@
 import { MantineColor } from "@mantine/core"
 import { IUIDropdownItem } from "../../../ui/ui-dropdown/types"
 
-type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert"
+type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert" | "segment"
 
 /**
  * Form field definitions
@@ -75,7 +75,29 @@ interface IQuantaFormField {
     /**
      * the color of the alert
      */
-    alertColor?: MantineColor
+    alertColor?: MantineColor,
+
+    /**
+     * items that are rendered within a segment output
+     */
+    segmentItems?: ISegmentItem[]
+}
+
+interface ISegmentItem {
+    /**
+     * the value that will be put into the output dict
+     */
+    value: string,
+
+    /**
+     * the name of the segment item
+     */
+    name: string,
+
+    /**
+     * the icon for the segment item
+     */
+    icon: JSX.Element
 }
 
 /**
@@ -96,5 +118,6 @@ interface IQuantaAdditionalField {
 export type {
     IQuantaFormField,
     IQuantaAdditionalField,
-    QuantaFormType
+    QuantaFormType,
+    ISegmentItem
 }

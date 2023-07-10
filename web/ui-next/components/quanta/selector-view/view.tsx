@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Dispatch, SetStateAction } from "react"
 import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../data/quanta/types/project"
 import { Stack } from "@mantine/core"
 import ProductionSelectorFrame from "./production-frame"
@@ -9,7 +9,12 @@ interface IViewProps {
     categorization: IQuantaCategorization | undefined,
     schemas: ProjectSchemas[],
     textStore: IQuantaTextStore,
-    setSelectorValue: (selectorId: string, value: string) => void
+    selectionIndex: number | undefined,
+    setSelectorValue: (selectorId: string, value: string) => void,
+    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>,
+    selectedValues: {
+        [key: string]: string | undefined;
+    }    
 }
 
 const View: React.FC<IViewProps> = React.memo(({ 
@@ -18,6 +23,9 @@ const View: React.FC<IViewProps> = React.memo(({
     categorization, 
     schemas, 
     textStore,
+    selectionIndex,
+    selectedValues,
+    setSelectedIndicator,
     setSelectorValue
 }) => {
     return (
@@ -31,7 +39,10 @@ const View: React.FC<IViewProps> = React.memo(({
                             categorization={categorization}
                             schemas={schemas}
                             textStore={textStore}
+                            selectionIndex={selectionIndex}
+                            selectedValues={selectedValues}
                             setSelectorValue={setSelectorValue}
+                            setSelectedIndicator={setSelectedIndicator}
                         />
                     </div>
                 ))}

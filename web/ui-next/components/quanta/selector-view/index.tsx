@@ -1,24 +1,28 @@
 import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../data/quanta/types/project"
-import { useCallback, useContext, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react"
 import View from "./view"
 
 interface IDatasetSelectionViewProps {
     categorization: IQuantaCategorization | undefined,
     schemas: ProjectSchemas[],
     textStore: IQuantaTextStore,
-    selectors: IQuantaSelector[]
+    selectors: IQuantaSelector[],
+    publicToken: string | undefined,
+    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>
 }
 
 const DatasetSelectionView: React.FC<IDatasetSelectionViewProps> = ({ 
     categorization, 
     schemas, 
     textStore, 
-    selectors 
+    selectors,
+    publicToken,
+    setSelectedIndicator 
 }) => {
     const [selectedValues, setSelectedValues] = useState<{[key: string]: string | undefined}>({})
     //display selectors, since we hide selectors that have an index greater than the selected index
     const [displaySelectors, setDisplaySelectors] = useState<IQuantaSelector[]>([])
-    const [publicToken, setPublicToken] = useState<string | undefined>(undefined)
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined)
 
     //function that sets a selection value in the selected values
     const setSelectorValue = useCallback((selectorId: string, value: string) => { 
@@ -69,6 +73,7 @@ const DatasetSelectionView: React.FC<IDatasetSelectionViewProps> = ({
             nDisplaySelectors.push(selector)
         }
 
+        setSelectedIndex(selectionIndex)
         setDisplaySelectors([ ...nDisplaySelectors ])
     }, [selectedValues])
 
@@ -79,6 +84,9 @@ const DatasetSelectionView: React.FC<IDatasetSelectionViewProps> = ({
             categorization={categorization}
             schemas={schemas}
             textStore={textStore}
+            selectionIndex={selectedIndex}
+            selectedValues={selectedValues}
+            setSelectedIndicator={setSelectedIndicator}
             setSelectorValue={setSelectorValue}
         />
     )

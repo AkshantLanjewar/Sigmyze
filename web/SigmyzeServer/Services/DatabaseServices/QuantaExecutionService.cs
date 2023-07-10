@@ -11,7 +11,7 @@ namespace SigmyzeServer.Services.DatabaseServices;
 
 public interface IQuantaExecutionService
 {
-    Task<string> UploadBody(List<QuantaInternalStoreWrapper> preloadedData);
+    Task<string> UploadBody(string preloadedData);
     Task<List<QuantaInternalStoreWrapper>?> GetBody(string token);
     Task DeleteUpload(string token);
 }
@@ -22,31 +22,43 @@ public class QuantaExecutionService : IQuantaExecutionService
     public QuantaExecutionService(IOptions<AuthDatabaseSettings> authDatabaseSettings)
     {
         var mongoClient = new MongoClient(authDatabaseSettings.Value.ConnectionString);
-        var mongoDatabase = mongoClient.GetDatabase("SigmyzeData");
+        var mongoDatabase = mongoClient.GetDatabase("SigmyzeExecution");
 
         _uploadCollection = mongoDatabase.GetCollection<UploadStoreSchema>("execution_upload");
     }
 
-    public async Task<string> UploadBody(List<QuantaInternalStoreWrapper> preloadedData)
+    static IEnumerable<string> Chunk(string str, int chunkSize)
+    {
+        return Enumerable.Range(0, str.Length / chunkSize)
+            .Select(i => str.Substring(i * chunkSize, chunkSize));
+    }
+
+    public async Task<string> UploadBody(string preloadedData)
     {
         UploadStoreSchema schema = new UploadStoreSchema();
         string token = Guid.NewGuid().ToString();
-        string preloadString = JsonConvert.SerializeObject(preloadedData);
+        string preloadString = preloadedData;
 
-        List<string> chunks = (from Match m in Regex.Matches(preloadString, @"\d{10000000}")
-                            select m.Value).ToList();
+        var ch = preloadString.Chunk(12000000).ToList();
+        List<string> chunks = new List<string>();
+        for(int i = 0; i < ch.Count; i++)
+        {
+            char[] characters = ch[i];
+            string output = new string(characters);
+            chunks.Add(output);
+        }
 
-        List<UploadStoreSchema> uploadChunks = new List<UploadStoreSchema>();
+        List<UploadStoreSchema> uploadBody = new List<UploadStoreSchema>();
         for(int i = 0; i < chunks.Count; i++)
         {
             UploadStoreSchema chunkObject = new UploadStoreSchema();
             chunkObject.Token = token;
             chunkObject.Chunk = chunks[i];
-
-            uploadChunks.Add(chunkObject);
+            
+            uploadBody.Add(chunkObject);
         }
         
-        await _uploadCollection.InsertManyAsync(uploadChunks);
+        await _uploadCollection.InsertManyAsync(uploadBody);
         return token;
     }
 
@@ -63,6 +75,7 @@ public class QuantaExecutionService : IQuantaExecutionService
         BsonDocument projectStage = new BsonDocument {
             {
                 "$project", new BsonDocument {
+                    { "_id", 0 },
                     { "chunk", "$chunk" }
                 }
             }
@@ -86,6 +99,7 @@ public class QuantaExecutionService : IQuantaExecutionService
 
             connectedOutput += result.Chunk;
         }
+
 
         List<QuantaInternalStoreWrapper>? preloadedData = JsonConvert
             .DeserializeObject<List<QuantaInternalStoreWrapper>>(connectedOutput);

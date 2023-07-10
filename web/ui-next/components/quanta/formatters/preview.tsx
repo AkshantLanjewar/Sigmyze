@@ -5,6 +5,7 @@ import { IQuantaState } from '../../data/quanta/types'
 import { QuantaIndicatorManagerData } from '../quanta-indicator-manager'
 import { IQuantaIndicator, IQuantaIndicatorManager } from '../quanta-indicator-manager/types'
 import QuantaFormattingEngine from '../../ui/formatting-engine'
+import { Tooltip } from '@mantine/core'
 
 interface IViewProps {
     title: string,
@@ -23,13 +24,31 @@ const FormatterPreviewView: React.FC<IViewProps> = React.memo(({ title, short, f
             </div>
 
             <div className={`${styles.indicator__title} ${styles.lighted}`}>
-                <div className={styles.name}>
-                    {formatter(title)}
-                </div>
+                <Tooltip
+                    openDelay={250}
+                    label={formatter(title)}
+                    transition={"slide-up"}
+                    position={"bottom"}
+                    styles={{ tooltip: { backgroundColor: "#08090A", fontWeight: "bold" } }}
+                    withArrow
+                >
+                    <div className={styles.name}>
+                        {formatter(title)}
+                    </div>
+                </Tooltip>
 
-                <div className={styles.indicator__id}>
-                    {formatter(short)}
-                </div>
+                <Tooltip
+                    openDelay={250}
+                    label={formatter(short)}
+                    transition={"slide-up"}
+                    position={"bottom-start"}
+                    styles={{ tooltip: { backgroundColor: "#08090A", fontWeight: "bold" } }}
+                    withArrow
+                >
+                    <div className={styles.indicator__id}>
+                        {formatter(short)}
+                    </div>
+                </Tooltip>
             </div>
         </div>
     )

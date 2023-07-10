@@ -4,7 +4,7 @@ const rewritesConfig = isDevelopment
     ? [
         {
             source: "/api/:path*",
-            destination: "http://localhost:5000/api/:path*"
+            destination: "http://localhost:5000/api/:path*",
         }
     ]
     : []
@@ -15,6 +15,10 @@ const nextConfig = {
 
     eslint: {
         ignoreDuringBuilds: true
+    },
+
+    experimental: {
+        proxyTimeout: 120_000,
     },
 
     async headers() {

@@ -3,7 +3,7 @@ import { IStatus } from "../../../data/datasets/DatasetsTypes";
 import { GET_Cacheless, GenerateOptions, server } from "../../../data/utils";
 import { IInternalStorePreload } from "./nodes/types";
 
-async function UploadProjectData(token: string, data: IInternalStorePreload[]) {
+async function UploadProjectData(token: string, data: string) {
     const body = {
         preloadedData: data
     }

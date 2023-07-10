@@ -23,7 +23,8 @@ const productionMessageHandler = async (
     setFlushCache: Dispatch<SetStateAction<boolean>>,
     intialSelection: MutableRefObject<boolean>,
     selectorLinks: ISelectorLinks,
-    setSelectorValue: (selectorId: string, value: string) => void
+    setSelectorValue: (selectorId: string, value: string) => void,
+    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>,
 ) => { 
     switch(messageFunction) {
         case "ping":
@@ -38,7 +39,8 @@ const productionMessageHandler = async (
                 selectorLinks,
                 intialSelection,
                 getSchema,
-                setSelectorValue
+                setSelectorValue,
+                setSelectedIndicator
             )
 
             break

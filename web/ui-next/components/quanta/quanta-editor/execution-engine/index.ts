@@ -10,7 +10,7 @@ function getDependentEdges(nodeId: string, edges: IQuantaRFEdge[]) {
     let connectedEdges = []
     for(let i = 0; i < edges.length; i++) {
         let edge = edges[i]
-        if(edge.target === nodeId)
+        if(edge.target === nodeId && connectedEdges.includes(edge.source!) === false)
             connectedEdges.push(edge.source!)
     }
 

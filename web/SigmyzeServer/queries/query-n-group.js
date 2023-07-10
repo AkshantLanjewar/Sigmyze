@@ -36,16 +36,16 @@ db.quanta_chunks.aggregate([
                         {
                             "project_indicators.field.datasetFields": {
                                 "$elemMatch": {
-                                    "fieldKey": "name",
-                                    "stringField": "Gross domestic product, deflator" //
+                                    "fieldKey": "ind3",
+                                    "stringField": "BCA" //
                                 }
                             }
                         },
                         {
                             "project_indicators.field.datasetFields": {
                                 "$elemMatch": {
-                                    "fieldKey": "name",
-                                    "stringField": "General government primary net lending/borrowing" //
+                                    "fieldKey": "ind3",
+                                    "stringField": "BCA_NGDPD" //
                                 }
                             }
                         }

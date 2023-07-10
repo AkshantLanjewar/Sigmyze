@@ -152,6 +152,20 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     }, [textStore])
 
     useEffect(() => {
+        if(projectData === undefined || dataLoaded === false)
+            return
+
+        SaveCounterUtil(
+            dataLoaded,
+            textLoad,
+            saveCounter,
+            setTextLoad,
+            toggleTextUpdated,
+            setSaveCounter
+        )
+    }, [projectData])
+
+    useEffect(() => {
         SaveCounterUtil(
             dataLoaded, 
             categorizeLoad, 

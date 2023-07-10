@@ -11,7 +11,7 @@ public class UploadInternalStoreBody
     [BsonElement("preloadedData")]
     [JsonProperty("preloadedData")]
     [JsonPropertyName("preloadedData")]
-    public List<QuantaInternalStoreWrapper>? PreloadedData { get; set; }
+    public string? PreloadedData { get; set; }
 }
 
 public class GetUploadStoreResponse

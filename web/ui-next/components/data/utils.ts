@@ -25,6 +25,7 @@ function GenerateOptions(method: string, token: string | null, data?: any): Requ
     let options = {} as RequestInit
     options.method = method
     options.headers = {}
+    
 
     if(token !== undefined)
         options.headers['Authorization'] = `Bearer ${token}`

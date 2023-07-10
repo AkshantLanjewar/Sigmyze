@@ -107,6 +107,7 @@ namespace SigmyzeServer
                 var token = context.Session.GetString("Token");
                 if(!string.IsNullOrEmpty(token))
                     context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    
                 await next();
             });
 

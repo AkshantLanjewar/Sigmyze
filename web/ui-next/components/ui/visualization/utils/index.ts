@@ -20,7 +20,7 @@ function convertQuantaChartDataAnt(data: IChartData[]) {
         let date = new Date(timestamp)
         
         let dateString = `${getMonthShortName(date.getMonth())} ${date.getFullYear()}`
-        convertedData.push({ date: dateString, value: point.xValue! })
+        convertedData.push({ date: dateString, value: point.yValue! })
     }
 
     return convertedData

@@ -55,63 +55,66 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
 
             <Stack spacing={"md"}>
                 {forms.map((step) => {
+                    //TODO: Convert to switch statement
                     let inputType = step.type
-                    if(inputType === undefined)
-                        return
+                    let output: JSX.Element | null = null
 
-                    if(inputType === "text")
-                        return (
-                            <TextInputQuanta 
-                                name={step.name}
-                                icon={step.icon}
-                                value={getValue(step.id!)}
-                                setValue={(id: string) => setValue(step.id!, id)}
-                            />
-                        )
+                    switch(inputType) {
+                        case "text":
+                            output = (
+                                <TextInputQuanta 
+                                    name={step.name}
+                                    icon={step.icon}
+                                    value={getValue(step.id!)}
+                                    setValue={(id: string) => setValue(step.id!, id)}
+                                />
+                            )
 
-                    if(inputType === "dropdown") {
-                        let dropdownItems = undefined
-                        if(step.dropdownField !== undefined) {
-                            let dropdownGroup = step.dropdownField
-                            dropdownItems = convertTypesToDropdown(dropdownGroup)
-                        } if(step.manualDropdownItems !== undefined) {
-                            dropdownItems = step.manualDropdownItems
-                        }
+                            break
+                        case "dropdown":
+                            let dropdownItems = undefined
+                            if(step.dropdownField !== undefined)
+                                dropdownItems = convertTypesToDropdown(step.dropdownField)
+                            else if(step.manualDropdownItems !== undefined)
+                                dropdownItems = step.manualDropdownItems
 
+                            if(dropdownItems === undefined)
+                                return
+                            
+                            output = (
+                                <DropdownInput
+                                    items={dropdownItems}
+                                    name={step.name}
+                                    value={getValue(step.id!)}
+                                    setValue={(value: string) => setValue(step.id!, value)}
+                                />
+                            )
+                            break
+                        case "alert":
+                            let alertIcon = step.alertIcon
+                            let alertTitle = step.alertTitle
+                            let alertContent = step.alertContent
+                            let alertColor = step.alertColor
 
-                        if(dropdownItems === undefined)
-                            return
-
-                        return (
-                            <DropdownInput
-                                items={dropdownItems}
-                                name={step.name}
-                                value={getValue(step.id!)}
-                                setValue={(value: string) => setValue(step.id!, value)}
-                            />
-                        )
+                            if(alertIcon === undefined || alertTitle === undefined || alertContent === undefined || alertColor === undefined)
+                                return
+                            
+                            output = (
+                                <Alert
+                                    icon={alertIcon}
+                                    color={alertColor}
+                                    title={alertTitle}
+                                >
+                                    {alertContent}
+                                </Alert>
+                            )
+                            break
+                        default:
+                            output = null
+                            break
                     }
 
-                    if(inputType === "alert") {
-                        let alertIcon = step.alertIcon
-                        let alertTitle = step.alertTitle
-                        let alertContent = step.alertContent
-                        let alertColor = step.alertColor
-
-                        if(alertIcon === undefined || alertTitle === undefined || alertContent === undefined || alertColor === undefined)
-                            return
-
-                        return (
-                            <Alert
-                                icon={alertIcon}
-                                color={alertColor}
-                                title={alertTitle}
-                            >
-                                {alertContent}
-                            </Alert>
-                        )
-                    }
-
+                    return output
                     if(inputType === "file") {
                         let fileType = step.fileType
                         let fileName = step.name

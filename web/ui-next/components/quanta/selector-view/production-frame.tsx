@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react"
 import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../data/quanta/types/project"
 import { IIFrameMessage } from "../selector-pane/selector-frame-tester/types"
 import productionMessageHandler from "./handler"
 import { buildAnalysis } from "../selector-frame/analysis"
-import { IPipelineMessage } from "../selector-frame/types"
+import { IPipelineMessage, IQuantaQuery } from "../selector-frame/types"
 import FrameView from "./production-frame-view"
+import { IPipelineAnalysis } from "../selector-pane/context/types"
 
 interface IProductionSelectorFrameProps {
     selector: IQuantaSelector,
@@ -12,7 +13,12 @@ interface IProductionSelectorFrameProps {
     categorization: IQuantaCategorization | undefined,
     schemas: ProjectSchemas[],
     textStore: IQuantaTextStore,
-    setSelectorValue: (selectorId: string, value: string) => void
+    selectionIndex: number | undefined,
+    setSelectorValue: (selectorId: string, value: string) => void,
+    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>,
+    selectedValues: {
+        [key: string]: string | undefined;
+    } 
 }
 
 const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({ 
@@ -21,7 +27,10 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
     categorization,
     schemas,
     textStore,
-    setSelectorValue 
+    selectionIndex,
+    selectedValues,
+    setSelectorValue ,
+    setSelectedIndicator
 }) => {
     const [code, setCode] = useState<string | undefined>(undefined)
     const [msgCache, setMsgCache] = useState<string[]>([])
@@ -56,6 +65,37 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
             textStore
         )
 
+        if(selectionIndex !== undefined) {
+            let selectedKeys = Object.keys(selectedValues)
+            let collected_queries = [] as IQuantaQuery[]
+
+            for(let i = 0; i < selectedKeys.length; i++) {
+                if(i > selectionIndex)
+                    continue
+
+                let key = selectedKeys[i]
+                let value = selectedValues[key]
+                if(value === undefined)
+                    continue
+
+                let selectedAnalysis: IQuantaQuery[] = JSON.parse(value)
+                collected_queries = [ ...collected_queries, ...selectedAnalysis ]
+            }
+
+            //now we build the additional analysis objects
+            for(let i = 0; i < collected_queries.length; i++) {
+                let query = collected_queries[i]
+                let analysisObject = {} as IPipelineAnalysis
+                if(query.fieldType === "string")
+                    analysisObject.objectType = "string"
+
+                analysisObject.objectId = `query::${query.fieldKey}`
+                analysisObject.stringValue = query.stringField
+                analysisObject.dateValue = query.dateField
+                analysis.push(analysisObject)
+            }
+        }
+
         const pipelineMessage: IPipelineMessage = {
             analysis: analysis
         }
@@ -66,7 +106,7 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
         }
 
         postMessage(JSON.stringify(frameMessage))
-    }, [selector, textStore, categorization])
+    }, [selector, textStore, categorization, selectionIndex, selectedValues])
 
     //effect that flushes all the cache into the selector once the ping has been received
     useEffect(() => {
@@ -87,11 +127,11 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
             handlerFunc(event)
         }
 
-        window.addEventListener("message", handler)
         pingReceived.current = false
         intialSelection.current = false
         setFlushCache(false)
 
+        window.addEventListener("message", handler)
         return () => window.removeEventListener("message", handler)
     }, [code])
 
@@ -129,7 +169,8 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
                     setFlushCache,
                     intialSelection,
                     selectorLink,
-                    setSelectorValue
+                    setSelectorValue,
+                    setSelectedIndicator
                 ) 
             } catch (error) {
                 console.debug(`[ERROR]: ${error}`)
@@ -166,9 +207,7 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
     }, [schemas])
 
     const postMessage = useCallback((msg: string) => {
-        if(iframeRef.current === null)
-            return
-        if(pingReceived.current === false) {
+        if(pingReceived.current === false || iframeRef.current === null) {
             let nMessageCache = msgCache
             nMessageCache.push(msg)
 
@@ -177,7 +216,7 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
         }
 
         iframeRef.current.contentWindow?.postMessage(msg)
-    }, [])
+    }, [msgCache])
     
     return (
         <FrameView
