@@ -5,6 +5,7 @@ import FileInput from "./form-elements/file-input/file-input"
 import TextInputQuanta from "./form-elements/text-input"
 import { IQuantaFormField } from "../../quanta/quanta-editor/types/form"
 import { convertTypesToDropdown } from "../../quanta/quanta-editor/utils"
+import QuantaSegmentControl from "./form-elements/segment-control"
 
 interface IFormBuilderProps {
     forms: IQuantaFormField[],
@@ -109,26 +110,39 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
                                 </Alert>
                             )
                             break
+                        case "file":
+                            let fileType = step.fileType
+                            let fileName = step.fileName
+                            if(fileType === undefined || fileName === undefined)
+                                return
+
+                            output = (
+                                <FileInput 
+                                    fileType={fileType}
+                                    fileName={fileName}
+                                    setValue={(val: any) => setValue(step.id!, val)}
+                                /> 
+                            )
+                            break
+                        case "segment":
+                            let segmentItems = step.segmentItems
+                            if(segmentItems === undefined)
+                                return
+                            
+                            output = (
+                                <QuantaSegmentControl
+                                    value={getValue(step.id!)}
+                                    setValue={(id: string) => setValue(step.id!, id)}
+                                    segmentItems={segmentItems}
+                                />
+                            )
+                            break
                         default:
                             output = null
                             break
                     }
 
                     return output
-                    if(inputType === "file") {
-                        let fileType = step.fileType
-                        let fileName = step.name
-                        if(fileType === undefined || fileName === undefined)
-                            return
-
-                        return (
-                            <FileInput 
-                                fileType={fileType}
-                                fileName={fileName}
-                                setValue={(val: any) => setValue(step.id!, val)}
-                            /> 
-                        )
-                    }
                 })}
 
                 <Group position={"right"}>

@@ -1,4 +1,4 @@
-import styles   from './toolbar.module.scss'
+import styles   from '../../quanta/toolbar/toolbar.module.scss'
 import Explorer from '../explorer/explorer'
 
 import { useState } from 'react'

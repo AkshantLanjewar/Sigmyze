@@ -79,6 +79,7 @@ interface IQuantaFormField {
 
     /**
      * items that are rendered within a segment output
+     * must set the segment value in the default value object
      */
     segmentItems?: ISegmentItem[]
 }

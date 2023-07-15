@@ -32,6 +32,7 @@ const PublishForm: React.FC<IFormProps> = ({ close }) => {
         if(descriptionValue !== undefined)
             nDefaultValue['description'] = descriptionValue
 
+        nDefaultValue['visibility'] = 'public'
         setDefaultValue({ ...nDefaultValue })
     }, [project_data])
 

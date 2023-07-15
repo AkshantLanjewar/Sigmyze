@@ -1,4 +1,4 @@
-import styles from './toolbar.module.scss'
+import styles from '../../quanta/toolbar/toolbar.module.scss'
 import dropdownStyles from '../explorer/explorer.module.scss'
 import { Text } from '@mantine/core'
 import { useContext, useEffect, useState } from 'react'

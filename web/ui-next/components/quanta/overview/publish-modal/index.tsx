@@ -1,4 +1,4 @@
-import { Modal } from "@mantine/core"
+import { Button, Group, Modal } from "@mantine/core"
 import { memo } from "react"
 import PublishForm from "./form"
 
@@ -22,6 +22,28 @@ const PublishModal: React.FC<IPublishModalProps> = memo(({ opened, close }) => {
             })}
         >
             <PublishForm close={close} />
+
+            <Group position={"right"}>
+                <Button
+                    variant={'subtle'}
+                    color={'indigo'}
+                    size={'xs'}
+                    px={'xs'}
+                    onClick={() => {  }}
+                >
+                    Cancel
+                </Button>
+
+                <Button
+                    variant={'subtle'}
+                    color={'red'}
+                    size={'xs'}
+                    px={'xs'}
+                    onClick={() => { }}
+                >
+                    Publish
+                </Button>
+            </Group>
         </Modal>
     )
 })
