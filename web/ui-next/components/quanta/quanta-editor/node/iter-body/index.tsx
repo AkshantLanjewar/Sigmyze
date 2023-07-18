@@ -1,10 +1,11 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { v4 } from "uuid"
 import { QuantaEditorContext } from "../../quanta-editor"
 import { IQuantaRFNodeData, IQuantaRFNodeDataType, IQuantaSocket } from "../../types/types"
 import { getDetailedType } from "../../utils"
 import InputRenderer from "../input/input-renderer"
 import OutputRenderer from "../output/OutputRenderer"
+import IterBodyView from "./view"
 
 interface IIterBodyProps {
     nodeId?: string,
@@ -27,50 +28,41 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
         setInternalFocused(focused)
     }, [focused])
 
-    function getIterType() {
-        if(nodeId === undefined)
-        {
+    const getIterType = useCallback(() => {
+        if(nodeId === undefined) {
             setIterOutputs([])
             return
-        }
-        if(quantaContext === null)
+        } if(quantaContext === null)
         {
             setIterOutputs([])
             return
         }
 
         let parentId = quantaContext.getParentId(nodeId)
-        if(parentId === undefined)
-        {
+        if(parentId === undefined) {
             setIterOutputs([])
             return
         }
 
         let edge = quantaContext.getConnectedEdge(parentId, "target")
-        if(edge === undefined)
-        {
+        if(edge === undefined) {
             setIterOutputs([])
             return
         } 
         
         let sourceNodeId = edge.source
         let sourceNodeHandle = edge.sourceHandle
-        if(sourceNodeId === undefined || sourceNodeHandle === undefined)
-        {
+        if(sourceNodeId === undefined || sourceNodeHandle === undefined) {
             setIterOutputs([])
             return
         }
 
         let sourceSocket = quantaContext.getNodeSocket(sourceNodeId, sourceNodeHandle, "output")
         let socketType = sourceSocket?.type
-        if(socketType === undefined)
-        {
+        if(socketType === undefined) {
             setIterOutputs([])
             return
-        }
-
-        if(types === undefined)
-        {
+        } if(types === undefined) {
             quantaContext.trackNodeType(nodeId, sourceNodeId, socketType)
             types = []
         }
@@ -88,8 +80,7 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
         //update the tracked socket
         quantaContext.updateTrackedNodeType(nodeId, sourceNodeId, socketType)
         let detailedSocket = getDetailedType(socketType)
-        if(detailedSocket === undefined)
-        {
+        if(detailedSocket === undefined) {
             setIterOutputs([])
             return
         }
@@ -106,7 +97,7 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
 
         quantaContext.setIterNodeType(nodeId, socketType)
         setParentId(parentId_)
-    }
+    }, [nodeId, quantaContext, types])
 
     useEffect(() => {
         getIterType()
@@ -117,17 +108,12 @@ const IterBody: React.FC<IIterBodyProps> = ({ nodeId, types, data, focused }) =>
     }, [quantaContext?.edgeToggle, quantaContext?.nodeToggle])
 
     return (
-        <>
-            {iterOutputs.map((step) => (
-                <OutputRenderer
-                    output={step}
-                    nodeId={nodeId}
-                    focused={internalFocused}
-                    parentId={parentId}
-                    unfocus={() => {  }}
-                />
-            ))}
-        </>
+        <IterBodyView
+            iterOutputs={iterOutputs}
+            nodeId={nodeId}
+            internalFocused={internalFocused}
+            parentId={parentId}
+        />
     )
 }
 

@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { QuantaContextData } from "../../../../data/quanta/context"
 import { IQuantaState } from "../../../../data/quanta/types"
 import { QuantaEditorContext } from "../../quanta-editor"
 import { IQuantaSocket } from "../../types/node-instructions"
 import { IQuantaRFNodeData, IQuantaTypeRef } from "../../types/types"
-import DynamicInput from "./dynamic-input"
-import NodeInput from "./node-input"
+import InputRendererView from "./input-renderer-view"
 
 interface IInputRendererProps {
     input: IQuantaSocket,
@@ -68,7 +67,7 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
         setControlledSocket({ ...nControlledSocket })
     }, [typeUpdated])
 
-    function editType(socketId: string, newType: IQuantaTypeRef) {
+    const editType = useCallback((socketId: string, newType: IQuantaTypeRef) => {
         if(input.selectableType !== true)
             return
         if(localType === undefined)
@@ -89,29 +88,18 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
         } else {
             quantaEditorContext.updateTrackedNodeType(nodeId, socketId, newType)
         }
-    }
+    }, [input, localType, nodeId, quantaEditorContext])
 
     return (
-        <div>
-            {input.dynamicSocket
-                ? (
-                    <DynamicInput 
-                        input={controlledSocket ? controlledSocket : input}
-                        focused={focused}
-                        nodeId={nodeId}
-                        data={data}
-                    />
-                )
-                : (
-                    <NodeInput
-                        socket={controlledSocket ? controlledSocket : input}
-                        focused={focused}
-                        localType={localType}
-                        editType={editType}
-                    />
-                )
-            }
-        </div>
+        <InputRendererView
+            controlledSocket={controlledSocket}
+            input={input}
+            focused={focused}
+            nodeId={nodeId}
+            data={data}
+            localType={localType}
+            editType={editType}
+        />
     )
 }
 

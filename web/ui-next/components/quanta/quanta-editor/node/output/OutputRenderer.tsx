@@ -1,3 +1,4 @@
+import { memo } from "react"
 import { IQuantaSocket } from "../../types/types"
 import DynamicOutput from "./dynamic-output"
 import NodeOutput from "./node-output"
@@ -10,7 +11,7 @@ interface IOutputRendererProps {
     parentId?: string
 }
 
-const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focused, unfocus, parentId }) => {
+const OutputRenderer: React.FC<IOutputRendererProps> = memo(({ output, nodeId, focused, unfocus, parentId }) => {
     return (
         <>
             {output.dynamicSocket
@@ -34,6 +35,6 @@ const OutputRenderer: React.FC<IOutputRendererProps> = ({ output, nodeId, focuse
             }
         </>
     )
-}
+})
 
 export default OutputRenderer

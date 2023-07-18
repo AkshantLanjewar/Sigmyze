@@ -81,7 +81,7 @@ const closeTab = (
     activeTab: string | undefined,
     setTabs: Dispatch<SetStateAction<IQuantaTab[]>>,
     setActiveTab: Dispatch<SetStateAction<string | undefined>> 
-) => {
+) => {    
     let nTabs = []
     for(let i = 0; i < tabs.length; i++) {
         let tab = tabs[i]

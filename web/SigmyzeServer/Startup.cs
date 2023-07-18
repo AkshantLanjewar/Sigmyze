@@ -65,6 +65,7 @@ namespace SigmyzeServer
 
             //data services
             services.AddSingleton<IQuantaDatasetService, QuantaDatasetService>();
+            services.AddSingleton<IPublishService, PublishService>();
 
             //organization services
             services.AddSingleton<IOrganizationRepository, OrganizationRepository>();

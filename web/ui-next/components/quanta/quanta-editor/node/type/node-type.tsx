@@ -1,7 +1,8 @@
 import { Badge, Group } from "@mantine/core"
-import React from "react"
-import { IQuantaTypeRef } from "../../types/types"
+import React, { useEffect, useState } from "react"
+import { IQuantaType, IQuantaTypeRef } from "../../types/types"
 import { getDetailedType } from "../../utils"
+import NodeTypeView from "./node-type-view"
 
 interface INodeTypeProps {
     type?: IQuantaTypeRef,
@@ -10,37 +11,26 @@ interface INodeTypeProps {
 }
 
 const NodeType: React.FC<INodeTypeProps> = ({ type, isArray, arrayType }) => {
-    if(type === undefined)
-        return null
+    const [internalType, setInternalType] = useState<IQuantaTypeRef | undefined>(undefined)
+    const [internalDetailedType, setInternalDetailedType] = useState<IQuantaType | undefined>(undefined)
     
-    let displayType = type
-    let detailedType = getDetailedType(displayType)
-    if(isArray === true && arrayType !== undefined)
-        displayType.typeId = arrayType.typeId
+    useEffect(() => {
+        if(type === undefined)
+            return
 
-    return (
-        <Group align={"center"} position={"center"}>
-            {type !== undefined && (
-                <>
-                    <Badge
-                        variant={"filled"}
-                        color={"indigo"}
-                        size={"lg"}
-                    >
-                        <Group spacing={2} align={"center"}>
-                            {detailedType && (
-                                <>
-                                    {React.cloneElement(detailedType.typeIcon!, { size: 18 })}
-                                </>
-                            )}
-                            
-                            {detailedType?.typeName}
-                        </Group>
-                    </Badge>
-                </>
-            )}
-        </Group>
-    )
+        let detailedType = getDetailedType(type)
+        let displayType = type
+        if(isArray === true && arrayType !== undefined)
+            displayType.typeId = arrayType.typeId
+
+        setInternalType({ ...displayType })
+        setInternalDetailedType({ ...detailedType })
+    }, [type, isArray, arrayType])
+
+    if(internalType === undefined || internalDetailedType === undefined)
+        return null
+    else
+        return <NodeTypeView detailedType={internalDetailedType} />
 }
 
 export default NodeType

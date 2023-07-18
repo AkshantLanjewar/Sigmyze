@@ -1,10 +1,9 @@
-import { Group } from "@mantine/core"
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { IUIDropdownItem } from "../../../../ui/ui-dropdown/types"
-import UIDropdown from "../../../../ui/ui-dropdown/ui-dropdown"
 import { IQuantaEditorGlobals, IQuantaSocket, IQuantaTypeRef } from "../../types/types"
 import { convertTypesToDropdown } from "../../utils"
 import { QuantaEditorContext } from "../../quanta-editor"
+import NodeTypeSelectorView from "./type-selector-view"
 
 interface INodeTypeSelector {
     output?: IQuantaSocket,
@@ -54,7 +53,7 @@ const NodeTypeSelector: React.FC<INodeTypeSelector> = ({ output, focused, socket
      *  NOTE: NOt the socket id
      * @returns 
      */
-    function emitChange(id: string) {
+    const emitChange = useCallback((id: string) => {
         if(output?.type === undefined)
             return
         if(socketId === undefined)
@@ -65,20 +64,16 @@ const NodeTypeSelector: React.FC<INodeTypeSelector> = ({ output, focused, socket
         let nRef = output.type
         nRef.typeId = id
         editType(id, nRef)
-    }
+    }, [output, socketId, editType])
     
     return (
-        <Group position={"center"}>
-            {selectedId !== undefined && (
-                <UIDropdown 
-                    items={dropdownItems}
-                    value={selectedId}
-                    subscribeClose={subscribeClose}
-                    emitChange={(id) => emitChange(id)}
-                    disabled={viewOnly}
-                />
-            )}
-        </Group>
+        <NodeTypeSelectorView
+            selectedId={selectedId}
+            dropdownItems={dropdownItems}
+            subscribeClose={subscribeClose}
+            viewOnly={viewOnly}
+            emitChange={emitChange}
+        />
     )
 }
 

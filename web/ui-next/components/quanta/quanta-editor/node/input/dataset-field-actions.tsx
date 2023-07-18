@@ -1,14 +1,10 @@
-import { ActionIcon, Tooltip } from "@mantine/core"
-import { IconPencil, IconSignature, IconTrash } from "@tabler/icons"
-import { useContext, useEffect, useState } from "react"
-import { Motion, spring } from "react-motion"
+import { IconSignature } from "@tabler/icons"
+import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import { QuantaContextData } from "../../../../data/quanta/context"
 import { IQuantaState } from "../../../../data/quanta/types"
-import FormBuilder from "../../../../ui/form-builder/form-builder"
-import ModalManager from "../../../../ui/modal-manager"
 import { IQuantaFormField } from "../../types/form"
 import { IQuantaSocket } from "../../types/node-instructions"
-import styles from '../node-renderer.module.scss'
+import DatasetFieldActionsView from "./dataset-field-actions-view"
 
 interface IDatasetFieldActionsProps {
     socket: IQuantaSocket,
@@ -35,15 +31,15 @@ const DatasetFieldActions: React.FC<IDatasetFieldActionsProps> = ({ socket, focu
             setDefaultValues(undefined)
     }, [modalState])
 
-    function deleteField() {
+    const deleteField = useCallback(() => {
         let socketId = socket.socketId
         if(socketId === undefined)
             return
 
         deleteElement("dataset", socketId)
-    }
+    }, [socket, deleteElement])
 
-    function openEditName() {
+    const openEditName = useCallback(() => {
         let socketName = socket.socketName
         if(socketName === undefined)
             return
@@ -51,18 +47,18 @@ const DatasetFieldActions: React.FC<IDatasetFieldActionsProps> = ({ socket, focu
         let nDefaultValues = { name: socketName }
         setDefaultValues({ ...nDefaultValues })
         setModalState("edit_name")
-    }
+    }, [socket])
 
-    const formFields = [
+    const formFields = useMemo(() => ([
         {
             type: "text",
             name: "Field Name",
             icon: <IconSignature />,
             id: "name"
         }
-    ] as IQuantaFormField[]
+    ] as IQuantaFormField[]), [])
 
-    const submit = (forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
+    const submit = useCallback((forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
         let newName = valStore["name"]
         let nodeId = socket.socketId
         if(typeof newName !== "string" || nodeId === undefined)
@@ -70,71 +66,19 @@ const DatasetFieldActions: React.FC<IDatasetFieldActionsProps> = ({ socket, focu
 
         editSchema("dataset", nodeId, "edit_text", newName, undefined)
         closeModal()
-    }
+    }, [socket, editSchema])
 
     return (
-        <>
-            <ModalManager
-                modalState={modalState}
-                close={closeModal}
-            >
-                <ModalManager.Modal
-                    id="edit_name"
-                    title="Edit Field Name"
-                >
-                    <FormBuilder
-                        forms={formFields}
-                        submit={submit}
-                        closeModal={closeModal}
-                        defaultValue={defaultValues}
-                    />
-                </ModalManager.Modal>
-            </ModalManager>
-
-            <Motion style={{ x: spring(internalFocused ? -95 : 0), opacity: spring(internalFocused ? 1 : 0) }}>
-                {({ x, opacity }) => (
-                    <div className={styles.node__add} style={{ left: x, opacity: opacity }}>
-                        <Tooltip
-                            withArrow
-                            color={"dark"}
-                            label={"Delete Field"}
-                            styles={{ tooltip: { backgroundColor: "#08090A" } }}
-                            openDelay={250}
-                            transition={"slide-down"}
-                            position={"top"}
-                        >
-                            <ActionIcon
-                                color={"red"}
-                                variant={"light"}
-                                radius={"sm"}
-                                onClick={() => deleteField()}
-                            >
-                                <IconTrash size={18} />
-                            </ActionIcon>
-                        </Tooltip>
-
-                        <Tooltip
-                            withArrow
-                            color={"dark"}
-                            label={"Edit Name"}
-                            styles={{ tooltip: { backgroundColor: "#08090A" } }}
-                            openDelay={250}
-                            transition={"slide-down"}
-                            position={"top"}
-                        >
-                            <ActionIcon
-                                color={"cyan"}
-                                variant={"light"}
-                                radius={"sm"}
-                                onClick={() => openEditName()}
-                            >
-                                <IconPencil size={18} />
-                            </ActionIcon>
-                        </Tooltip>
-                    </div>
-                )}
-            </Motion>
-        </>
+        <DatasetFieldActionsView
+            modalState={modalState}
+            formFields={formFields}
+            defaultValues={defaultValues}
+            internalFocused={internalFocused}
+            deleteField={deleteField}
+            openEditName={openEditName}
+            closeModal={closeModal}
+            submit={submit}
+        />
     )
 }
 

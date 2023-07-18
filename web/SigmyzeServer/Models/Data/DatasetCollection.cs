@@ -79,4 +79,61 @@ namespace SigmyzeServer.Models.Data
         [JsonPropertyName("projection")]
         public bool? Projection { get; set; }
     }
+
+    public class PublishedDatasetCollection
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
+
+        [BsonElement("title")]
+        [JsonProperty("title")]
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+
+        [BsonElement("quantaId")]
+        [JsonProperty("quantaId")]
+        [JsonPropertyName("quantaId")]
+        public string? QuantaId { get; set; }
+
+        [BsonElement("description")]
+        [JsonProperty("description")]
+        [JsonPropertyName("description")]
+        public string? Description { get; set; }
+
+        [BsonElement("public")]
+        [JsonProperty("public")]
+        [JsonPropertyName("public")]
+        public bool? Public { get; set; }
+
+        [BsonElement("public_id")]
+        [JsonProperty("public_id")]
+        [JsonPropertyName("public_id")]
+        public string? PublicId { get; set; }
+    }
+
+    public class OrganizationPublishedCollection
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
+
+        [BsonElement("organization_id")]
+        [JsonProperty("organization_id")]
+        [JsonPropertyName("organization_id")]
+        public string? OrganizationId { get; set; }
+
+        [BsonElement("published_datasets")]
+        [JsonProperty("published_datasets")]
+        [JsonPropertyName("published_datasets")]
+        public List<string>? PublishedDatasets { get; set; }
+
+        public bool Verify()
+        {
+            if(this.PublishedDatasets == null || this.OrganizationId == null)
+                return false;
+
+            return true;
+        }
+    }
 }

@@ -4,9 +4,9 @@ import { QuantaContextData } from '../../../../data/quanta/context'
 import { IQuantaState } from '../../../../data/quanta/types'
 import { IQuantaSocket } from '../../types/node-instructions'
 import { IQuantaRFNodeData } from '../../types/nodes'
-import { compareTypes } from '../../utils'
 import styles from '../node-renderer.module.scss'
 import InputRenderer from './input-renderer'
+import DynamicInputView from './dynamic-input-view'
 
 interface IDynamicInputProps {
     input: IQuantaSocket,
@@ -95,18 +95,13 @@ const DynamicInput: React.FC<IDynamicInputProps> = ({ input, nodeId, focused, da
     }, [input])
 
     return (
-        <div className={styles.dynamic__node}>
-            <div className={styles.title}>{input.groupTitle}</div>
-
-            {childSockets.map((step) => (
-                <InputRenderer
-                    input={step}
-                    nodeId={nodeId}
-                    focused={focused}
-                    data={data}
-                />
-            ))}
-        </div>
+        <DynamicInputView   
+            childSockets={childSockets}
+            nodeId={nodeId}
+            focused={focused}
+            input={input}
+            data={data}
+        />
     )
 }
 

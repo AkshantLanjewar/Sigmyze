@@ -15,16 +15,19 @@ public partial class DatasetController : OrganizationControllerBase
 {
     private readonly IQuantaDatasetService _quantaDatasetService;
     private readonly DatasetShared _sharedDataset;
+    private readonly IPublishService _publishService;
 
     public DatasetController(
         IOrganizationRepository organizationRepository,
         IQuantaDatasetService quantaDatasetService,
         IQuantaIndicatorRepository quantaIndicatorRepository,
-        IQuantaRepository quantaRepository
+        IQuantaRepository quantaRepository,
+        IPublishService publishService
     ) : base(organizationRepository)
     {
         _quantaDatasetService = quantaDatasetService;
         _sharedDataset = new DatasetShared(quantaDatasetService, quantaIndicatorRepository, quantaRepository);
+        _publishService = publishService;
     }
 
     [HttpGet]

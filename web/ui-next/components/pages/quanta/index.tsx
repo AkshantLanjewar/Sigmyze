@@ -2,12 +2,12 @@ import QuantaContext from "../../data/quanta/context"
 import ApplicationLayout from "../../nav-elements/application-layout"
 import styles from '../../../pages/lunar/lunar.module.scss'
 import { Group } from "@mantine/core"
-import QuantaToolbar from "../../lunar/toolbar/quanta-toolbar"
-import QuantaViewport from "../../lunar/viewport/quanta-viewport"
 import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
+import QToolbar from "../../quanta/toolbar"
+import QViewport from "../../quanta/viewport"
 
 const QuantaPage: React.FC = ({ }) => {
     const [projectId, setProjectId] = useState<string | null>(null)
@@ -38,11 +38,11 @@ const QuantaPage: React.FC = ({ }) => {
                         noWrap
                     >
                         <div className={styles.toolbar}>
-                            <QuantaToolbar />
+                            <QToolbar />
                         </div>
 
                         <div className={styles.viewport}>
-                            <QuantaViewport />
+                            <QViewport />
                         </div>
                     </Group>
                 </div>

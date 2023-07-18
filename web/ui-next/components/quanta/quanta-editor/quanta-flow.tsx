@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useContext, useEffect, useRef } from "react"
-import { applyEdgeChanges, applyNodeChanges, Background, Connection, Controls, ReactFlow, ReactFlowInstance, updateEdge } from "reactflow"
+import { applyEdgeChanges, applyNodeChanges, Background, Connection, ReactFlowInstance, updateEdge } from "reactflow"
 import { QuantaContextData } from "../../data/quanta/context"
 import { IQuantaState } from "../../data/quanta/types"
 import { ExecutionContextData } from "./execution-engine/context"
@@ -12,6 +12,7 @@ import { IQuantaRFNode } from "./types/nodes"
 import { IQuantaEditorGlobals, IQuantaSocket, IQuantaStore } from "./types/types"
 import { arrayConnection, buildEdge, compareTypes, GetNodeSocket, isNodeArray } from "./utils"
 import ConnectionLine from "./connection-line"
+import QuantaFlowView from "./quanta-flow-view"
 
 interface IQuantaFlowProps {
     nodes: IQuantaRFNode[],
@@ -146,25 +147,19 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
     }, [nodes, quantaStore])
 
     return (
-        <>
-            <ReactFlow
-                nodes={nodes as any}
-                edges={edges as any}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                nodeTypes={nodeTypes as any}
-                attributionPosition={'bottom-left'}
-                onInit={setReactFlowInstance}
-                onConnect={onConnect}
-                onEdgeUpdateStart={onEdgeUpdateStart}
-                onEdgeUpdate={onEdgeUpdate}
-                onEdgeUpdateEnd={onEdgeUpdateEnd}
-                connectionLineComponent={ConnectionLine as any}
-            >
-                <Background />
-                <Controls />
-            </ReactFlow>
-        </>
+        <QuantaFlowView
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            ConnectionLine={ConnectionLine}
+            setReactFlowInstance={setReactFlowInstance}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onEdgeUpdateStart={onEdgeUpdateStart}
+            onEdgeUpdate={onEdgeUpdate}
+            onEdgeUpdateEnd={onEdgeUpdateEnd}
+        />
     )
 }
 

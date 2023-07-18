@@ -5,6 +5,7 @@ import styles from '../node-renderer.module.scss'
 import NodeType from "../type/node-type"
 import NodeTypeSelector from "../type/node-type-selector"
 import DatasetFieldActions from "./dataset-field-actions"
+import { memo } from "react"
 
 interface INodeInputProps {
     socket: IQuantaSocket,
@@ -13,7 +14,7 @@ interface INodeInputProps {
     editType?: (socketId: string, newType: IQuantaTypeRef) => void
 }
 
-const NodeInput: React.FC<INodeInputProps> = ({ socket, focused, editType }) => {
+const NodeInput: React.FC<INodeInputProps> = memo(({ socket, focused, editType }) => {
     return (
         <div className={styles.node__socket}>
             <div>
@@ -72,6 +73,6 @@ const NodeInput: React.FC<INodeInputProps> = ({ socket, focused, editType }) => 
             }
         </div>
     )
-}
+})
 
 export default NodeInput

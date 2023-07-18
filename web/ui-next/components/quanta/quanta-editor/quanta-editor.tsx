@@ -1,8 +1,10 @@
 import { 
     createContext, 
     RefObject, 
+    useCallback, 
     useContext, 
     useEffect, 
+    useMemo, 
     useRef, 
     useState 
 } from "react"
@@ -21,9 +23,6 @@ import {
 } from "./types/types"
 
 import 'reactflow/dist/style.css'
-import ModalManager from "../../ui/modal-manager"
-import FormBuilder from "../../ui/form-builder/form-builder"
-import DeleteNodeForm from "./forms/delete-node-form"
 
 import { 
     BuildIterNode,
@@ -47,12 +46,9 @@ import {
 
 import { IQuantaSchemaShort } from "../schema-editor/types"
 import { QuantaContextData } from "../../data/quanta/context"
-import EngineWrapper from "./execution-engine/engine-wrapper"
-import ExecutionContext from "./execution-engine/context"
-import ContextButtons from "./editor-toolkit/context-buttons"
 
 import { BuildNode, GetNodeSocket, LoadEditorProject } from "./utils"
-import QuantaFlow from "./quanta-flow"
+import QuantaEditorView from "./quanta-editor-view"
 
 interface IQuantaEditorProps {
     fileId: string,
@@ -113,16 +109,16 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
      * This is a toggle that can unfocus all the nodes within the editor
      */
     const [focusToggle, setFocusToggle] = useState(false)
-    const toggleFocus = () => setFocusToggle(!focusToggle)
+    const toggleFocus = useCallback(() => setFocusToggle(!focusToggle), [focusToggle])
 
     const [edgeToggle, setEdgeToggle] = useState(false)
-    const toggleEdge = () => setEdgeToggle(!edgeToggle)
+    const toggleEdge = useCallback(() => setEdgeToggle(!edgeToggle), [edgeToggle])
 
     const [nodeToggle, setNodeToggle] = useState(false)
     const toggleNode = () => setNodeToggle(!nodeToggle)
 
     const [storeToggle, setStoreToggle] = useState(false)
-    const toggleUpdateStore = () => setStoreToggle(!storeToggle)
+    const toggleUpdateStore = useCallback(() => setStoreToggle(!storeToggle), [storeToggle])
 
     const [formTitle, setFormTitle] = useState<string | undefined>("")
     const [formContent, setFormContent] = useState<IQuantaFormField[]>([])
@@ -140,18 +136,18 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
 
     //when the engine wrapper should execute
     const [engineWrapperToggle, setEngineWrapperToggle] = useState(false)
-    const toggleEngineWrapper = () => setEngineWrapperToggle(!engineWrapperToggle)
+    const toggleEngineWrapper = useCallback(() => setEngineWrapperToggle(!engineWrapperToggle), [engineWrapperToggle])
 
     //toggle for the engine
     const [engineCacheToggle, setEngineCacheToggle] = useState(false)
-    const toggleEngineCache = () => setEngineCacheToggle(!engineCacheToggle)
+    const toggleEngineCache = useCallback(() => setEngineCacheToggle(!engineCacheToggle), [engineCacheToggle])
 
     //whether or not the editor has a node that has cachable data
     const [requiresCache, setRequiresCache] = useState(false)
-    const hasCache = () => setRequiresCache(true)
+    const hasCache = useCallback(() => setRequiresCache(true), [])
 
-    const openStoreModal = () => setStoreModal('store')
-    const closeStoreModal = () => setStoreModal(null)
+    const openStoreModal = useCallback(() => setStoreModal('store'), [])
+    const closeStoreModal = useCallback(() => setStoreModal(null), [])
 
     /**
      * Ref for the react flow element
@@ -236,139 +232,182 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
             setViewOnly(true)
     }, [viewMode])
 
-    let value = {} as IQuantaEditorGlobals
-    value.focusToggle = focusToggle
-    value.storeToggle = storeToggle
-    value.edgeToggle = edgeToggle
-    value.nodeToggle = nodeToggle
-    value.editorType = editorType
-    value.fileId = fileId
-    value.viewOnly = viewOnly
+    const getStoreValueCallback = useCallback((storeKey: string) => {
+        return getStoreValue(storeKey, quantaStore)
+    }, [quantaStore])
 
-    value.getStoreValue = (storeKey: string) => 
-        getStoreValue(storeKey, quantaStore)
-    value.createNode = (parentId: string, parentHandle: string, childType: string, handleRef: RefObject<HTMLElement>, groupId?: string) =>
-        CreateMenuNode(
-            parentId, 
-            parentHandle, 
-            childType, 
-            handleRef, 
-            nodes, 
-            reactFlowInstance, 
-            editorBounds, 
-            setNodes, 
+    const createNodeCallback = useCallback((
+        parentId: string, 
+        parentHandle: string, 
+        childType: string, 
+        handleRef: RefObject<HTMLElement>, 
+        groupId?: string
+    ) => {
+        return CreateMenuNode(
+            parentId,
+            parentHandle,
+            childType,
+            handleRef,
+            nodes,
+            reactFlowInstance,
+            editorBounds,
+            setNodes,
             toggleFocus,
             groupId
         )
-    value.createIter = (parentId: string, parentHandle: string, handleRef: RefObject<HTMLElement>) =>
-        BuildIterNode(
-            parentId, 
-            parentHandle, 
-            handleRef, 
-            nodes, 
-            reactFlowInstance, 
-            editorBounds, 
-            setNodes, 
+    }, [nodes, reactFlowInstance, editorBounds, toggleFocus])
+
+    const createIterCallback = useCallback((parentId: string, parentHandle: string, handleRef: RefObject<HTMLElement>) => {
+        return BuildIterNode(
+            parentId,
+            parentHandle,
+            handleRef,
+            nodes,
+            reactFlowInstance,
+            editorBounds,
+            setNodes,
             toggleFocus
         )
-    value.toggleFocus = toggleFocus
-    value.createStore = (storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) =>
-        createStore(storeKey, storeName, createFields, formTitle, quantaStore, toggleUpdateStore, setQuantaStore)
-    value.createStoreModal = (modalKey: string) =>
-        createStoreModal(modalKey, quantaStore, setFormTitle, setFormContent, setStoreKey, openStoreModal)
-    value.editStoreValue = (storeKey: string, itemId: string, key: string, field: any) =>
-        editStoreValue(storeKey, itemId, key, field, quantaStore, setQuantaStore, toggleUpdateStore)
-    value.deleteNode = (nodeId: string, backend?: string) => 
-        deleteNode(nodeId, setStoreModal, setModalNodeId, setModalNodeBackend, backend)
-    value.editorDeleteNode = () => 
-        editorDeleteNode(modalNodeId, modalNodeBackend, setModalNodeId, setModalNodeBackend, nodes, setNodes)
-    value.deleteStoreItem = (storeKey: string, itemId: string) =>
-        deleteStoreItem(storeKey, itemId, quantaStore, setQuantaStore, toggleUpdateStore)
-    value.trackNodeType = (nodeId: string, socketId: string, type: IQuantaTypeRef) =>
-        trackNodeType(nodeId, socketId, type, nodes, setNodes)
-    value.updateTrackedNodeType = (nodeId: string, socketId: string, type: IQuantaTypeRef) =>
-        updateTrackedNodeType(nodeId, socketId, type, nodes, setNodes)
-    value.getConnectedEdge = (nodeId: string, source: "source" | "target") =>
-        GetConnectedEdge(nodeId, source, edges)
-    value.getParentId = (nodeId: string) =>
-        GetParentId(nodeId, nodes)
-    value.getNodeSocket = (nodeId: string, socketId: string, type: "input" | "output") =>
-        GetNodeSocket(nodes, quantaStore, nodeId, socketId, type)
-    value.getNode = (nodeId: string) => getNode(nodeId, nodes)
+    }, [nodes, reactFlowInstance, editorBounds, toggleFocus])
 
-    value.setIterNodeType = (nodeId: string, nodeType: IQuantaTypeRef) =>
-        SetIterNodeType(nodeId, nodeType, iterNodeTypes, setIterNodeTypes)
-    value.getIterNodeType = (nodeId: string) =>
-        GetIterNodeType(nodeId, iterNodeTypes)
-    value.hasCache = hasCache
+    const createStoreCallback = useCallback((storeKey: string, storeName: string, createFields: IQuantaFormField[], formTitle: string) => {
+        return createStore(storeKey, storeName, createFields, formTitle, quantaStore, toggleUpdateStore, setQuantaStore)
+    }, [quantaStore, toggleUpdateStore])
 
-    const submitStoreModal_ = (forms: IQuantaFormField[], valStore: {[key: string]: string}) =>
-        submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)
+    const createStoreModalCallback = useCallback((modalKey: string) => {
+        return createStoreModal(modalKey, quantaStore, setFormTitle, setFormContent, setStoreKey, openStoreModal)
+    }, [quantaStore])
+
+    const editStoreValueCallback = useCallback((storeKey: string, itemId: string, key: string, field: any) => {
+        return editStoreValue(storeKey, itemId, key, field, quantaStore, setQuantaStore, toggleUpdateStore)
+    }, [quantaStore, toggleUpdateStore])
+
+    const deleteNodeCallback = useCallback((nodeId: string, backend?: string) => {
+        return deleteNode(nodeId, setStoreModal, setModalNodeId, setModalNodeBackend, backend)
+    }, [])
+
+    const editorDeleteNodeCallback = useCallback(() => {
+        return editorDeleteNode(modalNodeId, modalNodeBackend, setModalNodeId, setModalNodeBackend, nodes, setNodes)
+    }, [modalNodeId, modalNodeBackend, nodes])
+
+    const deleteStoreItemCallback = useCallback((storeKey: string, itemId: string) => {
+        return deleteStoreItem(storeKey, itemId, quantaStore, setQuantaStore, toggleUpdateStore)
+    }, [quantaStore, toggleUpdateStore])
+
+    const trackNodeTypeCallback = useCallback((nodeId: string, socketId: string, type: IQuantaTypeRef) => {
+        return trackNodeType(nodeId, socketId, type, nodes, setNodes)
+    }, [nodes])
+
+    const updateTrackedNodeTypeCallback = useCallback((nodeId: string, socketId: string, type: IQuantaTypeRef) => {
+        return updateTrackedNodeType(nodeId, socketId, type, nodes, setNodes)
+    }, [nodes])
+
+    const getConnectedEdgeCallback = useCallback((nodeId: string, source: "source" | "target") => {
+        return GetConnectedEdge(nodeId, source, edges)
+    }, [edges])
+
+    const getParentIdCallback = useCallback((nodeId: string) => {
+        return GetParentId(nodeId, nodes)
+    }, [nodes])
+
+    const getNodeSocketCallback = useCallback((nodeId: string, socketId: string, type: "input" | "output") => {
+        return GetNodeSocket(nodes, quantaStore, nodeId, socketId, type)
+    }, [nodes, quantaStore])
+
+    const getNodeCallback = useCallback((nodeId: string) => getNode(nodeId, nodes), [nodes])
+
+    const setIterNodeTypeCallback = useCallback((nodeId: string, nodeType: IQuantaTypeRef) => {
+        return SetIterNodeType(nodeId, nodeType, iterNodeTypes, setIterNodeTypes)
+    }, [iterNodeTypes])
+
+    const getIterNodeTypeCallback = useCallback((nodeId: string) => {
+        return GetIterNodeType(nodeId, iterNodeTypes)
+    }, [iterNodeTypes])
+
+    let memoValue: IQuantaEditorGlobals = useMemo(() => ({
+        focusToggle,
+        storeToggle,
+        edgeToggle,
+        nodeToggle,
+        editorType,
+        fileId,
+        viewOnly,
+        getStoreValue: getStoreValueCallback,
+        createNode: createNodeCallback,
+        createIter: createIterCallback,
+        toggleFocus: toggleFocus,
+        createStore: createStoreCallback,
+        createStoreModal: createStoreModalCallback,
+        editStoreValue: editStoreValueCallback,
+        deleteNode: deleteNodeCallback,
+        editorDeleteNode: editorDeleteNodeCallback,
+        deleteStoreItem: deleteStoreItemCallback,
+        trackNodeType: trackNodeTypeCallback,
+        updateTrackedNodeType: updateTrackedNodeTypeCallback,
+        getConnectedEdge: getConnectedEdgeCallback,
+        getParentId: getParentIdCallback,
+        getNodeSocket: getNodeSocketCallback,
+        getNode: getNodeCallback,
+        setIterNodeType: setIterNodeTypeCallback,
+        getIterNodeType: getIterNodeTypeCallback,
+        hasCache: hasCache
+    }), [
+        focusToggle,
+        storeToggle,
+        edgeToggle,
+        nodeToggle,
+        editorType,
+        fileId,
+        viewOnly,
+        getStoreValueCallback,
+        createNodeCallback,
+        createIterCallback,
+        toggleFocus,
+        createStoreCallback,
+        createStoreModalCallback,
+        editStoreValueCallback,
+        deleteNodeCallback,
+        editorDeleteNodeCallback,
+        deleteStoreItemCallback,
+        trackNodeTypeCallback,
+        updateTrackedNodeTypeCallback,
+        getConnectedEdgeCallback,
+        getParentIdCallback,
+        getNodeSocketCallback,
+        getNodeCallback,
+        setIterNodeTypeCallback,
+        getIterNodeTypeCallback,
+        hasCache
+    ])
+
+    const submitStoreModal_ = useCallback((forms: IQuantaFormField[], valStore: {[key: string]: string}) => {
+        return submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)
+    }, [])
 
     return (
-        <div 
+        <QuantaEditorView
             ref={ref}
-            style={{ width: "100%", height: "100%", position: 'relative' }}
-            className={".editor__wrapper"}
-        >
-            <ContextButtons 
-                hasCache={requiresCache}
-                viewOnly={viewOnly}
-                toggleEngineWrapper={toggleEngineWrapper}
-                toggleEngineCache={toggleEngineCache}
-            />
-
-            <ExecutionContext fileId={fileId}>
-                <QuantaEditorContext.Provider value={value}>
-                    <>
-                        <EngineWrapper
-                            subscribeExecute={engineWrapperToggle}
-                            engineCacheToggle={engineCacheToggle}
-                            nodes={nodes}
-                            edges={edges}
-                            store={quantaStore}
-                        />
-
-                        <ModalManager
-                            modalState={storeModal}
-                            close={closeStoreModal}
-                        >
-                            <ModalManager.Modal
-                                id="store"
-                                title={formTitle!}
-                            >
-                                <FormBuilder 
-                                    forms={formContent} 
-                                    closeModal={closeStoreModal}
-                                    submit={submitStoreModal_}
-                                />
-                            </ModalManager.Modal>
-
-                            <ModalManager.Modal
-                                id={"delete_node"}
-                                title={"Are you Sure?"}
-                            >
-                                <DeleteNodeForm     
-                                    opened={storeModal === "delete_node"} 
-                                    closeModal={closeStoreModal}
-                                />
-                            </ModalManager.Modal>
-                        </ModalManager>
-
-                        <QuantaFlow
-                            nodes={nodes}
-                            edges={edges}
-                            quantaStore={quantaStore}
-                            setNodes={setNodes}
-                            setEdges={setEdges}
-                            setReactFlowInstance={setReactFlowInstance}
-                            projectLoaded={projectLoaded}
-                            fileId={fileId}
-                        />
-                    </>
-                </QuantaEditorContext.Provider>
-            </ExecutionContext>
-        </div>
+            requiresCache={requiresCache}
+            viewOnly={viewOnly}
+            fileId={fileId}
+            memoValue={memoValue}
+            engineWrapperToggle={engineWrapperToggle}
+            engineCacheToggle={engineCacheToggle}
+            nodes={nodes}
+            edges={edges}
+            quantaStore={quantaStore}
+            storeModal={storeModal}
+            formTitle={formTitle}
+            formContent={formContent}
+            projectLoaded={projectLoaded}
+            setNodes={setNodes}
+            setEdges={setEdges}
+            setReactFlowInstance={setReactFlowInstance}
+            closeStoreModal={closeStoreModal}
+            toggleEngineWrapper={toggleEngineWrapper}
+            toggleEngineCache={toggleEngineCache}
+            submitStoreModal_={submitStoreModal_}
+        />
     )
 }
 

@@ -38,7 +38,7 @@ const QuantaUIContext: React.FC<IQuantaUIContextProps> = ({ children, projectDat
 
     const closeTabCallback = useCallback((tabId: string) => {
         closeTab(tabId, tabs, activeTab, setTabs, setActiveTab)
-    }, [])
+    }, [tabs, activeTab])
 
     const openModalCallback = useCallback((modalId: string) => {
         setModalState(modalId)

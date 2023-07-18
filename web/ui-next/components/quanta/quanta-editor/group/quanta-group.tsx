@@ -9,6 +9,7 @@ import NodeActionMenu from '../node/action-menu/action-menu'
 import { ExecutionContextData } from '../execution-engine/context'
 import { IExecutionEngineContext } from '../execution-engine/context/types'
 import NodeLoader from '../node/node-loader'
+import QuantaGroupView from './quanta-group-view'
 
 interface IQuantaGroupProps {
     selected: boolean,
@@ -26,42 +27,11 @@ const QuantaGroup: React.FC<IQuantaGroupProps> = ({ selected, id }) => {
     }, [activeNode])
     
     return (
-        <>
-            <NodeResizer
-                color={"#bbb"}
-                isVisible={selected}
-                nodeId={id}
-                lineStyle={{
-                    borderRadius: 8
-                }}
-            />
-
-            <Handle
-                type={"target"}
-                position={Position.Left}
-                className={`${styles.input} ${styles.left}`}
-                id={id}
-            />
-
-            <Handle
-                type={"source"}
-                position={Position.Right}
-                className={`${styles.input} ${styles.right}`}
-                id={id}
-            />
-
-            <div className={styles.quanta__group}>
-            <NodeLoader executing={executing} />
-
-                <div className={styles.inner}>
-                    <NodeActionMenu 
-                        focused={selected} 
-                        backend={"group"}
-                        nodeId={id}
-                    />
-                </div>
-            </div>
-        </>
+        <QuantaGroupView
+            selected={selected}
+            id={id}
+            executing={executing}
+        />
     )
 }
 
