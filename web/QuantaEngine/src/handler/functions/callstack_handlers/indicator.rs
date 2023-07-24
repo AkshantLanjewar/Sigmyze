@@ -1,13 +1,13 @@
 use std::sync::Arc;
 use js_sandbox::Script;
-use serde_json::{Value};
-use serde_json::Value::{Number};
+use serde_json::Value;
+use serde_json::Value::Number;
 use tokio::sync::Mutex;
 use crate::data_store::{get_store_value, QuantaDataStore};
 use crate::handler::functions::callstack::types::{QuantaEdge, QuantaSchema, StackFunction};
 use crate::handler::functions::callstack_handlers::{get_input_edge, QuantaValueResult};
 use crate::handler::functions::callstack_handlers::types::QuantaSocket;
-use crate::handler::functions::indicator::{AddIndicatorBody, BuildFieldsBody, StringToDateBody};
+use crate::handler::functions::indicator::{AddIndicatorBody, BuildFieldsBody, StringToDateBody, UpdateIndicatorBody};
 use crate::handler::functions::{InternalStore, QuantaFieldParam, QuantaString};
 
 pub async fn string_to_date_wrapper(
@@ -67,6 +67,77 @@ pub async fn string_to_date_wrapper(
 	};
 
 	let value = serde_json::to_value(&timestamp_object).unwrap();
+	Ok(value)
+}
+
+pub async fn update_indicator_callstack(
+	stack: &StackFunction,
+	edges: &Vec<QuantaEdge>
+) -> QuantaValueResult {
+	let node_id = match stack.node_id.as_ref() {
+		Some(v) => v,
+		None => return Err("no_node_id".into())
+	};
+
+	let chart_edge = match get_input_edge(node_id, "chart_data", edges) {
+		Some(v) => v,
+		None => return Err("invalid_chart_edge".into())
+	};
+
+	let field_edge = match get_input_edge(node_id, "field", edges) {
+		Some(v) => v,
+		None => return Err("invalid_field_edge".into())
+	};
+
+	if chart_edge.validate() == false || field_edge.validate() == false {
+		return Err("failed_input".into())
+	}
+
+	let chart_inputs = match stack.inputs.as_ref() {
+		Some(v) => v,
+		None => return Err("no_connected_inputs".into())
+	};
+
+	let mut update_mode: Option<String> = None;
+	for chart_input in chart_inputs.iter() {
+		if chart_input.id.is_none() {
+			continue;
+		}
+
+		let stack_type = match chart_input.type_ref.as_ref() {
+			Some(v) => v.clone(),
+			None => continue
+		};
+
+		let input_id = chart_input.id.as_ref().unwrap().clone();
+		let type_id = match stack_type.type_id {
+			Some(v) => v,
+			None => continue
+		};
+
+		if input_id == "mode" {
+			update_mode = Some(type_id);
+		}
+	}
+
+	let update_mode = match update_mode {
+		Some(v) => v,
+		None => return Err("no_mode".into())
+	};
+
+	//create the execution body
+	let chart_socket = InternalStore {
+		node_id: chart_edge.source,
+		socket_id: chart_edge.source_handle
+	};
+
+	let field_socket = InternalStore {
+		node_id: field_edge.source,
+		socket_id: field_edge.source_handle
+	};
+
+	let body = UpdateIndicatorBody { chart_input: Some(chart_socket), field_input: Some(field_socket), mode: Some(update_mode) };
+	let value = serde_json::to_value(&body).unwrap();
 	Ok(value)
 }
 

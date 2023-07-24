@@ -1,5 +1,5 @@
 import { IQuantaTypeGroup } from "../types/types"
-import { BaseTypes, ChartRules, FileTypes, SchemaTypes, SDMXFileTypes, SDMXVersionTypes } from "./quanta-types"
+import { BaseTypes, ChartRules, FileTypes, SchemaTypes, SDMXFileTypes, SDMXVersionTypes, UpdateModes } from "./quanta-types"
 import { QuantaTypes } from "./quanta-types/quanta-type"
 
 const typeGroups = [
@@ -8,6 +8,7 @@ const typeGroups = [
     SDMXVersionTypes,
     SDMXFileTypes,
     ChartRules,
+    UpdateModes,
     SchemaTypes,
     QuantaTypes
 ] as IQuantaTypeGroup[]

@@ -17,6 +17,7 @@ public interface IQuantaRepository
     Task<GetIndicatorsQuery?> GetProjectIndicators(string projectId, int page, int pageLen);
     Task<GetProjectDataQuery?> GetProjectData(string projectId);
     Task UpdateProjectData(string projectId, QuantaProjectData data);
+    Task<QuantaRepositoryDefinition?> GetQuantaRepository(string quantaId);
 }
 
 public class QuantaRepository : IQuantaRepository
@@ -40,6 +41,9 @@ public class QuantaRepository : IQuantaRepository
         var quantaIdIndex = Builders<QuantaRepositoryDefinition>.IndexKeys.Ascending(x => x.ProjectId);
         _quantaRepository.Indexes.CreateOne(new CreateIndexModel<QuantaRepositoryDefinition>(quantaIdIndex));
     }
+
+    public async Task<QuantaRepositoryDefinition?> GetQuantaRepository(string quantaId) =>
+        await _quantaRepository.Find(x => x.ProjectId == quantaId).FirstOrDefaultAsync();
 
     public async Task InitQuantaProject(string projectId, string projectName, string organizationId)
     {

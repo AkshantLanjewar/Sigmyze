@@ -55,7 +55,7 @@ function DetailedCreateList(outputType: IQuantaTypeRef, editorType: "create" | "
 		let key = keysWithMatchingInputType[i]
 		if(key === "add_indicator" && editorType === "update")
 			continue
-		if(key === "update_indicator" && editorType === "update")
+		if(key === "update_indicator" && editorType === "create")
 			continue
 
 		nKeys.push(key)

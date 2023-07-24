@@ -5,13 +5,20 @@ import { IQuantaFormField } from "../../types/form";
 import { IQuantaRFEdge } from "../../types/types";
 import { IEngineModalProps } from "../engine-wrapper";
 import { ICallStackFunc } from "../types";
+import { IInternalStore, IInternalStorePreload } from "./types";
+import { UploadProjectData } from "../callstack-api";
+
+interface IUploadDataParam {
+    storageToken: string,
+}
 
 async function fileUploadNode(
     stack: ICallStackFunc,
+    token: string | undefined,
     isFailedNode: (nodeId: string) => boolean,
     getInputEdge: (nodeId: string, socketId: string) => IQuantaRFEdge | undefined,
     getInputValue: (nodeId: string, socketId: string) => void,
-    setOutputValue: (nodeId: string, socketId: string, val: any) => void
+    executeFunction: (nodeId: string, functionId: string, outputIds: string[], functionData: any) => Promise<string>
 ) : Promise<any> {
     let filesUploaded = false
     let inputs = stack.inputs
@@ -61,19 +68,49 @@ async function fileUploadNode(
                 return
             }
 
-            //output the values
+            const exit = () => {
+                filesUploaded = true
+            modals.closeAll()
+            resolve("done")
+            }
+
+            //TODO: we are replacing the setOutputValue with preloaded inputs and token generateion
+            let preloadedInputs = [] as IInternalStorePreload[]
+            if(token === undefined) {
+                exit()
+                return
+            }
+
             for(let i = 0; i < forms.length; i++) {
                 let form = forms[i]
                 if(form.linkedKey === undefined)
                     continue
     
                 let val = valStore[form.id!]
-                await setOutputValue(stack.nodeId, form.linkedKey, val)
+                let store: IInternalStore = { nodeId: stack.nodeId, socketId: form.id! }
+                preloadedInputs.push({
+                    store: store,
+                    value: val
+                })
             }
 
-            filesUploaded = true
-            modals.closeAll()
-            resolve("done")
+            let preloadStr = JSON.stringify(preloadedInputs)
+            let preloadToken = await UploadProjectData(token, preloadStr)
+            if(preloadToken === undefined)
+                return
+
+            let nodeId = stack.nodeId
+            let functionId = "upload-data"
+            let outputIds = [] as string[]
+            let functionData: IUploadDataParam = { storageToken: preloadToken }
+
+            let res = await executeFunction(nodeId, functionId, outputIds, functionData)
+            if(res !== "success") {
+                exit()
+                throw new Error(`error in function: ${res}`)
+            }
+
+            exit()
         }
 
         if(execution_edge === undefined) {

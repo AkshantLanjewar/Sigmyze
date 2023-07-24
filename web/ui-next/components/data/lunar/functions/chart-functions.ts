@@ -2,6 +2,38 @@ import { SetStateAction } from "react"
 import { IIndicator } from "../../datasets/DatasetsTypes"
 import { DEFAULT_CHART_GLOBALS, DEFAULT_SETTINGS, IIndicatorSetting, ILunarProjectData, IProjectNodeData } from "../types/types"
 import { GetItem, SetItem } from "./util-functions"
+import { IQuantaIndicatorShell } from "../../../ui/quanta-dataset-manager/types"
+
+//this function adds an indicator id to the indicator in a split's project data
+const AddQuantaIndicator = (
+    data: ILunarProjectData | null,
+    setData: (value: SetStateAction<ILunarProjectData | null>) => void,
+    id: string,
+    indicatorId: IQuantaIndicatorShell,
+) => {
+    if(data === null)
+        return
+
+    let node = GetItem(id, data.splits)
+    if(node === null ||node.node_type !== "chart")
+        return
+
+    //patch node indicators
+    if(node.data === undefined)
+        node.data = { indicators: [], quantaIndicators: [] }
+    if(node.data.quantaIndicators === undefined)
+        node.data.quantaIndicators = []
+    
+    //
+
+    node.data.quantaIndicators.push(indicatorId)
+
+    let nSplits = SetItem(node, data.splits)
+    let nData = data
+    nData.splits = nSplits
+
+    setData({ ...nData })
+}
 
 function AddIndicator(
     data: ILunarProjectData | null,
@@ -36,6 +68,39 @@ function AddIndicator(
     nData.splits = nSplits
 
     setData({ ...nData })
+}
+
+const DeleteQuantaIndicator = (
+    data: ILunarProjectData | null,
+    setData: (value: SetStateAction<ILunarProjectData | null>) => void,
+    id: string,
+    indicatorId: IQuantaIndicatorShell,
+    toggleDriveUpdate: () => void,
+) => {
+    if(data === null)
+        return
+
+    let node = GetItem(id, data.splits)
+    if(node === null || node.node_type !== "chart" || node.data === undefined || node.data.quantaIndicators === undefined)
+        return
+
+    let nQuantaIndicators = []
+    for(let i = 0; i < node.data.quantaIndicators.length; i++) {
+        let quantaIndicator = node.data.quantaIndicators[i]
+        if(quantaIndicator === indicatorId)
+            continue
+
+        nQuantaIndicators.push(quantaIndicator)
+    }
+
+    node.data.quantaIndicators = nQuantaIndicators
+
+    let nSplits = SetItem(node, data.splits)
+    let nData = data
+    nData.splits = nSplits
+
+    setData({ ...nData })
+    toggleDriveUpdate()
 }
 
 function DeleteIndicator(
@@ -189,6 +254,33 @@ function GetIndicatorSetting(
     return indicatorSetting
 }
 
+const GetQuantaIndicatorSetting = (
+    data: ILunarProjectData | null,
+    id: string,
+    indicator: IQuantaIndicatorShell
+) => {
+    if(data === null)
+        return null
+
+    let node = GetItem(id, data.splits)
+    if(node === null || node.node_type !== "chart" || node.data === undefined || node.data.chartSettings === undefined)
+        return null
+
+    let indicatorSettings = node.data.chartSettings.indicatorSettings
+    let indicatorSetting = null
+    for(let i = 0; i < indicatorSettings.length; i++) {
+        let setting = indicatorSettings[i]
+        let setting_indicator = setting.quantaIndicator
+        if(setting_indicator === undefined)
+            continue
+
+        if(setting_indicator.datasetId === indicator.datasetId && setting_indicator.indicatorId === indicator.indicatorId)
+            indicatorSetting = setting
+    }
+
+    return indicatorSetting
+}
+
 function CreateIndicatorSetting(
     data: ILunarProjectData | null,
     setData: (value: SetStateAction<ILunarProjectData | null>) => void,
@@ -226,5 +318,9 @@ export {
     DeleteIndicator,
     CreateGlobals,
     SetChartTitle,
-    CompareIndicators 
+    CompareIndicators,
+    AddQuantaIndicator,
+    DeleteQuantaIndicator,
+    GetQuantaIndicatorSetting, 
+    CreateQuantaIndicatorSetting
 }

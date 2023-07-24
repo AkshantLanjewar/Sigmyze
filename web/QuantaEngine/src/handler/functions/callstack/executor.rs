@@ -1,11 +1,11 @@
 use std::sync::Arc;
-use serde_json::{json};
+use serde_json::json;
 use tokio::sync::Mutex;
 use crate::data_store::QuantaDataStore;
 use crate::handler::base::socket_function::parse_socket_function;
 use crate::handler::functions::callstack::types::{QuantaEdge, QuantaSchema, StackFunction};
 use crate::handler::functions::callstack::utils::build_socket_function_body;
-use crate::handler::functions::callstack_handlers::indicator::{add_indicator_callstack, build_fields_callstack, string_to_date_wrapper};
+use crate::handler::functions::callstack_handlers::indicator::{add_indicator_callstack, build_fields_callstack, string_to_date_wrapper, update_indicator_callstack};
 use crate::handler::functions::callstack_handlers::quanta_data::apply_data_rule_wrapper;
 use crate::handler::functions::callstack_handlers::quanta_loop::{quanta_iter, quanta_loop_wrapper};
 use crate::handler::functions::callstack_handlers::sdmx::get_sdmx_field_wrapper;
@@ -59,6 +59,7 @@ pub async fn call_stack_executor(
 	let function = function.clone();
 	let function_data = match function_id.as_str() {
 		"add_indicator" => add_indicator_callstack(&function, edges).await,
+		"update_indicator" => update_indicator_callstack(&function, edges).await,
 		"build_fields" => build_fields_callstack(&function, edges, schema, &failed_nodes).await,
 		"apply_data_rule" => apply_data_rule_wrapper(&function, edges, &failed_nodes).await,
 		"string_to_date" => string_to_date_wrapper(process_id.clone(), &function, edges, &failed_nodes, store).await,

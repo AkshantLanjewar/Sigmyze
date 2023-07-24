@@ -33,6 +33,19 @@ namespace SigmyzeServer.Models.ApplicationServices
         public NodeData? Data { get; set; }
     }
 
+    public class QuantaIndicatorShell
+    {
+        [BsonElement("datasetId")]
+        [JsonProperty("datasetId")]
+        [JsonPropertyName("datasetId")]
+        public string? DatasetId { get; set; }
+
+        [BsonElement("indicatorId")]
+        [JsonProperty("indicatorId")]
+        [JsonPropertyName("indicatorId")]
+        public string? IndicatorId { get; set; }
+    }
+
     public class NodeData
     {   
         [BsonElement("document_id")]
@@ -54,5 +67,10 @@ namespace SigmyzeServer.Models.ApplicationServices
         [JsonProperty("chartGlobals")]
         [JsonPropertyName("chartGlobals")]
         public IGlobalChartSettings? ChartGlobals { get; set; }
+
+        [BsonElement("quantaIndicators")]
+        [JsonProperty("quantaIndicators")]
+        [JsonPropertyName("quantaIndicators")]
+        public List<QuantaIndicatorShell>? QuantaIndicators { get; set; }
     }
 }

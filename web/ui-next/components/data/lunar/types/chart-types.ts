@@ -1,3 +1,4 @@
+import { IQuantaIndicatorShell } from "../../../ui/quanta-dataset-manager/types"
 import { IIndicator } from "../../datasets/DatasetsTypes"
 
 interface IGlobalChartSettings {
@@ -9,7 +10,8 @@ interface IChartSettings {
 }
 
 interface IIndicatorSetting {
-    indicator: IIndicator,
+    indicator?: IIndicator,
+    quantaIndicator?: IQuantaIndicatorShell
     lineColor?: string    
 }
 

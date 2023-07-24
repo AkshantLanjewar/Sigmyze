@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
 using MongoDB.Bson.Serialization.Attributes;
+using SigmyzeServer.Models.API;
+using SigmyzeServer.Models.ApplicationServices;
 
 namespace SigmyzeServer.Models.Data
 {
@@ -28,5 +30,35 @@ namespace SigmyzeServer.Models.Data
         [JsonProperty("category")]
         [BsonElement("category")]
         public string Category { get; set; }
+    }
+
+    public class DatasetCacheObject
+    {
+        [JsonProperty("categorization")]
+        public QuantaCategorization? Categorization { get; set; }
+
+        [JsonProperty("dataset_name")]
+        public string? DatasetName { get; set; }
+
+        [JsonProperty("dataset_id")]
+        public string? DatasetId { get; set; }
+
+        [JsonProperty("dataset_description")]
+        public string? DatasetDescription { get; set; }
+
+        [JsonProperty("selectors")]
+        public List<QuantaSelector>? Selectors { get; set; }
+
+        [JsonProperty("textStore")]
+        public Dictionary<string, string>? TextStore { get; set; }
+    }
+
+    public class PrimeResponse
+    {
+        [JsonProperty("status")]
+        public APIStatusMsg? Status { get; set; }
+
+        [JsonProperty("shellObject")]
+        public DatasetCacheObject? ShellObject { get; set; }
     }
 }

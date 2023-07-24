@@ -13,6 +13,7 @@ pub mod analysis;
 pub mod sdmx;
 pub mod callstack;
 pub mod callstack_handlers;
+pub mod upload;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct InternalStore {

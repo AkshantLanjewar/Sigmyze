@@ -1,4 +1,4 @@
-import { IconTextRecognition, IconCpu, IconBrackets, IconDatabase, IconChartAreaLine, IconCalendarEvent, IconInputSearch, IconStack2 } from "@tabler/icons"
+import { IconTextRecognition, IconCpu, IconBrackets, IconDatabase, IconChartAreaLine, IconCalendarEvent, IconInputSearch, IconStack2, IconTextPlus, IconReplace } from "@tabler/icons"
 import { IQuantaTypeGroup } from "../../types/node-type";
 
 const BaseTypes = {
@@ -63,4 +63,23 @@ const ChartRules = {
     ]
 } as IQuantaTypeGroup
 
-export { BaseTypes, ChartRules }
+const UpdateModes = {
+    groupName: "Update Modes",
+    groupId: "update_modes",
+    types: [
+        {
+            typeId: "append",
+            typeName: "Append",
+            typeIcon: <IconTextPlus />,
+            typeDescription: "Adds any new data to the end of the dataset, based on x axis"
+        },
+        {
+            typeId: "replace",
+            typeName: "replace",
+            typeIcon: <IconReplace />,
+            typeDescription: "Replaces any chart data within the indicator with the collected chart data"
+        }
+    ]
+} as IQuantaTypeGroup
+
+export { BaseTypes, ChartRules, UpdateModes }

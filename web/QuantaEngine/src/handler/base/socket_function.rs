@@ -8,7 +8,9 @@ use crate::{
         QuantaResult, 
         functions::{load::{load_process_id, unload_process_id}, 
         quanta_loop::{load_loop, unload_loop, get_loop_index}, 
-        indicator::{string_to_date, build_fields, add_indicator}, quanta_data::apply_data_rule, compilation::init_compilation
+        indicator::{string_to_date, build_fields, add_indicator, update_indicator}, 
+        quanta_data::apply_data_rule, 
+        compilation::init_compilation
     }
 }};
 use crate::handler::functions::analysis::{analyze_fields, load_indicators_analysis};
@@ -59,6 +61,7 @@ pub async fn parse_socket_function(
         "string_to_date" => string_to_date(process_id, node_id, function_data, store).await,
         "build_fields" => build_fields(process_id, node_id, function_data, store).await,
         "add_indicator" => add_indicator(process_id, node_id, function_data, store).await,
+        "update_indicator" => update_indicator(process_id, node_id, function_data, store).await,
         "apply_data_rule" => apply_data_rule(process_id, node_id, function_data, store).await,
         "init_compilation" => init_compilation(process_id, node_id, function_data, store).await,
         "compile_project" => compile_project(process_id, node_id, function_data, store).await,

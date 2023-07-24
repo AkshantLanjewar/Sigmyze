@@ -10,6 +10,7 @@ import {
 } from 'react-icons/fc'
 import AddIndicatorModal, { IAddIndicatorData } from "./add-indicator"
 import { LunarContextData } from "../../data/lunar/context"
+import AddQIndicator from "./add-q-indicator"
 
 interface IModalTemplateProps {
     id: string,
@@ -152,10 +153,9 @@ const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }
 
     return (
         <div>
-            <AddIndicatorModal
+            <AddQIndicator
                 modalState={modalState}
                 close={close}
-                data={pkg}
             />
 
             <ModalTemplate

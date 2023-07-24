@@ -29,11 +29,40 @@ public partial class QuantaIndicatorRepository
             }
         };
 
+        BsonDocument chunkIdStage = new BsonDocument {
+            {
+                "$project", new BsonDocument {
+                    {
+                        "chunk_indicators", new BsonDocument {
+                            {
+                                "$map", new BsonDocument {
+                                    { "input", "$chunk_indicators" },
+                                    { "as", "project_indicators" },
+                                    {
+                                        "in", new BsonDocument {
+                                            {
+                                                "$mergeObjects", new BsonArray {
+                                                    "$$project_indicators",
+                                                    new BsonDocument {
+                                                        { "chunk_id", "$chunk_id" }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         BsonDocument groupStage = new BsonDocument {
             {
                 "$group", new BsonDocument {
                     {
-                        "_id", 0
+                        "_id", "$chunk_id"
                     },
                     {
                         "project_indicators", new BsonDocument {
@@ -75,6 +104,7 @@ public partial class QuantaIndicatorRepository
 
         BsonDocument[] output = new BsonDocument[] {
             matchStage,
+            chunkIdStage,
             groupStage, 
             fieldStage
         };

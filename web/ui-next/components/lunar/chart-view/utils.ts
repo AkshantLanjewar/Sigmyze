@@ -30,7 +30,7 @@ function ParseSettings(
         nCharts.push(chart)
     }
 
-    return nCharts
+    return nCharts 
 }
 
 function ParsePresentationSettings(charts: ILunarChart[], settings: IChartSettings) {

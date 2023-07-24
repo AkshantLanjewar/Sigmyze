@@ -25,6 +25,7 @@ import { showNotification } from "@mantine/notifications"
 import { IFileUploadOutput, input_file_upload } from "./input-nodes"
 import { IExecuteStackBody, IInternalStore, IInternalStorePreload } from "./nodes/types"
 import { UploadProjectData } from "./callstack-api"
+import updateIndicator from "./nodes/update-indicator"
 
 interface ICallstackWrapperProps {
     callStack?: ICallStackFunc[],
@@ -366,7 +367,15 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
                     await startNode(stack, setOutputValue)
                     break
                 case "file_upload":
-                    let promise = await fileUploadNode(stack, isFailedNode, getInputEdge, getInputValue, setOutputValue)
+                    let promise = await fileUploadNode(
+                        stack, 
+                        authData?.token,
+                        isFailedNode, 
+                        getInputEdge, 
+                        getInputValue, 
+                        executeFunction
+                    )
+
                     await promise
 
                     break
@@ -399,6 +408,9 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
                     break
                 case "add_indicator":
                     await addIndicator(stack, getInputEdge, isFailedNode, executeFunction)
+                    break
+                case "update_indicator":
+                    await updateIndicator(stack, getInputEdge, isFailedNode, executeFunction)
                     break
                 default:
                     break

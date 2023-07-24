@@ -29,7 +29,7 @@ const ApplyDataRule = {
         },
         {
             dynamicSocket: true,
-            groupTitle: "Is Projection",
+            groupTitle: "Data Rule",
             dynamicDepend: "input_val",
             inputId: "rule",
             dependentInputs: [

@@ -62,6 +62,23 @@ struct AddQuantaIndicatorsBody {
     indicators: Vec<String>
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+struct UpdateIndicatorsBody {
+    #[serde(rename="processId")]
+    process_id: String,
+
+    #[serde(rename="organizationId")]
+    organization_id: String,
+
+    #[serde(rename="quantaId")]
+    quanta_id: String,
+
+    #[serde(rename="indicators")]
+    indicators: Vec<String>,
+
+    mode: String
+}
+
 pub async fn unload_process_id(
     _process_id: String,
     _node_id: String,
@@ -101,6 +118,16 @@ pub async fn unload_process_id(
         None => return Err("missing_cache".into())
     };
 
+    let mut unload_mode = "add";
+    if cache.len() > 0 {
+        let cache_item = cache.get(0).unwrap().clone();
+        let item_split = cache_item.split("::").collect::<Vec<&str>>();
+
+        if item_split.len() == 2 {
+            unload_mode = "update";
+        }
+    }
+
     let process_info_loc = format!("{}::info", process_id);
     let process_info = match get_store_value(process_info_loc, store).await {
         Some(v) => v,
@@ -114,26 +141,72 @@ pub async fn unload_process_id(
 
     let organization_id = process_info_split[0];
     let quanta_id = process_info_split[1];
-    let add_indicators_body = AddQuantaIndicatorsBody {
-        process_id: process_id.clone(),
-        organization_id: organization_id.into(),
-        quanta_id: quanta_id.into(),
-        indicators: cache
-    };
+    
+    if unload_mode == "add" {
+        let add_indicators_body = AddQuantaIndicatorsBody {
+            process_id: process_id.clone(),
+            organization_id: organization_id.into(),
+            quanta_id: quanta_id.into(),
+            indicators: cache.clone()
+        };
+    
+        let url = format!("{}/api/v2/quanta/add_indicator", SERVER_URL);
+        let client = reqwest::Client::new();
+        let res = client.post(url)
+            .json(&add_indicators_body)
+            .send()
+            .await;
+    
+        let res = match res {
+            Ok(r) => r.status(),
+            Err(err) => return Err(err.to_string())
+        };
+    
+        if res != 200 { return Err("bad_request".into()) }
+    } if unload_mode == "update" {
+        let mut amended_cache: Vec<String> = Vec::new();
+        let mut mode: Option<String> = None;
+        for cache_itm in cache.iter() {
+            let cache_item = cache_itm.clone();
+            let item_split = cache_item.split("::").collect::<Vec<&str>>();
+            if item_split.len() != 2 {
+                continue;
+            }
 
-    let url = format!("{}/api/v2/quanta/add_indicator", SERVER_URL);
-    let client = reqwest::Client::new();
-    let res = client.post(url)
-        .json(&add_indicators_body)
-        .send()
-        .await;
+            let cache_str = item_split[1];
+            amended_cache.push(cache_str.into());
+            if mode.is_none() {
+                mode = Some(item_split[0].into());
+            }
+        }
 
-    let res = match res {
-        Ok(r) => r.status(),
-        Err(err) => return Err(err.to_string())
-    };
+        let mode = match mode {
+            Some(v) => v,
+            None => return Err("no_mode".into())
+        };
 
-    if res != 200 { return Err("bad_request".into()) }
+        let update_indicators_body = UpdateIndicatorsBody {
+            process_id: process_id.clone(),
+            organization_id: organization_id.into(),
+            quanta_id: quanta_id.into(),
+            indicators: amended_cache,
+            mode: mode
+        };
+
+        let url = format!("{}/api/v2/quanta/update_indicators", SERVER_URL);
+        let client = reqwest::Client::new();
+        let res = client.post(url)
+            .json(&update_indicators_body)
+            .send()
+            .await;
+
+        let res = match res {
+            Ok(r) => r.status(),
+            Err(err) => return Err(err.to_string())
+        };
+
+        if res != 200 { return Err("bad_request".into()) }
+    }
 
     Ok("success".into())
 }

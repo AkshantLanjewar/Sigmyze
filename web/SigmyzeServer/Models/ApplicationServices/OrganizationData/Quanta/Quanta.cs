@@ -55,6 +55,18 @@ public class QuantaRepositoryDefinition
     [JsonProperty("project_data")]
     [JsonPropertyName("project_data")]
     public QuantaProjectData? ProjectData { get; set; }
+
+    public bool Validate()
+    {
+        if(this.ProjectData == null || this.ProjectData.DatasetName == null || this.ProjectData.DatasetId == null)
+            return false;
+        if(this.ProjectData.DatasetDescription == null || this.ProjectData.Store == null)
+            return false;
+        if(this.ProjectData.Store.Selectors == null || this.ProjectData.Store.TextStore == null || this.ProjectData.Store.Categorization == null)
+            return false;
+
+        return true;
+    }
 }
 
 public class QuantaProjectData

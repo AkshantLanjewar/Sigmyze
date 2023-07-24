@@ -16,6 +16,8 @@ public interface IQuantaIndicatorRepository
     Task<QuantaIndicator?> SelectProjectIndicatorId(string projectId, string indicatorId);
     Task ClearIndicators(string quantaId);
     Task ChunkIndicators(string quantaId, List<QuantaIndicator> indicators);
+    Task<string?> SelectorProjectIndicatorChunkId(string quantaId, List<QuantaQuery> query);
+    Task UpdateChunk(string chunkId, string mode, List<QuantaIndicator> indicators);
 }
 
 public partial class QuantaIndicatorRepository : IQuantaIndicatorRepository

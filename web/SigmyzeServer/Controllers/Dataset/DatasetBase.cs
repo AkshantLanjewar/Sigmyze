@@ -16,6 +16,7 @@ public partial class DatasetController : OrganizationControllerBase
     private readonly IQuantaDatasetService _quantaDatasetService;
     private readonly DatasetShared _sharedDataset;
     private readonly IPublishService _publishService;
+    private readonly IQuantaRepository _quantaRepository;
 
     public DatasetController(
         IOrganizationRepository organizationRepository,
@@ -28,6 +29,7 @@ public partial class DatasetController : OrganizationControllerBase
         _quantaDatasetService = quantaDatasetService;
         _sharedDataset = new DatasetShared(quantaDatasetService, quantaIndicatorRepository, quantaRepository);
         _publishService = publishService;
+        _quantaRepository = quantaRepository;
     }
 
     [HttpGet]

@@ -46,6 +46,20 @@ public class QuantaIndicatorChunk
     [BsonElement("chunk_indicators")]
     [Newtonsoft.Json.JsonIgnore]
     public List<QuantaIndicator>? ProjectIndicators { get; set; }
+
+    public int IndicatorIndex(string indicatorId)
+    {
+        if(this.ProjectIndicators == null)
+            return -1;
+        for(int i = 0; i < this.ProjectIndicators.Count; i++)
+        {
+            QuantaIndicator indicator = this.ProjectIndicators[i];
+            if(indicator.IndicatorId == indicatorId)
+                return i;
+        }
+
+        return -1;
+    }
 }
 
 public class QuantaIndicator
@@ -64,6 +78,11 @@ public class QuantaIndicator
     [JsonProperty("indicatorId")]
     [JsonPropertyName("indicatorId")]
     public string? IndicatorId { get; set; }
+
+    [BsonElement("chunk_id")]
+    [Newtonsoft.Json.JsonIgnore]
+    [JsonProperty("chunk_id")]
+    public string? ChunkId { get; set; }
 }
 
 public class DatasetField
@@ -72,6 +91,28 @@ public class DatasetField
     [JsonProperty("datasetFields")]
     [JsonPropertyName("datasetFields")]
     public List<DatasetFieldItem>? DatasetFields { get; set; }
+
+    public List<QuantaQuery>? ToQuery()
+    {
+        List<QuantaQuery> query = new List<QuantaQuery>();
+        if(this.DatasetFields == null)
+            return null;
+
+        for(int i = 0; i < this.DatasetFields.Count; i++)
+        {
+            DatasetFieldItem item = this.DatasetFields[i];
+            QuantaQuery queryItem = new QuantaQuery();
+
+            queryItem.DateField = item.DateField;
+            queryItem.StringField = item.StringField;
+            queryItem.FieldKey = item.FieldKey;
+            queryItem.FieldType = item.FieldType;
+            queryItem.MultiValue = false;
+            query.Add(queryItem);
+        }
+
+        return query;
+    }
 }
 
 public class DatasetFieldItem

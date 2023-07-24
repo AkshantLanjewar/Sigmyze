@@ -7,6 +7,23 @@ namespace SigmyzeServer.Services.OrganizationServices;
 
 public partial class QuantaIndicatorRepository
 {
+    //helper method that takes a query and returns the first indicators chunkId or null, also returns the indicatorId
+    //in the format chunkId::indicatorId
+    public async Task<string?> SelectorProjectIndicatorChunkId(string quantaId, List<QuantaQuery> query)
+    {
+        GetIndicatorsQuery? result = await SelectProjectIndicator(quantaId, query);
+        if(result == null || result.Indicators == null)
+            return null;
+
+        List<QuantaIndicator> indicators = result.Indicators;
+        if(indicators.Count == 0)
+            return null;
+
+        QuantaIndicator selectedIndicator = indicators[0];
+        string output = $"{selectedIndicator.ChunkId}::${selectedIndicator.IndicatorId}";
+        return output; 
+    }
+
     public async Task<GetIndicatorsQuery?> SelectProjectIndicator(string projectId, List<QuantaQuery> query)
     {
         BsonDocument unwindStage = new BsonDocument {
@@ -22,10 +39,10 @@ public partial class QuantaIndicatorRepository
                     {
                         "$push", "$project_indicators"
                     },
-                    {
-                        "_id", null
-                    }
                 }
+            },
+            {
+                "_id", "$_id"
             }
         };
 
@@ -58,7 +75,6 @@ public partial class QuantaIndicatorRepository
             return phantom;
         }
 
-        Console.WriteLine(pipeline.ToString());
         return results[0];
     }
 

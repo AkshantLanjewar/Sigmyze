@@ -8,6 +8,7 @@ import styles from '../../../pages/lunar/lunar.module.scss'
 import Toolbar from "../../lunar/toolbar/toolbar"
 import Viewport from "../../lunar/viewport/viewport"
 import ApplicationLayout from "../../nav-elements/application-layout"
+import QuantaDatasetManager from "../../ui/quanta-dataset-manager"
 
 interface ILunarPageProps {
     pkg: IAddIndicatorData
@@ -32,24 +33,26 @@ const LunarPage: React.FC<ILunarPageProps> = ({ pkg }) => {
                 location="/lunar"
                 protectedView={true}
             >
-                <LunarContext pkg={pkg}>
-                    <div style={{ height: '100%' }}>
-                        <Group
-                            spacing={"xs"}
-                            position={"apart"}
-                            sx={{ height: '100%' }}
-                            noWrap
-                        >
-                            <div className={styles.toolbar}>
-                                <Toolbar />
-                            </div>
+                <QuantaDatasetManager>
+                    <LunarContext pkg={pkg}>
+                            <div style={{ height: '100%' }}>
+                                <Group
+                                    spacing={"xs"}
+                                    position={"apart"}
+                                    sx={{ height: '100%' }}
+                                    noWrap
+                                >
+                                    <div className={styles.toolbar}>
+                                        <Toolbar />
+                                    </div>
 
-                            <div className={styles.viewport}>
-                                <Viewport />
+                                    <div className={styles.viewport}>
+                                        <Viewport />
+                                    </div>
+                                </Group>
                             </div>
-                        </Group>
-                    </div>
-                </LunarContext>
+                    </LunarContext>
+                </QuantaDatasetManager>
             </ApplicationLayout>
         </div>
     )

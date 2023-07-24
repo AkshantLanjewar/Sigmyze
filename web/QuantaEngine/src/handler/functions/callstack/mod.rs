@@ -2,7 +2,7 @@ pub mod types;
 mod executor;
 mod spawner;
 mod utils;
-mod request;
+pub mod request;
 pub mod stack;
 
 use std::sync::Arc;

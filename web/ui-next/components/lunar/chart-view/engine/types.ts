@@ -1,5 +1,6 @@
 import { IIndicator } from "../../../data/datasets/DatasetsTypes"
 import { IIndicatorSetting } from "../../../data/lunar/types/types"
+import { IQuantaIndicator } from "../../../quanta/quanta-indicator-manager/types"
 
 interface IChartRender {
     labels: Date[]
@@ -21,6 +22,14 @@ interface ILunarChart {
     data: IChartData[],
     id: string,
     indicator: IIndicator,
+    setting?: IIndicatorSetting
+}
+
+interface IQuantaChart {
+    data: IChartData[],
+    id: string,
+    indicator: IQuantaIndicator,
+    datasetId: string,
     setting?: IIndicatorSetting
 }
 
@@ -84,5 +93,6 @@ export type {
     ChartDims,
     IChartMargin,
     IChartD3Scales,
-    ID3Chart
+    ID3Chart,
+    IQuantaChart
 }

@@ -243,5 +243,5 @@ const ClickItem: React.FC<IClickItemProps> =
     )
 }
 
-export { IndicatorTitleItem }
+export { IndicatorTitleItem, ClickItem }
 export default D3ChartTitle

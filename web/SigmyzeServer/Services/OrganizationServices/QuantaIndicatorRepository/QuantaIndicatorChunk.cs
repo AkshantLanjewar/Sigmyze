@@ -5,6 +5,85 @@ namespace SigmyzeServer.Services.OrganizationServices;
 
 public partial class QuantaIndicatorRepository
 {
+    public async Task UpdateChunk(string chunkId, string mode, List<QuantaIndicator> indicators)
+    {
+        QuantaIndicatorChunk? chunk = await _quantaIndicatorChunks.Find(x => x.ChunkId == chunkId)
+            .FirstOrDefaultAsync();
+        if(chunk == null)
+            return;
+
+        List<QuantaIndicator>? updatedIndicators = chunk.ProjectIndicators;
+        if(updatedIndicators == null)
+            return;
+
+        for(int i = 0; i < indicators.Count; i++)
+        {
+            QuantaIndicator indicator = indicators[i];
+            if(indicator.IndicatorId == null)
+                continue;
+            int chunkIndex = chunk.IndicatorIndex(indicator.IndicatorId);
+            if(chunkIndex == -1)
+                continue;
+
+            QuantaIndicator currentIndicator = chunk.ProjectIndicators![chunkIndex];
+            switch(mode) {
+                case "append":
+                    List<ChartData>? currentData = currentIndicator.ChartData;
+                    if(currentData == null || indicator.ChartData == null)
+                        continue;
+
+                    List<int> collectedXValues = new List<int>();
+                    for(int x = 0; x < currentData.Count; x++)
+                    {
+                        ChartData point = currentData[x];
+                        int? xValue = point.XValue;
+                        if(xValue == null)
+                            continue;
+
+                        collectedXValues.Add((int)xValue!);
+                    }
+
+                    for(int x = 0; x < indicator.ChartData.Count; x++)
+                    {
+                        ChartData point = indicator.ChartData[x];
+                        if(x >= currentData.Count)
+                            currentData.Add(point);
+                        else
+                        {
+                            if(point.XValue == null)
+                                continue;
+
+                            int xValue = (int)point.XValue;
+                            if(collectedXValues.Contains(xValue))
+                                continue;
+                            currentData.Add(point);
+                        }
+                    }
+
+                    //sort the data based on the x value
+                    currentData = currentData.OrderBy(x => x.XValue).ToList();
+                    currentIndicator.ChartData = currentData;
+                    break;
+                case "replace":
+                    currentIndicator.ChartData = indicator.ChartData;
+                    break;
+                default:
+                    continue;
+            }
+
+            updatedIndicators[chunkIndex] = currentIndicator;
+        }
+
+        //update the indicator within the collection
+        var filter = Builders<QuantaIndicatorChunk>
+            .Filter.Eq(x => x.ChunkId, chunkId);
+
+        var update = Builders<QuantaIndicatorChunk>
+            .Update.Set(x => x.ProjectIndicators, updatedIndicators);
+
+        await _quantaIndicatorChunks.UpdateOneAsync(filter, update);
+    }
+
     public async Task ChunkIndicators(string quantaId, List<QuantaIndicator> indicators)
     {
         int breakPoint = 0;
