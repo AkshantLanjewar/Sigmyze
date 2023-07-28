@@ -11,7 +11,7 @@ const selectedPublicHandler = async (
     intialSelection: MutableRefObject<boolean>,
     getSchema: (id: string) => IQuantaSchema | undefined,
     setSelectorValue: (selectorId: string, value: string) => void,
-    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>,
+    setSelectedIndicator: (indicatorId: string) => void,
 ) => {
     if(intialSelection.current === false) {
         intialSelection.current = true

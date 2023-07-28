@@ -69,7 +69,7 @@ interface IDatasetsResponse {
 
 interface IDatasetsObjectsResponse {
     status: IStatus,
-    objects: Array<IDatasetObject>
+    objects?: Array<IDatasetObject>
 }
 
 interface IDatasetObjects {
@@ -91,7 +91,7 @@ interface IDatasetsIndicatorResponse {
     status: IStatus,
     indicator: IDatasetIndicator
 }
-
+ 
 export type { 
     IDataset,
     IDatasetObject,
@@ -106,5 +106,5 @@ export type {
     IIndicatorData,
     IDatasetObjects,
     IDatasetIndicator,
-    IStatus 
+    IStatus,
 }

@@ -12,6 +12,7 @@ public interface IOrganizationRepository
     Task InsertOrganization(Organization organization);
     Task UpdateOrganization(string organization_id, Organization nOrganization);
     Task DeleteOrganization(string organization_id);
+    Task<bool> WithinOrganization(string organizationId, string lunarId);
 }
 
 public class OrganizationRepository : IOrganizationRepository 
@@ -53,6 +54,16 @@ public class OrganizationRepository : IOrganizationRepository
     //FEATURE: This updates the organization in the collection based on its organization_id
     public async Task UpdateOrganization(string organization_id, Organization nOrganization) =>
         await _organizationCollection.ReplaceOneAsync(x => x.OrganizationId == organization_id, nOrganization);
+
+    public async Task<bool> WithinOrganization(string organizationId, string lunarId) 
+    {
+        Organization? document = await GetOrganization(organizationId);
+        List<string>? users = document?.Users;
+        if(users == null)
+            return false;
+
+        return users.Contains(lunarId);
+    }
     
     //FEATURE: This deletes an organization from the collection, along with its linked drive
     public async Task DeleteOrganization(string organization_id)

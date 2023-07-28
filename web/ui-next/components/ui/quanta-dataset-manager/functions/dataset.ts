@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react"
+import { GetPublicDatasets, IDatasetCard } from "../../../data/quanta/dataset-api"
 import { IQuantaIndicator } from "../../../quanta/quanta-indicator-manager/types"
 import QuantaFormattingEngine from "../../formatting-engine"
 import { IDatasetCache, IDatasetCacheObject, IQuantaIndicatorText } from "../types"
@@ -36,6 +38,21 @@ const getDatasetText = (datasetId: string, type: string, datasetCache: IDatasetC
         default:
             return undefined
     }
+}
+
+const getPublicDatasetCards = async (
+    datasetCardsCache: IDatasetCard[],
+    setDatasetCardsCache: Dispatch<SetStateAction<IDatasetCard[]>>
+) => {
+    if(datasetCardsCache.length > 0)
+        return datasetCardsCache
+
+    let datasetCards = await GetPublicDatasets()
+    if(datasetCards === undefined)
+        return
+
+    setDatasetCardsCache([ ...datasetCards ])
+    return datasetCards
 }
 
 const formatIndicatorText = async (
@@ -87,5 +104,6 @@ export {
     getDatasetCategorization,
     getDatasetText,
     formatIndicatorText,
-    fetchIndicatorText 
+    fetchIndicatorText,
+    getPublicDatasetCards 
 }

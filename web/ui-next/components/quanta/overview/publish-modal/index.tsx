@@ -13,7 +13,7 @@ const PublishModal: React.FC<IPublishModalProps> = memo(({ opened, close }) => {
             title={"Publish Dataset"}
             opened={opened}
             onClose={close}
-            size={"60%"}
+            size={600}
             centered
             styles={(theme) => ({
                 modal: {
@@ -22,28 +22,6 @@ const PublishModal: React.FC<IPublishModalProps> = memo(({ opened, close }) => {
             })}
         >
             <PublishForm close={close} />
-
-            <Group position={"right"}>
-                <Button
-                    variant={'subtle'}
-                    color={'indigo'}
-                    size={'xs'}
-                    px={'xs'}
-                    onClick={() => {  }}
-                >
-                    Cancel
-                </Button>
-
-                <Button
-                    variant={'subtle'}
-                    color={'red'}
-                    size={'xs'}
-                    px={'xs'}
-                    onClick={() => { }}
-                >
-                    Publish
-                </Button>
-            </Group>
         </Modal>
     )
 })

@@ -8,7 +8,7 @@ interface IDatasetSelectionViewProps {
     textStore: IQuantaTextStore,
     selectors: IQuantaSelector[],
     publicToken: string | undefined,
-    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>
+    setSelectedIndicator: (indicatorId: string) => void
 }
 
 const DatasetSelectionView: React.FC<IDatasetSelectionViewProps> = ({ 

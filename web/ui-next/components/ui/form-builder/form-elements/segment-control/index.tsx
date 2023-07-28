@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ISegmentItem } from "../../../../quanta/quanta-editor/types/form";
-import { Center, SegmentedControlItem } from "@mantine/core";
+import { Center, Group, SegmentedControlItem } from "@mantine/core";
 import QuantaSegmentControlView from "./view";
 
 interface ISegmentedControlProps {
@@ -42,9 +42,14 @@ const QuantaSegmentControl: React.FC<ISegmentedControlProps> = ({
 
             obj.value = item.value
             obj.label = (
-                <Center>
-
-                </Center>
+                <Group 
+                    position={"center"}
+                    align={"center"}
+                    spacing={5}  
+                >
+                    {item.icon}
+                    {item.name}
+                </Group>
             )
 
             nInternalItems.push(obj)

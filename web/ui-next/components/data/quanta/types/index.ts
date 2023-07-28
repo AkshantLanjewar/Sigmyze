@@ -1,5 +1,9 @@
 import { INodeExecutionResult } from "../../../quanta/quanta-editor/execution-engine/context/types"
-import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../../ui/einstein/types/types"
+import { IQuantaRFEdge } from "../../../quanta/quanta-editor/types/edges"
+import { IQuantaTypeRef } from "../../../quanta/quanta-editor/types/node-type"
+import { IQuantaRFNode } from "../../../quanta/quanta-editor/types/nodes"
+import { IQuantaStore } from "../../../quanta/quanta-editor/types/store"
+
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 import { IPipelineAnalysis, IPipelinedData } from "../../../quanta/selector-pane/context/types"
 import { IQuantaCategorization, IQuantaEditorProject, IQuantaProjectData, IQuantaSelector, IQuantaSelectorCode, IQuantaTextStore, ProjectSchemas } from "./project"
@@ -43,10 +47,15 @@ interface IQuantaState {
 
     textUpdated: boolean,
 
-    schemas: ProjectSchemas[]
+    schemas: ProjectSchemas[],
+
+    publishUpdate: boolean
 
     //tells the application to update the indicators
     toggleUpdateEditorIndicators: () => void,
+
+    //update publish status
+    togglePublishUpdate: () => void
 
     //text changing related functions
     changeText: (text: string, field: "title" | "id" | "desc") => void,

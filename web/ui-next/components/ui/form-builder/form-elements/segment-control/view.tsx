@@ -9,14 +9,17 @@ interface IViewProps {
 
 const QuantaSegmentControlView: React.FC<IViewProps> = memo(({ value, items, setValue }) => {
     return (
-        <SegmentedControl
-            value={value}
-            data={items}
-            onChange={setValue}
-            size={"sm"}
-            radius={"xl"}
-            transitionTimingFunction={"linear"}
-        />
+        <>
+            <SegmentedControl
+                value={value}
+                data={items}
+                onChange={setValue}
+                size={"sm"}
+                radius={"xl"}
+                transitionTimingFunction={"linear"}
+                color={"indigo"}
+            />
+        </>
     )
 })
 

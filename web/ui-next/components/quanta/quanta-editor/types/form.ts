@@ -1,7 +1,7 @@
 import { MantineColor } from "@mantine/core"
 import { IUIDropdownItem } from "../../../ui/ui-dropdown/types"
 
-type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert" | "segment"
+type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert" | "segment" | "dynamic"
 
 /**
  * Form field definitions
@@ -81,7 +81,35 @@ interface IQuantaFormField {
      * items that are rendered within a segment output
      * must set the segment value in the default value object
      */
-    segmentItems?: ISegmentItem[]
+    segmentItems?: ISegmentItem[],
+
+    /**
+     * this is the config for the dynamic form element
+     */
+    dynamicConfig?: IDynamicConfig
+}
+
+interface IDynamicConfig {
+    /**
+     * this is the id of the form element we are trying to dynamically monitor
+     */
+    dependsOn: string,
+
+    /**
+     * this is the required value we want from that form element in order to trigger the property
+     */
+    dependValue: any,
+
+    /**
+     * this is the action we are taking for the dynamic property
+     * visibility: means that the content will be hidden unless the value is triggered
+     */
+    dynamicProperty: "visibility",
+
+    /**
+     * this is the actual form element we want to dynamically control
+     */
+    dynamicContent: IQuantaFormField
 }
 
 interface ISegmentItem {
@@ -120,5 +148,6 @@ export type {
     IQuantaFormField,
     IQuantaAdditionalField,
     QuantaFormType,
-    ISegmentItem
+    ISegmentItem,
+    IDynamicConfig
 }

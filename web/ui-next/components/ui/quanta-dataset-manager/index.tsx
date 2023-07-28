@@ -1,8 +1,9 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react"
 import { IDatasetCache, IDatasetManagerState, IQuantaIndicatorCache, IQuantaIndicatorShell } from "./types"
 import { FetchIndicator, PrimeDataset } from "./http"
-import { fetchIndicatorText, formatIndicatorText, getDatasetCategorization, getDatasetSelectors, getDatasetText } from "./functions"
+import { fetchIndicatorText, formatIndicatorText, getDatasetCategorization, getDatasetSelectors, getDatasetText, getPublicDatasetCards } from "./functions"
 import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
+import { IDatasetCard } from "../../data/quanta/dataset-api"
 
 interface IQuantaDatasetManagerProps {
     children?: JSX.Element | never[]
@@ -13,9 +14,19 @@ const QuantaDatasetManagerData = createContext<IDatasetManagerState | null>(null
 const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }) => {
     //dataset cache
     const [datasetCache, setDatasetCache] = useState<IDatasetCache>({})
+    const [datasetCardsCache, setDatasetCardsCache] = useState<IDatasetCard[]>([])
     //indicator cache
     const [indicatorCache, setIndicatorCache] = useState<IQuantaIndicatorCache>({})
     const [cachedIndicators, setCachedIndicators] = useState<IQuantaIndicatorShell[]>([])
+
+    //here are some utility functions that help with the dataset card cache
+    const popDatasetCard = useCallback(() => {
+        let newCardsCache = datasetCardsCache
+        let output = newCardsCache.shift()
+
+        setDatasetCardsCache([ ...newCardsCache ])
+        return output
+    }, [datasetCardsCache])
 
     //here are some utilities to help interface with the indicator cache
     const isCached = useCallback((datasetId: string, indicatorId: string) => {
@@ -110,6 +121,14 @@ const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }
         deleteIndicator(cachedShift.datasetId, cachedShift.indicatorId)
     }, [cachedIndicators])
 
+    //effect that limits the size of the datasetCard Caache to 100
+    useEffect(() => {
+        if((datasetCardsCache.length > 100) === false)
+            return
+
+        popDatasetCard()
+    }, [datasetCardsCache])
+
     //here are all the methods that will be a part of the dataset manager
     const primeDatasetCallback = useCallback(async (datasetId: string) => {
         return await PrimeDataset(datasetId, datasetCache, setDatasetCache)
@@ -138,9 +157,14 @@ const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }
     const getDatasetTextCallback = useCallback((datasetId: string, type: string) => {
         return getDatasetText(datasetId, type, datasetCache)
     }, [datasetCache])
+
+    const getPublicDatasetCardsCallback = useCallback(() => {
+        return getPublicDatasetCards(datasetCardsCache, setDatasetCardsCache)
+    }, [datasetCardsCache])
     
     const memoValue: IDatasetManagerState = useMemo(() => ({
         primeDataset: primeDatasetCallback,
+        getPublicDatasetCards: getPublicDatasetCardsCallback,
         fetchIndicator: fetchIndicatorCallback,
         getDatasetSelectors: getDatasetSelectorsCallback,
         getDatasetCategorization: getDatasetCategorizationCallback,
@@ -149,6 +173,7 @@ const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }
         fetchIndicatorText: fetchIndicatorTextCallback
     }), [
         primeDatasetCallback,
+        getPublicDatasetCardsCallback,
         fetchIndicatorCallback,
         getDatasetSelectorsCallback,
         getDatasetCategorizationCallback,

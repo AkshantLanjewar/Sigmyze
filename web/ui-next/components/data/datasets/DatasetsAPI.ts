@@ -50,5 +50,5 @@ export {
     GetCategories,
     GetIndicators,
     DatasetsTable,
-    GetIndicator 
+    GetIndicator,
 }

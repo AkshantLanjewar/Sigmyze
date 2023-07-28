@@ -2,7 +2,7 @@ import { showNotification } from "@mantine/notifications"
 import { GET_Cacheless, GenerateOptions, server } from "../utils"
 import { IGetIndicatorsLength, IQuantaIndicatorResp, IQuantaIndicatorsResp } from "./quanta-indicator-api"
 import { IQuantaQuery } from "../../quanta/selector-frame/types"
-import { IStatus } from "../datasets/DatasetsTypes"
+import { IDataset, IStatus } from "../datasets/DatasetsTypes"
 
 async function GetDatasetIndicators(token: string) {
     let url = `${server}/api/v2/dataset/${token}/indicators`
@@ -206,6 +206,82 @@ async function GetQuantaMapping(quantaId: string) {
     return resp.token
 }
 
+interface IDatasetCard {
+    datasetName?: string,
+    datasetId?: string,
+    description?: string
+}
+
+const validateDatasetCard = (card: IDatasetCard) => {
+    if(card.datasetId === undefined || card.datasetName === undefined || card.description === undefined)
+        return false
+    
+    return true
+}
+
+interface IGetDatasetCardsResponse {
+    status?: IStatus,
+    datasetCards?: IDatasetCard[]
+}
+
+async function GetOrganizationDatasets(token: string, organizationId: string) {
+    let url = `${server}/api/v2/dataset/published/${organizationId}/published`
+    let options = GenerateOptions("GET", token)
+    let resp = await GET_Cacheless<IGetDatasetCardsResponse>(url, options)
+
+    if(resp.datasetCards === undefined || resp.status?.error === true) {
+        showNotification({
+            title: "Dataset Error",
+            message: `Server Error, unable to retreive dataset details due to -> ${resp.status?.msg}`,
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return undefined
+    }
+
+    let polishedDatasetCards: IDatasetCard[] = []
+    for(let i = 0; i < resp.datasetCards.length; i++) {
+        let datasetCard = resp.datasetCards[i]
+        if(validateDatasetCard(datasetCard) === false)
+            continue
+
+        polishedDatasetCards.push(datasetCard)
+    }
+
+    return polishedDatasetCards
+}
+
+async function GetPublicDatasets() {
+    let url = `${server}/api/v2/dataset/published/public`
+    let options = GenerateOptions("GET", null)
+    let resp = await GET_Cacheless<IGetDatasetCardsResponse>(url, options)
+
+    if(resp.datasetCards === undefined || resp.status?.error === true) {
+        showNotification({
+            title: "Dataset Error",
+            message: `Server Error, unable to retreive dataset details due to -> ${resp.status?.msg}`,
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return undefined
+    }
+
+    let polishedDatasetCards: IDatasetCard[] = []
+    for(let i = 0; i < resp.datasetCards.length; i++) {
+        let datasetCard = resp.datasetCards[i]
+        if(validateDatasetCard(datasetCard) === false)
+            continue
+
+        polishedDatasetCards.push(datasetCard)
+    }
+
+    return polishedDatasetCards
+}
+
+export type { IDatasetCard }
+
 export {
     GetDatasetIndicators,
     GetDatasetIndicatorsPaged,
@@ -216,5 +292,8 @@ export {
     GetDatasetIndicatorById,
     CreateQuantaMapping,
     DeleteQuantaMapping,
-    GetQuantaMapping
+    GetQuantaMapping,
+    GetOrganizationDatasets,
+    GetPublicDatasets,
+    validateDatasetCard
 }

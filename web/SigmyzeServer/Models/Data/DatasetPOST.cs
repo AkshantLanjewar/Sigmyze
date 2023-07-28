@@ -22,6 +22,9 @@ public class PublishDatasetPOST
     [JsonPropertyName("organizationId")]
     public string? OrganizationId { get; set; }
 
+    [JsonPropertyName("publicToken")]
+    public string? PublicToken { get; set; }
+
     public bool Verify()
     {
         if(this.Title == null || this.DatasetId == null || this.Description == null)

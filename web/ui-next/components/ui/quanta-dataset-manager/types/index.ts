@@ -1,3 +1,4 @@
+import { IDatasetCard } from '../../../data/quanta/dataset-api'
 import { IQuantaCategorization, IQuantaSelector } from '../../../data/quanta/types/project'
 import { IQuantaIndicator } from '../../../quanta/quanta-indicator-manager/types'
 import { IDatasetCacheObject, IQuantaIndicatorText } from './dataset'
@@ -9,6 +10,7 @@ interface IQuantaIndicatorShell {
 
 interface IDatasetManagerState {
     primeDataset: (datasetId: string) => Promise<IDatasetCacheObject | undefined>,
+    getPublicDatasetCards: () => Promise<IDatasetCard[] | undefined>,
     fetchIndicator: (datasetId: string, indicatorId: string) => Promise<IQuantaIndicator | undefined>,
 
     getDatasetSelectors: (datasetId: string) => IQuantaSelector[] | undefined,

@@ -48,7 +48,7 @@ namespace SigmyzeServer.Services.DatabaseServices
 
                 Dataset _dataset = new Dataset();
                 _dataset.Name    = name;
-                _dataset.Logo    = metadata["logo"].AsString;
+                
 
                 _collectionMap.Add(_dataset.Name, col);
                 _collectionObjMap.Add(_dataset.Name, mappedCol);

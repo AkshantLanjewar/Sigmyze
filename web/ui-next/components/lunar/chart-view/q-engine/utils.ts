@@ -1,4 +1,4 @@
-import d3 from "d3"
+import * as d3 from 'd3'
 import { ChartDims, IChartD3Scales, IChartData, ID3Chart, IQuantaChart } from "../engine/types"
 import { colorTsar } from "../engine/utils"
 

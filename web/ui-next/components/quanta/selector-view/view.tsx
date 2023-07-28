@@ -11,7 +11,7 @@ interface IViewProps {
     textStore: IQuantaTextStore,
     selectionIndex: number | undefined,
     setSelectorValue: (selectorId: string, value: string) => void,
-    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>,
+    setSelectedIndicator: (indicatorId: string) => void,
     selectedValues: {
         [key: string]: string | undefined;
     }    

@@ -1,4 +1,4 @@
-import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore } from "../../../data/quanta/types/project"
+import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../../data/quanta/types/project"
 import { IQuantaIndicator } from "../../../quanta/quanta-indicator-manager/types";
 
 //this is all the data that we cache, and is required to run the bare minimum of public UI without having to request for indicators
@@ -19,6 +19,8 @@ interface IDatasetCacheObject {
     selectors: IQuantaSelector[];
     //stores data relating to the formatters
     textStore: IQuantaTextStore;
+    //schemas for the dataset
+    schemas: ProjectSchemas[]
 }
 
 interface IQuantaIndicatorShell {

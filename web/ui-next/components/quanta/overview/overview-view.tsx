@@ -12,6 +12,8 @@ import CategoryMapper from '../category-mapper'
 import Formatters from '../formatters'
 import SelectorViewModal from '../selector-view/modal'
 import PublishModal from './publish-modal'
+import PublishButton from './publish-button'
+import UnpublishModal from './unpublish-modal'
 
 const QuantaOverviewView: React.FC = ({ }) => {
     const [previewOpen, setPreviewOpen] = useState(false)
@@ -19,6 +21,9 @@ const QuantaOverviewView: React.FC = ({ }) => {
 
     const [publishOpen, setPublishOpen] = useState(false)
     const closePublish = useCallback(() => setPublishOpen(false), [])
+
+    const [unpublishOpen, setUnpublishOpen] = useState(false)
+    const closeUnpublish = useCallback(() => setUnpublishOpen(false), [])
 
     const quantaContext = useContext(QuantaContextData) as IQuantaState
     const quantaProject = quantaContext.project_data
@@ -33,6 +38,11 @@ const QuantaOverviewView: React.FC = ({ }) => {
             <PublishModal
                 opened={publishOpen}
                 close={closePublish}
+            />
+
+            <UnpublishModal
+                opened={unpublishOpen}
+                close={closeUnpublish}
             />
 
             <div className={styles.overview__content}>
@@ -79,20 +89,10 @@ const QuantaOverviewView: React.FC = ({ }) => {
                             Preview
                         </Button>
 
-                        <Button
-                            radius={"xl"}
-                            color={"indigo"}
-                            onClick={() => setPublishOpen(true)}
-                        >
-                            <IconWorldUpload  
-                                size={14} 
-                                style={{ marginRight: 2.5 }} 
-                                fill='white'
-                                fillOpacity={1}
-                            />
-
-                            Publish
-                        </Button>
+                        <PublishButton
+                            setPublishOpen={setPublishOpen}
+                            setUnpublishOpen={setUnpublishOpen}
+                        />
                     </div>
                 </div>
 

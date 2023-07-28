@@ -39,7 +39,6 @@ import {
     setTextValue
 } from "./functions"
 
-import { IQuantaRFEdge, IQuantaRFNode, IQuantaStore, IQuantaTypeRef } from "../../ui/einstein/types/types"
 import { GetProject } from "./quanta-api"
 import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"
@@ -50,6 +49,10 @@ import { IPipelineAnalysis, IPipelinedData } from "../../quanta/selector-pane/co
 import { usePrevious } from "../../ui/debug"
 import QuantaUIContext from "./ui-context"
 import QuantaCodeContex from "./quanta-code-context"
+import { IQuantaRFEdge } from "../../quanta/quanta-editor/types/edges"
+import { IQuantaTypeRef } from "../../quanta/quanta-editor/types/node-type"
+import { IQuantaRFNode } from "../../quanta/quanta-editor/types/nodes"
+import { IQuantaStore } from "../../quanta/quanta-editor/types/store"
 
 interface IQuantaContextProps {
     quantaId: string | null,
@@ -78,6 +81,9 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
     const [updateEditorIndicators, setUpdateEditorIndicators] = useState(false)
     const toggleUpdateEditorIndicators = () => setUpdateEditorIndicators(!updateEditorIndicators)
+
+    const [publishUpdate, setPublishUpdate] = useState(false)
+    const togglePublishUpdate = useCallback(() => setPublishUpdate(!publishUpdate), [publishUpdate])
 
     //store elements
     const [editorProjects, setEditorProjects] = useState<IQuantaEditorProject[]>([])
@@ -388,6 +394,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         internalValue.updateCategorization = categorizeUpdated
         internalValue.updateEditorIndicators = updateEditorIndicators
         internalValue.toggleUpdateEditorIndicators = toggleUpdateEditorIndicators
+        internalValue.publishUpdate = publishUpdate
 
         internalValue.updateEditorSchema = updateEditorSchema
         internalValue.updateSchema = updateSchema
@@ -399,6 +406,8 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         internalValue.schemas = schemas
 
         //NOTE: Theese are the functions relating to the context
+        //function handles publish status updated
+        internalValue.togglePublishUpdate = togglePublishUpdate
         //this function handles changing a text field
         internalValue.changeText = changeTextCallback
         //this function activates a selector
@@ -448,6 +457,8 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
 
         return internalValue
     }, [
+        publishUpdate,
+        togglePublishUpdate,
         projectData, 
         schemas, 
         editorProjects, 

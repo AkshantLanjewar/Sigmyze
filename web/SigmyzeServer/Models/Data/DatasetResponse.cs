@@ -51,6 +51,9 @@ namespace SigmyzeServer.Models.Data
 
         [JsonProperty("textStore")]
         public Dictionary<string, string>? TextStore { get; set; }
+
+        [JsonProperty("schemas")]
+         public List<QuantaSchemas>? Schemas { get; set; }
     }
 
     public class PrimeResponse

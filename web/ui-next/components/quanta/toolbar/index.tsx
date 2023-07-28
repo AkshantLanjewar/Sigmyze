@@ -68,7 +68,7 @@ const QToolbar: React.FC = ({ }) => {
             nTreeNodes[0].active = true
 
         for(let i = 0; i < nTreeNodes[0].children.length; i++) {
-            let node = nTreeNodes[i]
+            let node = nTreeNodes[0].children[i]
             if(node.node_id === id) {
                 focusTab(id, type)
                 node.active = true

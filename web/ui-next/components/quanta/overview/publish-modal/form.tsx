@@ -1,9 +1,12 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { IQuantaFormField } from "../../quanta-editor/types/form"
 import FormBuilder from "../../../ui/form-builder/form-builder"
-import { IconBook2, IconBuilding, IconSignature, IconWorldWww, IconWritingSign } from "@tabler/icons"
+import { IconBook2, IconBuilding, IconCurrencyCent, IconSignature, IconWorldWww, IconWritingSign } from "@tabler/icons"
 import { QuantaContextData } from "../../../data/quanta/context"
 import { IQuantaState } from "../../../data/quanta/types"
+import { IPublishDatasetPOST, PublishDataset } from "../../../data/quanta/quanta-publish-api"
+import { UserContextData } from "../../../data/user/context"
+import { IUserContext } from "../../../data/user/types"
 
 interface IFormProps {
     close: () => void
@@ -14,7 +17,8 @@ const PublishForm: React.FC<IFormProps> = ({ close }) => {
     const [defaultValue, setDefaultValue] = useState<{[key: string]: any} | undefined>(undefined)
     const loaded = useRef<boolean>(false)
 
-    const { project_data } = useContext(QuantaContextData) as IQuantaState
+    const { project_data, quantaId, organizationId, togglePublishUpdate } = useContext(QuantaContextData) as IQuantaState
+    const { authData } = useContext(UserContextData) as IUserContext
 
     useEffect(() => {
         if(project_data === undefined || loaded.current === true)
@@ -56,6 +60,21 @@ const PublishForm: React.FC<IFormProps> = ({ close }) => {
             icon: <IconBook2 />
         },
         {
+            id: "dynamicPublic",
+            type: "dynamic",
+            dynamicConfig: {
+                dependsOn: "visibility",
+                dependValue: "public",
+                dynamicProperty: "visibility",
+                dynamicContent: {
+                    name: "Public Publishing Token",
+                    id: "publish_token",
+                    type: "text",
+                    icon: <IconCurrencyCent />
+                }
+            }
+        },
+        {
             name: "Visibility",
             id: "visibility",
             type: "segment",
@@ -71,12 +90,53 @@ const PublishForm: React.FC<IFormProps> = ({ close }) => {
                     icon: <IconBuilding />
                 }
             ]
-        }
+        },
     ] as IQuantaFormField[]), [])
 
-    const submit = useCallback((forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
+    const submit = useCallback((_forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
+        async function main() {
+            setLoadingStr('loading')
+            let valKeys = Object.keys(valStore)
+            let postData = {} as IPublishDatasetPOST
 
-    }, [])
+            //get the form data and put it in the post data
+            let token = authData?.token
+            if(valKeys.includes('title') === false || valKeys.includes('dataset_id') === false || valKeys.includes('description') === false)
+                return
+            if(quantaId === null || organizationId === null || token === undefined)
+                return
+
+            postData.title = valStore['title']
+            postData.datasetId = valStore['dataset_id']
+            postData.description = valStore['description']
+            postData.quantaId = quantaId
+            postData.organizationId = organizationId
+
+            if(valKeys.includes('visibility') === false)
+                return
+
+            let visibilityValue = valStore['visibility']
+            postData.public = false
+
+            switch(visibilityValue) {
+                case "public":
+                    if(valKeys.includes('publish_token') === false)
+                        return
+
+                    let publishedToken = valStore['publish_token']
+                    postData.public = true
+                    postData.publicToken = publishedToken
+                    break
+                default: return
+            }
+
+            await PublishDataset(token, postData)
+            setLoadingStr(undefined)
+            togglePublishUpdate()
+        }
+
+        main()
+    }, [quantaId, organizationId, togglePublishUpdate])
     
     return (
         <>

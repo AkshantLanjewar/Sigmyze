@@ -246,6 +246,8 @@ function GetIndicatorSetting(
     for(let i = 0; i < indicatorSettings.length; i++) {
         let setting = indicatorSettings[i]
         let setting_indicator = setting.indicator
+        if(setting_indicator === undefined)
+            continue
 
         if(CompareIndicators(indicator, setting_indicator))
             indicatorSetting = setting
@@ -322,5 +324,4 @@ export {
     AddQuantaIndicator,
     DeleteQuantaIndicator,
     GetQuantaIndicatorSetting, 
-    CreateQuantaIndicatorSetting
 }

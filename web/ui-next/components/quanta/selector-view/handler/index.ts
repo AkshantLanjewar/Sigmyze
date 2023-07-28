@@ -24,7 +24,7 @@ const productionMessageHandler = async (
     intialSelection: MutableRefObject<boolean>,
     selectorLinks: ISelectorLinks,
     setSelectorValue: (selectorId: string, value: string) => void,
-    setSelectedIndicator: Dispatch<SetStateAction<string | undefined>>,
+    setSelectedIndicator: (indicatorId: string) => void,
 ) => { 
     switch(messageFunction) {
         case "ping":

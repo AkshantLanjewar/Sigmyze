@@ -60,7 +60,7 @@ public class QuantaRepositoryDefinition
     {
         if(this.ProjectData == null || this.ProjectData.DatasetName == null || this.ProjectData.DatasetId == null)
             return false;
-        if(this.ProjectData.DatasetDescription == null || this.ProjectData.Store == null)
+        if(this.ProjectData.DatasetDescription == null || this.ProjectData.Store == null || this.ProjectData.DatasetSchema == null)
             return false;
         if(this.ProjectData.Store.Selectors == null || this.ProjectData.Store.TextStore == null || this.ProjectData.Store.Categorization == null)
             return false;

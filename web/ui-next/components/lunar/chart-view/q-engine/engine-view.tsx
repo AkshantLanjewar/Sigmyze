@@ -7,8 +7,12 @@ import { IGlobalChartSettings } from "../../../data/lunar/types/chart-types"
 import QD3RenderTitle from "../quanta-d3-text/render-title"
 import { Group } from "@mantine/core"
 import D3Chart from "../d3-chart/d3-chart"
-import { AxisBottom } from "@visx/axis"
 import D3TooltipBox from "../d3-chart/d3-tooltip-box"
+import dynamic from "next/dynamic"
+
+const AxisBottom = dynamic(() => import('@visx/axis').then(({ AxisBottom }) => AxisBottom),
+    { ssr: false }
+);
 
 interface IViewProps {
     ref: RefObject<HTMLDivElement>,

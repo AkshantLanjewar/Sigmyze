@@ -1,11 +1,7 @@
-import { Alert, Button, Group, LoadingOverlay, Stack } from "@mantine/core"
+import { Button, Group, LoadingOverlay, Stack } from "@mantine/core"
 import { useEffect, useState } from "react"
-import DropdownInput from "./form-elements/dropdown-input"
-import FileInput from "./form-elements/file-input/file-input"
-import TextInputQuanta from "./form-elements/text-input"
 import { IQuantaFormField } from "../../quanta/quanta-editor/types/form"
-import { convertTypesToDropdown } from "../../quanta/quanta-editor/utils"
-import QuantaSegmentControl from "./form-elements/segment-control"
+import FormElement from "./form-element"
 
 interface IFormBuilderProps {
     forms: IQuantaFormField[],
@@ -18,7 +14,6 @@ interface IFormBuilderProps {
 
 const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, defaultValue, loadingStr }) => {
     const [valStore, setValStore] = useState<{[key: string]: any}>({})
-    const [internalLoading, setInternalLoading] = useState(false)
 
     useEffect(() => {
         if(defaultValue === undefined)
@@ -55,95 +50,14 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
             />
 
             <Stack spacing={"md"}>
-                {forms.map((step) => {
-                    //TODO: Convert to switch statement
-                    let inputType = step.type
-                    let output: JSX.Element | null = null
-
-                    switch(inputType) {
-                        case "text":
-                            output = (
-                                <TextInputQuanta 
-                                    name={step.name}
-                                    icon={step.icon}
-                                    value={getValue(step.id!)}
-                                    setValue={(id: string) => setValue(step.id!, id)}
-                                />
-                            )
-
-                            break
-                        case "dropdown":
-                            let dropdownItems = undefined
-                            if(step.dropdownField !== undefined)
-                                dropdownItems = convertTypesToDropdown(step.dropdownField)
-                            else if(step.manualDropdownItems !== undefined)
-                                dropdownItems = step.manualDropdownItems
-
-                            if(dropdownItems === undefined)
-                                return
-                            
-                            output = (
-                                <DropdownInput
-                                    items={dropdownItems}
-                                    name={step.name}
-                                    value={getValue(step.id!)}
-                                    setValue={(value: string) => setValue(step.id!, value)}
-                                />
-                            )
-                            break
-                        case "alert":
-                            let alertIcon = step.alertIcon
-                            let alertTitle = step.alertTitle
-                            let alertContent = step.alertContent
-                            let alertColor = step.alertColor
-
-                            if(alertIcon === undefined || alertTitle === undefined || alertContent === undefined || alertColor === undefined)
-                                return
-                            
-                            output = (
-                                <Alert
-                                    icon={alertIcon}
-                                    color={alertColor}
-                                    title={alertTitle}
-                                >
-                                    {alertContent}
-                                </Alert>
-                            )
-                            break
-                        case "file":
-                            let fileType = step.fileType
-                            let fileName = step.fileName
-                            if(fileType === undefined || fileName === undefined)
-                                return
-
-                            output = (
-                                <FileInput 
-                                    fileType={fileType}
-                                    fileName={fileName}
-                                    setValue={(val: any) => setValue(step.id!, val)}
-                                /> 
-                            )
-                            break
-                        case "segment":
-                            let segmentItems = step.segmentItems
-                            if(segmentItems === undefined)
-                                return
-                            
-                            output = (
-                                <QuantaSegmentControl
-                                    value={getValue(step.id!)}
-                                    setValue={(id: string) => setValue(step.id!, id)}
-                                    segmentItems={segmentItems}
-                                />
-                            )
-                            break
-                        default:
-                            output = null
-                            break
-                    }
-
-                    return output
-                })}
+                {forms.map((step) => (
+                    <FormElement 
+                        step={step}
+                        valStore={valStore}
+                        getValue={getValue}
+                        setValue={setValue}
+                    />
+                ))}
 
                 <Group position={"right"}>
                     <Button

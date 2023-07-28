@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.Data;
 using SigmyzeServer.Models.User;
 
@@ -15,6 +16,7 @@ public interface IPublishService
     Task ReduceOrganizationMapping(string organizationId, string datasetId);
     Task<string> PublishDataset(PublishDatasetPOST data);
     Task<string> UnpublishDataset(UnpublishDatasetPOST data);
+    Task<List<QuantaDatasetDisplay>?> GetDatasetCards(string organizationId);
 }
 
 public class PublishService : IPublishService
@@ -112,6 +114,31 @@ public class PublishService : IPublishService
         await _organizationIndexCollection.FindOneAndUpdateAsync(filter, update);
     }
 
+    public async Task<List<QuantaDatasetDisplay>?> GetDatasetCards(string organizationId)
+    {
+        OrganizationPublishedCollection? document = await FetchMapping(organizationId);
+        List<string>? publishedDatasets = document?.PublishedDatasets;
+        if(publishedDatasets == null)
+            return null;
+
+        List<QuantaDatasetDisplay> datasetCards = new List<QuantaDatasetDisplay>();
+        for(int i = 0; i < publishedDatasets.Count; i++)
+        {
+            string publicDatasetId = publishedDatasets[i];
+            PublishedDatasetCollection? publishedDocument = await FetchPublishedDataset(publicDatasetId);
+            if(publishedDocument == null || publishedDocument.validateCard() == false)
+                continue;
+
+            QuantaDatasetDisplay newCard = new QuantaDatasetDisplay();
+            newCard.DatasetId = publishedDocument.PublicId;
+            newCard.DatasetName = publishedDocument.Title;
+            newCard.Description = publishedDocument.Description;
+            datasetCards.Add(newCard);
+        }
+
+        return datasetCards;
+    }
+
     //helper method for PublishDataset that generates a new id::hash combo until a valid id is found
     private async Task<string> GenerateHash(string organizationId, string datasetId)
     {
@@ -130,7 +157,15 @@ public class PublishService : IPublishService
         if(await DatasetExists(data.QuantaId!) == true)
             return "dataset";
 
-        string publicId = await GenerateHash(data.OrganizationId!, data.DatasetId!);
+        string organizationId = data.OrganizationId!;
+        if(data.Public == true && data.PublicToken == null)
+            return "no_token";
+        if(data.PublicToken != "gobbly_goo_this_is_the_token")
+            return "invalid_token";
+        if(data.Public == true)
+            organizationId = "public";
+
+        string publicId = await GenerateHash(organizationId, data.DatasetId!);
         //create the document that needs to be published
         PublishedDatasetCollection document = new PublishedDatasetCollection();
         document.PublicId = publicId;
@@ -140,7 +175,7 @@ public class PublishService : IPublishService
         document.Public = data.Public;
 
         await _publishedDatasetsCollection.InsertOneAsync(document);
-        await AppendOrganizationMapping(data.OrganizationId!, data.DatasetId!);
+        await AppendOrganizationMapping(organizationId, publicId);
         return "success";
     }
 
@@ -153,9 +188,13 @@ public class PublishService : IPublishService
         if(document == null)
             return "no_document";
 
+        string organizationId = data.OrganizationId!;
+        if(document.Public == true)
+            organizationId = "public";
+
         string publicId = document.PublicId!;
         await _publishedDatasetsCollection.DeleteOneAsync(x => x.PublicId == publicId);
-        await ReduceOrganizationMapping(data.OrganizationId!, publicId);
+        await ReduceOrganizationMapping(organizationId, publicId);
         return "success";
     }
 

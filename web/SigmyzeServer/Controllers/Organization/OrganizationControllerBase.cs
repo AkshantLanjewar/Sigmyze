@@ -42,6 +42,15 @@ public class OrganizationControllerBase : ControllerBase
         return status;
     }
 
+    protected APIStatusMsg SuccessMsg()
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "success";
+
+        return status;
+    }
+
     //FEATURE: Validate whether a user is a member of organization
     protected async Task<Organization?> ValidateOrganization(UserServiceIndex servicesIndex, string organizationId)
     {

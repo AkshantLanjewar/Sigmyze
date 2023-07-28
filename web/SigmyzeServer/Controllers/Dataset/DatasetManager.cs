@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.ApplicationServices;
 using SigmyzeServer.Models.Data;
 
@@ -34,6 +33,7 @@ public partial class DatasetController
         response.ShellObject.DatasetName = projectDocument.ProjectData.DatasetName;
         response.ShellObject.Selectors = projectDocument.ProjectData.Store.Selectors;
         response.ShellObject.TextStore = projectDocument.ProjectData.Store.TextStore;
+        response.ShellObject.Schemas = projectDocument.ProjectData.DatasetSchema;
 
         return await SerializeJSON(response);
     }

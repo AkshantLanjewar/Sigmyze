@@ -32,6 +32,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 		let objects = await GetObjects(dataset.name)
 		const default_object = DefaultIndicatorTable[dataset.name.toLowerCase() as keyof typeof DefaultIndicatorTable]
         const indicators = await GetIndicators(dataset.name, default_object)
+		if(objects.objects === undefined || objects.objects === null)
+			continue
 
 		for(let x = 0; x < objects.objects.length; x++) {
 			let object = objects.objects[x]

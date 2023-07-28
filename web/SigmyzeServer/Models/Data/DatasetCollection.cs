@@ -110,6 +110,14 @@ namespace SigmyzeServer.Models.Data
         [JsonProperty("public_id")]
         [JsonPropertyName("public_id")]
         public string? PublicId { get; set; }
+
+        public bool validateCard()
+        {
+            if(this.Title == null || this.PublicId == null || this.Description == null)
+                return false;
+
+            return true;
+        }
     }
 
     public class OrganizationPublishedCollection
