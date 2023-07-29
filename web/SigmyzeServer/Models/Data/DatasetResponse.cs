@@ -64,4 +64,16 @@ namespace SigmyzeServer.Models.Data
         [JsonProperty("shellObject")]
         public DatasetCacheObject? ShellObject { get; set; }
     }
+
+    public class DatasetNodeEditorsResponse
+    {
+        [JsonProperty("status")]
+        public APIStatusMsg? Status { get; set; }
+        
+        [JsonProperty("fetchEditor")]
+        public QuantaEditorProject? FetchEditor { get; set; }
+
+        [JsonProperty("updateEditor")]
+        public QuantaEditorProject? UpdateEditor { get; set; }
+    }
 }

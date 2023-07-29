@@ -1,10 +1,45 @@
 import { showNotification } from "@mantine/notifications"
 import { GET_Cacheless, GenerateOptions, server } from "../../../data/utils"
-import { IPrimeResponse } from "./response"
-import { IDatasetCache } from "../types"
+import { IDatasetEditorResponse, IPrimeResponse } from "./response"
+import { IDatasetCache, IDatasetProjects } from "../types"
 import { Dispatch, SetStateAction } from "react"
 import { IQuantaIndicator } from "../../../quanta/quanta-indicator-manager/types"
 import { GetDatasetIndicatorById } from "../../../data/quanta/dataset-api"
+
+const FetchDatasetEditor = async (
+    datasetId: string,
+    fetchDatasetEditor: (datasetId: string) => IDatasetProjects | undefined,
+    addDatasetEditor: (dataset: IDatasetProjects) => void
+) => {
+    let editor = fetchDatasetEditor(datasetId)
+    if(editor !== undefined)
+        return editor
+
+    //now we have to fetch the editor information from the server
+    const url = `${server}/api/v2/dataset/${datasetId}/node-editors`
+    const options = GenerateOptions("GET", null)
+    const response = await GET_Cacheless<IDatasetEditorResponse>(url, options)
+
+    if(response.status?.error === true || response.fetchEditor === undefined || response.updateEditor === undefined) {
+        showNotification({
+            title: "Data Error",
+            message: "Unfortunately, we had an issue fetching this dataset's editors, please try again",
+            color: 'red',
+            autoClose: 1000 * 10
+        })
+
+        return
+    }
+
+    let newDatasetEditor: IDatasetProjects = {
+        datasetId: datasetId,
+        fetchEditor: response.fetchEditor,
+        updateEditor: response.updateEditor
+    }
+
+    addDatasetEditor(newDatasetEditor)
+    return newDatasetEditor
+}
 
 const PrimeDataset = async (
     datasetId: string, 
@@ -64,5 +99,6 @@ const FetchIndicator = async (
 
 export { 
     PrimeDataset,
-    FetchIndicator 
+    FetchIndicator,
+    FetchDatasetEditor 
 }

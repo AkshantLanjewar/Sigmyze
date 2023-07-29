@@ -3,6 +3,7 @@ import { IsDatasetAuthorized, IsPublic } from "../../../data/quanta/quanta-publi
 import { useRouter } from "next/router"
 import { UserContextData } from "../../../data/user/context"
 import { IUserContext } from "../../../data/user/types"
+import PublicQuantaPageView from "./view"
 
 interface IPublicQuantaPageProps {
     datasetId: string
@@ -57,7 +58,9 @@ const PublicQuantaPage: React.FC<IPublicQuantaPageProps> = ({ datasetId }) => {
         main()
     }, [datasetId, authData])
 
-    return null
+    return validated
+        ? <PublicQuantaPageView datasetId={datasetId} />
+        : null
 }
 
 export default PublicQuantaPage

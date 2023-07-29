@@ -49,11 +49,13 @@ import { QuantaContextData } from "../../data/quanta/context"
 
 import { BuildNode, GetNodeSocket, LoadEditorProject } from "./utils"
 import QuantaEditorView from "./quanta-editor-view"
+import { IQuantaEditorProject } from "../../data/quanta/types/project"
 
 interface IQuantaEditorProps {
     fileId: string,
     fileName: string,
-    viewMode?: boolean
+    viewMode?: boolean,
+    editorData?: IQuantaEditorProject
 }
 
 /**
@@ -61,7 +63,7 @@ interface IQuantaEditorProps {
  */
 const QuantaEditorContext = createContext<IQuantaEditorGlobals | null>(null)
 
-const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode }) => {
+const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode, editorData }) => {
     /**
      * This is a list of nodes within the editor
      * State managed by both react flow and component
@@ -179,6 +181,17 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
     }, [edges])
 
     useEffect(() => {
+        if(fileId === "static") {
+            if(editorData === undefined)
+                return
+            
+            setNodes([ ...editorData.nodes ])
+            setEdges([ ...editorData.edges ])
+            setQuantaStore({ ...editorData.quantaStore })
+
+            return
+        }
+
         if(quantaContext === null)
             return
 
@@ -194,7 +207,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
         )
 
         setProjectLoaded(true)
-    }, [fileId, fileName])
+    }, [fileId, fileName, editorData])
 
     useEffect(() => {
         if(quantaContext === null)

@@ -1,4 +1,4 @@
-import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../../data/quanta/types/project"
+import { IQuantaCategorization, IQuantaEditorProject, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../../data/quanta/types/project"
 import { IQuantaIndicator } from "../../../quanta/quanta-indicator-manager/types";
 
 //this is all the data that we cache, and is required to run the bare minimum of public UI without having to request for indicators
@@ -37,10 +37,20 @@ interface IQuantaIndicatorText {
     short: string
 }
 
+interface IDatasetProjects {
+    //id for the dataset
+    datasetId: string,
+    //fetch editor data
+    fetchEditor: IQuantaEditorProject,
+    //update editor data
+    updateEditor: IQuantaEditorProject
+}
+
 export type { 
     IDatasetCache,
     IDatasetCacheObject,
     IQuantaIndicatorShell,
     IQuantaIndicatorCache,
-    IQuantaIndicatorText 
+    IQuantaIndicatorText,
+    IDatasetProjects 
 }

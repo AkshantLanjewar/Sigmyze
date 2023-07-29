@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react"
-import { IDatasetCache, IDatasetManagerState, IQuantaIndicatorCache, IQuantaIndicatorShell } from "./types"
-import { FetchIndicator, PrimeDataset } from "./http"
+import { IDatasetCache, IDatasetManagerState, IDatasetProjects, IQuantaIndicatorCache, IQuantaIndicatorShell } from "./types"
+import { FetchDatasetEditor, FetchIndicator, PrimeDataset } from "./http"
 import { fetchIndicatorText, formatIndicatorText, getDatasetCategorization, getDatasetSelectors, getDatasetText, getPublicDatasetCards } from "./functions"
 import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
 import { IDatasetCard } from "../../data/quanta/dataset-api"
@@ -15,9 +15,33 @@ const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }
     //dataset cache
     const [datasetCache, setDatasetCache] = useState<IDatasetCache>({})
     const [datasetCardsCache, setDatasetCardsCache] = useState<IDatasetCard[]>([])
+    const [datasetEditorsCache, setDatasetEditorscache] = useState<IDatasetProjects[]>([])
     //indicator cache
     const [indicatorCache, setIndicatorCache] = useState<IQuantaIndicatorCache>({})
     const [cachedIndicators, setCachedIndicators] = useState<IQuantaIndicatorShell[]>([])
+
+    //here are some utility functions that help with the dataset editor cache
+    const popDatasetEditor = useCallback(() => {
+        let newEditorsCache = datasetEditorsCache
+        let output = newEditorsCache.shift()
+
+        setDatasetEditorscache([ ...newEditorsCache ])
+        return output
+    }, [datasetEditorsCache])
+
+    const fetchDatasetEditor = useCallback((datasetId: string) => {
+        for(let i = 0; i < datasetEditorsCache.length; i++) {
+            let datasetEditor = datasetEditorsCache[i]
+            if(datasetEditor.datasetId === datasetId)
+                return datasetEditor
+        }
+
+        return undefined
+    }, [datasetEditorsCache])
+
+    const addDatasetEditor = useCallback((dataset: IDatasetProjects) => {
+        setDatasetEditorscache([ ...datasetEditorsCache, dataset ])
+    }, [datasetEditorsCache])
 
     //here are some utility functions that help with the dataset card cache
     const popDatasetCard = useCallback(() => {
@@ -129,10 +153,22 @@ const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }
         popDatasetCard()
     }, [datasetCardsCache])
 
+    //effect that limits the size of the datasetEditor cache to 80
+    useEffect(() => {
+        if((datasetEditorsCache.length > 80) === false)
+            return
+
+        popDatasetEditor()
+    }, [datasetEditorsCache])
+
     //here are all the methods that will be a part of the dataset manager
     const primeDatasetCallback = useCallback(async (datasetId: string) => {
         return await PrimeDataset(datasetId, datasetCache, setDatasetCache)
     }, [datasetCache])
+
+    const fetchDatasetEditorCallback = useCallback(async (datasetId: string) => {
+        return await FetchDatasetEditor(datasetId, fetchDatasetEditor, addDatasetEditor)
+    }, [fetchDatasetEditor, addDatasetEditor])
 
     const fetchIndicatorCallback = useCallback(async (datasetId: string, indicatorId: string) => {
         return await FetchIndicator(datasetId, indicatorId, isCached, cacheIndicator, getIndicator)
@@ -166,6 +202,7 @@ const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }
         primeDataset: primeDatasetCallback,
         getPublicDatasetCards: getPublicDatasetCardsCallback,
         fetchIndicator: fetchIndicatorCallback,
+        fetchDatasetEditor: fetchDatasetEditorCallback,
         getDatasetSelectors: getDatasetSelectorsCallback,
         getDatasetCategorization: getDatasetCategorizationCallback,
         getDatasetText: getDatasetTextCallback,
@@ -176,6 +213,7 @@ const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }
         getPublicDatasetCardsCallback,
         fetchIndicatorCallback,
         getDatasetSelectorsCallback,
+        fetchDatasetEditorCallback,
         getDatasetCategorizationCallback,
         getDatasetTextCallback,
         formatIndicatorTextCallback,
