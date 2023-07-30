@@ -10,6 +10,7 @@ import FormBuilder from "../../ui/form-builder/form-builder"
 import DeleteNodeForm from "./forms/delete-node-form"
 import QuantaFlow from "./quanta-flow"
 import { ReactFlowInstance } from "reactflow"
+import { IQuantaEditorProject } from "../../data/quanta/types/project"
 
 interface IViewProps {
     ref: RefObject<HTMLDivElement>,
@@ -26,6 +27,7 @@ interface IViewProps {
     formTitle: string | undefined,
     formContent: IQuantaFormField[],
     projectLoaded: boolean,
+    editorData?: IQuantaEditorProject,
     setNodes: Dispatch<SetStateAction<IQuantaRFNode[]>>,
     setEdges: Dispatch<SetStateAction<IQuantaRFEdge[]>>,
     setReactFlowInstance: Dispatch<SetStateAction<ReactFlowInstance | null>>,
@@ -52,6 +54,7 @@ const QuantaEditorView: React.FC<IViewProps> = memo(({
     formTitle,
     formContent,
     projectLoaded,
+    editorData,
     setNodes,
     setEdges,
     setReactFlowInstance,
@@ -73,7 +76,7 @@ const QuantaEditorView: React.FC<IViewProps> = memo(({
                 toggleEngineCache={toggleEngineCache}
             />
 
-            <ExecutionContext fileId={fileId}>
+            <ExecutionContext fileId={fileId} editorData={editorData}>
                 <QuantaEditorContext.Provider value={memoValue}>
                     <>
                         <EngineWrapper

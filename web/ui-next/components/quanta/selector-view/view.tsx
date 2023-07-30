@@ -30,7 +30,7 @@ const View: React.FC<IViewProps> = React.memo(({
 }) => {
     return (
         <>
-            <Stack spacing={"md"}>
+            <Stack spacing={"md"} sx={{ width: "100%" }}>
                 {selectors.map((step) => (
                     <div>
                         <ProductionSelectorFrame 

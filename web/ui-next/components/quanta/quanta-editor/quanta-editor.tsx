@@ -188,6 +188,8 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
             setNodes([ ...editorData.nodes ])
             setEdges([ ...editorData.edges ])
             setQuantaStore({ ...editorData.quantaStore })
+            console.log(editorData.quantaStore)
+            setEditorType("create")
 
             return
         }
@@ -415,6 +417,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
             projectLoaded={projectLoaded}
             setNodes={setNodes}
             setEdges={setEdges}
+            editorData={editorData}
             setReactFlowInstance={setReactFlowInstance}
             closeStoreModal={closeStoreModal}
             toggleEngineWrapper={toggleEngineWrapper}

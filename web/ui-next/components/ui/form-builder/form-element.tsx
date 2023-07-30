@@ -120,7 +120,7 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
         }
 
         setDisplayFragment(output)
-    }, [step])
+    }, [step, setValue])
 
     return displayFragment
 }

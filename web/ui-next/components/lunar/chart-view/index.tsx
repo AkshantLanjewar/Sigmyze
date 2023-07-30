@@ -63,7 +63,7 @@ const QuantaChartView: React.FC<IViewProps> = ({ tabId }) => {
                 return
 
             let newCharts = await FetchQuantaIndicators(indicators, fetchIndicator)
-            newCharts = ParseQuantaSettings(nodeId, charts, getQuantaIndicatorSetting, createIndicatorSetting)
+            newCharts = ParseQuantaSettings(nodeId, newCharts, getQuantaIndicatorSetting, createIndicatorSetting)
             setCharts([ ...newCharts ])
         }
 

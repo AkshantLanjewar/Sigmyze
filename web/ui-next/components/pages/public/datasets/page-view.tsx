@@ -56,10 +56,10 @@ const PublicDatasetView: React.FC<IViewProps> = memo(({ datasetCards, router }) 
                         <div className={styles.group}>
                             <div className={styles.header}>
                                 <Title order={2} className={styles.title}>
-                                    Economic Datasets
+                                    Published Datasets
                                 </Title>
 
-                                <Text size="sm" color="dimmed" className={styles.count}>1 Dataset</Text>
+                                <Text size="sm" color="dimmed" className={styles.count}>{datasetCards.length} Dataset</Text>
                             </div>
 
                             <SimpleGrid
@@ -77,7 +77,7 @@ const PublicDatasetView: React.FC<IViewProps> = memo(({ datasetCards, router }) 
                                         onClick={() => { router.push(`/public/quanta/${step.datasetId}`) }}
                                     >
                                         <CardSection className={styles.imageWrapper}>
-                                            <IconAtom2 width={"3em"} height={"3em"} />
+                                            <IconAtom2 width={98} height={98} />
                                         </CardSection>
 
                                         <Text mt={"sm"} weight={"bold"}>{step.datasetName}</Text>

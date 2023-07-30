@@ -16,6 +16,7 @@ const QuantaSegmentControlView: React.FC<IViewProps> = memo(({ value, items, set
                 onChange={setValue}
                 size={"sm"}
                 radius={"xl"}
+                mb={"md"}
                 transitionTimingFunction={"linear"}
                 color={"indigo"}
             />

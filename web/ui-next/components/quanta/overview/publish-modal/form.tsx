@@ -133,6 +133,8 @@ const PublishForm: React.FC<IFormProps> = ({ close }) => {
             await PublishDataset(token, postData)
             setLoadingStr(undefined)
             togglePublishUpdate()
+
+            close()
         }
 
         main()

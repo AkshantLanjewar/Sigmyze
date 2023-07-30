@@ -13,52 +13,59 @@ const PublicQuantaPageView: React.FC<IViewProps> = memo(({ datasetId }) => (
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
         <Container 
             p={"md"}
+            px={"xl"}
+            mt={"md"}
+            mb={"md"}
             fluid={true}
+            sx={{ width: "100%" }}
         >
-            <Link href={"/datasets"}>
+            <Link href={"/datasets"} >
                 <Group 
                     position={"left"} 
                     align={"center"} 
-                    spacing={5}
+                    spacing={2.5}
                     p={0}
                 >
-                    <IconArrowLeft />
+                    <IconArrowLeft size={18} color="#3b5bdb" />
 
                     <Text size={"sm"} weight={"bold"} color={"indigo"}>Go Back to Datasets!</Text>
                 </Group>
             </Link>
 
             <Group
-                    position={"left"}
-                    spacing={"xl"}
-                    mt={"xl"}
-                    p={0}
+                position={"left"}
+                align={"flex-start"}
+                spacing={"xl"}
+                mt={"xl"}
+                p={0}
+            >
+                <ThemeIcon
+                    size={64}
+                    color={"red"}
+                    mt={8}
                 >
-                    <ThemeIcon
-                        size={64}
-                        color={"red"}
-                    >
-                        <IconAtom2 width={48} height={48} />
-                    </ThemeIcon>
+                    <IconAtom2 width={48} height={48} />
+                </ThemeIcon>
 
-                    <Stack spacing={"lg"}>
-                        <Stack spacing={5}>
-                            <Title order={2}>Dataset Title</Title>
-                            <Title order={6}>Dataset ID</Title>
-                        </Stack>
-
-                        <Text size={"sm"} color={"dimmed"}>
-                            Dataset Description
-                        </Text>
+                <Stack spacing={"lg"}>
+                    <Stack spacing={5}>
+                        <Title order={2}>Dataset Title</Title>
+                        <Title order={6}>Dataset ID</Title>
                     </Stack>
-                </Group>
+
+                    <Text size={"sm"} color={"dimmed"} style={{ maxWidth: 500 }}>
+                        Dataset Description
+                    </Text>
+                </Stack>
+            </Group>
         </Container>
 
         <div style={{ flexGrow: 1, display: 'flex', width: "100%" }}>
             <Tabs
-                color={"indigo"}
-                radius={"sm"}
-                keepMounted={true}
+                color={"red"}
+                radius={"xs"}
+                keepMounted={false}
+                defaultValue={"indicators"}
                 sx={{
                     height: '100%',
                     width: "100%",
@@ -67,7 +74,7 @@ const PublicQuantaPageView: React.FC<IViewProps> = memo(({ datasetId }) => (
                     flexGrow: 1
                 }}
             >
-                <Tabs.List>
+                <Tabs.List px={0}>
                     <Tabs.Tab
                         value="indicators"
                         icon={<IconBuildingBank />}
@@ -92,7 +99,7 @@ const PublicQuantaPageView: React.FC<IViewProps> = memo(({ datasetId }) => (
 
                 <Tabs.Panel
                     value={"indicators"}
-                    sx={{ flexGrow: 1 }}
+                    sx={{ flexGrow: 1, backgroundColor: "#101113" }}
                 >
                     <PublicIndicatorsPanel datasetId={datasetId} />
                 </Tabs.Panel>

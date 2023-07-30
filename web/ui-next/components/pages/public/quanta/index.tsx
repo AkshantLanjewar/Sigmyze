@@ -36,8 +36,10 @@ const PublicQuantaPage: React.FC<IPublicQuantaPageProps> = ({ datasetId }) => {
         async function main() {
             setValidated(false)
             let isPublic = await IsPublic(datasetId)
-            if(isPublic === true)
+            if(isPublic === true) {
+                setValidated(true)
                 return
+            }
 
             //now we need to check if the user is authenticated for this dataset's page
             let token = authData?.token

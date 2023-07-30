@@ -7,17 +7,19 @@ import { addExecutionResults, executeSocketFunction, getOutputValueSocket, isExe
 import { IExecutionEngineContext, INodeExecutionResult, ISocketResp, ISocketRespHandler } from "./types"
 import { QuantaContextData } from "../../../../data/quanta/context"
 import { IQuantaState } from "../../../../data/quanta/types"
+import { IQuantaEditorProject } from "../../../../data/quanta/types/project"
 
 interface IExecutionContextProps {
     fileId: string,
+    editorData: IQuantaEditorProject | undefined,
     children?: React.ReactNode
 }
 
 const ExecutionContextData = createContext<IExecutionEngineContext | null>(null)
 
-const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children }) => {
+const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children, editorData }) => {
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
-    const { setEditorExecution, getEditorProject } = useContext(QuantaContextData) as IQuantaState
+    const { getEditorProject } = useContext(QuantaContextData) as IQuantaState
 
     /**
      * state relating to sockets
@@ -126,6 +128,13 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children }
 
         setExecutionResults([ ...executionCache ])
     }, [fileId])
+
+    useEffect(() => {
+        if(editorData === undefined)
+            return
+
+        setExecutionResults([ ...editorData.executionResults ])
+    }, [editorData])
     
     let contextData = {} as IExecutionEngineContext
     contextData.socketCreated = socketCreated

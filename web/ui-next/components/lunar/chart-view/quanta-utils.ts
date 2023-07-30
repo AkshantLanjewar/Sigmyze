@@ -12,11 +12,14 @@ const ParseQuantaSettings = (
     createIndicatorSetting: Function
 ) => {
     let nCharts = [] as IQuantaChart[]
+    console.log(charts)
     for(let i = 0; i < charts.length; i++) {
         let chart = charts[i]
+        console.log(chart)
         if(chart.indicator.indicatorId === undefined)
             continue
 
+        console.log(chart)
         let indicatorShell: IQuantaIndicatorShell = {
             datasetId: chart.datasetId,
             indicatorId: chart.indicator.indicatorId

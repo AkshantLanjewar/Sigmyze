@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.ApplicationServices;
+using SigmyzeServer.Models.Data;
 
 namespace SigmyzeServer.Controllers;
 
@@ -24,6 +25,12 @@ public partial class DatasetController
         }
 
         string? quantaId = await GetQuantaId(body.Token);
+        if(quantaId == null)
+        {
+            PublishedDatasetCollection? document = await _publishService.FetchPublishedDataset(body.Token);
+            quantaId = document?.QuantaId;
+        }
+
         if(quantaId == null)
         {
             msg = ErrorMsg("no_quanta");
@@ -50,6 +57,12 @@ public partial class DatasetController
 
         GetQuantaIndicatorsLengthResp resp = new GetQuantaIndicatorsLengthResp();
         string? quantaId = await GetQuantaId(token);
+        if(quantaId == null)
+        {
+            PublishedDatasetCollection? document = await _publishService.FetchPublishedDataset(token);
+            quantaId = document?.QuantaId;
+        }
+
         if(quantaId == null)
         {
             msg = ErrorMsg("no_token");

@@ -19,7 +19,8 @@ public partial class DatasetController
             return await SerializeJSON(response);
         }
 
-        QuantaRepositoryDefinition? projectDocument = await _quantaRepository.GetQuantaRepository(token);
+        string quantaId = publishedDocument.QuantaId;
+        QuantaRepositoryDefinition? projectDocument = await _quantaRepository.GetQuantaRepository(quantaId);
         if(projectDocument == null || projectDocument.Validate() == false)
         {
             response.Status = ErrorMsg("invalid_project");

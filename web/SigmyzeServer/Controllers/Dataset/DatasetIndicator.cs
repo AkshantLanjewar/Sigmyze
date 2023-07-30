@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SigmyzeServer.Models.API;
+using SigmyzeServer.Models.Data;
 
 namespace SigmyzeServer.Controllers;
 
@@ -14,6 +15,12 @@ public partial class DatasetController
         msg.MSG = "working";
 
         string? quantaId = await GetQuantaId(token);
+        if(quantaId == null)
+        {
+            PublishedDatasetCollection? document = await _publishService.FetchPublishedDataset(token);
+            quantaId = document?.QuantaId;
+        }
+
         GetQuantaIndicatorsResp response = new GetQuantaIndicatorsResp();
         if(quantaId == null)
         {
@@ -37,6 +44,12 @@ public partial class DatasetController
         msg.MSG = "working";
 
         string? quantaId = await GetQuantaId(token);
+        if(quantaId == null)
+        {
+            PublishedDatasetCollection? document = await _publishService.FetchPublishedDataset(token);
+            quantaId = document?.QuantaId;
+        }
+
         GetQuantaIndicatorsResp response = new GetQuantaIndicatorsResp();
         if(quantaId == null)
         {

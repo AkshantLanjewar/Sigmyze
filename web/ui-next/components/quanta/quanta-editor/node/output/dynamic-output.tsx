@@ -6,6 +6,7 @@ import { QuantaEditorContext } from '../../quanta-editor'
 import { IQuantaEditorGlobals, IQuantaSocket, IQuantaStoreItem, IQuantaTypeRef } from '../../types/types'
 import { validateStoreSocket, buildStoreKey } from '../../utils'
 import DynamicOutputView from './dynamic-view'
+import { IconFileCode2, IconStack2 } from '@tabler/icons'
 
 interface IDynamicOutput {
     output: IQuantaSocket,
@@ -13,6 +14,11 @@ interface IDynamicOutput {
     focused: boolean,
     parentId?: string
 }
+
+const icon_dict = {
+    file: <IconFileCode2 />,
+    stack_2: <IconStack2 />
+} as any
 
 const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, parentId }) => {
     const [renderedOutputs, setRenderedOutputs] = useState<IQuantaSocket[]>([])
@@ -26,8 +32,24 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, pare
             if(validateStoreSocket(storeItem) === false)
                 continue
 
+            if(storeItem.frozenData !== undefined && storeItem.data === undefined) {
+                let parsedData = JSON.parse(storeItem.frozenData)
+                if(parsedData.icon !== undefined) {
+                    let type = parsedData.type
+                    if(type === undefined)
+                        continue
+
+                    if(type.typeId === "xml" || type.typeId === "xsd")
+                        parsedData.icon = icon_dict["file"]
+                }
+
+                storeItem.data = parsedData
+            }
+
             let nOutput = {} as IQuantaSocket
             nOutput.socketId = storeItem.id
+            if(storeItem.data === undefined)
+                continue
 
             nOutput.type = storeItem.data.type
             nOutput.icon = storeItem.data.icon
@@ -84,7 +106,7 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, pare
             let storeItems = store.items
             if(storeItems === undefined)
                 return
-
+            
             buildStoreOutputs(storeItems)
         }
     }, [nodeId])

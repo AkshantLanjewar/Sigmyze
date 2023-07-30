@@ -4,7 +4,7 @@ import { IRawFragmentTemplateProps } from "../../../ui/multi-form/types";
 import { UserContextData } from "../../../data/user/context";
 import { IUserContext } from "../../../data/user/types";
 import { useRouter } from "next/router";
-import { Card, CardSection, SimpleGrid, Text } from "@mantine/core";
+import { Card, CardSection, Container, SimpleGrid, Text } from "@mantine/core";
 import styles from '../../../../pages/datasets/datasets.module.scss'
 import { IconAtom2 } from "@tabler/icons";
 
@@ -21,7 +21,8 @@ interface IViewProps {
 const View: React.FC<IViewProps> = memo(({ cards, activeValue, setSelected }) => (
     <SimpleGrid 
         p={"sm"}
-        cols={4}
+        cols={3}
+        sx={{ width: "100%" }}
         breakpoints={[
             { maxWidth: 1000, cols: 3 },
             { maxWidth: 755, cols: 2 },
@@ -32,7 +33,6 @@ const View: React.FC<IViewProps> = memo(({ cards, activeValue, setSelected }) =>
             <Card
                 radius={"md"}
                 className={styles.card}
-                sx={(theme) => ({ border: (activeValue === step.datasetId && activeValue !== undefined) ? `2px solid ${theme.colors.indigo[7]}` : 'none' })}
                 onClick={() => {
                     if(step.datasetId === undefined)
                         return
@@ -42,12 +42,22 @@ const View: React.FC<IViewProps> = memo(({ cards, activeValue, setSelected }) =>
                     setSelected(outputString)
                 }}
             >
-                <CardSection className={styles.imageWrapper}>
-                    <IconAtom2 width={"3em"} height={"3em"} />
-                </CardSection>
+                <Container 
+                    fluid={true} 
+                    sx={(theme) => ({ 
+                        width: "100%", 
+                        backgroundColor: theme.colors.dark[6], 
+                        paddingBottom: 12,
+                        border: step.datasetId === activeValue ? `2px solid ${theme.colors.indigo[8]}` : "none" 
+                    })}
+                >
+                    <CardSection className={styles.datasetWrapper}>
+                        <IconAtom2 width={"6em"} height={"6em"} />
+                    </CardSection>
 
-                <Text mt={"sm"} weight={"bold"}>{step.datasetName}</Text>
-                <Text className={styles.description} size={"xs"}>{step.datasetId?.toLowerCase()}</Text>
+                    <Text mt={"sm"} weight={"bold"}>{step.datasetName}</Text>
+                    <Text className={styles.description} size={"xs"}>{step.datasetId?.toLowerCase()}</Text>
+                </Container>
             </Card>
         ))}
     </SimpleGrid>

@@ -47,42 +47,7 @@ const MultiForm: React.FC<IAddMultiFormProps> = ({ formParts, cancel, submit }) 
 
         let payloadValue = collectedPayload[stepId]
         setActiveValue(payloadValue)
-    }, [activeStep])
-
-    //sets the form fragment based on the changed form step
-    useEffect(() => {
-        if(formStep === undefined || formStep > formSteps.length - 1)
-            return
-
-        let formPart = formSteps[formStep]
-        if(validateFormPart(formPart) === false)
-            return
-
-        //switch and set the active fragment
-        console.log(formPart)
-        switch(formPart.type) {
-            case "raw":
-                let RawFragment = formPart.rawFragment!
-                setActiveStep({ ...formPart })
-                setActiveFragment((
-                    <RawFragment
-                        activeValue={activeValue}
-                        collectedBefore={collectedBefore}
-                        setSelected={(payload: string) => {
-                            let activeId = activeStep?.partId
-                            if(activeId === undefined)
-                                return
-            
-                            setSelected(activeId, payload)
-                        }} 
-                    />
-                ))
-
-                break
-            default:
-                break
-        }
-    }, [formStep, formSteps])
+    }, [activeStep, collectedPayload])
 
     //now we need to build a collection of all the previously collected data within the correct output ids
     //move increment step func into a seperate function and call twice
@@ -169,6 +134,40 @@ const MultiForm: React.FC<IAddMultiFormProps> = ({ formParts, cancel, submit }) 
         newCollectedPayload[fragmentId] = payload
         setCollectedPayload({ ...newCollectedPayload })
     }, [collectedPayload])
+
+    //sets the form fragment based on the changed form step
+    useEffect(() => {
+        if(formStep === undefined || formStep > formSteps.length - 1)
+            return
+
+        let formPart = formSteps[formStep]
+        if(validateFormPart(formPart) === false)
+            return
+
+        //switch and set the active fragment
+        switch(formPart.type) {
+            case "raw":
+                let RawFragment = formPart.rawFragment!
+                setActiveStep({ ...formPart })
+                setActiveFragment((
+                    <RawFragment
+                        activeValue={activeValue}
+                        collectedBefore={collectedBefore}
+                        setSelected={(payload: string) => {
+                            let activeId = formPart?.partId
+                            if(activeId === undefined)
+                                return
+            
+                            setSelected(activeId, payload)
+                        }} 
+                    />
+                ))
+
+                break
+            default:
+                break
+        }
+    }, [formStep, formSteps, setSelected, collectedBefore])
 
     return (
         <MultiFormView

@@ -69,6 +69,7 @@ const AddQuantaIndicatorForm: React.FC<IFormProps> = ({ modalState, close }) => 
         }
 
         addQuantaIndicator(visualId, shell)
+        close()
     }, [ui, addQuantaIndicator])
     
     return (

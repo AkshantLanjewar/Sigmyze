@@ -21,12 +21,12 @@ const AddQIndicator: React.FC<IAddIndicatorProps> = memo(({ modalState, close })
         overlayOpacity={0.55}
         overlayBlur={3}
         exitTransitionDuration={200}
-        size={900}
+        size={1200}
         withCloseButton={false}
         sx={(theme) => ({
             '.mantine-Paper-root': {
                 padding: 0,
-                backgroundColor: theme.colors.dark[8]
+                backgroundColor: theme.colors.dark[9]
             }
         })}
     >

@@ -41,6 +41,7 @@ const UnpublishForm: React.FC<IFormProps> = ({ close }) => {
             if(token === undefined || quantaId === null || organizationId === null)
                 return
             
+            setLoadingStr("swag")
             let valKeys = Object.keys(valStore)
             if(valKeys.includes('affirm') === false) {
                 showNotification({
@@ -50,6 +51,7 @@ const UnpublishForm: React.FC<IFormProps> = ({ close }) => {
                     autoClose: 1000 * 10
                 })
 
+                setLoadingStr(undefined)
                 return
             }
 
@@ -58,7 +60,9 @@ const UnpublishForm: React.FC<IFormProps> = ({ close }) => {
                 organizationId
             }
 
-            await UnpublishDataset(token, data)
+            try { await UnpublishDataset(token, data) } catch (error) {}
+            setLoadingStr(undefined)
+            close()
         }
 
         main()

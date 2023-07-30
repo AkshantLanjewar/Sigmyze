@@ -1,11 +1,13 @@
-import { ParentSize } from "@visx/responsive"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { IGlobalChartSettings } from "../../data/lunar/types/chart-types"
 import { IPresentationChart } from "../document-editor/blocks/types"
-import styles from './chart-view.module.scss'
-import ChartEngine from "./engine/chart-engine"
-import { ILunarChart } from "./engine/types"
-import { FetchIndicators, ParsePresentationSettings } from "./utils"
+import { IQuantaChart } from "./engine/types"
+import { FetchQuantaIndicators, ParseQuantaSettings } from "./quanta-utils"
+import QChartEngine from "./q-engine"
+import { QuantaDatasetManagerData } from "../../ui/quanta-dataset-manager"
+import { IDatasetManagerState } from "../../ui/quanta-dataset-manager/types"
+import { LunarContextData } from "../../data/lunar/context"
+import { ILunarState } from "../../data/lunar/types/types"
 
 interface IDocumentChartViewProps {
     data: IPresentationChart,
@@ -14,18 +16,17 @@ interface IDocumentChartViewProps {
 }
 
 const DocumentChartView: React.FC<IDocumentChartViewProps> = ({ data, width, height }) => {
-    const [chart, setChart] = useState<ILunarChart[]>([])
+    const [chart, setChart] = useState<IQuantaChart[]>([])
     const [globals, setGlobals] = useState<IGlobalChartSettings | undefined>(undefined)
+
+    const { fetchIndicator } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
+    const { getQuantaIndicatorSetting, createIndicatorSetting } = useContext(LunarContextData) as ILunarState
 
     useEffect(() => {
         async function main() {
-            let indicators = data.indicators
-            let settings = data.chartSettings
-            let node_id = data.node_id
-
-            let charts = await FetchIndicators(indicators)
-            charts = ParsePresentationSettings(charts, settings)
-            setChart([ ...charts ])
+            let newCharts = await FetchQuantaIndicators(data.indicators, fetchIndicator)
+            newCharts = ParseQuantaSettings(data.node_id, newCharts, getQuantaIndicatorSetting, createIndicatorSetting)
+            setChart([ ...newCharts ])
         }
 
         main()
@@ -35,7 +36,7 @@ const DocumentChartView: React.FC<IDocumentChartViewProps> = ({ data, width, hei
 
     return (
         <div style={{ width: width, height: height }}>
-            <ChartEngine 
+            <QChartEngine 
                 width={width}
                 height={height}
                 charts={chart}

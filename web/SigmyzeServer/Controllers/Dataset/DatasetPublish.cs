@@ -18,7 +18,7 @@ public partial class DatasetController
         string result = await _publishService.PublishDataset(data);
         switch(result) {
             case "success":
-                msg.Error = true;
+                msg.Error = false;
                 msg.MSG = "published";
 
                 break;
@@ -115,7 +115,7 @@ public partial class DatasetController
         string result = await _publishService.UnpublishDataset(data);
         switch(result) {
             case "success":
-                msg.Error = true;
+                msg.Error = false;
                 msg.MSG = "unpubilshed";
 
                 break;

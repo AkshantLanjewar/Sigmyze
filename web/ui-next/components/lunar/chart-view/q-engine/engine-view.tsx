@@ -51,9 +51,9 @@ const QuantaEngineView: React.FC<IViewProps> = memo(({
     setTooltipData,
     closeTooltip
 }) => (
-    <>
+    <div ref={ref} style={{ width: width, height: height, position: 'relative' }}>
         {scales && (
-            <div ref={ref} style={{ width: width, height: height, position: 'relative' }}>
+            <>
                 {display
                     ? (
                         <QD3RenderTitle 
@@ -75,50 +75,48 @@ const QuantaEngineView: React.FC<IViewProps> = memo(({
                 }
         
                 <svg className={styles.svg} ref={svgRef}>
-                    <Group left={margin.left} top={margin.top}>
-                        {scales.d3Charts && scales.d3Charts.map((step, i) => (
-                            <D3Chart
-                                showAxis={i === 0}
-                                chart={step}
-                                dims={boxDims}
-                                timescale={scales.timescale!}
-                                index={i}
-                                setPathRef={setPathRef}
-                            />
-                        ))}
-        
-                        <D3Tooltip 
+                    {scales.d3Charts && scales.d3Charts.map((step, i) => (
+                        <D3Chart
+                            showAxis={i === 0}
+                            chart={step}
                             dims={boxDims}
-                            charts={scales.d3Charts}
-                            timescale={scales.timescale}
-                            margin={margin}
-                            pathRefs={pathRefs}
-        
-                            tooltipRef={tooltipRef.current}
-                            tooltipData={tooltipData}
-                            setTooltipData={setTooltipData}
-                            closeTooltip={closeTooltip}
-        
+                            timescale={scales.timescale!}
+                            index={i}
+                            setPathRef={setPathRef}
                         />
-        
-                        {scales.timescale && (
-                            <AxisBottom
-                                stroke={'#373A40'}
-                                tickStroke={'#141517'}
-                                strokeWidth={2}
-        
-                                orientation={'bottom'}
-                                scale={scales.timescale}
-                                top={boxDims.y}
-                                hideTicks
-                                tickLabelProps={() => ({
-                                    fill: '#EDF2F7',
-                                    fontSize: 12,
-                                    textAnchor: "middle"
-                                })}
-                            />
-                        )}
-                    </Group>
+                    ))}
+    
+                    <D3Tooltip 
+                        dims={boxDims}
+                        charts={scales.d3Charts}
+                        timescale={scales.timescale}
+                        margin={margin}
+                        pathRefs={pathRefs}
+    
+                        tooltipRef={tooltipRef.current}
+                        tooltipData={tooltipData}
+                        setTooltipData={setTooltipData}
+                        closeTooltip={closeTooltip}
+    
+                    />
+    
+                    {scales.timescale && (
+                        <AxisBottom
+                            stroke={'#373A40'}
+                            tickStroke={'#141517'}
+                            strokeWidth={2}
+    
+                            orientation={'bottom'}
+                            scale={scales.timescale}
+                            top={boxDims.y}
+                            hideTicks
+                            tickLabelProps={() => ({
+                                fill: '#EDF2F7',
+                                fontSize: 12,
+                                textAnchor: "middle"
+                            })}
+                        />
+                    )}
                 </svg>
         
                 <D3TooltipBox
@@ -128,9 +126,9 @@ const QuantaEngineView: React.FC<IViewProps> = memo(({
                     ref={tooltipRef}
                     charts={scales.d3Charts}
                 />
-            </div>
+            </>
         )}
-    </>
+    </div>
 ))
 
 export default QuantaEngineView

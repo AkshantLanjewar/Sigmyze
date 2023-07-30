@@ -53,16 +53,18 @@ import { IQuantaRFEdge } from "../../quanta/quanta-editor/types/edges"
 import { IQuantaTypeRef } from "../../quanta/quanta-editor/types/node-type"
 import { IQuantaRFNode } from "../../quanta/quanta-editor/types/nodes"
 import { IQuantaStore } from "../../quanta/quanta-editor/types/store"
+import { IDatasetCacheObject } from "../../ui/quanta-dataset-manager/types"
 
 interface IQuantaContextProps {
     quantaId: string | null,
     organizationId: string | null,
-    children?: JSX.Element | never[]
+    children?: JSX.Element | never[],
+    primeData?: IDatasetCacheObject
 }
 
 const QuantaContextData = createContext<IQuantaState | null>(null)
 
-const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId, children }) => {
+const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId, children, primeData }) => {
     const [projectData, setProjectData] = useState<IQuantaProjectData | undefined>(undefined)
 
     //state for the selector
@@ -141,6 +143,13 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     useEffect(() => {
         loadQuanta()
     }, [])
+
+    useEffect(() => {
+        if(primeData === undefined)
+            return
+
+        setSchemas([ ...primeData.schemas ])
+    }, [primeData])
 
     useEffect(() => {
         loadQuanta()

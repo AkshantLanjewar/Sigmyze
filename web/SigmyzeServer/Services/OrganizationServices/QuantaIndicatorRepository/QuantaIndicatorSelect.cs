@@ -35,14 +35,18 @@ public partial class QuantaIndicatorRepository
         BsonDocument matchArrStage = matchQueryStage(query);
         BsonDocument groupStage = new BsonDocument {
             {
-                "indicators", new BsonDocument {
+                "$group", new BsonDocument {
                     {
-                        "$push", "$project_indicators"
+                        "indicators", new BsonDocument {
+                            {
+                                "$push", "$project_indicators"
+                            },
+                        }
                     },
+                    {
+                        "_id", "$_id"
+                    }
                 }
-            },
-            {
-                "_id", "$_id"
             }
         };
 
@@ -98,12 +102,16 @@ public partial class QuantaIndicatorRepository
 
         BsonDocument groupStage = new BsonDocument {
             {
-                "indicators", new BsonDocument {
+                "$group", new BsonDocument {
                     {
-                        "$push", "$project_indicators"
+                        "indicators", new BsonDocument {
+                            {
+                                "$push", "$project_indicators"
+                            },
+                        }
                     },
                     {
-                        "_id", null
+                        "_id", 0
                     }
                 }
             }

@@ -1,8 +1,13 @@
 import * as d3 from 'd3'
 import { ChartDims, IChartD3Scales, IChartData, ID3Chart, IQuantaChart } from "../engine/types"
 import { colorTsar } from "../engine/utils"
+import { IQuantaIndicatorText } from '../../../ui/quanta-dataset-manager/types'
 
-const processQuantaCharts = (charts: IQuantaChart[], dims: ChartDims) => {
+const processQuantaCharts = async (
+    charts: IQuantaChart[], 
+    dims: ChartDims, 
+    fetchIndicatorText: (datasetId: string, indicatorId: string) => Promise<IQuantaIndicatorText | undefined>
+) => {
     let unsortedLabels = [] as Date[]
     for(let i = 0; i < charts.length; i++) {
         let chart = charts[i]
@@ -36,6 +41,11 @@ const processQuantaCharts = (charts: IQuantaChart[], dims: ChartDims) => {
         let name = `${datasetId}::${indicatorId}`
         const GETYData = (d: IChartData) => d.value
 
+        let indicatorText = await fetchIndicatorText(datasetId, indicatorId)
+        if(indicatorText === undefined)
+            continue
+
+        name = indicatorText.short
         let valueAxis = d3
             .scaleLinear()
             .range([dims.y , 0])
