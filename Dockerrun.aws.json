@@ -33,8 +33,8 @@
             "hostname": "sigmyze-server",
             "portMappings": [
                 {
-                    "hostPort": 2015,
-                    "containerPort": 80
+                    "hostPort": 80,
+                    "containerPort": 2015
                 }
             ],
             "memory": 200
@@ -45,7 +45,7 @@
             "hostname": "quanta-server",
             "portMappings": [
                 {
-                    "hostPort": 80,
+                    "hostPort": 5025,
                     "containerPort": 5025
                 }
             ],
