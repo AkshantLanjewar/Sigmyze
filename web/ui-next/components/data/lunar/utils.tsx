@@ -9,10 +9,12 @@ import {
     deleteProject,
     createProject,
     idVoid,
-    addIndicator
+    addIndicator,
+    addQuantaIndicator
 } from "./types/types"
 
 import { chartMenu, documentMenu, folderMenu, indicatorMenu } from './types/menu-templates'
+import { IQuantaIndicatorText } from '../../ui/quanta-dataset-manager/types'
 
 let project_actions = [
     {
@@ -73,7 +75,7 @@ interface IActionFunctions {
     deleteProject?: deleteProject,
     createProject?: createProject,
     setExplorerModal?: idVoid,
-    deleteIndicator?: addIndicator
+    deleteIndicator?: addQuantaIndicator
 }
 
 function GenerateActions(id: string, type: string, actions: IActionFunctions): IProjectNodeAction[] {
@@ -148,11 +150,11 @@ function HydrateContextItems(
                 nItem.cb = () => { actions.setExplorerModal!("add_indicator") }
                 break
             case "Delete Indicator":
-                if(data === undefined || data.indicator === undefined)
-                nItem.cb = () => {  }
+                if(data?.quantaIndicator === undefined)
+                    continue    
 
-                let indicator = data!.indicator!
-                nItem.cb = () => { actions.deleteIndicator!(id, indicator) }
+                let indicator = data.quantaIndicator
+                nItem.cb = () => actions.deleteIndicator!(id, indicator)
                 break
             default:
                 nItem.cb = () => {  }
@@ -165,7 +167,11 @@ function HydrateContextItems(
     return nItems
 }
 
-function ConvertToTree(splits: Array<IProjectNode>, actions: IActionFunctions): Array<ITreeNode> {
+const ConvertToTree = async (
+    splits: Array<IProjectNode>, 
+    actions: IActionFunctions, 
+    fetchIndicatorText: (datasetId: string, indicatorId: string) => Promise<IQuantaIndicatorText | undefined>
+): Promise<Array<ITreeNode>> => {
     let nNodes: Array<ITreeNode> = []
     for(let i = 0; i < splits.length; i++) {
         let split = splits[i]
@@ -191,37 +197,38 @@ function ConvertToTree(splits: Array<IProjectNode>, actions: IActionFunctions): 
         }
 
         node['actions']  = GenerateActions(split.node_id, split.node_type, actions)
-        node['children'] = ConvertToTree(split.children, actions)
+        node['children'] = await ConvertToTree(split.children, actions, fetchIndicatorText)
         if(split.node_type === "chart") {
             node['useActive'] = true
-            let indicators = split.data?.indicators
-            if(indicators !== undefined) {
+            let indicators = split.data?.quantaIndicators
+            if(indicators !== undefined)
                 for(let i = 0; i < indicators.length; i++) {
-                    let indicator = indicators[i]
-                    let indicator_child = {
-                        node_id: `${node.node_id}-${indicator.object.object_id}:${indicator.indicator.indicator_id}`,
-                        node_type: 'indicator',
-                        node_title: `${indicator.object.object_id}:${indicator.indicator.indicator_id}`,
+                    let indicatorShell = indicators[i]
+                    let indicatorText = await fetchIndicatorText(indicatorShell.datasetId, indicatorShell.indicatorId)
+                    if(indicatorText === undefined)
+                        continue
 
-                        data: {
-                            indicator: indicator
-                        },
-    
+                    let indicatorChild = {
+                        node_id: `${indicatorShell.datasetId}::${indicatorShell.indicatorId}`,
+                        node_type: 'indicator',
+                        node_title: indicatorText.short,
+
+                        data: { quantaIndicator: indicatorShell },
+
                         opened: true,
                         useActive: true,
-                        context: true,
+                        context: true
                     } as ITreeNode
 
-                    indicator_child['contextItems'] = HydrateContextItems(
-                        indicatorMenu, 
-                        actions, 
-                        node.node_id, 
-                        indicator_child.data
+                    indicatorChild['contextItems'] = HydrateContextItems(
+                        indicatorMenu,
+                        actions,
+                        node.node_id,
+                        indicatorChild.data
                     )
-    
-                    node['children'].push(indicator_child)
+
+                    node['children'].push(indicatorChild)
                 }
-            }
         }
 
         if(split.node_type === "project")

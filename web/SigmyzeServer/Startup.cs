@@ -10,6 +10,7 @@ using SigmyzeServer.Services.DatabaseServices;
 using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using SigmyzeServer.Services.OrganizationServices;
+using System.Net.WebSockets;
 
 namespace SigmyzeServer
 {
@@ -23,9 +24,17 @@ namespace SigmyzeServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
+            services.AddCors(options => options.AddDefaultPolicy(
+                builder => builder
+                    .WithOrigins("http://localhost")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+            ));
 
+            services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
             services.AddControllers();
+
             services.AddApiVersioning(config => {
                 config.DefaultApiVersion = new ApiVersion(1, 0);
                 config.AssumeDefaultVersionWhenUnspecified = true;
@@ -62,11 +71,19 @@ namespace SigmyzeServer
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<ITokenDataService, TokenDataService>();
 
+            //data services
+            services.AddSingleton<IQuantaDatasetService, QuantaDatasetService>();
+            services.AddSingleton<IPublishService, PublishService>();
+
             //organization services
             services.AddSingleton<IOrganizationRepository, OrganizationRepository>();
             services.AddSingleton<IDriveRepository, DriveRepository>();
             services.AddSingleton<IProjectRepository, ProjectRepository>();
+            services.AddSingleton<IQuantaRepository, QuantaRepository>(); 
+            services.AddSingleton<IQuantaIndicatorRepository, QuantaIndicatorRepository>();
             services.AddSingleton<IUserServiceRepository, UserServiceRepository>();
+            services.AddSingleton<ICodeRepository, CodeRepository>();
+            services.AddSingleton<IQuantaExecutionService, QuantaExecutionService>();
 
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -91,6 +108,7 @@ namespace SigmyzeServer
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors();
             app.UseSwagger();
 
             app.UseSession();
@@ -99,6 +117,7 @@ namespace SigmyzeServer
                 var token = context.Session.GetString("Token");
                 if(!string.IsNullOrEmpty(token))
                     context.Request.Headers.Add("Authorization", "Bearer " + token);
+                    
                 await next();
             });
 

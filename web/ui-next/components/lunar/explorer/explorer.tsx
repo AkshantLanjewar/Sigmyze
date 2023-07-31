@@ -6,11 +6,14 @@ import { ConvertToTree } from '../../data/lunar/utils'
 
 import Tree, { ITreeNode } from '../../tree/tree'
 import { usePrevious } from '@mantine/hooks'
+import { QuantaDatasetManagerData } from '../../ui/quanta-dataset-manager'
+import { IDatasetManagerState } from '../../ui/quanta-dataset-manager/types'
 
 const Explorer: React.FC = ({ }) => {
     const [nodes, setNodes] = useState<Array<ITreeNode>>([])
     const prevNodes = usePrevious(nodes)
 
+    const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
     const lunarContext = useContext(LunarContextData) as ILunarState 
     const { data, ui } = lunarContext
 
@@ -40,25 +43,29 @@ const Explorer: React.FC = ({ }) => {
     }
 
     useEffect(() => {
-        if(data == null)
-            return
-        if(ui == null)
-            return
+        async function main() {
+            if(data == null)
+                return
+            if(ui == null)
+                return
 
-        let nNodes = ConvertToTree(data.splits, { 
-            deleteProject: lunarContext.deleteProject, 
-            createProject: lunarContext.createProject, 
-            setExplorerModal: lunarContext.setExplorerModal, 
-            deleteIndicator: lunarContext.deleteIndicator 
-        }) 
+            let nNodes = await ConvertToTree(data.splits, { 
+                deleteProject: lunarContext.deleteProject, 
+                createProject: lunarContext.createProject, 
+                setExplorerModal: lunarContext.setExplorerModal, 
+                deleteIndicator: lunarContext.deleteQuantaIndicator 
+            }, fetchIndicatorText) 
 
-        if(nNodes === undefined)
-            return
-        //set the active from the ui
-        nNodes = SetActive(nNodes, ui.visual_id)
+            if(nNodes === undefined)
+                return
+            //set the active from the ui
+            nNodes = SetActive(nNodes, ui.visual_id)
 
-        //setDataNodes([ ...nNodes ])
-        setNodes([ ...nNodes ]) 
+            //setDataNodes([ ...nNodes ])
+            setNodes([ ...nNodes ]) 
+        }
+
+        main()
     }, [data, ui])
 
     useEffect(() => {

@@ -1,6 +1,7 @@
 import styles from './tree.module.scss'
 import Node   from './node'
 import { IIndicator } from '../data/datasets/DatasetsTypes'
+import { IQuantaIndicatorShell } from '../ui/quanta-dataset-manager/types/dataset'
 
 interface ITreeNode {
     node_id: string,
@@ -19,7 +20,8 @@ interface ITreeNode {
 }
 
 interface ITreeNodeData {
-    indicator?: IIndicator
+    indicator?: IIndicator,
+    quantaIndicator?: IQuantaIndicatorShell
 }
 
 interface IContextMenuItem {
@@ -56,5 +58,5 @@ const Tree: React.FC<ITreeProps> = ({ nodes, setActive }): JSX.Element => {
     )
 }
 
-export type { ITreeNode, IContextMenuItem, ITreeNodeData }
+export type { ITreeNode, IContextMenuItem, ITreeNodeData, ITreeAction }
 export default Tree

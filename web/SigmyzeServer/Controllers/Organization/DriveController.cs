@@ -17,17 +17,20 @@ namespace SigmyzeServer.Controllers
         private readonly IUserServiceRepository _userServiceRepository;
         private readonly IDriveRepository _driveRepository;
         private readonly IProjectRepository _projectRepository; 
+        private readonly IQuantaRepository _quantaRepository;
 
         public DriveController(
             IOrganizationRepository organizationRepository, 
             IUserServiceRepository userServiceRepository,
             IDriveRepository driveRepository,
-            IProjectRepository projectRepository
+            IProjectRepository projectRepository,
+            IQuantaRepository quantaRepository
         ) : base(organizationRepository)
         {
             _userServiceRepository = userServiceRepository;
             _driveRepository = driveRepository;
             _projectRepository = projectRepository;
+            _quantaRepository = quantaRepository;
         }
 
         //FEATURE: This retreives a drive from the collection chain
@@ -72,7 +75,7 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
             drive = utils.InsertFolder(drive!, body.ParentFolder, body.FolderName);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
@@ -107,7 +110,7 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
             drive = utils.DeleteFolder(drive!, body.ParentFolder, body.FolderId);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
@@ -141,7 +144,7 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
             drive = utils.UpdateFolder(drive!, body.ParentFolder, body.FolderId, body.FolderName);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
@@ -156,7 +159,7 @@ namespace SigmyzeServer.Controllers
             msg.Error = false;
             msg.MSG = "new_project";
 
-            if(body.OrganizationId == null || body.ProjectName == null || body.ParentFolder == null)
+            if(body.OrganizationId == null || body.ProjectName == null || body.ParentFolder == null || body.ProjectType == null)
             {
                 msg.MSG = "bad_req";
                 msg.Error = true;
@@ -175,8 +178,8 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
-            drive = utils.InsertProject(drive!, body.OrganizationId, body.ParentFolder, body.ProjectName);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
+            drive = await utils.InsertProject(drive!, body.OrganizationId, body.ParentFolder, body.ProjectName, body.ProjectType);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
             return await SerializeJSON(msg);
@@ -190,7 +193,7 @@ namespace SigmyzeServer.Controllers
             msg.Error = false;
             msg.MSG = "delete_project";
 
-            if(body.OrganizationId == null || body.ProjectId == null || body.ParentFolder == null)
+            if(body.OrganizationId == null || body.ProjectId == null || body.ParentFolder == null || body.ProjectType == null)
             {
                 msg.MSG = "bad_req";
                 msg.Error = true;
@@ -209,8 +212,8 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
-            drive = utils.DeleteProject(drive!, body.ParentFolder, body.ProjectId);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
+            drive = utils.DeleteProject(drive!, body.ParentFolder, body.ProjectId, body.ProjectType);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
             return await SerializeJSON(msg);
@@ -224,7 +227,7 @@ namespace SigmyzeServer.Controllers
             msg.Error = false;
             msg.MSG = "project-updated";
 
-            if(body.OrganizationId == null || body.ProjectId == null || body.ParentFolder == null)
+            if(body.OrganizationId == null || body.ProjectId == null || body.ParentFolder == null || body.ProjectType == null)
             {
                 msg.MSG = "bad_req";
                 msg.Error = true;
@@ -243,8 +246,8 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository);
-            drive = await utils.UpdateProject(drive!, body.ParentFolder, body.ProjectId, body.ProjectName);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
+            drive = await utils.UpdateProject(drive!, body.ParentFolder, body.ProjectId, body.ProjectName, body.ProjectType);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
             return await SerializeJSON(msg);

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react"
+import { createContext, useState, useEffect, useContext, useCallback } from "react"
 import { 
     ILunarState, 
     ILunarProjectData, 
@@ -34,7 +34,10 @@ import {
     SetActiveItem,
     SwitchTab,
     GrabDocument,
-    SetDocument
+    SetDocument,
+    AddQuantaIndicator,
+    DeleteQuantaIndicator,
+    GetQuantaIndicatorSetting
 } from "./functions/functions"
 
 import { ITreeNode } from "../../tree/tree"
@@ -44,6 +47,7 @@ import { UserContextData } from "../user/context"
 import { IUserContext } from "../user/types"
 import { usePrevious } from "@mantine/hooks"
 import { IDocument } from "./types/document-types"
+import { IQuantaIndicatorShell } from "../../ui/quanta-dataset-manager/types"
 
 interface ILunarContextProps {
     pkg: IAddIndicatorData
@@ -267,12 +271,26 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
     const getIndicatorSetting = (id: string, indicator: IIndicator) => GetIndicatorSetting(data, id, indicator)
     const setChartTitle = (id: string, name: string) =>
         SetChartTitle(data, setData, id, name, updateDrive)
+    const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
+        CreateIndicatorSetting(data, setData, updateDrive, id, setting)
+
     const addIndicator = ( id: string, indicator: IIndicator ) =>
         AddIndicator(data, setData, id, indicator, updateDrive)
     const deleteIndicator = (id: string, indicator: IIndicator) =>
         DeleteIndicator(data, setData, id, indicator, updateDrive)
-    const createIndicatorSetting = (id: string, setting: IIndicatorSetting) => 
-        CreateIndicatorSetting(data, setData, updateDrive, id, setting)
+
+    //quanta indicator counterparts (moving over to quanta system, delete unsused code next update cycle)
+    const addQuantaIndicator = useCallback(( id: string, indicator: IQuantaIndicatorShell ) => {
+        return AddQuantaIndicator(data, setData, id, indicator)
+    }, [data])
+
+    const deleteQuantaIndicator = useCallback((id: string, indicator: IQuantaIndicatorShell) => {
+        return DeleteQuantaIndicator(data,setData, id, indicator, updateDrive)
+    }, [data, updateDrive])
+
+    const getQuantaIndicatorSetting = useCallback((id: string, indicator: IQuantaIndicatorShell) => {
+        return GetQuantaIndicatorSetting(data, id, indicator)
+    }, [data])
 
     //document functions
     const grabDocument = (documentId: string) =>
@@ -297,6 +315,7 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 createSettings: createSettings ,
                 getNodeIdTab: getNodeIdTab,
                 getIndicatorSetting,
+                getQuantaIndicatorSetting,
                 createIndicatorSetting,
                 deleteIndicator,
                 createGlobals,
@@ -307,7 +326,9 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                 closeTab,
                 toggleDriveUpdate: updateDrive,
                 grabDocument,
-                setDocument
+                setDocument,
+                addQuantaIndicator,
+                deleteQuantaIndicator
             }}>
                 <div style={{ width: "100%", height: "100%" }}>
                     {ui !== null && (

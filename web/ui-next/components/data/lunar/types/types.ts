@@ -1,4 +1,5 @@
 import { ITreeNode } from "../../../tree/tree"
+import { IQuantaIndicatorShell } from "../../../ui/quanta-dataset-manager/types"
 import { IIndicator } from "../../datasets/DatasetsTypes"
 import { IChartSettings, IGlobalChartSettings, IIndicatorSetting } from "./chart-types"
 import { IDocument } from "./document-types"
@@ -8,10 +9,12 @@ type deleteProject = (id: string, type: string) => void
 type createProject = (parent_id: string, name: string, type: string) => void
 type setActiveItem = (id: string, type: string) => void
 type addIndicator = ( id: string, indicator: IIndicator ) => void
+type addQuantaIndicator = ( id: string, indicatorId: IQuantaIndicatorShell ) => void
 type idExists = ( id: string ) => boolean
 type idVoid = (id: string ) => void
 type idStringNull = (id: string) => string | null
 type getIndicatorSetting = (id: string, indicator: IIndicator) => IIndicatorSetting | null
+type getQuantaIndicatorSetting = (id: string, indicator: IQuantaIndicatorShell) => IIndicatorSetting | null
 
 /**
  * @interface
@@ -113,7 +116,22 @@ interface ILunarState {
      * @description
      *  this removes an indicator from the chart
      */
-    deleteIndicator: addIndicator
+    deleteIndicator: addIndicator,
+
+    /**
+     * adds an quanta indicator into the chart's context
+     */
+    addQuantaIndicator: addQuantaIndicator,
+
+    /**
+     * removes a quanta indicator from the charts context
+     */
+    deleteQuantaIndicator: addQuantaIndicator,
+
+    /**
+     * grabs the setting for a quanta indicator in the chart
+     */
+    getQuantaIndicatorSetting: getQuantaIndicatorSetting
 
     /**
      * @param {string} id
@@ -172,6 +190,8 @@ interface ILunarState {
      *  this creates an indicator setting for the specified chart
      */
     createIndicatorSetting: Function,
+
+    
 
     /**
      * @param {string} id
@@ -366,7 +386,8 @@ interface IProjectNodeData {
     indicators?: Array<IIndicator>,
     chartSettings?: IChartSettings,
     chartGlobals?: IGlobalChartSettings,
-    document_id?: string
+    document_id?: string,
+    quantaIndicators?: IQuantaIndicatorShell[]
 }
 
 //default project
@@ -426,5 +447,7 @@ export type {
     createProject,
     idVoid,
     getIndicatorSetting,
-    addIndicator 
+    addIndicator,
+    addQuantaIndicator,
+    getQuantaIndicatorSetting 
 }

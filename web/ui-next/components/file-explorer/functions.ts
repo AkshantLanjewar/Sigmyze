@@ -55,8 +55,11 @@ function ConvertToFileExplorerData(resp: IDriveResp, activeDirectory: string) {
     for(let i = 0; i < projects_r.length; i++) {
         let project = projects_r[i]
         let nItem = {} as IExplorerItem
+        let project_type = "lunar_project"
+        if(project.project_type !== undefined)
+            project_type = project.project_type
 
-        nItem.item_type = "lunar_project"
+        nItem.item_type = project_type
         nItem.item_id = project.project_id!
         nItem.item_name = project.project_name!
         items.push(nItem)

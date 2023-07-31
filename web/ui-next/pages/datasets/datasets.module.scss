@@ -1,3 +1,5 @@
+$dark-9: var(--mantine-color-dark-9);
+
 .header {
     position: relative;
     min-height: 500px;
@@ -76,6 +78,16 @@
         min-height: 154px;
         display: flex;
         justify-content: center;
+        align-items: center;
+
+    }
+
+    .datasetWrapper {
+        min-height: 154px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $dark-9;
     }
 
     .description {

@@ -7,6 +7,8 @@ import { useClickOutside } from '@mantine/hooks'
 import { LunarContextData } from '../../../../data/lunar/context'
 import { ITooltipState } from '../d3-tooltip'
 import { CompareIndicators } from '../../../../data/lunar/functions/chart-functions'
+import { QuantaDatasetManagerData } from '../../../../ui/quanta-dataset-manager'
+import { IDatasetManagerState } from '../../../../ui/quanta-dataset-manager/types'
 
 interface ID3ChartTitleProps {
     margin: IChartMargin,
@@ -96,6 +98,9 @@ interface IIndicatorTitleItemProps {
 
 const IndicatorTitleItem: React.FC<IIndicatorTitleItemProps> = ({ setting, index, tooltipData, charts }): JSX.Element => {
     const [indicatorValue, setIndicatorValue] = useState<number | null>(null)
+    const [shortValue, setShortValue] = useState<string | undefined>(undefined)
+
+    const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
 
     useEffect(() => {
         let data = tooltipData.tooltipData
@@ -122,6 +127,22 @@ const IndicatorTitleItem: React.FC<IIndicatorTitleItemProps> = ({ setting, index
         }
     }, [tooltipData.tooltipOpen])
 
+    useEffect(() => {
+        async function main() {
+            let indicator = setting.quantaIndicator
+            if(indicator === undefined)
+                return
+
+            let indicatorText = await fetchIndicatorText(indicator.datasetId, indicator.indicatorId)
+            if(indicatorText === undefined)
+                return
+
+            setShortValue(indicatorText.short)
+        }
+
+        main()
+    }, [setting])
+
     return (
         <div className={styles.clickItem}>
             <Group position='apart'>
@@ -137,7 +158,7 @@ const IndicatorTitleItem: React.FC<IIndicatorTitleItemProps> = ({ setting, index
                         size={"sm"}
                         weight={"bold"}
                     >
-                        {`${setting.indicator.object.object_id}:${setting.indicator.indicator.indicator_id}`}
+                        {shortValue}
                     </Text>
                 </Group>
 
@@ -243,5 +264,5 @@ const ClickItem: React.FC<IClickItemProps> =
     )
 }
 
-export { IndicatorTitleItem }
+export { IndicatorTitleItem, ClickItem }
 export default D3ChartTitle

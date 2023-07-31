@@ -1,0 +1,18 @@
+.file__button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+
+    .file__name {
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .file__type {
+        color: #fff;
+        font-weight: 700;
+        font-size: 8px;
+    }
+}

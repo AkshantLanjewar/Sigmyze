@@ -1,0 +1,128 @@
+$indigo-6: var(--mantine-color-indigo-6);
+
+$inputWidth: 10px;
+
+$timing: 1s;
+$delay: .5s;
+
+.loader__wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+
+    z-index: 20;
+
+    pointer-events: none;
+    overflow: hidden;
+
+    .loader__inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.in__progress {
+        .bar {
+            position: absolute;
+            width: 3rem;
+            height: 0.5rem;
+            background: $indigo-6;
+    
+            transition: top $timing linear;
+            transition: left $timing linear;
+    
+            -webkit-animation-duration: $timing;
+            animation-duration: $timing;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+            border-radius: 8px;
+    
+            &.delay {
+                animation-delay: $delay;
+                -webkit-animation-delay: $delay;
+            }
+    
+            @keyframes h-move {
+                0% {
+                    left: 0;
+                }
+    
+                100% {
+                    left: calc(100%);
+                }
+            }
+    
+            @-webkit-keyframes h-move {
+                0% {
+                    left: 0;
+                }
+    
+                100% {
+                    left: calc(100%);
+                }
+            }
+    
+            @keyframes v-move {
+                0% {
+                    top: calc(0px + ((2.5rem) / 2));
+                }
+    
+                100% {
+                    top: 115%;
+                }
+            }
+    
+            @-webkit-keyframes v-move {
+                0% {
+                    top: calc(0px + ((2.5rem) / 2));
+                }
+    
+                100% {
+                    top: 125%;
+                }
+            }
+    
+            &.delay {
+                animation-delay: $delay;
+                -webkit-animation-delay: $delay;
+            }
+    
+            &.top {
+                top: 0;
+                left: 0;
+    
+                -webkit-animation-name: h-move;
+                animation-name: h-move;
+            }
+    
+            &.right {
+                top: calc(0px + ((2.5rem) / 2)); // calc(100% - 25px)
+                right: -20px;
+                transform: rotate(90deg);
+    
+                animation-name: v-move;
+                -webkit-animation-name: v-move;
+            }
+    
+            &.bottom {
+                bottom: 0;
+                left: 0;
+    
+                -webkit-animation-name: h-move;
+                animation-name: h-move;
+            }
+    
+            &.left {
+                top: calc(0px + ((2.5rem) / 2)); // calc(100% - 25px)
+                left: -20px;
+                transform: rotate(90deg);
+    
+                animation-name: v-move;
+                -webkit-animation-name: v-move;
+            }
+        }
+    }
+}

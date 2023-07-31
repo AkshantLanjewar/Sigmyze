@@ -14,6 +14,8 @@ phases:
     commands:
       #build the docker images
       - echo Building the docker images
+      - docker build -t $REPOSITORY_URL/quanta -f web/QuantaEngine/Dockerfile web/QuantaEngine
+      - echo Built the quanta rust layer
       - docker build -t $REPOSITORY_URL/dotnet -f web/SigmyzeServer/Dockerfile web/SigmyzeServer
       - echo Built the DOTNET docker layer
       - docker build -t $REPOSITORY_URL/application -f web/ui-next/Dockerfile web/ui-next
@@ -25,6 +27,8 @@ phases:
       - echo Pushing the docker images
       - docker push $REPOSITORY_URL/dotnet
       - echo Pushed the DOTNET docker layer
+      - docker push $REPOSITORY_URL/quanta
+      - echo pushed the QUANTA docker layer
       - docker push $REPOSITORY_URL/application
       - echo Pushed the NextJS layer
       - docker push $REPOSITORY_URL/nginx

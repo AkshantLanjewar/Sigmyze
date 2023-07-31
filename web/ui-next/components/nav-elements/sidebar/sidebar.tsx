@@ -1,5 +1,5 @@
 import { Navbar, Tooltip } from '@mantine/core'
-import { IconDatabase, IconDeviceFloppy, IconGlobe, IconStack2 } from '@tabler/icons'
+import { IconAtom2, IconDatabase, IconDeviceFloppy, IconGlobe, IconStack2 } from '@tabler/icons'
 import Link from 'next/link'
 import DriveCreateItem from './drive-create-item'
 import styles from './sidebar.module.scss'
@@ -23,7 +23,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
                 <div className={`${styles.elements} ${location === '/lunar' && styles.border}`}>
                     {location === '/drive' && (
                         <>
-                            <DriveCreateItem />
+                            <DriveCreateItem /> 
                         </>
                     )}
 
@@ -49,6 +49,19 @@ const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
                         >
                             <div className={`${styles.element} ${location === '/lunar' && styles.active}`}>
                                 <IconGlobe />
+                            </div>
+                        </Tooltip>
+                    </Link>
+
+                    <Link href={"/quanta"}>
+                        <Tooltip
+                            label={"Quanta Editor"}
+                            position={"right"}
+                            withArrow
+                            styles={{ tooltip: { backgroundColor: "#08090A" } }}
+                        >
+                            <div className={`${styles.element} ${location === '/quanta' && styles.active}`}>
+                                <IconAtom2 />
                             </div>
                         </Tooltip>
                     </Link>

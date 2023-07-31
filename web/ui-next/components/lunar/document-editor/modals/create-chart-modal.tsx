@@ -11,6 +11,8 @@ import { useForm } from '@mantine/form'
 import { usePrevious } from '@mantine/hooks'
 import { ICreateMediaBlockData } from '../document-block'
 import { IChartBlockData, MediaTypes, TextTypes } from '../../../data/lunar/types/document-types'
+import { QuantaDatasetManagerData } from '../../../ui/quanta-dataset-manager'
+import { IDatasetManagerState } from '../../../ui/quanta-dataset-manager/types'
 
 interface ISelectItem extends React.ComponentPropsWithoutRef<'div'> {
     value: string,
@@ -74,6 +76,8 @@ const CreateChartModal: React.FC<ICreateChartModalProps> = ({ active, close, cre
     const [chartObject, setChartObject] = useState<IPresentationChart | undefined>(undefined)
     const [selectedChart, setSelectedChart] = useState<string | null>(null)
 
+    const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
+
     //formdata
     const form = useForm({
         initialValues: {
@@ -114,52 +118,59 @@ const CreateChartModal: React.FC<ICreateChartModalProps> = ({ active, close, cre
 
     //whenever the project data is updated, generate the selectable options
     useEffect(() => {
-        let charts = ExtractChartsWrapper(data)
-        let presentationCharts = [] as IPresentationChart[]
-        for(let i = 0; i < charts.length; i++) {
-            let chart = charts[i]
-            let chart_data = chart.data
-            if(chart_data === undefined)
-                continue
+        async function main() {
+            let charts = ExtractChartsWrapper(data)
+            let presentationCharts = [] as IPresentationChart[]
+            for(let i = 0; i < charts.length; i++) {
+                let chart = charts[i]
+                let chart_data = chart.data
+                if(chart_data === undefined)
+                    continue
 
-            let presentationChart = {} as IPresentationChart
-            presentationChart.node_id = chart.node_id
-            if(
-                chart_data.chartGlobals === undefined || 
-                chart_data.chartSettings === undefined || 
-                chart_data.indicators === undefined
-            )
-                continue
-            presentationChart.chartGlobals = chart_data.chartGlobals
-            presentationChart.chartSettings = chart_data.chartSettings
-            presentationChart.indicators = chart_data.indicators
-            presentationCharts.push(presentationChart)
-        }
-
-        let selectItems = [] as ISelectItem[]
-        for(let i = 0; i < presentationCharts.length; i++) {
-            let chart = presentationCharts[i]
-            let item = {} as ISelectItem
-
-            item.value = chart.node_id
-            item.label = chart.chartGlobals.chartTitle
-            item.subtext = ""
-
-            let indicators = chart.indicators
-            for(let x = 0; x < indicators.length; x++) {
-                let indicator = indicators[x]
-                let id_string = `${indicator.object.object_id}:${indicator.indicator.indicator_id}`
-                
-                item.subtext += `${id_string}`
-                if(x !== indicators.length - 1)
-                    item.subtext += ','
+                let presentationChart = {} as IPresentationChart
+                presentationChart.node_id = chart.node_id
+                if(
+                    chart_data.chartGlobals === undefined || 
+                    chart_data.chartSettings === undefined || 
+                    chart_data.quantaIndicators === undefined
+                )
+                    continue
+                presentationChart.chartGlobals = chart_data.chartGlobals
+                presentationChart.chartSettings = chart_data.chartSettings
+                presentationChart.indicators = chart_data.quantaIndicators
+                //TODO: we need to add quanta indicators into the presentation chart pipeline
+                presentationCharts.push(presentationChart)
             }
 
-            selectItems.push(item)
+            let selectItems = [] as ISelectItem[]
+            for(let i = 0; i < presentationCharts.length; i++) {
+                let chart = presentationCharts[i]
+                let item = {} as ISelectItem
+
+                item.value = chart.node_id
+                item.label = chart.chartGlobals.chartTitle
+                item.subtext = ""
+
+                let indicators = chart.indicators
+                for(let x = 0; x < indicators.length; x++) {
+                    let indicator = indicators[x]
+                    let indicatorText = await fetchIndicatorText(indicator.datasetId, indicator.indicatorId)
+                    if(indicatorText === undefined)
+                        continue
+
+                    item.subtext += `${indicatorText.short}`
+                    if(x !== indicators.length - 1)
+                        item.subtext += ','
+                }
+
+                selectItems.push(item)
+            }
+
+            setItems([ ...selectItems ])
+            setChartObjects([ ...presentationCharts ])
         }
 
-        setItems([ ...selectItems ])
-        setChartObjects([ ...presentationCharts ])
+        main()
     }, [data])
 
     //whenever an id is selected, find the chartobejct and set it

@@ -1,0 +1,31 @@
+import { useContext } from "react"
+import { SelectorPaneContextData } from "./context"
+import { ISelectorPaneState } from "./context/types"
+import SelectorFrame from "../selector-frame"
+
+const FramePreview: React.FC = ({ }) => {
+    const { 
+        selectorCode, 
+        analyzePipelineLoading, 
+        pipelineAnalysis,
+        pipelineLinks 
+    } = useContext(SelectorPaneContextData) as ISelectorPaneState
+
+    return (
+        <div style={{ width: "100%", height: "100%" }}>
+            {selectorCode
+                ? (
+                    <SelectorFrame 
+                        source={selectorCode} 
+                        pipelineLoading={analyzePipelineLoading}
+                        pipelineAnalysis={pipelineAnalysis}
+                        pipelineLinks={pipelineLinks}
+                    />
+                )
+                : null
+            }
+        </div>
+    )
+}
+
+export default FramePreview

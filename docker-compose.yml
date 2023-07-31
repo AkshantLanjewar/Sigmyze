@@ -17,6 +17,13 @@ services:
     restart: always
     ports:
       - "2015:80"
+  quanta-server:
+    build:
+      context: web/QuantaEngine
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5025:80"
   application:
     build: 
       context: web/ui-next

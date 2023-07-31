@@ -7,6 +7,7 @@ import ChartView from '../chart-view/chart-view'
 import DocumentEditor from '../document-editor/document-editor'
 import styles from './viewport.module.scss'
 import { RxCross2 } from 'react-icons/rx'
+import QuantaChartView from '../chart-view'
 
 /**
  * @description
@@ -45,7 +46,7 @@ const Viewport: React.FC = ({ }) => {
         tabBodies = ui!.tabs.map((step => {
             let panelBody = null
             if(step.tab_type === "chart")
-                panelBody = <ChartView tabId={step.tab_id} />
+                panelBody = <QuantaChartView tabId={step.tab_id} />
             if(step.tab_type === "document")
                 panelBody = <DocumentEditor tabId={step.tab_id} />
 

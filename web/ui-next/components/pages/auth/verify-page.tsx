@@ -3,14 +3,17 @@ import { useForm } from "@mantine/form"
 import { showNotification } from "@mantine/notifications"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { FormEvent, useContext, useEffect } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import { UserResendVerification } from "../../data/user/user-api"
 import Logo from "../../nav-elements/logo/logo"
 import styles from './auth-styles.module.scss'
+import { LoadingOverlay } from "@mantine/core"
 
 const VerifyPageComponent: React.FC = ({ }) => {
+    const [visible, setVisible] = useState(false);
+
     const form = useForm({
         initialValues: {
             token: '',
@@ -21,16 +24,22 @@ const VerifyPageComponent: React.FC = ({ }) => {
     const router = useRouter()
 
     function onSubmit(e: FormEvent<HTMLFormElement>) {
+        setVisible(true);
         e.preventDefault()
 
         async function main() {
-            if(userContext.verify === undefined)
+            if(userContext.verify === undefined) {
+                setVisible(false);
                 return
-            if(userContext.authData?.token === undefined)
+            }
+            if(userContext.authData?.token === undefined) {
+                setVisible(false);
                 return
+            }
 
             let code = form.values.token
             await userContext.verify(userContext.authData.token, code)
+            setVisible(false);
         }
 
         main()
@@ -79,7 +88,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
             <div className={styles.content}>
                 <div className={styles.loginWrapper}>
                     <div className={styles.title}>Check your E-Mail!</div>
-
+                    <LoadingOverlay visible={visible} loaderProps={{ size: 'sm', color: 'blue', variant: 'oval' }} overlayOpacity={0.3} overlayColor="#c5c5c5"/>
                     <form className={styles.form} onSubmit={onSubmit}>
                         <TextInput 
                             required

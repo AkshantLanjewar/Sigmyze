@@ -1,0 +1,98 @@
+.pane__wrapper {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 30px;
+
+    .title__section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .title__row {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            justify-content: space-between;
+
+            .title {
+                font-weight: 700;
+                font-size: 32px;
+                color: #FFFFFF;
+            }
+        }
+
+        .description {
+            width: 475px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+    }
+
+    .section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding-top: 15px;
+
+        .preview {
+            width: 100%;
+            min-height: 500px;
+            background-color: #101113;
+
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .title__section {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            padding: 10px 0;
+
+            .title__row {
+                display: flex;
+                justify-content: space-between;
+                width: 700px;
+
+                .title {
+                    font-weight: 700;
+                    font-size: 20px;
+                    color: #FFFFFF;
+                }
+            }
+
+            .title__description {
+                width: 700px;
+                color: #909296;
+                font-size: 12px;
+                font-weight: 500;
+            }
+        }
+
+        .file__upload {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 700px;
+        }
+
+        .schema__compare {
+            width: 100%;
+            display: flex;
+            gap: 10px;
+
+            .compare { 
+                width: calc(50% - 10px);
+                overflow: hidden; 
+            }
+        }
+    }
+}

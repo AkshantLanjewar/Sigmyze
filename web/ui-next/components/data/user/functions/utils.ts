@@ -28,6 +28,7 @@ async function RefreshToken(
             let nAuthenticationData = {} as IAuthenticationData
             nAuthenticationData.token = resp.token
             nAuthenticationData.verified_state = "verify"
+            nAuthenticationData.logged_in = true
             if(resp.verified === "yes")
                 nAuthenticationData.verified_state = "logged_in"
             
@@ -35,6 +36,7 @@ async function RefreshToken(
         }
     } catch (error) {
         //failure
+        console.debug(`[Refresh Error]: ${error}`)
         await Logout(token, authData, setAuthData, setUserData)
         showNotification({
             title: "Auth Error",

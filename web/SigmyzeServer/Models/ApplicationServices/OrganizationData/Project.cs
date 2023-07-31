@@ -14,6 +14,10 @@ namespace SigmyzeServer.Models.ApplicationServices
         [JsonProperty("project_name")]
         [BsonElement("project_name")]
         public string? ProjectName { get; set; }
+
+        [JsonProperty("project_type")]
+        [BsonElement("project_type")]
+        public string? ProjectType { get; set; }
     }
 
     public class ProjectData

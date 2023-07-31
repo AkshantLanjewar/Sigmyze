@@ -20,7 +20,7 @@ const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) 
     //NOTE: this handles the managment of the file-explorer ui
     const [selectedDriveId, setSelectedDriveId] = useState<string | null>(null)
 
-    const { loggedIn, authData } = useContext(UserContextData) as IUserContext
+    const { loggedIn, authData, logout } = useContext(UserContextData) as IUserContext
 
     //FEATURE: Reset the state options
     function reset() {
@@ -41,7 +41,18 @@ const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) 
         if(token === undefined)
             return
 
-        GetOrganizations(token, setOrganizations)
+        async function main() {
+            if(logout === undefined)
+                return
+
+            try {
+                await GetOrganizations(token!, setOrganizations)
+            } catch(e) {
+                await logout(token!)
+            }
+        }
+
+        main()
     }, [authData])
 
     useEffect(() => {

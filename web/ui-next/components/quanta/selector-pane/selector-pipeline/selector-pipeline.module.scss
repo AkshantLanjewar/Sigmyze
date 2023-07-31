@@ -1,0 +1,13 @@
+.title__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 800px;
+}
+
+.pipeline__objects {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 600px;
+}

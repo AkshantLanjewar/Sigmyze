@@ -3,13 +3,16 @@ import { useForm } from '@mantine/form'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FormEvent, useContext, useEffect } from 'react'
+import { FormEvent, useContext, useEffect, useState } from 'react'
 import { UserContextData } from '../../data/user/context'
 import { IUserContext } from '../../data/user/types'
 import Logo from '../../nav-elements/logo/logo'
 import styles from './auth-styles.module.scss'
+import { LoadingOverlay } from '@mantine/core'
 
 const LoginPageComponent: React.FC = ({ }) => {
+    const [visible, setVisible] = useState(false);
+
     const form = useForm({
         initialValues: {
             email: '',
@@ -29,12 +32,16 @@ const LoginPageComponent: React.FC = ({ }) => {
         form.validate()
 
         async function main() {
+            setVisible(true);
             let email = form.values.email
             let password = form.values.password
-            if(userContext.login === undefined)
+            if(userContext.login === undefined) {
+                setVisible(false);
                 return
+            }
             
             await userContext.login(email, password)
+            setVisible(false);
             router.push('/drive')
         }
 
@@ -68,7 +75,7 @@ const LoginPageComponent: React.FC = ({ }) => {
             <div className={styles.content}>
                 <div className={styles.loginWrapper}>
                     <div className={styles.title}>Welcome Back!</div>
-
+                    <LoadingOverlay visible={visible} loaderProps={{ size: 'sm', color: 'blue', variant: 'oval' }} overlayOpacity={0.3} overlayColor="#c5c5c5"/>
                     <form className={styles.form} onSubmit={onSubmit}>
                         <TextInput 
                             required

@@ -65,12 +65,14 @@ const ChartView: React.FC<IChartViewProps> = ({ tabId }) => {
         if(indicators === undefined)
             return
 
+        console.log(indicators)
         let charts = await FetchIndicators(indicators)
         charts = ParseSettings(nodeId!, charts, lunarContext.getIndicatorSetting, lunarContext.createIndicatorSetting) 
         setChart([ ...charts ]) 
     }
 
     useEffect(() => {
+        console.log(nodeData)
         if(nodeId === null)
             return
 

@@ -1,0 +1,112 @@
+$indigo-6: var(--mantine-color-indigo-6);
+
+$inputWidth: 10px;
+
+$timing: 1s;
+$delay: .5s;
+
+.node__wrapper {
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 8px;
+    background-color: #08090A;
+    min-width: 250px;
+    z-index: 10;
+    cursor: pointer;
+    position: relative;
+    will-change: auto;
+
+    border: 2px solid transparent;
+
+    &.active {
+        border-color: #bbb;
+    }
+
+    .node__title {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        padding: 20px;
+        border-bottom: 2px solid #2C2E33;
+        color: #FFFFFF;
+
+        .title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+    }
+
+    .node__body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        padding: 20px;
+        overflow: visible;
+
+        .dynamic__node {
+            padding-top: 10px;
+            
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 5px;
+
+            .title {
+                font-size: 12px;
+                font-weight: 700;
+                color: #FFFFFF;
+            }
+        }
+
+        .node__socket {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+
+            position: relative;
+
+            .output {
+                position: absolute;
+                right: -27px;
+
+                width: $inputWidth;
+                height: $inputWidth;
+                background-color: black;
+                z-index: 10;
+                border-width: 2px;
+            }
+
+            .input {
+                position: absolute;
+                left: -27px;
+
+                width: $inputWidth;
+                height: $inputWidth;
+                background-color: black;
+                z-index: 10;
+                border-width: 2px;
+            }
+
+            .node__add {
+                position: absolute;
+                z-index: -1;
+
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                
+                top: 50%;
+                transform: translateY(-50%);
+
+                .add__button {
+                    border-radius: 4px;
+                    background-color: #08090a;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

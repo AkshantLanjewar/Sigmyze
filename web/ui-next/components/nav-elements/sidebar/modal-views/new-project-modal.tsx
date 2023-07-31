@@ -48,7 +48,7 @@ const NewProjectModal: React.FC<INewProjectModalProps> = ({ close }) => {
                 return
 
             setLoading(true)
-            await CreateProject(token, selectedOrganization, activeDirectory, name)
+            await CreateProject(token, selectedOrganization, activeDirectory, name, "lunar_project")
             toggleDrive()
             setLoading(false)
             close()

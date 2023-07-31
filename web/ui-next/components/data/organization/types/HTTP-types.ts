@@ -14,7 +14,8 @@ interface IDriveResp {
 
 interface IDriveProject {
     project_id?: string,
-    project_name?: string
+    project_name?: string,
+    project_type?: string
 }
 
 interface IDriveFolder {
@@ -48,20 +49,23 @@ interface IDriveUpdateFolder {
 interface IDriveCreateProject {
     project_name: string,
     parent_folder: string,
-    organization_id: string
+    organization_id: string,
+    project_type: string
 }
 
 interface IDriveDeleteProject {
     project_id: string,
     parent_folder: string,
-    organization_id: string
+    organization_id: string,
+    project_type: string,
 }
 
 interface IDriveUpdateProject {
     project_id: string,
     parent_folder: string,
     organization_id: string,
-    project_name?: string
+    project_name?: string,
+    project_type?: string
 }
 
 export type { 

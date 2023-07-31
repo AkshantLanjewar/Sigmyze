@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.ApplicationServices;
 using SigmyzeServer.Services.OrganizationServices;
 
@@ -30,6 +31,24 @@ public class OrganizationControllerBase : ControllerBase
         string lunarID = jwt.Claims.First(claim => claim.Type == "Lunar_Id").Value.ToString();
 
         return lunarID;
+    }
+
+    protected APIStatusMsg ErrorMsg(string msg)
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = true;
+        status.MSG = msg;
+
+        return status;
+    }
+
+    protected APIStatusMsg SuccessMsg()
+    {
+        APIStatusMsg status = new APIStatusMsg();
+        status.Error = false;
+        status.MSG = "success";
+
+        return status;
     }
 
     //FEATURE: Validate whether a user is a member of organization
