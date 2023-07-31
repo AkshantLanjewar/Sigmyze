@@ -24,7 +24,8 @@
                     "hostPort": 3000,
                     "containerPort": 3000
                 }
-            ]
+            ],
+            "memory": 256
         },
         {
             "name": "sigmyze-server",
@@ -35,7 +36,8 @@
                     "hostPort": 2015,
                     "containerPort": 80
                 }
-            ]
+            ],
+            "memory": 256
         },
         {
             "name": "quanta-server",
@@ -46,7 +48,8 @@
                     "hostPort": 5025,
                     "containerPort": 5025
                 }
-            ]
+            ],
+            "memory": 256
         }
     ]
 }
