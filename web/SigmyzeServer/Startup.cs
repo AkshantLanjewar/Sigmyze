@@ -26,7 +26,7 @@ namespace SigmyzeServer
         {
             services.AddCors(options => options.AddDefaultPolicy(
                 builder => builder
-                    .WithOrigins("http://localhost")
+                    .WithOrigins("https://sigmyze.com")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()
