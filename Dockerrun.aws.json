@@ -45,8 +45,8 @@
             "hostname": "quanta-server",
             "portMappings": [
                 {
-                    "hostPort": 5025,
-                    "containerPort": 80
+                    "hostPort": 80,
+                    "containerPort": 5025
                 }
             ],
             "memory": 256
