@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { GetServerSidePropsContext } from "next"
 import ApplicationLayout from "../../../components/nav-elements/application-layout"
 import PublicQuantaPage from "../../../components/pages/public/quanta"
@@ -8,10 +9,12 @@ interface IPublicDatasetProps {
 }
 
 const PublicQuantaDataset: React.FC<IPublicDatasetProps> = ({ datasetId }) => {
+    const [datasetTitle, setDatasetTitle] = useState<string>("CHANGE_ME")
+
     return (
         <>
             <ApplicationLayout
-                title="CHANGE_ME"
+                title={datasetTitle}
                 description=""
                 location={`/public/quanta/${datasetId}`}
                 protectedView={false}
@@ -19,7 +22,7 @@ const PublicQuantaDataset: React.FC<IPublicDatasetProps> = ({ datasetId }) => {
             >
                 <div style={{ width: "100%", height: "100%" }}>
                     <QuantaDatasetManager>
-                        <PublicQuantaPage datasetId={datasetId} />
+                        <PublicQuantaPage datasetId={datasetId} setDatasetTitle={setDatasetTitle} />
                     </QuantaDatasetManager>
                 </div>
             </ApplicationLayout>

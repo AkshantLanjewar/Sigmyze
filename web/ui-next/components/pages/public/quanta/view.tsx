@@ -6,10 +6,14 @@ import PublicIndicatorsPanel from "./tabs/public-indicators";
 import PublicNodeView from "./tabs/public-node-view";
 
 interface IViewProps {
-    datasetId: string
+    datasetId: string,
+    datasetTitle: string | undefined,
+    internalId: string | undefined,
+    description: string | undefined
+    
 }
 
-const PublicQuantaPageView: React.FC<IViewProps> = memo(({ datasetId }) => (
+const PublicQuantaPageView: React.FC<IViewProps> = memo(({ datasetId, datasetTitle, internalId, description }) => (
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
         <Container 
             p={"md"}
@@ -49,12 +53,26 @@ const PublicQuantaPageView: React.FC<IViewProps> = memo(({ datasetId }) => (
 
                 <Stack spacing={"lg"}>
                     <Stack spacing={5}>
-                        <Title order={2}>Dataset Title</Title>
-                        <Title order={6}>Dataset ID</Title>
+                        <Title order={2}>
+                            {datasetTitle
+                                ? datasetTitle
+                                : "Dataset Title"
+                            }
+                        </Title>
+
+                        <Title order={6}>
+                            {internalId
+                                ? internalId
+                                : "Dataset ID"
+                            }
+                        </Title>
                     </Stack>
 
                     <Text size={"sm"} color={"dimmed"} style={{ maxWidth: 500 }}>
-                        Dataset Description
+                        {description
+                            ? description
+                            : "Dataset Description"
+                        }
                     </Text>
                 </Stack>
             </Group>
