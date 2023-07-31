@@ -52,7 +52,7 @@ function capitalizeFirstLetter(string: string) {
 
 const dev = process.env.NODE_ENV !== 'production';
 const server = dev ? 'http://localhost:3000' : 'https://sigmyze.com'
-const wsServer = dev ? "ws://127.0.0.1:5025" : 'ws://sigmyze.com/quanta-socket'
+const wsServer = dev ? "ws://127.0.0.1:5025" : 'wss://sigmyze.com/quanta-socket'
 
 export { 
     GET,
