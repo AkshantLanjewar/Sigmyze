@@ -1,5 +1,4 @@
 import { IconBoxMargin, IconWriting } from "@tabler/icons"
-import { IQuantaFormField } from "../../../ui/einstein/types/form"
 import FormBuilder from "../../../ui/form-builder/form-builder"
 import { useContext } from "react"
 import { UserContextData } from "../../user/context"
@@ -10,6 +9,7 @@ import { showNotification } from "@mantine/notifications"
 import { CreateQuantaProject } from "../quanta-code-context/quanta-code-api"
 import { QuantaCodeContextData } from "../quanta-code-context"
 import { IQuantaCodeContext } from "../quanta-code-context/state"
+import { IQuantaFormField } from "../../../quanta/quanta-editor/types/form"
 
 interface INewSelectorFormProps {
     closeModal: () => void

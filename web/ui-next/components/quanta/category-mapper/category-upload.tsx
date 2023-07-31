@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
-import { IQuantaFormField } from "../../ui/einstein/types/types"
 import FormBuilder from "../../ui/form-builder/form-builder"
 import { QuantaContextData } from "../../data/quanta/context"
 import { IQuantaState } from "../../data/quanta/types"
 import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
 import { IconDatabase } from "@tabler/icons"
 import { showNotification } from "@mantine/notifications"
+import { IQuantaFormField } from "../quanta-editor/types/form"
 
 interface ICategoryUploadProps {
     closeModal: () => void

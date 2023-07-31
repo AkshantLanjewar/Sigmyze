@@ -7,8 +7,8 @@ import EditableText from "../../ui/editable-text/editable-text"
 import SchemaTypeSelector from "./schema-type-selector"
 import { QuantaContextData } from "../../data/quanta/context"
 import { v4 } from "uuid"
-import { IQuantaTypeRef } from "../../ui/einstein/types/node-type"
 import SchemaLinker from "./schema-linker"
+import { IQuantaTypeRef } from "../quanta-editor/types/node-type"
 
 interface ISchemaViewerProps {
     parentId: string,

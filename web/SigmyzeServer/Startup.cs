@@ -24,9 +24,17 @@ namespace SigmyzeServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
+            services.AddCors(options => options.AddDefaultPolicy(
+                builder => builder
+                    .WithOrigins("http://localhost")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+            ));
 
+            services.Configure<AuthDatabaseSettings>(Configuration.GetSection("UserDatabase"));
             services.AddControllers();
+
             services.AddApiVersioning(config => {
                 config.DefaultApiVersion = new ApiVersion(1, 0);
                 config.AssumeDefaultVersionWhenUnspecified = true;
@@ -100,6 +108,7 @@ namespace SigmyzeServer
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors();
             app.UseSwagger();
 
             app.UseSession();

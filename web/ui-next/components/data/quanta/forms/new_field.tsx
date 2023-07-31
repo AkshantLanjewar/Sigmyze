@@ -1,10 +1,10 @@
-import { IconAnalyze, IconSignature } from "@tabler/icons"
+import { IconSignature } from "@tabler/icons"
 import { useContext } from "react"
 import { v4 } from "uuid"
-import { IQuantaFormField } from "../../../ui/einstein/types/types"
 import FormBuilder from "../../../ui/form-builder/form-builder"
 import { QuantaContextData } from "../context"
 import { IQuantaState } from "../types"
+import { IQuantaFormField } from "../../../quanta/quanta-editor/types/form"
 
 interface INewFieldForm {
     closeModal: () => void

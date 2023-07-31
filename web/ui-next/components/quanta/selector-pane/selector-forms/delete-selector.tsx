@@ -1,10 +1,10 @@
 import { IconAdjustments, IconAlertCircle } from "@tabler/icons"
-import { IQuantaFormField } from "../../../ui/einstein/types/types"
 import FormBuilder from "../../../ui/form-builder/form-builder"
 import { useContext } from "react"
 import { QuantaContextData } from "../../../data/quanta/context"
 import { IQuantaState } from "../../../data/quanta/types"
 import { showNotification } from "@mantine/notifications"
+import { IQuantaFormField } from "../../quanta-editor/types/form"
 
 interface IDeleteSelectorFormProps {
     close: () => void,

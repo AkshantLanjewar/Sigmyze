@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react"
 import { v4 } from "uuid"
-import { IQuantaTypeRef } from "../../../ui/einstein/types/node-type"
 import { IQuantaSchema } from "../../../quanta/schema-editor/types"
 import { ProjectSchemas } from "../types/project"
+import { IQuantaTypeRef } from "../../../quanta/quanta-editor/types/node-type"
 
 const initSchema = (
     parentId: string,

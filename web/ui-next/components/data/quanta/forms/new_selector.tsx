@@ -1,9 +1,9 @@
 import { IconBoxMargin, IconWriting } from "@tabler/icons"
-import { IQuantaFormField } from "../../../ui/einstein/types/form"
 import FormBuilder from "../../../ui/form-builder/form-builder"
 import { QuantaContextData } from "../context"
 import { IQuantaState } from "../types"
 import { useContext } from "react"
+import { IQuantaFormField } from "../../../quanta/quanta-editor/types/form"
 
 interface INewSelectorFormProps {
     closeModal: () => void

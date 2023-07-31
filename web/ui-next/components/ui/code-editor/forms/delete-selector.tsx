@@ -1,5 +1,4 @@
 import { IconAlertCircle, IconWriting } from "@tabler/icons"
-import { IQuantaFormField } from "../../einstein/types/form"
 import FormBuilder from "../../form-builder/form-builder"
 import { useContext } from "react"
 import { CodeEditorContextData } from ".."
@@ -9,6 +8,7 @@ import { QuantaCodeContextData } from "../../../data/quanta/quanta-code-context"
 import { IQuantaCodeContext } from "../../../data/quanta/quanta-code-context/state"
 import { QuantaUIContextData } from "../../../data/quanta/ui-context"
 import { IQuantaUIState } from "../../../data/quanta/ui-context/state"
+import { IQuantaFormField } from "../../../quanta/quanta-editor/types/form"
 
 interface IDeleteSelectorFormProps {
     closeModal: () => void

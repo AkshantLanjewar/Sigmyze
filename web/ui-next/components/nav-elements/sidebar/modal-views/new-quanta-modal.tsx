@@ -5,8 +5,8 @@ import { CreateProject } from "../../../data/organization/drive-api"
 import { IOrganizationController } from "../../../data/organization/types"
 import { UserContextData } from "../../../data/user/context"
 import { IUserContext } from "../../../data/user/types"
-import { IQuantaFormField } from "../../../ui/einstein/types/types"
 import FormBuilder from "../../../ui/form-builder/form-builder"
+import { IQuantaFormField } from "../../../quanta/quanta-editor/types/form"
 
 interface INewQuantaModalProps {
     close: () => void

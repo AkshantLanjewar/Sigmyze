@@ -67,6 +67,8 @@ async function pageStaticProps() {
         let dataset = datasets.datasets[i]
         let name    = dataset.name
         let data    = await GetObjects(name)
+        if(data.objects === undefined)
+            continue
 
         const default_object = DefaultIndicatorTable[name.toLowerCase() as keyof typeof DefaultIndicatorTable]
         const indicators = await GetIndicators(name, default_object)

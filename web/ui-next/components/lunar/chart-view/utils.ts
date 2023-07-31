@@ -41,6 +41,9 @@ function ParsePresentationSettings(charts: ILunarChart[], settings: IChartSettin
 
         for(let x = 0; x < indicatorSettings.length; x++) {
             let setting = indicatorSettings[x]
+            if(setting.indicator === undefined)
+                continue
+
             if(CompareIndicators(chart.indicator, setting.indicator))
                 chart.setting = setting
         }
