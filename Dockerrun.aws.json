@@ -34,6 +34,7 @@
             "name": "application",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/application:latest",
             "hostname": "application",
+            "essential": true,
             "portMappings": [
                 {
                     "hostPort": 3000,
@@ -46,6 +47,7 @@
             "name": "sigmyze-server",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/dotnet:latest",
             "hostname": "sigmyze-server",
+            "essential": true,
             "portMappings": [
                 {
                     "hostPort": 2015,
