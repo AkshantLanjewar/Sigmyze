@@ -1,5 +1,13 @@
 {
     "AWSEBDockerrunVersion": "2",
+    "volumes": [
+        {
+            "name": "certbot-certs",
+            "host": {
+                "sourcePath": "/etc/letsencrypt/live/sigmyze"
+            }
+        }
+    ],
     "containerDefinitions": [
         {
             "name": "nginx",
@@ -13,7 +21,14 @@
                 }
             ],
             "links": ["sigmyze-server", "application", "quanta-server"],
-            "memory": 128
+            "memory": 128,
+            "mountPoints": [
+                {
+                    "sourceVolume": "certbot-certs",
+                    "containerPath": "/etc/certs",
+                    "readOnly": true
+                }
+            ]
         },
         {
             "name": "application",
