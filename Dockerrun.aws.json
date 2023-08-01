@@ -4,7 +4,7 @@
         {
             "name": "certbot-certs",
             "host": {
-                "sourcePath": "/etc/letsencrypt/live/sigmyze"
+                "sourcePath": "/etc/letsencrypt/live/ebcert"
             }
         }
     ],
