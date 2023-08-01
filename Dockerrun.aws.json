@@ -1,13 +1,5 @@
 {
     "AWSEBDockerrunVersion": "2",
-    "volumes": [
-        {
-            "name": "certbot-certs",
-            "host": {
-                "sourcePath": "/etc/letsencrypt/live/ebcert"
-            }
-        }
-    ],
     "containerDefinitions": [
         {
             "name": "nginx",
@@ -21,20 +13,12 @@
                 }
             ],
             "links": ["sigmyze-server", "application", "quanta-server"],
-            "memory": 128,
-            "mountPoints": [
-                {
-                    "sourceVolume": "certbot-certs",
-                    "containerPath": "/etc/certs",
-                    "readOnly": true
-                }
-            ]
+            "memory": 128
         },
         {
             "name": "application",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/application:latest",
             "hostname": "application",
-            "essential": true,
             "portMappings": [
                 {
                     "hostPort": 3000,
@@ -47,7 +31,6 @@
             "name": "sigmyze-server",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/dotnet:latest",
             "hostname": "sigmyze-server",
-            "essential": true,
             "portMappings": [
                 {
                     "hostPort": 2015,
