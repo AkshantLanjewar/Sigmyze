@@ -2,24 +2,6 @@
     "AWSEBDockerrunVersion": "2",
     "containerDefinitions": [
         {
-            "name": "nginx",
-            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/nginx:latest",
-            "hostname": "nginx",
-            "essential": true,
-            "portMappings": [
-                {
-                    "hostPort": 443,
-                    "containerPort": 443
-                },
-                {
-                    "hostPort": 80,
-                    "containerPort": 80
-                }
-            ],
-            "links": ["sigmyze-server", "application", "quanta-server"],
-            "memory": 128
-        },
-        {
             "name": "application",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/application:latest",
             "hostname": "application",
@@ -54,6 +36,24 @@
                 }
             ],
             "memory": 1024
+        },
+        {
+            "name": "nginx",
+            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/nginx:latest",
+            "hostname": "nginx",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 443,
+                    "containerPort": 443
+                },
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": ["sigmyze-server", "application", "quanta-server"],
+            "memory": 128
         }
     ]
 }
