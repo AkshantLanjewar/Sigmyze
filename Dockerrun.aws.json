@@ -4,6 +4,7 @@
         {
             "name": "application",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/application:latest",
+            "essential": true,
             "hostname": "application",
             "portMappings": [
                 {
