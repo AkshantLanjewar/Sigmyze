@@ -12,7 +12,7 @@
                     "containerPort": 3000
                 }
             ],
-            "memory": 256
+            "memoryReservation": 256
         },
         {
             "name": "sigmyze-server",
@@ -24,7 +24,7 @@
                     "containerPort": 80
                 }
             ],
-            "memory": 256
+            "memoryReservation": 256
         },
         {
             "name": "quanta-server",
@@ -36,7 +36,7 @@
                     "containerPort": 5025
                 }
             ],
-            "memory": 1024
+            "memoryReservation": 1024
         },
         {
             "name": "nginx",
@@ -54,7 +54,7 @@
                 }
             ],
             "links": ["sigmyze-server", "application", "quanta-server"],
-            "memory": 128
+            "memoryReservation": 128
         }
     ]
 }
