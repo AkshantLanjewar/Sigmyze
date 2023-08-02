@@ -8,8 +8,8 @@
             "essential": true,
             "portMappings": [
                 {
-                    "hostPort": 80,
-                    "containerPort": 80
+                    "hostPort": 443,
+                    "containerPort": 443
                 }
             ],
             "links": ["sigmyze-server", "application", "quanta-server"],

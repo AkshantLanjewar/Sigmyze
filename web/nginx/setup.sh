@@ -6,7 +6,7 @@ certbot certonly --non-interactive \
       --dns-route53 \
       --preferred-challenge dns \
       --agree-tos \
-      --domains sigmyze.com,quanta.sigmyze.com \
+      --domains sigmyze.com,login.sigmyze.com \
       --email sigmyze@gmail.com
 
 /usr/sbin/nginx -g "daemon off;"
