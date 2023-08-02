@@ -19,8 +19,5 @@ COPY ./default.conf /etc/nginx/conf.d/
 COPY ./setup.sh /setup.sh
 RUN chmod +x /setup.sh 
 
-# Expose the listening port
-EXPOSE 80
-
 # Launch NGINX
 CMD [ "../setup.sh" ]
