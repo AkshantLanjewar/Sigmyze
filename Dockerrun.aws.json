@@ -36,13 +36,12 @@
                     "containerPort": 5025
                 }
             ],
-            "memoryReservation": 1024
+            "memoryReservation": 256
         },
         {
             "name": "nginx",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/nginx:latest",
             "hostname": "nginx",
-            "essential": true,
             "portMappings": [
                 {
                     "hostPort": 443,
@@ -54,7 +53,7 @@
                 }
             ],
             "links": ["sigmyze-server", "application", "quanta-server"],
-            "memoryReservation": 128
+            "memoryReservation": 256
         }
     ]
 }
