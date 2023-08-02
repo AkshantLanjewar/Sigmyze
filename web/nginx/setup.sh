@@ -8,5 +8,3 @@ certbot certonly --non-interactive \
       --agree-tos \
       --domains sigmyze.com,login.sigmyze.com \
       --email sigmyze@gmail.com
-
-/usr/sbin/nginx -g "daemon off;"
