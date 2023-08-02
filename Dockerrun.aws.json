@@ -5,6 +5,7 @@
             "name": "quanta-server",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/quanta:latest",
             "hostname": "quanta-server",
+            "essential": false,
             "portMappings": [
                 {
                     "hostPort": 5025,
@@ -36,6 +37,23 @@
                     "containerPort": 80
                 }
             ],
+            "memoryReservation": 256
+        },
+        {
+            "name": "nginx",
+            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/nginx:latest",
+            "hostname": "nginx",
+            "portMappings": [
+                {
+                    "hostPort": 443,
+                    "containerPort": 443
+                },
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": ["sigmyze-server", "application", "quanta-server"],
             "memoryReservation": 256
         }
     ]
