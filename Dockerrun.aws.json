@@ -53,7 +53,7 @@
                     "containerPort": 5025
                 }
             ],
-            "memory": 256
+            "memory": 384
         }
     ]
 }
