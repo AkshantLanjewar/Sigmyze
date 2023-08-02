@@ -23,5 +23,4 @@ RUN chmod +x /setup.sh
 EXPOSE 80
 
 # Launch NGINX
-ENTRYPOINT [ "../setup.sh", "--" ]
-CMD [ "nginx", "-g", "daemon off;" ]
+CMD [ "../setup.sh" ]
