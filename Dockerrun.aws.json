@@ -2,31 +2,6 @@
     "AWSEBDockerrunVersion": "2",
     "containerDefinitions": [
         {
-            "name": "quanta-server",
-            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/quanta:latest",
-            "hostname": "quanta-server",
-            "portMappings": [
-                {
-                    "hostPort": 5025,
-                    "containerPort": 5025
-                }
-            ],
-            "memoryReservation": 512
-        },
-        {
-            "name": "application",
-            "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/application:latest",
-            "essential": true,
-            "hostname": "application",
-            "portMappings": [
-                {
-                    "hostPort": 3000,
-                    "containerPort": 3000
-                }
-            ],
-            "memoryReservation": 256
-        },
-        {
             "name": "sigmyze-server",
             "image": "581758326652.dkr.ecr.us-east-1.amazonaws.com/sigmyze-containers/dotnet:latest",
             "hostname": "sigmyze-server",
