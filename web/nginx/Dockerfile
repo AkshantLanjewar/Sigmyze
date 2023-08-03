@@ -17,7 +17,7 @@ RUN rm /etc/nginx/conf.d/*
 # *.conf files in "conf.d/" dir get included in main config
 COPY ./default.conf /etc/nginx/conf.d/
 COPY ./setup.sh ./setup.sh
-RUN chmod +x /setup.sh 
+RUN chmod +x ./setup.sh 
 
 # Launch NGINX
 CMD [ "./setup.sh" ]
