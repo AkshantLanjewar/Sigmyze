@@ -16,7 +16,7 @@ use crate::handler::handle_text_msg;
 #[tokio::main(flavor = "multi_thread")]
 async fn main() {
     env_logger::init();
-    let server = TcpListener::bind("127.0.0.1:5025").await;
+    let server = TcpListener::bind("localhost:5025").await;
     let server = server.expect("failed to bind");
     let store = Arc::new(Mutex::new(QuantaDataStore::init()));
 
