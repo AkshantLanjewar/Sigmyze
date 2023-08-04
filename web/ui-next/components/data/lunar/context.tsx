@@ -4,16 +4,13 @@ import {
     ILunarProjectData, 
     IProjectNode,
     ILunarUIData, 
-    ILunarTab,
     IIndicatorSetting
 } from "./types/types"
 
-import { v4 as uuidv4 } from 'uuid'
 import { DEFAULT_PROJECT } from "./types/types"
 import { EnumerateNodes } from "./utils"
 
 import ExplorerModal from "../../lunar/explorer-modals/explorer-modals"
-import { IAddIndicatorData } from "../../lunar/explorer-modals/add-indicator"
 import { IIndicator } from "../datasets/DatasetsTypes"
 import { 
     AddIndicator,  
@@ -50,13 +47,12 @@ import { IDocument } from "./types/document-types"
 import { IQuantaIndicatorShell } from "../../ui/quanta-dataset-manager/types"
 
 interface ILunarContextProps {
-    pkg: IAddIndicatorData
     children?: JSX.Element | never[]
 }
 
 const LunarContextData = createContext<ILunarState | null>(null)
 
-const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
+const LunarContext: React.FC<ILunarContextProps> = ({ children }) => {
     const [data, setData] = useState<ILunarProjectData | null>(null)
     const [ui, setUI]     = useState<ILunarUIData | null>(null)
 
@@ -335,7 +331,6 @@ const LunarContext: React.FC<ILunarContextProps> = ({ children, pkg }) => {
                         <ExplorerModal 
                             modalState={ui.explorer_modal}
                             close={CloseModal}
-                            pkg={pkg}
                         />
                     )}
 

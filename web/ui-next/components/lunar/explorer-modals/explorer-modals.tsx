@@ -8,7 +8,7 @@ import {
     FcDocument,
     FcComboChart 
 } from 'react-icons/fc'
-import AddIndicatorModal, { IAddIndicatorData } from "./add-indicator"
+
 import { LunarContextData } from "../../data/lunar/context"
 import AddQIndicator from "./add-q-indicator"
 
@@ -97,10 +97,9 @@ const ModalWarning: React.FC<IModalWarningProps> = ({ icon, title, description }
 interface IExplorerModalProps {
     modalState: string | undefined | null,
     close: () => void,
-    pkg: IAddIndicatorData
 }
 
-const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close, pkg }) => {
+const ExplorerModal: React.FC<IExplorerModalProps> = ({ modalState, close }) => {
     const folderRef   = useRef<HTMLInputElement>(null)
     const documentRef = useRef<HTMLInputElement>(null)
     const chartRef    = useRef<HTMLInputElement>(null)
