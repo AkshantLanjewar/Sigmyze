@@ -3,7 +3,7 @@ import { IconPlus, IconTrash } from '@tabler/icons'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Motion, spring } from 'react-motion'
 import { Handle, Position } from 'reactflow'
-import { IQuantaSocket, IQuantaTypeRef } from '../../types/types'
+import { IQuantaSocket, IQuantaTypeRef, IQuantaXYPos } from '../../types/types'
 import NodeCreateMenu from '../node-create-menu'
 import styles from '../node-renderer.module.scss'
 import NodeType from '../type/node-type'
@@ -21,10 +21,20 @@ interface INodeOutputProps {
 }
 
 const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfocus, editType, deleteStoreField, parentId }) => {
-    const ref = useRef<HTMLElement>(null)
+    const ref = useRef<HTMLDivElement>(null)
+
     const [opened, setOpened] = useState(false)
+    const [handleCords, setHandleCords] = useState<IQuantaXYPos | undefined>(undefined)
 
     useEffect(() => {
+        if(focused === true) {
+            if(ref.current === null)
+                return
+
+            let _handleCoords = ref.current.getBoundingClientRect()
+            setHandleCords({ x: _handleCoords.x, y: _handleCoords.y })
+        }
+
         if(focused === false)
             setOpened(false)
     }, [focused])
@@ -41,16 +51,19 @@ const NodeOutput: React.FC<INodeOutputProps> = ({ output, nodeId, focused, unfoc
     }, [output, deleteStoreField])
 
     return (
-        <NodeOutputView
-            output={output}
-            focused={focused}
-            nodeId={nodeId}
-            ref={ref}
-            parentId={parentId}
-            editType={editType}
-            unfocus={unfocus}
-            deleteField={deleteField}
-        />
+        <div ref={ref}>
+            <NodeOutputView
+                output={output}
+                focused={focused}
+                handleCords={handleCords}
+                nodeId={nodeId}
+                ref={ref}
+                parentId={parentId}
+                editType={editType}
+                unfocus={unfocus}
+                deleteField={deleteField}
+            />
+        </div>
     )
 }
 

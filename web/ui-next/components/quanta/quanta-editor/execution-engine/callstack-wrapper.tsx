@@ -111,7 +111,6 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         const nodeId = quantaId
         const outputIds = [] as string[]
         
-        console.log(callStack)
         const body: IExecuteStackBody = {
             preloadedData: preloadToken,
             stack: callStack,

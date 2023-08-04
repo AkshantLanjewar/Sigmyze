@@ -255,7 +255,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
         parentId: string, 
         parentHandle: string, 
         childType: string, 
-        handleRef: RefObject<HTMLElement>, 
+        handleRef: IQuantaXYPos | undefined, 
         groupId?: string
     ) => {
         return CreateMenuNode(
@@ -272,7 +272,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
         )
     }, [nodes, reactFlowInstance, editorBounds, toggleFocus])
 
-    const createIterCallback = useCallback((parentId: string, parentHandle: string, handleRef: RefObject<HTMLElement>) => {
+    const createIterCallback = useCallback((parentId: string, parentHandle: string, handleRef: IQuantaXYPos | undefined) => {
         return BuildIterNode(
             parentId,
             parentHandle,

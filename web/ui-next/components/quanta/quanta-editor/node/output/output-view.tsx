@@ -9,12 +9,14 @@ import NodeTypeSelector from "../type/node-type-selector"
 import NodeType from "../type/node-type"
 import { Handle, Position } from "reactflow"
 import { IconTrash } from "@tabler/icons"
+import { IQuantaXYPos } from "../../types/nodes"
 
 interface IViewProps {
     output: IQuantaSocket,
     focused: boolean,
+    handleCords: IQuantaXYPos | undefined,
     nodeId: string | undefined,
-    ref: RefObject<HTMLElement>,
+    ref: RefObject<HTMLDivElement>,
     parentId: string | undefined
     editType: ((itemId: string, newType: IQuantaTypeRef) => void) | undefined,
     unfocus: () => void,
@@ -24,6 +26,7 @@ interface IViewProps {
 const NodeOutputView: React.FC<IViewProps> = memo(({
     output,
     focused,
+    handleCords,
     nodeId,
     ref,
     parentId,
@@ -114,6 +117,7 @@ const NodeOutputView: React.FC<IViewProps> = memo(({
                             focused={focused} 
                             output={output}
                             unfocus={unfocus}
+                            handleCords={handleCords}
                             nodeId={nodeId}
                             handleRef={ref}
                             parentId={parentId}

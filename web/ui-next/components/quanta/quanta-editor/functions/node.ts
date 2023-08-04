@@ -8,7 +8,7 @@ function CreateMenuNode(
     parentId: string, 
     parentHandle: string, 
     childType: string, 
-    handleRef: RefObject<HTMLElement>,
+    handleRef: IQuantaXYPos | undefined,
     nodes: IQuantaRFNode[],
     reactFlowInstance: ReactFlowInstance<any, any> | null,
     editorBounds: IQuantaXYPos,
@@ -16,18 +16,17 @@ function CreateMenuNode(
     toggleFocus: () => void,
     groupId?: string
 ) {
-    if(handleRef.current === null)
+    if(handleRef === undefined)
         return
     if(reactFlowInstance === null)
         return
 
     let nNodes = nodes
     let newNode = BuildNode(childType, groupId)!
-    let handleCoords = handleRef.current.getBoundingClientRect()
 
     const position = reactFlowInstance.project({
-        x: handleCoords.x - editorBounds.x,
-        y: handleCoords.y - editorBounds.y - 70
+        x: handleRef.x - editorBounds.x - 50,
+        y: handleRef.y - editorBounds.y - 125
     })
 
     newNode.position = position
@@ -51,22 +50,21 @@ function CreateMenuNode(
 function BuildIterNode(
     parentId: string,
     parentHandle: string,
-    handleRef: RefObject<HTMLElement>,
+    handleRef: IQuantaXYPos | undefined,
     nodes: IQuantaRFNode[],
     reactFlowInstance: ReactFlowInstance<any, any> | null,
     editorBounds: IQuantaXYPos,
     setNodes: Dispatch<SetStateAction<IQuantaRFNode[]>>,
     toggleFocus: () => void
 ) {
-    if(handleRef.current === null)
+    if(handleRef === undefined)
         return
     if(reactFlowInstance === null)
         return
 
-    let handleCoords = handleRef.current.getBoundingClientRect()
     const position = reactFlowInstance.project({
-        x: handleCoords.x - editorBounds.x,
-        y: handleCoords.y - editorBounds.y - 70
+        x: handleRef.x - editorBounds.x,
+        y: handleRef.y - editorBounds.y - 70
     })
 
     let nNodes = nodes

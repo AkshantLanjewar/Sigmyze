@@ -3,7 +3,7 @@ import { IQuantaRFEdge } from "./edges"
 import { IQuantaFormField } from "./form"
 import { IQuantaSocket } from "./node-instructions"
 import { IQuantaTypeRef } from "./node-type"
-import { IQuantaRFNode } from "./nodes"
+import { IQuantaRFNode, IQuantaXYPos } from "./nodes"
 import { IQuantaStoreData } from "./store"
 
 /**
@@ -63,7 +63,7 @@ interface IQuantaEditorGlobals {
         parentId: string, 
         parentHandle: string, 
         childType: string, 
-        handleRef: RefObject<HTMLElement>, 
+        handleRef: IQuantaXYPos | undefined, 
         groupId?: string
     ) => void,
 
@@ -76,7 +76,7 @@ interface IQuantaEditorGlobals {
      * @param handleRef 
      *  this is the ref for the button that spawned the create menu
      */
-    createIter: (parentId: string, parentHandle: string, handleRef: RefObject<HTMLElement>) => void,
+    createIter: (parentId: string, parentHandle: string, handleRef: IQuantaXYPos | undefined) => void,
 
     /**
      * This retreives the store value with a given key

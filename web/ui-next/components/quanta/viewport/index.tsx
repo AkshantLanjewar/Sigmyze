@@ -9,6 +9,7 @@ import QuantaSelectorsView from '../selectors/selectors-view'
 import QuantaEditor from '../quanta-editor/quanta-editor'
 import CodeEditor from '../../ui/code-editor'
 import QViewportView from './view'
+import { IconX } from '@tabler/icons'
 
 const QViewport: React.FC = ({ }) => {
     const { tabId, changeTab, closeTab, tabs } = useContext(QuantaUIContextData) as IQuantaUIState
@@ -33,7 +34,7 @@ const QViewport: React.FC = ({ }) => {
                         className={styles.icon}
                         onClick={() => { closeTab(step.tabId!) }}
                     >
-
+                        <IconX size={14} />
                     </ActionIcon>
                 </div>
             </Tabs.Tab>

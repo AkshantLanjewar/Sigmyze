@@ -3,7 +3,7 @@ import { IconBrackets, IconPlus } from "@tabler/icons"
 import React, { cloneElement, RefObject, useContext } from "react"
 import { useEffect, useState } from "react"
 import { QuantaEditorContext } from "../quanta-editor"
-import { IQuantaEditorGlobals, IQuantaNodeDetails, IQuantaSocket } from "../types/types"
+import { IQuantaEditorGlobals, IQuantaNodeDetails, IQuantaSocket, IQuantaXYPos } from "../types/types"
 import { DetailedCreateList } from "../utils"
 import styles from './node-renderer.module.scss'
 
@@ -50,13 +50,22 @@ const NodeCreateMenuInner: React.FC<INodeCreateMenuInner> = ({ onClick, name, de
 interface INodeCreateMenu {
     focused: boolean,
     nodeId?: string,
-    handleRef: RefObject<HTMLElement>
+    handleCords: IQuantaXYPos | undefined,
+    handleRef: RefObject<HTMLDivElement>
     output: IQuantaSocket,
     unfocus: () => void,
     parentId?: string
 }
 
-const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, handleRef, unfocus, parentId }) => {
+const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ 
+    focused, 
+    nodeId, 
+    handleCords, 
+    output, 
+    handleRef, 
+    unfocus, 
+    parentId 
+}) => {
     const [opened, setOpened] = useState(false)
     const [menuItems, setMenuItems] = useState<IQuantaNodeDetails[]>([])
 
@@ -81,8 +90,8 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
             return
         if(nodeId === undefined)
             return
-
-        createMenuFunc(nodeId, output.socketId!, type, handleRef, parentId)
+        
+        createMenuFunc(nodeId, output.socketId!, type, handleCords, parentId)
     }
     
     return (
@@ -94,23 +103,25 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({ focused, nodeId, output, ha
                 opened={opened}
                 onClose={() => setOpened(false)}
             >
-                <Menu.Target ref={handleRef}>
-                    <ActionIcon
-                        color={"dark"}
-                        variant={"filled"}
-                        radius={"md"}
-                        className={`${styles.add__button} ${focused && styles.active}`}
-                        onClick={() => setOpened(true)}
-                    >
-                        <IconPlus size={14} stroke={"2"} />
-                    </ActionIcon>
+                <Menu.Target>
+                    <div>
+                        <ActionIcon
+                            color={"dark"}
+                            variant={"filled"}
+                            radius={"md"}
+                            className={`${styles.add__button} ${focused && styles.active}`}
+                            onClick={() => setOpened(true)}
+                        >
+                            <IconPlus size={14} stroke={"2"} />
+                        </ActionIcon>
+                    </div>
                 </Menu.Target>
 
                 <Menu.Dropdown>
                     {output.isArray
                         ? (
                             <NodeCreateMenuInner
-                                onClick={() => createIter(nodeId!, output.socketId!, handleRef)}
+                                onClick={() => createIter(nodeId!, output.socketId!, handleCords)}
                                 name={"Iterate"}
                                 description={"Iterate through an array."}
                                 icon={(
