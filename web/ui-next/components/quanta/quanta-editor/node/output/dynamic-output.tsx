@@ -109,7 +109,7 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, pare
             
             buildStoreOutputs(storeItems)
         }
-    }, [nodeId])
+    }, [nodeId, quantaEditorContext.getStoreValue])
 
     useEffect(() => {
         if(quantaEditorContext?.storeToggle === undefined)

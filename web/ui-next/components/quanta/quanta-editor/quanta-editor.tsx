@@ -397,7 +397,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
 
     const submitStoreModal_ = useCallback((forms: IQuantaFormField[], valStore: {[key: string]: string}) => {
         return submitStoreModal(forms, valStore, storeKey, quantaStore, setQuantaStore, closeStoreModal, toggleUpdateStore)
-    }, [])
+    }, [storeKey, quantaStore, toggleUpdateStore])
 
     return (
         <QuantaEditorView
