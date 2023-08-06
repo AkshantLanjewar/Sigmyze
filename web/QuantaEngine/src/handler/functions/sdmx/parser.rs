@@ -36,6 +36,7 @@ pub async fn sdmx_parser(
 		None => return Err("no_xsd_data".into())
 	};
 
+	println!("[SDMX Parser]: validating sdmx socket data");
 	if xml_data.validate() == false || xsd_data.validate() == false {
 		return Err("invalid_socket".into())
 	}
@@ -44,6 +45,7 @@ pub async fn sdmx_parser(
 	let xml_socket_id = xml_data.socket_id.unwrap();
 	let xml_key = format!("{}::{}::{}", &process_id, &xml_node_id, &xml_socket_id);
 
+	println!("[SDMX Parser]: fetching XML data");
 	let xml_data = match get_store_value(xml_key, store).await {
 		Some(v) => v,
 		None => return Err("no_xml_store".into())
@@ -54,6 +56,7 @@ pub async fn sdmx_parser(
 	let xml_file_id = Uuid::new_v4().to_string();
 	let xml_file_loc = format!("./data/{}.xml", xml_file_id);
 
+	println!("[SDMX Parser]: creating xml file");
 	let xml_file = File::create(&xml_file_loc)
 		.await
 		.expect("failed_create_xml_file");
@@ -66,6 +69,7 @@ pub async fn sdmx_parser(
 	let xsd_socket_id = xsd_data.socket_id.unwrap();
 	let xsd_key = format!("{}::{}::{}", &process_id, &xsd_node_id, &xsd_socket_id);
 
+	println!("[SDMX Parser]: fetching XSD data");
 	let xsd_data = match get_store_value(xsd_key,  store).await {
 		Some(v) => v,
 		None => return Err("no_xsd_data".into())
@@ -76,6 +80,7 @@ pub async fn sdmx_parser(
 	let xsd_file_id = Uuid::new_v4().to_string();
 	let xsd_file_loc = format!("./data/{}.xsd", xsd_file_id);
 
+	println!("[SDMX Parser]: creating xsd file");
 	let xsd_file = File::create(&xsd_file_loc)
 		.await
 		.expect("failed_create_xsd_file");
@@ -84,6 +89,7 @@ pub async fn sdmx_parser(
 	xsd_buffer.write_all(&xsd_data).await.expect("failed_xsd_write");
 
 	//now parse the actual sdmx
+	println!("[SDMX Parser]: parsing into series");
 	let sdmx_series = match sdmx_data_parser(
 		xml_file_loc.clone(),
 		xsd_file_loc.clone()
@@ -92,10 +98,14 @@ pub async fn sdmx_parser(
 		Err(_) => return Err("failed_sdmx_parse".into())
 	};
 
+	println!("[SDMX Parser]: fetched {} indicators", &sdmx_series.len());
+	if sdmx_series.len() > 0 {
+		println!("{:?}", &sdmx_series.get(0));
+	}
+
 	let series_str = serde_json::to_string(&sdmx_series).unwrap();
 	let socket_id = output_ids[0].clone();
 	let series_key = format!("{}::{}::{}", process_id, node_id, socket_id);
-	println!("{}", &series_key);
 	set_store_value(series_key, series_str, store).await;
 
 	//delete the files

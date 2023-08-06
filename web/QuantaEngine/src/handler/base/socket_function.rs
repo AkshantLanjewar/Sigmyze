@@ -52,6 +52,7 @@ pub async fn parse_socket_function(
     let function_data = function_data.to_string();
     let function_id = function_id.as_str();
 
+    println!("executing {}", &function_id);
     let output: QuantaResult = match function_id {
         "load_process_id" => load_process_id(process_id, node_id, function_data, store).await,
         "unload_process_id" => unload_process_id(process_id, node_id, function_data, store).await,

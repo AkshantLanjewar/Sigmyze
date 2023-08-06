@@ -361,7 +361,6 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             setNodeExecuting(stack.nodeId)
             setActiveNode(stack.nodeId)
 
-            console.log(stack.functionId)
             switch(stack.functionId) {
                 case "start":
                     await startNode(stack, setOutputValue)

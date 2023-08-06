@@ -17,7 +17,6 @@ async function sdmxDataMapper(
 ) {
     let nodeId = stack.nodeId
     let connectedEdge = getInputEdge(nodeId, "sdmx_data")
-    
     if(connectedEdge === undefined)
         throw new Error("no connected edge")
     if(connectedEdge.source === undefined || connectedEdge.sourceHandle === undefined)
