@@ -21,7 +21,6 @@ pub fn parse_xml(xml_path: &String, xsd_defs: &SDMXSeriesFields) -> Vec<SDMXSeri
 				let tag_name = String::from_utf8(tag_name.as_ref().to_vec()).unwrap();
 				let tag_name = tag_name.as_str();
 
-				println!("{}", &tag_name);
 				match tag_name {
 					"Series" => {
 						let mut sdmx_series = SDMXSeries::new();
@@ -40,6 +39,8 @@ pub fn parse_xml(xml_path: &String, xsd_defs: &SDMXSeriesFields) -> Vec<SDMXSeri
 								.to_vec()
 							).unwrap();
 
+							println!("{}", &attr_name);
+							println!("{}", &attr_value);
 							let xsd_series = xsd_defs.get_series_name(
 								&attr_name
 							);
