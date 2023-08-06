@@ -24,6 +24,7 @@ pub async fn sdmx_parser(
 	store: &Arc<Mutex<QuantaDataStore>>,
 	output_ids: Vec<String>,
 ) -> QuantaResult {
+	println!("{}", &function_data);
 	let body: SDMXFunctionBody = serde_json::from_str(&function_data).expect("bad_body");
 
 	let xml_data = match body.xml_data {

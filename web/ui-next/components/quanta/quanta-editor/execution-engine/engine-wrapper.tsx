@@ -1,5 +1,5 @@
 import { ContextModalProps, ModalsProvider } from "@mantine/modals"
-import { useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import ExecuteNodeGraph from "."
 import { UserContextData } from "../../../data/user/context"
 import { IUserContext } from "../../../data/user/types"
@@ -13,16 +13,29 @@ import { ICallStackFunc } from "./types"
 
 interface IEngineModalProps {
     forms: IQuantaFormField[],
-    submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => void
+    submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => Promise<void>
 }
 
 const EngineModal = ({ context, id, innerProps }: ContextModalProps<IEngineModalProps>) => {  
+    const [innerLoading, setInnerLoading] = useState<string | undefined>(undefined)
+
+    const submitWrapper = useCallback((forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
+        async function main() {
+            setInnerLoading('loading')
+            await innerProps.submit(forms, valStore)
+            setInnerLoading(undefined)
+        }
+
+        main()
+    }, [innerProps])
+
     return (
         <>
             <FormBuilder
                 forms={innerProps.forms}
                 closeModal={() => context.closeModal(id)}
-                submit={innerProps.submit}
+                submit={submitWrapper}
+                loadingStr={innerLoading}
             />
         </>
     )

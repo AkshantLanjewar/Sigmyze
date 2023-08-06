@@ -73,6 +73,7 @@ async function sdmxDataParserNode(
         }
 
         let funcRes = await executeFunction(stack.nodeId, function_id, output_ids, function_data)
+        console.log(funcRes)
         if(funcRes !== "Parsed SDMX Data")
             throw new Error("sdmx parsing error")
     }

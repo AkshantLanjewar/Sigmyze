@@ -87,7 +87,7 @@ async function fileUploadNode(
                     continue
     
                 let val = valStore[form.id!]
-                let store: IInternalStore = { nodeId: stack.nodeId, socketId: form.id! }
+                let store: IInternalStore = { nodeId: stack.nodeId, socketId: form.linkedKey }
                 preloadedInputs.push({
                     store: store,
                     value: val

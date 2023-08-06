@@ -10,7 +10,7 @@ use crate::{
         quanta_loop::{load_loop, unload_loop, get_loop_index}, 
         indicator::{string_to_date, build_fields, add_indicator, update_indicator}, 
         quanta_data::apply_data_rule, 
-        compilation::init_compilation
+        compilation::init_compilation, upload::upload_data
     }
 }};
 use crate::handler::functions::analysis::{analyze_fields, load_indicators_analysis};
@@ -72,6 +72,7 @@ pub async fn parse_socket_function(
         "get_sdmx_field_key" => get_sdmx_field_key(process_id, node_id, function_data, store).await,
         "get_sdmx_field_val" => get_sdmx_field_value(process_id, node_id, function_data, store).await,
         "execute_stack" => execute_stack_wrapper(process_id, node_id, function_data, store).await,
+        "upload-data" => upload_data(process_id, node_id, function_data, store).await,
         _ => Ok("no_func".into())
     };
 

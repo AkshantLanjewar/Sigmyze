@@ -237,7 +237,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
         for(let i = 0; i < internalStack.length; i++) {
             let stack_ = internalStack[i]
             if(stack_.nodeId === nodeId)
-                stack = stack_
+                return stack_
 
             let stackChildren = stack_.stackThread
             if(stackChildren !== undefined)
@@ -361,6 +361,7 @@ const CallstackWrapper: React.FC<ICallstackWrapperProps> = ({ callStack, execute
             setNodeExecuting(stack.nodeId)
             setActiveNode(stack.nodeId)
 
+            console.log(stack.functionId)
             switch(stack.functionId) {
                 case "start":
                     await startNode(stack, setOutputValue)
