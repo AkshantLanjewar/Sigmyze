@@ -76,6 +76,9 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
             case "file":
                 let fileType = step.fileType
                 let fileName = step.fileName
+                if(fileName === undefined && step.name !== undefined)
+                    fileName = step.name
+
                 if(fileType === undefined || fileName === undefined)
                     return
 

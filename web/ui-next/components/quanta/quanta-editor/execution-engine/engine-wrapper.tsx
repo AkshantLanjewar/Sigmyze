@@ -16,7 +16,7 @@ interface IEngineModalProps {
     submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => void
 }
 
-const EngineModal = ({ context, id, innerProps }: ContextModalProps<IEngineModalProps>) => {    
+const EngineModal = ({ context, id, innerProps }: ContextModalProps<IEngineModalProps>) => {  
     return (
         <>
             <FormBuilder

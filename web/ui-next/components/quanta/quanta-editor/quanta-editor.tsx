@@ -188,7 +188,6 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
             setNodes([ ...editorData.nodes ])
             setEdges([ ...editorData.edges ])
             setQuantaStore({ ...editorData.quantaStore })
-            console.log(editorData.quantaStore)
             setEditorType("create")
 
             return

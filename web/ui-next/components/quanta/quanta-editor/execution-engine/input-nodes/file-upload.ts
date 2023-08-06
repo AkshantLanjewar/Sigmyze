@@ -58,6 +58,7 @@ function input_file_upload(stack: ICallStackFunc) {
         let dynamicOutputs = stack.dynamicOutputs
         let files = []
 
+        console.log(dynamicOutputs)
         for(let i = 0; i < dynamicOutputs.length; i++) {
             let output = dynamicOutputs[i]
             if(output.type.groupId === "files")
@@ -74,6 +75,7 @@ function input_file_upload(stack: ICallStackFunc) {
             formComponents.push({
                 type: "file",
                 fileType: file.fileType,
+                fileName: file.name,
                 name: file.name,
                 linkedKey: file.linkedId,
                 id: v4()
