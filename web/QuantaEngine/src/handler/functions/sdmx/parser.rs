@@ -99,7 +99,6 @@ pub async fn sdmx_parser(
 	};
 
 	println!("[SDMX Parser]: fetched {} indicators", &sdmx_series.len());
-	println!("{:?}", &sdmx_series);
 	if sdmx_series.len() > 0 {
 		println!("{:?}", &sdmx_series.get(0));
 	}
