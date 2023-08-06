@@ -52,7 +52,6 @@ pub async fn upload_data(
         let preload_node_id = upload_store.node_id.as_ref().unwrap();
         let preload_socket_id = upload_store.socket_id.as_ref().unwrap();
         let preload_key = format!("{}::{}::{}", &process_id, preload_node_id, preload_socket_id);
-        println!("{}", &preload_key);
         set_store_value(preload_key, preload_data, &store).await;
     }
 
