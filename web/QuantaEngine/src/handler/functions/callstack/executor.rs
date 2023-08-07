@@ -32,10 +32,6 @@ pub async fn call_stack_executor(
 	};
 
 	for dependency in dependencies.iter() {
-		if executed_nodes.contains(dependency) == false {
-			return Err("dependency_unexpected".into())
-		}
-
 		if failed_nodes.contains(dependency) {
 			return Err("dependency_failed".into())
 		}
