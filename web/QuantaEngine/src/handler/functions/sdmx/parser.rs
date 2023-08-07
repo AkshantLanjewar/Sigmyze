@@ -80,6 +80,7 @@ pub async fn sdmx_parser(
 	let xsd_file_id = Uuid::new_v4().to_string();
 	let xsd_file_loc = format!("./data/{}.xml", xsd_file_id);
 
+	println!("[SDMX Parser]: xsd_len {}", &xsd_data.len());
 	println!("[SDMX Parser]: creating xsd file");
 	let xsd_file = File::create(&xsd_file_loc)
 		.await

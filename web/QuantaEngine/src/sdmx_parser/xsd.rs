@@ -1,4 +1,4 @@
-use std::{fs, env};
+use std::{fs};
 
 use quick_xml::events::Event;
 use quick_xml::Reader;
@@ -12,11 +12,14 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 
 	let mut reader = Reader::from_file(path.clone()).unwrap();
 	let mut buf = Vec::new();
-	let filecontents = fs::read_to_string(path)
+	let _filecontents = fs::read_to_string(path.clone())
 		.expect("failed_to_open");
 
-	println!("{}", filecontents);
-	println!("{:?}", env::current_dir().unwrap());
+	println!("{}", &path);
+	let paths = fs::read_dir("./data").unwrap();
+	for _path in paths {
+		println!("Name: {}", _path.unwrap().path().display());
+	}
 
 	loop {
 		match reader.read_event_into(&mut buf) {
