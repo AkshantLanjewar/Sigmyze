@@ -14,6 +14,8 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 	loop {
 		match reader.read_event_into(&mut buf) {
 			Ok(Event::Eof) => break,
+			
+			Err(e) => println!("{:?}", e.to_string()),
 
 			Ok(Event::Start(e)) => {
 				let tag_name = &e.name();
