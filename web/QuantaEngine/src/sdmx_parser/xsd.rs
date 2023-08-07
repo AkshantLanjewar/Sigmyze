@@ -12,8 +12,12 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 	let mut buf = Vec::new();
 
 	loop {
+		println!("loop called :(");
 		match reader.read_event_into(&mut buf) {
-			Ok(Event::Eof) => break,
+			Ok(Event::Eof) => {
+				println!("breaking");
+				break;
+			},
 			
 			Err(e) => println!("{:?}", e.to_string()),
 
