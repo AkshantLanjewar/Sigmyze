@@ -95,7 +95,8 @@ pub async fn stack_list_executor(
 			index
 		).await {
 			Ok(_) => executed_nodes.push(node_id.into()),
-			Err(_) => {
+			Err(e) => {
+				println!("{}", e.to_string());
 				failed_nodes.push(node_id.into());
 			}
 		}
