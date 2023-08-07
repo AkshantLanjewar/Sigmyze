@@ -78,6 +78,8 @@ pub async fn call_stack_executor(
 		function_id = String::from("get_loop_index");
 	} else if function_id == "get_sdmx_field_value" {
 		function_id = String::from("get_sdmx_field_val");
+	} else if function_id == "file_upload" {
+		return Ok("uploaded".into())
 	}
 
 	let function_data = match function_data {
