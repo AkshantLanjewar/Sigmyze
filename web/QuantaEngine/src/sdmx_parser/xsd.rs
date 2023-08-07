@@ -240,7 +240,7 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 						}
 
 						depth -= 1;
-						depth_map.insert(depth, None);
+						println!("{:?}", depth_map.insert(depth, None));
 					},
 
 					"complexType" => {
@@ -249,7 +249,7 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 						}
 
 						depth -= 1;
-						depth_map.insert(depth, None);
+						println!("{:?}", depth_map.insert(depth, None));
 					}
 
 					"enumeration" => {
@@ -258,7 +258,7 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 						}
 
 						depth -= 1;
-						depth_map.insert(depth, None);
+						println!("{:?}", depth_map.insert(depth, None));
 					},
 
 					"documentation" => {
@@ -284,7 +284,7 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 						let enumeration_value = enumeration_value.clone().unwrap();
 						let documentation_value = documentation_value.clone().unwrap();
 
-						depth_map.insert(depth, None);
+						println!("{:?}", depth_map.insert(depth, None));
 						sdmx_series_fields.add_type_value(
 							&simple_type,
 							&enumeration_value,

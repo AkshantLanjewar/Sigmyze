@@ -1,15 +1,6 @@
 version: "3"
 
 services:
-  nginx:
-    build:
-      context: web/nginx
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - "80:80"
-    depends_on:
-      - sigmyze-server
   sigmyze-server:
     build:
       context: web/SigmyzeServer
@@ -31,5 +22,3 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    depends_on:
-      - nginx

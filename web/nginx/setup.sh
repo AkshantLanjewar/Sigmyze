@@ -7,6 +7,7 @@ certbot certonly --non-interactive \
       --preferred-challenge dns \
       --agree-tos \
       --domains sigmyze.com,alrightalrig.sigmyze.com \
-      --email sigmyze@gmail.com
+      --email sigmyze@gmail.com \
+     # --test-cert
 
 nginx -g "daemon off;"

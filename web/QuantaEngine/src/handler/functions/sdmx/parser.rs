@@ -52,10 +52,7 @@ pub async fn sdmx_parser(
 	};
 
 	let xml_data = xml_data.replace("\"","");
-	let xml_slice = &xml_data[..500];
-	println!("{}", xml_slice);
 	let xml_data = general_purpose::STANDARD.decode(xml_data).unwrap();
-	
 	let xml_file_id = Uuid::new_v4().to_string();
 	let xml_file_loc = format!("./data/{}.xml", xml_file_id);
 
