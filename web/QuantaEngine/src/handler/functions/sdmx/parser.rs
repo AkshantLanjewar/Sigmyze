@@ -78,7 +78,7 @@ pub async fn sdmx_parser(
 	let xsd_data = xsd_data.replace("\"", "");
 	let xsd_data = general_purpose::STANDARD.decode(xsd_data).unwrap();
 	let xsd_file_id = Uuid::new_v4().to_string();
-	let xsd_file_loc = format!("./data/{}.xsd", xsd_file_id);
+	let xsd_file_loc = format!("./data/{}.xml", xsd_file_id);
 
 	println!("[SDMX Parser]: creating xsd file");
 	let xsd_file = File::create(&xsd_file_loc)
