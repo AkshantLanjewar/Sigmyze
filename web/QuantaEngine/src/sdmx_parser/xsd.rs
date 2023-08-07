@@ -8,6 +8,7 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 	let mut depth = 0;
 	let mut depth_map: FxHashMap<i32, Option<String>> = FxHashMap::default();
 
+	println!("{}", &path);
 	let mut reader = Reader::from_file(path).unwrap();
 	let mut buf = Vec::new();
 
