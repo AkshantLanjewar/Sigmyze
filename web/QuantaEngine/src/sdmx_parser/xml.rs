@@ -44,7 +44,9 @@ pub fn parse_xml(xml_path: &String, xsd_defs: &SDMXSeriesFields) -> Vec<SDMXSeri
 								&attr_name
 							);
 
-							println!("{:?}", &xsd_series);
+							if xsd_series.is_none() {
+								continue;
+							}
 
 							if xsd_series.is_some() {
 								let xsd_series = xsd_series.unwrap().clone();
