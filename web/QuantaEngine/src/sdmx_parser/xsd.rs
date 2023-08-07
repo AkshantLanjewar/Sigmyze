@@ -17,7 +17,6 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 
 	println!("{}", filecontents);
 	loop {
-		println!("loop called :(");
 		match reader.read_event_into(&mut buf) {
 			Ok(Event::Eof) => {
 				println!("breaking");
@@ -222,7 +221,6 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 				let depth_value = depth_map.get(&depth);
 				let text_content = e.as_ref().to_vec();
 				let text_content = String::from_utf8(text_content).unwrap();
-				println!("TEXT CONTENT: {}", &text_content);
 
 				if depth_value.is_none() {
 					continue;
