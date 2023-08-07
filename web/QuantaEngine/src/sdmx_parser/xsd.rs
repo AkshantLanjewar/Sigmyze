@@ -21,7 +21,7 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 				let tag_name: Vec<&str> = tag_name.split(":").collect();
 				let tag_name = tag_name[1];
 
-				println!("{}", &tag_name);
+				println!("[Sigmyze Parser XSD]: Started Tag{}", &tag_name);
 				match tag_name {
 					"simpleType" => {
 						let mut field_name: Option<String> = None;

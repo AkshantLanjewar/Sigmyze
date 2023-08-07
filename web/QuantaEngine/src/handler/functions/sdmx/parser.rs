@@ -109,8 +109,8 @@ pub async fn sdmx_parser(
 	set_store_value(series_key, series_str, store).await;
 
 	//delete the files
-	remove_file(xml_file_loc).await.unwrap();
-	remove_file(xsd_file_loc).await.unwrap();
+	//remove_file(xml_file_loc).await.unwrap();
+	//remove_file(xsd_file_loc).await.unwrap();
 
 	Ok("Parsed SDMX Data".into())
 }
