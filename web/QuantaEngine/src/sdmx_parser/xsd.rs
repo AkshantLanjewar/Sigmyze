@@ -1,3 +1,5 @@
+use std::fs;
+
 use quick_xml::events::Event;
 use quick_xml::Reader;
 use rustc_hash::FxHashMap;
@@ -8,9 +10,12 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 	let mut depth = 0;
 	let mut depth_map: FxHashMap<i32, Option<String>> = FxHashMap::default();
 
-	let mut reader = Reader::from_file(path).unwrap();
+	let mut reader = Reader::from_file(path.clone()).unwrap();
 	let mut buf = Vec::new();
+	let filecontents = fs::read_to_string(path)
+		.expect("failed_to_open");
 
+	println!("{}", filecontents);
 	loop {
 		println!("loop called :(");
 		match reader.read_event_into(&mut buf) {
