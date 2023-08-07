@@ -76,6 +76,7 @@ pub async fn quanta_loop_wrapper(
 		None => return Err("no_stack_thread".into())
 	};
 
+	println!("loop of length {}", &loop_length);
 	while index < loop_length {
 		let process_id = process_id.clone();
 		let stack_thread = stack_thread.clone();
