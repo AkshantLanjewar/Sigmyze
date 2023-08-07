@@ -65,6 +65,7 @@ pub async fn sdmx_parser(
 
 	let mut xml_buffer = BufWriter::new(xml_file);
 	xml_buffer.write_all(&xml_data).await.expect("failed_xml_write");
+	xml_buffer.flush().await.unwrap();
 
 	//now do the xsd data
 	let xsd_node_id = xsd_data.node_id.unwrap();
@@ -90,6 +91,7 @@ pub async fn sdmx_parser(
 
 	let mut xsd_buffer = BufWriter::new(xsd_file);
 	xsd_buffer.write_all(&xsd_data).await.expect("failed_xsd_write");
+	xsd_buffer.flush().await.unwrap();
 
 	//now parse the actual sdmx
 	//we wait 2 seconds so the file can write out
