@@ -42,11 +42,11 @@ pub async fn quanta_loop_wrapper(
 		None => return Err("no_socket_id".into())
 	};
 
+	println!("here");
 	if failed_nodes.contains(connected_input_node) {
 		return Err("inputs_failed".into())
 	}
 
-	println!("here");
 	let loop_id = Uuid::new_v4().to_string();
 	let connected_internal = InternalStore {
 		node_id: Some(connected_input_node.clone()),
