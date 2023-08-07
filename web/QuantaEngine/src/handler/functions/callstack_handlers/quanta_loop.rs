@@ -32,6 +32,7 @@ pub async fn quanta_loop_wrapper(
 	}
 
 	let connected_input = &inputs[0];
+	println!("here");
 	let connected_input_node = match connected_input.id.as_ref() {
 		Some(v) => v,
 		None => return Err("no_node_id".into())
