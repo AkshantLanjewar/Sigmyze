@@ -1,4 +1,6 @@
+use core::time;
 use std::sync::Arc;
+use std::thread;
 use base64::Engine;
 use base64::engine::general_purpose;
 use crate::handler::functions::InternalStore;
@@ -90,7 +92,9 @@ pub async fn sdmx_parser(
 	xsd_buffer.write_all(&xsd_data).await.expect("failed_xsd_write");
 
 	//now parse the actual sdmx
+	//we wait 2 seconds so the file can write out
 	println!("[SDMX Parser]: parsing into series");
+	thread::sleep(time::Duration::from_secs(5));
 	let sdmx_series = match sdmx_data_parser(
 		xml_file_loc.clone(),
 		xsd_file_loc.clone()
