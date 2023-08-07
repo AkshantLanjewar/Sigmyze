@@ -67,6 +67,7 @@ async fn run_task(task: Task) {
 			store,
 			schema
 		) => {
+			println!("[QuantaLog]: Spawned Task");
 			match stack_list_executor(
 				edges,
 				call_stack,

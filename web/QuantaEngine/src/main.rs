@@ -9,7 +9,6 @@ use log::*;
 use tokio::{net::{TcpListener, TcpStream}, sync::Mutex, fs};
 use tokio_tungstenite::{tungstenite::{Result, Error}, accept_async};
 use futures_util::stream::StreamExt;
-use tokio_tungstenite::tungstenite::protocol::WebSocketConfig;
 
 use crate::handler::handle_text_msg;
 

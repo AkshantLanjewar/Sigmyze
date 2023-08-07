@@ -5,7 +5,7 @@ use base64::Engine;
 use base64::engine::general_purpose;
 use crate::handler::functions::InternalStore;
 use serde::{Deserialize, Serialize};
-use tokio::fs::{File, remove_file};
+use tokio::fs::File;
 use tokio::io::{AsyncWriteExt, BufWriter};
 use tokio::sync::Mutex;
 use uuid::Uuid;

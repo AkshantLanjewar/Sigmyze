@@ -5,7 +5,6 @@ use crate::handler::functions::quanta_data::ChartData;
 use crate::sdmx_parser::types::{SDMXSeries, SDMXSeriesFields};
 
 pub fn parse_xml(xml_path: &String, xsd_defs: &SDMXSeriesFields) -> Vec<SDMXSeries> {
-	println!("{:?}", xsd_defs);
 	let mut depth = 0;
 	let mut depth_map: FxHashMap<i32, Option<SDMXSeries>> = FxHashMap::default();
 	let mut collected_series: Vec<SDMXSeries> = Vec::new();
