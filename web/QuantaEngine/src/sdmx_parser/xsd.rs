@@ -8,7 +8,6 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 	let mut depth = 0;
 	let mut depth_map: FxHashMap<i32, Option<String>> = FxHashMap::default();
 
-	println!("{}", &path);
 	let mut reader = Reader::from_file(path).unwrap();
 	let mut buf = Vec::new();
 
@@ -19,10 +18,10 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 			Ok(Event::Start(e)) => {
 				let tag_name = &e.name();
 				let tag_name = String::from_utf8(tag_name.as_ref().to_vec()).unwrap();
+				println!("{}", &tag_name);
 				let tag_name: Vec<&str> = tag_name.split(":").collect();
 				let tag_name = tag_name[1];
 
-				println!("[Sigmyze Parser XSD]: Started Tag{}", &tag_name);
 				match tag_name {
 					"simpleType" => {
 						let mut field_name: Option<String> = None;
@@ -242,7 +241,6 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 						}
 
 						depth -= 1;
-						println!("{:?}", depth_map.insert(depth, None));
 					},
 
 					"complexType" => {
@@ -251,7 +249,6 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 						}
 
 						depth -= 1;
-						println!("{:?}", depth_map.insert(depth, None));
 					}
 
 					"enumeration" => {
@@ -260,7 +257,6 @@ pub fn parse_xsd(path: String) -> SDMXSeriesFields {
 						}
 
 						depth -= 1;
-						println!("{:?}", depth_map.insert(depth, None));
 					},
 
 					"documentation" => {
