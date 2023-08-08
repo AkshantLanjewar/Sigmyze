@@ -6,7 +6,7 @@ certbot certonly --non-interactive \
       --dns-route53 \
       --preferred-challenge dns \
       --agree-tos \
-      --domains sigmyze.com,alrighta.sigmyze.com \
+      --domains sigmyze.com,alright.sigmyze.com \
       --email sigmyze@gmail.com \
      # --test-cert
 
