@@ -53,7 +53,6 @@ pub async fn call_stack_executor(
 
 	let mut output_ids: Vec<String> = Vec::new();
 	let function = function.clone();
-	println!("[CallStack]: Calling {}", &function_id);
 	let function_data = match function_id.as_str() {
 		"add_indicator" => add_indicator_callstack(&function, edges).await,
 		"update_indicator" => update_indicator_callstack(&function, edges).await,

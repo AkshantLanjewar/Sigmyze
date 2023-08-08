@@ -42,7 +42,6 @@ pub async fn quanta_loop_wrapper(
 		None => return Err("no_socket_id".into())
 	};
 
-	println!("here");
 	if failed_nodes.contains(connected_input_node) {
 		return Err("inputs_failed".into())
 	}

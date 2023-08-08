@@ -5,7 +5,7 @@ use base64::Engine;
 use base64::engine::general_purpose;
 use crate::handler::functions::InternalStore;
 use serde::{Deserialize, Serialize};
-use tokio::fs::File;
+use tokio::fs::{File, remove_file};
 use tokio::io::{AsyncWriteExt, BufWriter};
 use tokio::sync::Mutex;
 use uuid::Uuid;
@@ -38,7 +38,6 @@ pub async fn sdmx_parser(
 		None => return Err("no_xsd_data".into())
 	};
 
-	println!("[SDMX Parser]: validating sdmx socket data");
 	if xml_data.validate() == false || xsd_data.validate() == false {
 		return Err("invalid_socket".into())
 	}
@@ -47,7 +46,6 @@ pub async fn sdmx_parser(
 	let xml_socket_id = xml_data.socket_id.unwrap();
 	let xml_key = format!("{}::{}::{}", &process_id, &xml_node_id, &xml_socket_id);
 
-	println!("[SDMX Parser]: fetching XML data");
 	let xml_data = match get_store_value(xml_key, store).await {
 		Some(v) => v,
 		None => return Err("no_xml_store".into())
@@ -58,7 +56,6 @@ pub async fn sdmx_parser(
 	let xml_file_id = Uuid::new_v4().to_string();
 	let xml_file_loc = format!("./data/{}.xml", xml_file_id);
 
-	println!("[SDMX Parser]: creating xml file");
 	let xml_file = File::create(&xml_file_loc)
 		.await
 		.expect("failed_create_xml_file");
@@ -72,7 +69,6 @@ pub async fn sdmx_parser(
 	let xsd_socket_id = xsd_data.socket_id.unwrap();
 	let xsd_key = format!("{}::{}::{}", &process_id, &xsd_node_id, &xsd_socket_id);
 
-	println!("[SDMX Parser]: fetching XSD data");
 	let xsd_data = match get_store_value(xsd_key, store).await {
 		Some(v) => v,
 		None => return Err("no_xsd_data".into())
@@ -83,8 +79,6 @@ pub async fn sdmx_parser(
 	let xsd_file_id = Uuid::new_v4().to_string();
 	let xsd_file_loc = format!("./data/{}.xml", xsd_file_id);
 
-	println!("[SDMX Parser]: xsd_len {}", &xsd_data.len());
-	println!("[SDMX Parser]: creating xsd file");
 	let xsd_file = File::create(&xsd_file_loc)
 		.await
 		.expect("failed_create_xsd_file");
@@ -95,7 +89,6 @@ pub async fn sdmx_parser(
 
 	//now parse the actual sdmx
 	//we wait 2 seconds so the file can write out
-	println!("[SDMX Parser]: parsing into series");
 	thread::sleep(time::Duration::from_secs(5));
 	let sdmx_series = match sdmx_data_parser(
 		xml_file_loc.clone(),
@@ -116,8 +109,8 @@ pub async fn sdmx_parser(
 	set_store_value(series_key, series_str, store).await;
 
 	//delete the files
-	//remove_file(xml_file_loc).await.unwrap();
-	//remove_file(xsd_file_loc).await.unwrap();
+	remove_file(xml_file_loc).await.unwrap();
+	remove_file(xsd_file_loc).await.unwrap();
 
 	Ok("Parsed SDMX Data".into())
 }
