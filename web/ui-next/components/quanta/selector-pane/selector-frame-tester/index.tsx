@@ -203,7 +203,7 @@ const SelectorFrameTester: React.FC<ISelectorFrameTesterProps> = ({ source, sele
     return (
         <>
             <iframe
-                style={{ display: "none" }}
+                style={{ visibility: "hidden" }}
                 srcDoc={internalSource}
             />
         </>
