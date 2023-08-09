@@ -50,6 +50,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
             return
 
         const newWebsocket = new WebSocket(wsServer + '/')
+
         newWebsocket.onerror = err => console.error(err)
         newWebsocket.onmessage = msg => {
             let msgData = msg.data
@@ -60,6 +61,14 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
         newWebsocket.onopen = () => {
             setWebSocket(newWebsocket)
             setSocketCreated(true)
+        }
+
+        newWebsocket.onclose = () => {
+            setWebSocket(null)
+            setSocketCreated(false)
+
+            //call the connect function again
+            connect()
         }
     }
 

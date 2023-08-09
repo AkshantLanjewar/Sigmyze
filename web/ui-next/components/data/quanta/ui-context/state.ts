@@ -1,3 +1,4 @@
+import { WebContainer } from "@webcontainer/api";
 import { IQuantaTab } from "../types/ui";
 
 interface IQuantaUIState {
@@ -11,13 +12,20 @@ interface IQuantaUIState {
      */
     tabs?: IQuantaTab[],
 
+    /**
+     * This is whether or not the webcontainer has been created
+     */
+    webcontainerCreated: boolean,
+
     //tab related functions
     changeTab: (tabId: string) => void,
     focusTab: (fileId: string, fileType: string) => void,
     closeTab: (tabId: string) => void,
 
     //opens a context modal
-    openModal: (modalId: string) => void
+    openModal: (modalId: string) => void,
+    //method that retrieves the webcontainer
+    getContainer: () => WebContainer | null
 }
 
 export type { IQuantaUIState }

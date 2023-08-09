@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { IQuantaTab } from "../types/ui"
 import { IQuantaUIState } from "./state"
 import { changeTab, closeTab, focusTab } from "./functions"
@@ -9,6 +9,7 @@ import NewFieldForm from "../forms/new_field"
 import NewCodeSelector from "../forms/new_code_selector"
 import { QuantaCodeContextData } from "../quanta-code-context"
 import { IQuantaCodeContext } from "../quanta-code-context/state"
+import { WebContainer } from "@webcontainer/api"
 
 interface IQuantaUIContextProps {
     projectData: IQuantaProjectData | undefined,
@@ -21,6 +22,9 @@ const QuantaUIContext: React.FC<IQuantaUIContextProps> = ({ children, projectDat
     //state relating to the tabs
     const [activeTab, setActiveTab] = useState<string | undefined>(undefined)
     const [tabs, setTabs] = useState<IQuantaTab[]>([] as IQuantaTab[])
+    //this is the ref that will store the webcontainer
+    const [containerCreated, setContainerCreated] = useState(false)
+    const containerRef = useRef<WebContainer | null>(null)
 
     //state for the modal managaer
     const [modalState, setModalState] = useState<string | null>(null)
@@ -44,15 +48,46 @@ const QuantaUIContext: React.FC<IQuantaUIContextProps> = ({ children, projectDat
         setModalState(modalId)
     }, [])
 
-    let value: IQuantaUIState = {
+    //method that will return the value of the container ref
+    const getContainer = useCallback(() => {
+        return containerRef.current
+    }, [])
+
+    //here we will move the webcontainer booting process since we dont need to persist this to the server
+    useEffect(() => {
+        async function main() {
+            try {
+                const container = await WebContainer.boot()
+                containerRef.current = container
+                setContainerCreated(true)
+            } catch {}
+        }
+
+        main()
+
+        return () => containerRef.current?.teardown()
+    }, [])
+
+    let value: IQuantaUIState = useMemo(() => ({
         tabId: activeTab,
         tabs: tabs,
+        webcontainerCreated: containerCreated,
 
         changeTab: changeTabCallback,
         focusTab: focusTabCallback,
         closeTab: closeTabCallback,
-        openModal: openModalCallback
-    }
+        openModal: openModalCallback,
+        getContainer: getContainer
+    }), [
+        activeTab,
+        tabs,
+        containerCreated,
+        changeTabCallback,
+        focusTabCallback,
+        closeTabCallback,
+        openModalCallback,
+        getContainer
+    ])
 
     return (
         <>

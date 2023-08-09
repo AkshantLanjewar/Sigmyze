@@ -7,6 +7,8 @@ import { SelectorPaneContextData } from '../selector-pane/context'
 import { ISelectorPaneState } from '../selector-pane/context/types'
 import dynamic from 'next/dynamic'
 import { WebContainer } from '@webcontainer/api'
+import { QuantaUIContextData } from '../../data/quanta/ui-context'
+import { IQuantaUIState } from '../../data/quanta/ui-context/state'
 
 const UploadModal = dynamic(() => import('./upload-modal'), { ssr: false })
 
@@ -16,27 +18,19 @@ const SelectorCodeUpload: React.FC = ({ }) => {
 
     const [codeTitle, setCodeTitle] = useState<string | null>(null)
     const { selectorCode } = useContext(SelectorPaneContextData) as ISelectorPaneState
+    const { getContainer, webcontainerCreated } = useContext(QuantaUIContextData) as IQuantaUIState
 
     const iframeRef = useRef<HTMLIFrameElement | null>(null)
     const containerRef = useRef<WebContainer | null>(null)
 
+    //if the webcontainer is created, put it into the internal container ref
     useEffect(() => {
-        async function main() {
-            if(iframeRef.current === null)
-                return
+        if(webcontainerCreated === false)
+            return
 
-            try {
-                const container = await WebContainer.boot()
-                containerRef.current = container
-            } catch {}
-        }
-
-        main()
-
-        return () => {
-            containerRef.current?.teardown()
-        }
-    }, [])
+        let webcontainer = getContainer()
+        containerRef.current = webcontainer
+    }, [webcontainerCreated, getContainer])
 
     useEffect(() => {
         if(selectorCode === null) {
