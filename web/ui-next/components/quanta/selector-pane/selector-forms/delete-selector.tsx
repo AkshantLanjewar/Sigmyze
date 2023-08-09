@@ -79,6 +79,7 @@ const DeleteSelectorForm: React.FC<IDeleteSelectorFormProps> = ({ close, selecto
                 forms={formFields}
                 submit={submit}
                 closeModal={close}
+                submitText="Delete"
             />
         </>
     )

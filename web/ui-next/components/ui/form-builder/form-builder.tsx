@@ -9,10 +9,18 @@ interface IFormBuilderProps {
     submit: (forms: IQuantaFormField[], valStore: {[key: string]: any}) => void,
     defaultValue?: {[key: string]: any},
     loading?: boolean,
-    loadingStr?: string
+    loadingStr?: string,
+    submitText?: string
 }
 
-const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, defaultValue, loadingStr }) => {
+const FormBuilder: React.FC<IFormBuilderProps> = ({ 
+    forms, 
+    closeModal, 
+    submit, 
+    defaultValue, 
+    loadingStr,
+    submitText 
+}) => {
     const [valStore, setValStore] = useState<{[key: string]: any}>({})
 
     useEffect(() => {
@@ -77,7 +85,10 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ forms, closeModal, submit, d
                         px={'xs'}
                         onClick={() => { submit(forms, valStore) }}
                     >
-                        Create
+                        {submitText
+                            ? submitText
+                            : "Create"
+                        }
                     </Button>
                 </Group>
             </Stack>
