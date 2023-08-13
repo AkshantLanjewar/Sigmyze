@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { ISocketHandlerState } from "./types"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
@@ -19,18 +19,19 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
      * state relating to sockets
      */
     const [socketCreated, setSocketCreated] = useState(false)
+    const [dontRecreate, setDontRecreate] = useState(false)
     const [webSocket, setWebSocket] = useState<WebSocket | null>(null)
     const [socketResponseQueue, setSocketResponseQueue] = useState<ISocketResp[]>([])
     const [socketResponse, setSocketResponse] = useState(false)
     const [socketHandlers, setSocketHandlers] = useState<ISocketRespHandler[]>([])
 
-    function addMessage(msg: ISocketResp) {
+    const addMessage = useCallback((msg: ISocketResp) => {
         let nSocketQueue = socketResponseQueue
         nSocketQueue.push(msg)
 
         setSocketResponseQueue([ ...nSocketQueue ])
         setSocketResponse(!socketResponse)
-    }
+    }, [socketResponseQueue, socketResponse])
 
     function addHandler(requestId: string, callback: Function) {
         let handler = {
@@ -43,7 +44,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
         setSocketHandlers([ ...nHandlers ])
     }
 
-    function connect() {
+    const connect: Function = useCallback(() => {
         if(loaded === false || loggedIn === false)
             return
         if(socketCreated === true)
@@ -66,29 +67,33 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
         newWebsocket.onclose = () => {
             setWebSocket(null)
             setSocketCreated(false)
+            if(dontRecreate === true)
+                return
 
-            //call the connect function again
-            connect()
+            console.log('[info]: connection dropped, connecting again in 5 seconds')
+            setTimeout(() => {
+                console.log('[info]: connecting')
+                connect()
+            }, 1000 * 5)
         }
-    }
+    }, [loaded, loggedIn, socketCreated, addMessage, dontRecreate])
 
     useEffect(() => {
         connect()
-    }, [])
 
-    useEffect(() => {
-        connect() // persists connection
-    }, [loaded, loggedIn, socketCreated])
-
-    useEffect(() => {
         return () => {
             if(webSocket === null)
                 return
 
             webSocket.close()
             setSocketCreated(false)
+            setDontRecreate(true)
         }
-    }, [webSocket])
+    }, [])
+
+    useEffect(() => {
+        connect() // persists connection
+    }, [loaded, loggedIn, socketCreated])
 
     //handles the inbound messaging
     useEffect(() => {
