@@ -16,13 +16,15 @@ const formComponents = [
         type: "file",
         fileType: "json",
         name: "Category Definition",
-        id: "source"
+        id: "source",
+        testId: "file-upload"
     },
     {
         type: "dropdown",
         id: "map",
         name: "Map to Field",
-        manualDropdownItems: []
+        manualDropdownItems: [],
+        testId: "dropdown"
     }
 ] as IQuantaFormField[]
 

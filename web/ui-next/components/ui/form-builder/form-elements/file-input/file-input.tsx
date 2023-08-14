@@ -6,12 +6,14 @@ import styles from './file-input.module.scss'
 interface IFileInputProps {
     fileType?: string,
     fileName?: string,
+    testId?: string,
     setValue?: (val: any) => void
 }
 
-const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) => {
+const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, testId, setValue }) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const [internalTestId, setInternalTestId] = useState<string>("")
     const [name, setName] = useState<string | undefined>(undefined)
     const [type, setType] = useState<string | undefined>(undefined)
     const [loaded, setLoaded] = useState(false)
@@ -26,6 +28,13 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
         setType(`.${fileType}`)
         setLoaded(true)
     }, [fileType, fileName])
+
+    useEffect(() => {
+        if(testId === undefined)
+            return
+
+        setInternalTestId(testId)
+    }, [testId])
 
     function openFileInput() {
         if(inputRef.current === null)
@@ -67,7 +76,10 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
     }
 
     return (
-        <div className={styles.file__item}>
+        <div 
+            className={styles.file__item}
+            data-testId={internalTestId}
+        >
             <LoadingOverlay
                 visible={loader}
                 overlayBlur={2}
