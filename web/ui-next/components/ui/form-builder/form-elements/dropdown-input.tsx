@@ -50,6 +50,7 @@ const DropdownInput: React.FC<IDropdownInput> = ({ items, name, value, testId, s
                         expand={true}
                         radius={"sm"}
                         position={'bottom-start'}
+                        internalTestId={internalTestId}
                     />
                 </>
             )}

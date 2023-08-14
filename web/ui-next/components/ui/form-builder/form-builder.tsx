@@ -73,6 +73,7 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({
                         color={'red'}
                         size={'xs'}
                         px={'xs'}
+                        data-testId={'cancel-button'}
                         onClick={() => { closeModal() }}
                     >
                         Cancel
@@ -83,6 +84,7 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({
                         color={'indigo'}
                         size={'xs'}
                         px={'xs'}
+                        data-testId={'submit-button'}
                         onClick={() => { submit(forms, valStore) }}
                     >
                         {submitText

@@ -6,6 +6,7 @@ import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
 import { IconDatabase } from "@tabler/icons"
 import { showNotification } from "@mantine/notifications"
 import { IQuantaFormField } from "../quanta-editor/types/form"
+import { Buffer } from 'buffer'
 
 interface ICategoryUploadProps {
     closeModal: () => void

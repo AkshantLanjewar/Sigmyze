@@ -102,6 +102,7 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, testId, setV
                             ref={inputRef}
                             onChangeCapture={fileChange}
                             accept={type}
+                            data-testId={`${internalTestId}-input`}
                         />
 
                         <ActionIcon
@@ -111,6 +112,7 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, testId, setV
                             radius={"md"}
                             sx={{ borderWidth: 2, zIndex: 3 }}
                             onClick={() => openFileInput()}
+                            data-testId={`${internalTestId}-click`}
                         >
                             {fileUploaded
                                 ? <IconBraces size={28} stroke={"2"} color={"#d0bfff"} />

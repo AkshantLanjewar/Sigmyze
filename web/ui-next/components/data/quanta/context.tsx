@@ -58,7 +58,7 @@ import { IDatasetCacheObject } from "../../ui/quanta-dataset-manager/types"
 interface IQuantaContextProps {
     quantaId: string | null,
     organizationId: string | null,
-    children?: JSX.Element | never[],
+    children?: React.ReactNode,
     primeData?: IDatasetCacheObject
 }
 
@@ -148,7 +148,21 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
         if(primeData === undefined)
             return
 
-        setSchemas([ ...primeData.schemas ])
+        if(primeData.schemas !== undefined) {
+            setSchemas([ ...primeData.schemas ])
+            toggleUpdateSchema()
+            toggleUpdateEditorSchema()
+        } if(primeData.selectors !== undefined) {
+            setSelectors([ ...primeData.selectors ])
+            toggleSelectorUpdate()
+            toggleSelectorsUpdated()
+        } if(primeData.textStore !== undefined) {
+            setTextStore({ ...primeData.textStore })
+            toggleTextUpdated()
+        }
+
+        setCategorize(primeData.categorization)
+        toggleCategorizeUpdated()
     }, [primeData])
 
     useEffect(() => {

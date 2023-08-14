@@ -18,6 +18,7 @@ import CategoryUpload from './category-upload'
  *  CategoryUpload Unit testing requirements:
  *      - source = Category Definition
  *      - map = Map to Field
+ *      - cancel button functional
  *  
  *  The requirements for E2E will test the flow of uploading a categories.json successfuly using the component
  *  UploadSteps:
@@ -34,6 +35,8 @@ import CategoryUpload from './category-upload'
  *      2) file-name (this is the file-name status)
  *      3) file-upload (this is the file-upload form component)
  *      4) dropdown (this is the dropdown form component)
+ *      5) filetype (this is the filetype locator)
+ *      6) cancel-button (the form cancel button)
 */
 
 const CategoryMapper: React.FC = ({ }) => {
@@ -54,7 +57,7 @@ const CategoryMapper: React.FC = ({ }) => {
         }
 
         setFileName(fileName)
-    }, [updateCategorization])
+    }, [updateCategorization, categorization])
 
     return (
         <>
@@ -97,7 +100,12 @@ const CategoryMapper: React.FC = ({ }) => {
 
                     <Group spacing={2.5}>
                         <IconCode size={14} color={"#3b5bdb"} /> 
-                        <div className={fileStyles.file__type}>.json file</div>
+                        <div 
+                            className={fileStyles.file__type}
+                            data-testId={"filetype"}
+                        >
+                            .json file
+                        </div>
                     </Group>
                 </Stack>
             </UnstyledButton>

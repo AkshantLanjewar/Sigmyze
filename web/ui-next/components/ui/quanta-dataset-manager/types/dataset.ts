@@ -8,19 +8,19 @@ interface IDatasetCache {
 
 interface IDatasetCacheObject {
     //used for feeding categories into a selector
-    categorization: IQuantaCategorization;
+    categorization?: IQuantaCategorization; //added
     //name of the dataset, display purposes
-    dataset_name: string;
+    dataset_name?: string;
     //id of the dataset, display purposes
-    dataset_id: string;
+    dataset_id?: string;
     //description of the dataset, used in public pages
-    dataset_description: string;
+    dataset_description?: string;
     //selectors, used when fetching indicators from this specific dataset
-    selectors: IQuantaSelector[];
+    selectors?: IQuantaSelector[]; //added
     //stores data relating to the formatters
-    textStore: IQuantaTextStore;
+    textStore?: IQuantaTextStore; //added
     //schemas for the dataset
-    schemas: ProjectSchemas[]
+    schemas?: ProjectSchemas[] //added
 }
 
 interface IQuantaIndicatorShell {
