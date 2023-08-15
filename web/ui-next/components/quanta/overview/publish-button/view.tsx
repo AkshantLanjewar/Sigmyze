@@ -31,6 +31,7 @@ const PublishButtonView: React.FC<IViewProps> = memo(({ publishedState, setPubli
                 radius={"xl"}
                 color={"indigo"}
                 onClick={() => setPublishOpen(true)}
+                data-testId={"publish-button"}
             >
                 <IconWorldUpload  
                     size={14} 

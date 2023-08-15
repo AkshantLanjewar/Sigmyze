@@ -19,6 +19,7 @@ const PreviewControls: React.FC<IControlProps> = memo(({
                     variant="light"
                     color="red"
                     onClick={() => close()}
+                    data-testId={"cancel-preview"}
                 >
                     Cancel
                 </Button>
