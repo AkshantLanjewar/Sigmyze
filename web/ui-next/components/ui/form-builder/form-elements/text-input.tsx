@@ -38,6 +38,7 @@ const TextInputQuanta: React.FC<ITextInputQuanta> = ({ name, icon, value, setVal
                     value={value}
                     onChange={(e) => setValue ? setValue(e.target.value) : null}
                     icon={icon}
+                    data-testId={`${testingId}-input`}
                     styles={{
                         icon: {
                             marginLeft: 10
