@@ -54,17 +54,25 @@ import { IQuantaTypeRef } from "../../quanta/quanta-editor/types/node-type"
 import { IQuantaRFNode } from "../../quanta/quanta-editor/types/nodes"
 import { IQuantaStore } from "../../quanta/quanta-editor/types/store"
 import { IDatasetCacheObject } from "../../ui/quanta-dataset-manager/types"
+import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
 
 interface IQuantaContextProps {
     quantaId: string | null,
     organizationId: string | null,
     children?: React.ReactNode,
-    primeData?: IDatasetCacheObject
+    primeData?: IDatasetCacheObject,
+    dummyIndicators?: IQuantaIndicator[]
 }
 
 const QuantaContextData = createContext<IQuantaState | null>(null)
 
-const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId, children, primeData }) => {
+const QuantaContext: React.FC<IQuantaContextProps> = ({ 
+    quantaId, 
+    organizationId, 
+    children, 
+    primeData,
+    dummyIndicators 
+}) => {
     const [projectData, setProjectData] = useState<IQuantaProjectData | undefined>(undefined)
 
     //state for the selector
@@ -596,7 +604,7 @@ const QuantaContext: React.FC<IQuantaContextProps> = ({ quantaId, organizationId
     return (
         <>
             <QuantaContextData.Provider value={memoValue}>
-                <QuantaIndicatorManager>
+                <QuantaIndicatorManager dummyIndicators={dummyIndicators}>
                     <QuantaCodeContex quantaId={quantaId}>
                         <QuantaUIContext projectData={projectData}>
                             <div style={{ width: "100%", height: "100%" }}>

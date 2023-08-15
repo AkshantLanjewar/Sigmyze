@@ -1,16 +1,32 @@
-import styles from './index.module.scss'
-
-import { ScrollArea, Table } from "@mantine/core"
 import { useContext, useEffect, useState } from "react"
-import { v4 } from 'uuid'
 import { QuantaIndicatorManagerData } from '../quanta-indicator-manager'
 import { IChartData, IQuantaIndicatorManager } from '../quanta-indicator-manager/types'
 import { validateIndicator } from '../quanta-indicator-manager/utils'
 import { capitalizeFirstLetter } from '../../data/utils'
-import SparkView from '../../ui/visualization/spark-view'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import View from './view'
+
+/**
+ *  Here lies all the documentation relating to the unit and e2e tests for the indicator viewer
+ *  
+ *  Unit tests to be conducted
+ *  Table Mount Test
+ *      1) check if chart table header exists and = Chart
+ *      2) check if chart type table header exists = chart
+ *  Table Dummy Indicator Test
+ *      1) insert dummy indicator into the indicator manager context
+ *      2) check if dummy header exists
+ *      3) check if dummy type header exists
+ *      4) check if the dummy indicator value exists within the table
+ * 
+ *  due to the lack of interactivity, we will not be needing an e2e test
+ * 
+ *  The testId's will be:
+ *      1) indicator-table-h-{fieldType} -> the field type of a table header
+ *      2) indicator-table-h-{fieldName} -> the field name of a table header
+ *      3) indicator-table-item-{index}-{fieldKey} -> this is the value of a table item, requires table index and
+ */
 
 interface ITableHeader {
     fieldName: string,
@@ -25,13 +41,14 @@ interface ITableRowItem {
     itemType: string,
     stringValue?: string,
     dateValue?: Date,
-    chartValue?: IChartData[]
+    chartValue?: IChartData[],
+    testingId?: string
 }
 
 const IndicatorViewer: React.FC = ({ }) => {
     const [scrolled, setScrolled] = useState(false)
     const [rows, setRows] = useState<ITableRow[]>([])
-    const [headers, setHeaders] = useState<ITableHeader[]>([])
+    const [headers, setHeaders] = useState<ITableHeader[]>([{ fieldName: "Chart", fieldType: "chart" }])
 
     const { indicators } = useContext(QuantaIndicatorManagerData) as IQuantaIndicatorManager
     const { toggleUpdateEditorIndicators } = useContext(QuantaContextData) as IQuantaState
@@ -75,6 +92,7 @@ const IndicatorViewer: React.FC = ({ }) => {
                 let tableItem = {} as ITableRowItem
 
                 tableItem.itemType = fieldType
+                tableItem.testingId = `indicator-table-item-${i}-${field.fieldKey}`
                 switch(tableItem.itemType) {
                     case "string":
                         tableItem.stringValue = field.stringField!

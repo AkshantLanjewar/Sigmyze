@@ -5,6 +5,8 @@ import { IDatasetCacheObject } from "../components/ui/quanta-dataset-manager/typ
 import QuantaContext from "../components/data/quanta/context"
 import UserContext from "../components/data/user/context"
 import OrganizationContext from "../components/data/organization/context"
+import { IQuantaIndicator } from "../components/quanta/quanta-indicator-manager/types"
+import { v4 } from "uuid"
 
 interface IApplicationTestingWrapper {
     children: React.ReactNode
@@ -32,15 +34,17 @@ const ApplicationTestingWrapper: React.FC<IApplicationTestingWrapper> = ({ child
 //design all the data that can be mocked into the context
 interface IQuantaContextTestingWrapper {
     data?: IDatasetCacheObject,
+    dummyIndicators?: IQuantaIndicator[]
     children: React.ReactNode
 }
 
-const QuantaContextTestingWrapper: React.FC<IQuantaContextTestingWrapper> = ({ data, children }) => {
+const QuantaContextTestingWrapper: React.FC<IQuantaContextTestingWrapper> = ({ data, dummyIndicators, children }) => {
     return (
         <QuantaContext
             quantaId={null}
             organizationId={null}
             primeData={data}
+            dummyIndicators={dummyIndicators}
         >
             {children}
         </QuantaContext>
@@ -49,5 +53,5 @@ const QuantaContextTestingWrapper: React.FC<IQuantaContextTestingWrapper> = ({ d
 
 export { 
     ApplicationTestingWrapper,
-    QuantaContextTestingWrapper 
+    QuantaContextTestingWrapper
 }
