@@ -27,7 +27,7 @@ const DynamicOutputView: React.FC<IViewProps> = memo(({
         <div className={styles.dynamic__node}>
             <div className={styles.title}>{output.groupTitle}</div>
 
-            {renderedOutputs.map((step) => (
+            {renderedOutputs.map((step, i) => (
                 <NodeOutput
                     output={step}
                     nodeId={nodeId}
@@ -36,6 +36,7 @@ const DynamicOutputView: React.FC<IViewProps> = memo(({
                     unfocus={() => { }}
                     editType={editType}
                     deleteStoreField={deleteStoreField}
+                    index={i}
                 />
             ))}
         </div>

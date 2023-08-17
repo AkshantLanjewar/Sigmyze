@@ -111,13 +111,14 @@ const NodeCreateMenu: React.FC<INodeCreateMenu> = ({
                             radius={"md"}
                             className={`${styles.add__button} ${focused && styles.active}`}
                             onClick={() => setOpened(true)}
+                            data-testId={"add-button"}
                         >
                             <IconPlus size={14} stroke={"2"} />
                         </ActionIcon>
                     </div>
                 </Menu.Target>
 
-                <Menu.Dropdown>
+                <Menu.Dropdown data-testId={"add-menu-items"}>
                     {output.isArray
                         ? (
                             <NodeCreateMenuInner

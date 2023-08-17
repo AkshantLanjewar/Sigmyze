@@ -38,6 +38,12 @@ $delay: .5s;
         }
     }
 
+    .socket__renderer {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
     .node__body {
         display: flex;
         flex-direction: column;

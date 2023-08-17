@@ -36,30 +36,32 @@ const NodeOutputView: React.FC<IViewProps> = memo(({
 }) => {
     return (
         <div className={styles.node__socket}>
-            {output.hideType
-                ? <div />
-                : (
-                    <>
-                        {output.selectableType
-                            ? (
-                                <NodeTypeSelector 
-                                    output={output} 
-                                    focused={focused}
-                                    socketId={output.socketId}
-                                    editType={editType}
-                                />
-                            )
-                            : (
-                                <NodeType 
-                                    type={output.type}
-                                    isArray={output.isArray}
-                                    arrayType={output.arrayType}
-                                />
-                            )
-                        }
-                    </>
-                )
-            }
+            <div data-testId={"output-type"}>
+                {output.hideType
+                    ? null
+                    : (
+                        <>
+                            {output.selectableType
+                                ? (
+                                    <NodeTypeSelector 
+                                        output={output} 
+                                        focused={focused}
+                                        socketId={output.socketId}
+                                        editType={editType}
+                                    />
+                                )
+                                : (
+                                    <NodeType 
+                                        type={output.type}
+                                        isArray={output.isArray}
+                                        arrayType={output.arrayType}
+                                    />
+                                )
+                            }
+                        </>
+                    )
+                }
+            </div>
 
             <Group 
                 align={"center"} 
