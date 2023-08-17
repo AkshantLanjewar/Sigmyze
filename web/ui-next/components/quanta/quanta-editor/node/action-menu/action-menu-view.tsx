@@ -42,6 +42,7 @@ const NodeActionMenuView: React.FC<IViewProps> = memo(({
                                                 variant={"filled"}
                                                 radius={"sm"}
                                                 onClick={deleteNode}
+                                                data-testId={"delete-icon"}
                                             >
                                                 <IconTrash size={18} />
                                             </ActionIcon>

@@ -7,6 +7,8 @@ import UserContext from "../components/data/user/context"
 import OrganizationContext from "../components/data/organization/context"
 import { IQuantaIndicator } from "../components/quanta/quanta-indicator-manager/types"
 import { v4 } from "uuid"
+import QuantaEditor from "../components/quanta/quanta-editor/quanta-editor"
+import { IQuantaEditorProject } from "../components/data/quanta/types/project"
 
 interface IApplicationTestingWrapper {
     children: React.ReactNode
@@ -51,7 +53,38 @@ const QuantaContextTestingWrapper: React.FC<IQuantaContextTestingWrapper> = ({ d
     )
 }
 
+interface IQuantaEditorTestWrapper {
+    data?: IDatasetCacheObject,
+    dummyIndicators?: IQuantaIndicator[],
+    editorData?: IQuantaEditorProject,
+    children: React.ReactNode
+}
+
+const QuantaEditorTestingWrapper: React.FC<IQuantaEditorTestWrapper> = ({ 
+    data, 
+    dummyIndicators, 
+    editorData, 
+    children 
+}) => (
+    <QuantaContext
+        quantaId={null}
+        organizationId={null}
+        primeData={data}
+        dummyIndicators={dummyIndicators}
+    >
+        <QuantaEditor 
+            fileId="static" 
+            fileName="ruckus"
+            testMode={false}
+            editorData={editorData}
+        >
+            {children}
+        </QuantaEditor>
+    </QuantaContext>
+)
+
 export { 
     ApplicationTestingWrapper,
-    QuantaContextTestingWrapper
+    QuantaContextTestingWrapper,
+    QuantaEditorTestingWrapper
 }

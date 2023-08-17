@@ -41,8 +41,8 @@ const QuantaGroupView: React.FC<IViewProps> = memo(({
                 id={id}
             />
 
-            <div className={styles.quanta__group}>
-            <NodeLoader executing={executing} />
+            <div className={styles.quanta__group} data-testId={"node-group"}>
+                <NodeLoader executing={executing} />
 
                 <div className={styles.inner}>
                     <NodeActionMenu 

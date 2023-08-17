@@ -15,6 +15,7 @@ $delay: .5s;
 
     pointer-events: none;
     overflow: hidden;
+    opacity: 0;
 
     .loader__inner {
         position: relative;
@@ -23,6 +24,8 @@ $delay: .5s;
     }
 
     &.in__progress {
+        opacity: 1;
+        
         .bar {
             position: absolute;
             width: 3rem;

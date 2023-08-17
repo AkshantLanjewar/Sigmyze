@@ -6,7 +6,10 @@ interface INodeLoaderProps {
 
 const NodeLoader: React.FC<INodeLoaderProps> = ({ executing }) => {
     return (
-        <div className={`${styles.loader__wrapper} ${executing && styles.in__progress}`}>
+        <div 
+            data-testId={"node-loader"}
+            className={`${styles.loader__wrapper} ${executing && styles.in__progress}`}
+        >
             <div className={`${styles.bar} ${styles.top}`}></div>
             <div className={`${styles.bar} ${styles.right} ${styles.delay}`}></div>
             <div className={`${styles.bar} ${styles.bottom} ${styles.delay}`}></div>
