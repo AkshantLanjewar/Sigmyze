@@ -10,10 +10,12 @@ interface IInputRendererProps {
     input: IQuantaSocket,
     nodeId?: string,
     focused?: boolean,
-    data?: IQuantaRFNodeData
+    data?: IQuantaRFNodeData,
+    index: number,
+    isChild?: boolean
 }
 
-const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, data }) => {
+const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, data, index, isChild }) => {
     const [localType, setLocalType] = useState<IQuantaTypeRef | undefined>(undefined)
     const [typeUpdated, setTypeUpdate] = useState(false)
     const [controlledSocket, setControlledSocket] = useState<IQuantaSocket | undefined>(undefined)
@@ -98,7 +100,9 @@ const InputRenderer: React.FC<IInputRendererProps> = ({ input, nodeId, focused, 
             nodeId={nodeId}
             data={data}
             localType={localType}
+            index={index}
             editType={editType}
+            isChild={isChild}
         />
     )
 }

@@ -11,10 +11,11 @@ interface INodeInputProps {
     socket: IQuantaSocket,
     focused?: boolean,
     localType?: IQuantaTypeRef,
+    child: boolean
     editType?: (socketId: string, newType: IQuantaTypeRef) => void
 }
 
-const NodeInput: React.FC<INodeInputProps> = memo(({ socket, focused, editType }) => {
+const NodeInput: React.FC<INodeInputProps> = memo(({ socket, focused, child, editType }) => {
     return (
         <div className={styles.node__socket}>
             <div>
@@ -53,24 +54,26 @@ const NodeInput: React.FC<INodeInputProps> = memo(({ socket, focused, editType }
                 )}
             </div>
             
-            {socket.hideType === true
-                ? <div />
-                : (
-                    <>
-                        {socket.selectableType
-                            ? (
-                                <NodeTypeSelector
-                                    output={socket}
-                                    focused={focused}
-                                    socketId={socket.socketId}
-                                    editType={editType}
-                                />
-                            )
-                            : <NodeType type={socket.type} />
-                        }
-                    </>
-                )
-            }
+            <div data-testId={"input-type"}>
+                {socket.hideType === true
+                    ? null
+                    : (
+                        <>
+                            {socket.selectableType
+                                ? (
+                                    <NodeTypeSelector
+                                        output={socket}
+                                        focused={focused}
+                                        socketId={socket.socketId}
+                                        editType={editType}
+                                    />
+                                )
+                                : <NodeType type={socket.type} />
+                            }
+                        </>
+                    )
+                }
+            </div>
         </div>
     )
 })

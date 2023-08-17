@@ -24,7 +24,7 @@ import { IQuantaNodeInstructions } from "../../types/types";
  *  - output-{index} -> this is the container for a specific output based on its index in the rendered list [added]
  *  - output-type -> this is the type container for the output [added]
  *  - add-button -> this is the add new node button [added]
- *  - add-menu-items -> this is the container where the list of new nodes to be added are rendered
+ *  - add-menu-items -> this is the container where the list of new nodes to be added are rendered [added]
  */
 
 const StartNode = {

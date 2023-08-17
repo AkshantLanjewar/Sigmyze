@@ -102,5 +102,5 @@ test('e2e: start-node integration test', async ({ mount }) => {
     //check if the menu is visible and contains the same amount of items as the threadMenuItems
     const addMenuItems = component.getByTestId(addMenuItemsLocator)
     await expect(addMenuItems).toBeVisible()
-    await expect(addMenuItems).toHaveCount(threadMenuItems.length)
+    await expect(addMenuItems.locator('button')).toHaveCount(threadMenuItems.length)
 })

@@ -71,6 +71,7 @@ const NodeOutput: React.FC<INodeOutputProps> = ({
                 parentId={parentId}
                 editType={editType}
                 unfocus={unfocus}
+                index={index}
                 deleteField={deleteField}
             />
         </div>

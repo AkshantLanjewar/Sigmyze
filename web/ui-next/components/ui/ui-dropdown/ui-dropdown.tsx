@@ -8,7 +8,7 @@ import styles from './ui-dropdown.module.scss'
 
 interface IUIDropdownItemProps {
     item: IUIDropdownItem,
-    internalTestId: string,
+    internalTestId?: string,
     selectItem: (id: string) => void
 }
 
@@ -47,7 +47,7 @@ interface IUIDropdownProps {
     position?: FloatingPosition,
     subscribeClose?: boolean,
     disabled?: boolean,
-    internalTestId: string
+    internalTestId?: string
 }
 
 const UIDropdown: React.FC<IUIDropdownProps> = ({ 
@@ -139,7 +139,7 @@ const UIDropdown: React.FC<IUIDropdownProps> = ({
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Stack spacing={"sm"}>
+                    <Stack spacing={"sm"} data-testId={`${internalTestId}-target`}>
                         {items?.map((step) => (
                             <UIDropdownItem 
                                 item={step} 

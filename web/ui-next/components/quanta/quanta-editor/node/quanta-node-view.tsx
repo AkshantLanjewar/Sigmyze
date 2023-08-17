@@ -57,13 +57,14 @@ const QuantaNodeView: React.FC<IViewProps> = memo(({
                         />
                     )}
 
-                    <div className={styles.socket__renderer}>
-                        {instructions.inputs?.map((step) => (
+                    <div className={styles.socket__renderer} data-testId={"inputs"}>
+                        {instructions.inputs?.map((step, i) => (
                             <InputRenderer
                                 input={step}
                                 nodeId={data.nodeId}
                                 focused={focused}
                                 data={data}
+                                index={i}
                             />
                         ))}
                     </div>

@@ -27,6 +27,7 @@ const NodeTypeSelectorView: React.FC<IViewProps> = memo(({
                     subscribeClose={subscribeClose}
                     emitChange={(id) => emitChange(id)}
                     disabled={viewOnly}
+                    internalTestId="input-type-menu"
                 />
             )}
         </Group>

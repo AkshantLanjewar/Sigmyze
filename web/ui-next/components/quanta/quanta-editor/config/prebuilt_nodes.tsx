@@ -15,7 +15,7 @@ import {
 } from "./nodes"
 
 const prebuildNodeDict = {
-    start: StartNode, // created callstack
+    start: StartNode, // created callstack [tested]
     iter: IterNode, // created clalstack
     sdmx_data_parser: SDMXDataParser, // created callstack
     sdmx_data_mapper: SDMXDataMapper, // created callstack

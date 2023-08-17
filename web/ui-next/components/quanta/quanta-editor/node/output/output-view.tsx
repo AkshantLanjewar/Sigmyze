@@ -19,6 +19,7 @@ interface IViewProps {
     ref: RefObject<HTMLDivElement>,
     parentId: string | undefined
     editType: ((itemId: string, newType: IQuantaTypeRef) => void) | undefined,
+    index: number,
     unfocus: () => void,
     deleteField: () => void
 }
@@ -31,6 +32,7 @@ const NodeOutputView: React.FC<IViewProps> = memo(({
     ref,
     parentId,
     editType,
+    index,
     unfocus,
     deleteField
 }) => {
