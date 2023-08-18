@@ -81,6 +81,14 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, pare
             return
 
         let executionSockets = executionResult.computedSockets
+        for(let i = 0; i < executionSockets.length; i++) {
+            let executionSocket = executionSockets[i]
+            if(typeof executionSocket['icon'] === 'object')
+                executionSocket.icon = <IconStack2 />
+
+            executionSockets[i] = executionSocket
+        }
+
         setRenderedOutputs([ ...executionSockets ])
     }, [executionResults])
     

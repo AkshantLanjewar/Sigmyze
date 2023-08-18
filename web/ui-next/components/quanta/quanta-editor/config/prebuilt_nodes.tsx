@@ -25,8 +25,8 @@ const prebuildNodeDict = {
     get_sdmx_field_value: GetSDMXFieldValue, // created callstack
     build_fields: BuildField, // created callstack
     string_to_date: StringToDate, // created callstack
-    add_indicator: AddIndicator,
-    update_indicator: UpdateIndicator
+    add_indicator: AddIndicator, //created callstack
+    update_indicator: UpdateIndicator //created callstack
 } as { [key: string]: IQuantaNodeInstructions }
 
 export default prebuildNodeDict

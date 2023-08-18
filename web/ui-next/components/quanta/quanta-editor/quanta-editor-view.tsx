@@ -80,7 +80,7 @@ const QuantaEditorView: React.FC<IViewProps> = memo(({
                 toggleEngineCache={toggleEngineCache}
             />
 
-            <ExecutionContext fileId={fileId} editorData={editorData}>
+            <ExecutionContext fileId={fileId} editorData={editorData} internalTesting={internalTesting}>
                 <QuantaEditorContext.Provider value={memoValue}>
                     <>
                         <EngineWrapper
@@ -123,6 +123,7 @@ const QuantaEditorView: React.FC<IViewProps> = memo(({
                                 <QuantaFlow
                                     nodes={nodes}
                                     edges={edges}
+                                    internalTesting={internalTesting}
                                     quantaStore={quantaStore}
                                     setNodes={setNodes}
                                     setEdges={setEdges}
