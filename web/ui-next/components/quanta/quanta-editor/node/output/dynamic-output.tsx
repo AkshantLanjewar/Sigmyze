@@ -39,8 +39,7 @@ const DynamicOutput: React.FC<IDynamicOutput> = ({ output, nodeId, focused, pare
                     if(type === undefined)
                         continue
 
-                    if(type.typeId === "xml" || type.typeId === "xsd")
-                        parsedData.icon = icon_dict["file"]
+                    parsedData.icon = icon_dict["file"]
                 }
 
                 storeItem.data = parsedData

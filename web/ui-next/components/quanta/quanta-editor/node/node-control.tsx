@@ -8,10 +8,11 @@ import { IQuantaUIState } from "../../../data/quanta/ui-context/state"
 
 interface INodeControlProps {
     control: IQuantaControl,
-    nodeId?: string
+    nodeId?: string,
+    index: number
 }
 
-const NodeControl: React.FC<INodeControlProps> = ({ control, nodeId }) => {
+const NodeControl: React.FC<INodeControlProps> = ({ control, nodeId, index }) => {
     const quantaContext = useContext(QuantaEditorContext)
     const { openModal } = useContext(QuantaUIContextData) as IQuantaUIState
 
@@ -32,7 +33,7 @@ const NodeControl: React.FC<INodeControlProps> = ({ control, nodeId }) => {
     }
 
     return (
-        <div>
+        <div data-testId={`control-${index}`}>
             <Button
                 radius={"xl"}
                 variant={'filled'}

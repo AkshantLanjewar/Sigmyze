@@ -83,12 +83,15 @@ const QuantaNodeView: React.FC<IViewProps> = memo(({
                         ))}
                     </div>
 
-                    {instructions.controls?.map((step) => (
-                        <NodeControl 
-                            control={step}
-                            nodeId={data.nodeId}
-                        />
-                    ))}
+                    <div className={styles.socket__renderer} data-testId={"controls"}>
+                        {instructions.controls?.map((step, index) => (
+                            <NodeControl 
+                                control={step}
+                                nodeId={data.nodeId}
+                                index={index}
+                            />
+                        ))}
+                    </div>
 
                     <NodeActionMenu 
                         instructions={instructions}

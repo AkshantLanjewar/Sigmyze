@@ -208,6 +208,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({
             setQuantaStore({ ...editorData.quantaStore })
             setEditorType("create")
 
+            toggleUpdateStore()
             return
         }
 

@@ -9,13 +9,15 @@ const PREBUILT_FORMS = {
             name: "File Name",
             icon: <IconSignature />,
             linkedKey: "name",
-            id: v4()
+            id: v4(),
+            testId: "new-file-name"
         },
         {
             type: "dropdown",
             dropdownField: "files",
             name: "File Type",
             linkedKey: "type",
+            testId: "new-file-type",
             id: v4()
         },
         {
