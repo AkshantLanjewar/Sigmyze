@@ -25,6 +25,8 @@ const inputTypeLocator = "input-type"
 //here are the locators for the forms
 const newFileNameLocator = "new-file-name"
 const newFileTypeLocator = "new-file-type"
+const submitButtonLocator = "submit-button"
+const cancelButtonLocator = "cancel-button"
 
 //utility function that add extensions to a locator
 const addExtensions = (base: string, extensions: string[]) => {
@@ -188,4 +190,22 @@ test('E2E: file-upload integration test', async ({ mount, page }) => {
     //new we need to validate the file type form field
     const newFileType = page.getByTestId(newFileTypeLocator)
     await expect(newFileType).toContainText("File Type")
+    //now we need to type in the dummy file name value
+    const newFileInput = newFileName.locator('input').first()
+    await newFileInput.type("Dummy File", { delay: 200 })
+    //now we need to get the submit button and submit the form
+    const submitButton = page.getByTestId(submitButtonLocator).first()
+    await submitButton.click()
+    //now we need to check the output blocks
+    const outputs = component.getByTestId(outputLocator)
+    await expect(outputs.locator('> div')).toHaveCount(1)
+    //we need to get the first output block and check if its a group
+    const fileOutputBlockLocator = addExtensions(outputBase, ["0"])
+    const fileOutputBlock = outputs.getByTestId(fileOutputBlockLocator)
+    //check there are 0 group children
+    const fileOutputChildren = fileOutputBlock.getByTestId(outputGroupChildrenLocator)
+    await expect(fileOutputChildren.locator('> div')).toHaveCount(1)
+    //now we want to get the child and check the title
+    const fileChild = fileOutputChildren.getByTestId(fileOutputBlockLocator + "::child")
+    await expect(fileChild).toContainText("Dummy File")
 })
