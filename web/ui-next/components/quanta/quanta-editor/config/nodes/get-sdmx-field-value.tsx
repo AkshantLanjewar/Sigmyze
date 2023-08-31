@@ -1,6 +1,17 @@
 import { IconBox, IconInputSearch } from "@tabler/icons"
 import { IQuantaNodeInstructions } from "../../types/types"
 
+/**
+ * theese are the testing requirements to make sure get-sdmx-field value in the node editor
+ * 
+ * Mount Test Requirements:
+ *  - title = Get SDMX Field Value
+ *  - there is one input block
+ *  - input 0 = SDMX Field
+ *  - there is one output block
+ *  - output 0 = Field Value
+ */
+
 const GetSDMXFieldValue = {
     name: "Get SDMX Field Value",
     icon: <IconBox />,
