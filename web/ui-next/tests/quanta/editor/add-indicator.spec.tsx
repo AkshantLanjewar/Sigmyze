@@ -1,15 +1,29 @@
 import { test, expect } from '@playwright/experimental-ct-react'
+import { IDatasetCacheObject } from "../../../components/ui/quanta-dataset-manager/types"
 import { IQuantaEditorProject } from '../../../components/data/quanta/types/project'
 import { BuildNode } from '../../../components/quanta/quanta-editor/utils'
 import { ApplicationTestingWrapper, QuantaEditorTestingWrapper } from '../../utils'
-import { IDatasetCacheObject } from '../../../components/ui/quanta-dataset-manager/types'
 
 //here are the locators for the testing spec
 const nodeTitleLocator = "node-title"
 const outputLocator = "outputs"
 const outputBase = "output"
+const addButtonLocator = "add-button"
+const addMenuItemsLocator = "add-menu-items"
 const inputsLocator = "inputs"
 const inputLocatorBase = "input"
+const outputGroupTitleLocator = "output-group-title"
+const outputGroupChildrenLocator = "output-group-children"
+const controlsLocators = "controls"
+const controlLocatorBase = "control"
+const inputGroupTitleLocator = "input-group-title"
+const inputGroupChildrenLocator = "input-group-children"
+const inputTypeLocator = "input-type"
+//here are the locators for the forms
+const newFileNameLocator = "new-file-name"
+const newFileTypeLocator = "new-file-type"
+const submitButtonLocator = "submit-button"
+const cancelButtonLocator = "cancel-button"
 
 //utility function that add extensions to a locator
 const addExtensions = (base: string, extensions: string[]) => {
@@ -32,14 +46,14 @@ const mockData: IDatasetCacheObject = {
     schemas: []
 }
 
-test('string to date mount test', async ({ mount }) => {
+test('add indicator mount test', async ({ mount }) => {
     const mockEditorData: IQuantaEditorProject = {
         fileId: "ruckus",
         edges: [],
         quantaStore: {},
         executionResults: [],
         nodes: [
-            BuildNode("string_to_date")!
+            BuildNode("add_indicator")!
         ],
     }
 
@@ -52,21 +66,21 @@ test('string to date mount test', async ({ mount }) => {
         </div>
     )
 
-    //first we want to test the title
+    //first we need to check the title = Add Indicator
     const nodeTitle = component.getByTestId(nodeTitleLocator)
-    await expect(nodeTitle).toContainText("String to Date")
-    //now we need to check that there is one input block
+    await expect(nodeTitle).toContainText("Add Indicator")
+    //there are 2 input blocks
     const inputs = component.getByTestId(inputsLocator)
-    await expect(inputs.locator('> div')).toHaveCount(1)
-    //now we need to check input 0 = Input String
-    const inputStringLocator = addExtensions(inputLocatorBase, ["0"])
-    const inputString = component.getByTestId(inputStringLocator)
-    await expect(inputString).toContainText("Input String")
-    //now we need to check that there is one output block
+    await expect(inputs.locator('> div')).toHaveCount(2)
+    //we need to check input-0 = Chart Data
+    const chartDataInputLocator = addExtensions(inputLocatorBase, ["0"])
+    const chartDataInput = inputs.getByTestId(chartDataInputLocator)
+    await expect(chartDataInput).toContainText("Chart Data")
+    //we need to check input-1 = New Field
+    const fieldInputLocator = addExtensions(inputLocatorBase, ["1"])
+    const fieldInput = inputs.getByTestId(fieldInputLocator)
+    await expect(fieldInput).toContainText("New Field")
+    //now we need to check that there are 0 output blocks
     const outputs = component.getByTestId(outputLocator)
-    await expect(outputs.locator('> div')).toHaveCount(1)
-    //now we need to check output-0 = Date
-    const dateOutputLocator = addExtensions(outputBase, ["0"])
-    const dateOutput = component.getByTestId(dateOutputLocator)
-    await expect(dateOutput).toContainText("Date")
+    await expect(outputs.locator('> div')).toHaveCount(0)
 })
