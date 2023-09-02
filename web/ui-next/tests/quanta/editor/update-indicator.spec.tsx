@@ -31,14 +31,14 @@ const mockData: IDatasetCacheObject = {
     schemas: []
 }
 
-test('add indicator mount test', async ({ mount }) => {
+test('update-indicator mount test', async ({ mount }) => {
     const mockEditorData: IQuantaEditorProject = {
         fileId: "ruckus",
         edges: [],
         quantaStore: {},
         executionResults: [],
         nodes: [
-            BuildNode("add_indicator")!
+            BuildNode("update_indicator")!
         ],
     }
 
@@ -51,20 +51,24 @@ test('add indicator mount test', async ({ mount }) => {
         </div>
     )
 
-    //first we need to check the title = Add Indicator
+    //first we need to check the title
     const nodeTitle = component.getByTestId(nodeTitleLocator)
-    await expect(nodeTitle).toContainText("Add Indicator")
-    //there are 2 input blocks
+    await expect(nodeTitle).toContainText("Update Indicator")
+    //now we need to check that there are 3 input blocks
     const inputs = component.getByTestId(inputsLocator)
-    await expect(inputs.locator('> div')).toHaveCount(2)
-    //we need to check input-0 = Chart Data
-    const chartDataInputLocator = addExtensions(inputLocatorBase, ["0"])
-    const chartDataInput = inputs.getByTestId(chartDataInputLocator)
-    await expect(chartDataInput).toContainText("Chart Data")
-    //we need to check input-1 = New Field
-    const fieldInputLocator = addExtensions(inputLocatorBase, ["1"])
-    const fieldInput = inputs.getByTestId(fieldInputLocator)
-    await expect(fieldInput).toContainText("New Field")
+    await expect(inputs.locator('> div')).toHaveCount(3)
+    //now we need to check input-0 = Update Mode
+    const updateModeLocator = addExtensions(inputLocatorBase, ["0"])
+    const updateMode = inputs.getByTestId(updateModeLocator)
+    await expect(updateMode).toContainText("Update Mode")
+    //now we need to check input-1 = Chart Data
+    const chartDataLocator = addExtensions(inputLocatorBase, ["1"])
+    const chartData = inputs.getByTestId(chartDataLocator)
+    await expect(chartData).toContainText("Chart Data")
+    //now we need to check input-2 = Query Fields
+    const queryFieldsLocator = addExtensions(inputLocatorBase, ["2"])
+    const queryFields = inputs.getByTestId(queryFieldsLocator)
+    await expect(queryFields).toContainText("Query Fields")
     //now we need to check that there are 0 output blocks
     const outputs = component.getByTestId(outputLocator)
     await expect(outputs.locator('> div')).toHaveCount(0)
