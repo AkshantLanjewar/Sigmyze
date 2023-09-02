@@ -8,23 +8,14 @@ import { ApplicationTestingWrapper, QuantaEditorTestingWrapper } from '../../uti
 const nodeTitleLocator = "node-title"
 const outputLocator = "outputs"
 const outputBase = "output"
-const addButtonLocator = "add-button"
-const addMenuItemsLocator = "add-menu-items"
 const inputsLocator = "inputs"
 const inputLocatorBase = "input"
-const outputGroupTitleLocator = "output-group-title"
-const outputGroupChildrenLocator = "output-group-children"
 const controlsLocators = "controls"
 const controlLocatorBase = "control"
 const inputGroupTitleLocator = "input-group-title"
 const inputGroupChildrenLocator = "input-group-children"
-const inputTypeLocator = "input-type"
 //here are the locators for the forms
-const newFileNameLocator = "new-file-name"
-const newFileTypeLocator = "new-file-type"
 const submitButtonLocator = "submit-button"
-const cancelButtonLocator = "cancel-button"
-//this is the locator for the build-fields form field
 const fieldNameLocator = "field_name_input"
 
 //utility function that add extensions to a locator
