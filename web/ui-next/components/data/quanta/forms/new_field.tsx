@@ -18,7 +18,8 @@ const NewFieldForm: React.FC<INewFieldForm> = ({ closeModal }) => {
             type: "text",
             name: "Field Name",
             icon: <IconSignature />,
-            id: "field_name"
+            id: "field_name",
+            testId: "field_name_input"
         }
     ] as IQuantaFormField[]
 
