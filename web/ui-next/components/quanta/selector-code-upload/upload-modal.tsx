@@ -1,5 +1,4 @@
 import { MutableRefObject, useContext, useEffect, useRef, useState } from "react"
-import { ICompileProjectResult } from "../selector-pane/context/functions"
 import { SelectorPaneContextData } from "../selector-pane/context"
 import { ISelectorPaneState } from "../selector-pane/context/types"
 import FormBuilder from "../../ui/form-builder/form-builder"
@@ -18,7 +17,7 @@ interface IUploadModalProps {
 
 const UploadModal: React.FC<IUploadModalProps> = ({ closeModal, containerRef }) => {
     const [loadingStr, setLoadingStr] = useState<string | undefined>(undefined)
-    const { compileProject, initialized, setTestSource } = useContext(SelectorPaneContextData) as ISelectorPaneState
+    const { initialized, setTestSource } = useContext(SelectorPaneContextData) as ISelectorPaneState
 
     const formComponents = [
         {
@@ -26,7 +25,8 @@ const UploadModal: React.FC<IUploadModalProps> = ({ closeModal, containerRef }) 
             fileType: "zip",
             name: "Source Code",
             linkedKey: "source",
-            id: "source"
+            id: "source",
+            testId: "source-input"
         }
     ] as IQuantaFormField[]
 

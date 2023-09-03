@@ -78,7 +78,6 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, testId, setV
     return (
         <div 
             className={styles.file__item}
-            data-testId={internalTestId}
         >
             <LoadingOverlay
                 visible={loader}
@@ -121,7 +120,12 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, testId, setV
                         </ActionIcon>
 
                         <Stack spacing={0}>
-                            <div className={styles.file__name}>{name}</div>
+                            <div 
+                                className={styles.file__name}
+                                data-testId={internalTestId}
+                            >
+                                {name}
+                            </div>
 
                             <Group spacing={2.5}>
                                 <IconCode size={14} color={"#d0bfff"} />

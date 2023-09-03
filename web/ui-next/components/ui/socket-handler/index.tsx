@@ -9,10 +9,11 @@ import { executeSocketFunction, getOutputValueSocket, setOutputValueSocket } fro
 const SocketHandlerData = createContext<ISocketHandlerState | null>(null)
 
 interface ISocketHandler {
+    testMode?: boolean,
     children?: React.ReactNode
 }
 
-const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
+const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
 
     /**
@@ -45,7 +46,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
     }
 
     const connect: Function = useCallback(() => {
-        if(loaded === false || loggedIn === false)
+        if(loaded === false || loggedIn === false || testMode === true)
             return
         if(socketCreated === true)
             return
@@ -76,9 +77,12 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
                 connect()
             }, 1000 * 5)
         }
-    }, [loaded, loggedIn, socketCreated, addMessage, dontRecreate])
+    }, [loaded, loggedIn, socketCreated, addMessage, dontRecreate, testMode])
 
     useEffect(() => {
+        if(testMode === true)
+            return
+
         connect()
 
         return () => {
@@ -89,9 +93,12 @@ const SocketHandler: React.FC<ISocketHandler> = ({ children }) => {
             setSocketCreated(false)
             setDontRecreate(true)
         }
-    }, [])
+    }, [testMode])
 
     useEffect(() => {
+        if(testMode === true)
+            return
+        
         connect() // persists connection
     }, [loaded, loggedIn, socketCreated])
 

@@ -1,0 +1,19 @@
+diff --git a/node_modules/@shortercode/webzip/package.json b/node_modules/@shortercode/webzip/package.json
+index 07d9397..896214c 100644
+--- a/node_modules/@shortercode/webzip/package.json
++++ b/node_modules/@shortercode/webzip/package.json
+@@ -1,10 +1,10 @@
+ {
+   "name": "@shortercode/webzip",
+   "version": "0.1.0",
+-  "description": "A modern TypeScript library for creating, reading and editing ZIP archives in a client side environment.",
+-  "main": "cjs/index.js",
+-  "module": "mjs/index.mjs",
+-  "types": "mjs/index.d.ts",
++  "description": "A modern TypeScript library for creating, THIS IS THE SWAG CHANGE.",
++  "main": "index.js",
++  "module": "index.mjs",
++  "types": "index.d.ts",
+   "scripts": {
+     "test": "jest --verbose --coverage",
+     "typecheck": "tsc --noEmit --watch",

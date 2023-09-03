@@ -6,9 +6,10 @@ import QuantaContext from "../components/data/quanta/context"
 import UserContext from "../components/data/user/context"
 import OrganizationContext from "../components/data/organization/context"
 import { IQuantaIndicator } from "../components/quanta/quanta-indicator-manager/types"
-import { v4 } from "uuid"
 import QuantaEditor from "../components/quanta/quanta-editor/quanta-editor"
-import { IQuantaEditorProject } from "../components/data/quanta/types/project"
+import { IQuantaEditorProject, IQuantaSelectorCode, ISelectorPipeline } from "../components/data/quanta/types/project"
+import SocketHandler from "../components/ui/socket-handler"
+import SelectorPaneContext from "../components/quanta/selector-pane/context"
 
 interface IApplicationTestingWrapper {
     children: React.ReactNode
@@ -17,18 +18,20 @@ interface IApplicationTestingWrapper {
 const ApplicationTestingWrapper: React.FC<IApplicationTestingWrapper> = ({ children }) => {
     return (
         <UserContext testing={true}>
-            <OrganizationContext testing={true}>
-                <MantineProvider
-                    withGlobalStyles
-                    withNormalizeCSS
-                    withCSSVariables 
-                    theme={theme}
-                >
-                    <NotificationsProvider>
-                        {children}
-                    </NotificationsProvider>
-                </MantineProvider>
-            </OrganizationContext>
+            <SocketHandler testMode={true}>
+                <OrganizationContext testing={true}>
+                    <MantineProvider
+                        withGlobalStyles
+                        withNormalizeCSS
+                        withCSSVariables 
+                        theme={theme}
+                    >
+                        <NotificationsProvider>
+                            {children}
+                        </NotificationsProvider>
+                    </MantineProvider>
+                </OrganizationContext>
+            </SocketHandler>
         </UserContext>
     )
 }
@@ -83,8 +86,42 @@ const QuantaEditorTestingWrapper: React.FC<IQuantaEditorTestWrapper> = ({
     </QuantaContext>
 )
 
+interface ISelectorPaneTestWrapper {
+    data?: IDatasetCacheObject,
+    dummyIndicators?: IQuantaIndicator[],
+    selectorId: string,
+    extSelectorCode?: IQuantaSelectorCode,
+    selectorPipeline?: ISelectorPipeline,
+    children: React.ReactNode
+}
+
+const SelectorPaneTestingWrapper: React.FC<ISelectorPaneTestWrapper> = ({
+    data,
+    dummyIndicators,
+    selectorId,
+    extSelectorCode,
+    selectorPipeline,
+    children
+}) => (
+   <ApplicationTestingWrapper>
+        <QuantaContextTestingWrapper 
+            data={data} 
+            dummyIndicators={dummyIndicators}
+        >
+            <SelectorPaneContext
+                selectorId={selectorId}
+                extSelectorCode={extSelectorCode}
+                extSelectorPipeline={selectorPipeline}
+            >
+                {children}
+            </SelectorPaneContext>
+        </QuantaContextTestingWrapper>
+   </ApplicationTestingWrapper> 
+)
+
 export { 
     ApplicationTestingWrapper,
     QuantaContextTestingWrapper,
-    QuantaEditorTestingWrapper
+    QuantaEditorTestingWrapper,
+    SelectorPaneTestingWrapper
 }
