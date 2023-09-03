@@ -1,6 +1,17 @@
 import { IconCalendarEvent, IconTextRecognition } from "@tabler/icons"
 import { IQuantaNodeInstructions } from "../../types/node-instructions"
 
+/**
+ * here are the testing requirements to make sure string-to-date integrates within the editor
+ * 
+ * Unit Test Requirements
+ *  - title = String to Date
+ *  - there is one input block
+ *  - input 0 = Input String
+ *  - there is one output block
+ *  - output 0 = Date
+ */
+
 const StringToDate = {
     name: "String to Date",
     icon: <IconCalendarEvent />,

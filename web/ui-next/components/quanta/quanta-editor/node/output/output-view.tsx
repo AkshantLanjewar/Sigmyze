@@ -19,6 +19,7 @@ interface IViewProps {
     ref: RefObject<HTMLDivElement>,
     parentId: string | undefined
     editType: ((itemId: string, newType: IQuantaTypeRef) => void) | undefined,
+    index: number,
     unfocus: () => void,
     deleteField: () => void
 }
@@ -31,35 +32,38 @@ const NodeOutputView: React.FC<IViewProps> = memo(({
     ref,
     parentId,
     editType,
+    index,
     unfocus,
     deleteField
 }) => {
     return (
         <div className={styles.node__socket}>
-            {output.hideType
-                ? <div />
-                : (
-                    <>
-                        {output.selectableType
-                            ? (
-                                <NodeTypeSelector 
-                                    output={output} 
-                                    focused={focused}
-                                    socketId={output.socketId}
-                                    editType={editType}
-                                />
-                            )
-                            : (
-                                <NodeType 
-                                    type={output.type}
-                                    isArray={output.isArray}
-                                    arrayType={output.arrayType}
-                                />
-                            )
-                        }
-                    </>
-                )
-            }
+            <div data-testId={"output-type"}>
+                {output.hideType
+                    ? null
+                    : (
+                        <>
+                            {output.selectableType
+                                ? (
+                                    <NodeTypeSelector 
+                                        output={output} 
+                                        focused={focused}
+                                        socketId={output.socketId}
+                                        editType={editType}
+                                    />
+                                )
+                                : (
+                                    <NodeType 
+                                        type={output.type}
+                                        isArray={output.isArray}
+                                        arrayType={output.arrayType}
+                                    />
+                                )
+                            }
+                        </>
+                    )
+                }
+            </div>
 
             <Group 
                 align={"center"} 

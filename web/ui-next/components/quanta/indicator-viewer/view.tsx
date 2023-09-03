@@ -26,8 +26,14 @@ const View: React.FC<IViewProps> = React.memo(({ headers, rows, setScrolled }) =
                         <tr className={styles.row}>
                             {headers.map((step) => (
                                 <th className={styles.text} key={v4()}>
-                                    <span>{step.fieldName}</span>
-                                    <span className={styles.muted}>{step.fieldType}</span>
+                                    <span data-testId={`indicator-table-h-${step.fieldName}`}>{step.fieldName}</span>
+
+                                    <span 
+                                        data-testId={`indicator-table-h-${step.fieldType}`} 
+                                        className={styles.muted}
+                                    >
+                                        {step.fieldType}
+                                    </span>
                                 </th>
                             ))}
                         </tr>
@@ -53,7 +59,10 @@ const View: React.FC<IViewProps> = React.memo(({ headers, rows, setScrolled }) =
                                     }
 
                                     return (
-                                        <td className={styles.table__d}>
+                                        <td 
+                                            className={styles.table__d}
+                                            data-testId={step.testingId}
+                                        >
                                             {internal}
                                         </td>
                                     )

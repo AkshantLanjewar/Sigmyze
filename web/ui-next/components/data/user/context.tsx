@@ -5,12 +5,13 @@ import { IUserContext, IAuthenticationData, IUserData } from "./types"
 import superjson from 'superjson'
 
 interface IUserContextProps {
+    testing?: boolean,
     children: React.ReactNode
 }
 
 const UserContextData = createContext<IUserContext | null>(null)
 
-const UserContext: React.FC<IUserContextProps> = ({ children }) => {
+const UserContext: React.FC<IUserContextProps> = ({ testing, children }) => {
     //setup the context state
     const [checkLoadedToggle, setCheckLoadedToggle] = useState(false)
     const [deserializedCalled, setDeserializedCalled] = useState(false)
@@ -93,7 +94,7 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
     async function TokenRefresh() {
         if(contextValue.loaded === false)
             return
-        if(contextValue.loggedIn === false)
+        if(contextValue.loggedIn === false || testing === true)
             return
 
         //refresh the token
@@ -119,7 +120,7 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
             let token = authData?.token
             if(token === undefined || contextValue.logout === undefined)
                 return
-            if(authData?.logged_in !== true)
+            if(authData?.logged_in !== true || testing === true)
                 return
 
             try {
@@ -133,6 +134,9 @@ const UserContext: React.FC<IUserContextProps> = ({ children }) => {
     }, [authData])
 
     useEffect(() => {
+        if(testing === true)
+            return
+
         setTimeout(() => {
             setCheckLoadedToggle(true)
         }, 500)

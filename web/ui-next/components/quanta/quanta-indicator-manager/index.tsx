@@ -9,10 +9,11 @@ import { GetQuantaIndicators } from "../../data/quanta/quanta-api"
 const QuantaIndicatorManagerData = createContext<IQuantaIndicatorManager | null>(null)
 
 interface IQuantaIndicatorManagerProps {
+    dummyIndicators?: IQuantaIndicator[],
     children?: JSX.Element | never[]
 }
 
-const QuantaIndicatorManager: React.FC<IQuantaIndicatorManagerProps> = ({ children }) => {
+const QuantaIndicatorManager: React.FC<IQuantaIndicatorManagerProps> = ({ dummyIndicators, children }) => {
     const { quantaId, organizationId, updateEditorIndicators } = useContext(QuantaContextData) as IQuantaState
     const { authData } = useContext(UserContextData) as IUserContext
 
@@ -37,6 +38,13 @@ const QuantaIndicatorManager: React.FC<IQuantaIndicatorManagerProps> = ({ childr
     useEffect(() => {
         main()
     }, [updateEditorIndicators])
+
+    useEffect(() => {
+        if(dummyIndicators === undefined)
+            return
+
+        setIndicators([ ...dummyIndicators ])
+    }, [dummyIndicators])
 
     let value: IQuantaIndicatorManager = {
         indicators: indicators

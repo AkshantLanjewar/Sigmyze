@@ -4,6 +4,13 @@ import { QuantaContextData } from "../../data/quanta/context"
 import SchemaViewer from "./schema-viewer"
 import { IQuantaSchema, IQuantaSchemaType } from "./types"
 
+/**
+ * UnitTest Mount (schema with no children)
+ *      - create dummy schema with test name
+ * Locators
+ *      - dummy nodeId
+ */
+
 interface ISchemaEditorProps {
     schemaId: string,
     viewOnly?: boolean,

@@ -6,12 +6,14 @@ import styles from './file-input.module.scss'
 interface IFileInputProps {
     fileType?: string,
     fileName?: string,
+    testId?: string,
     setValue?: (val: any) => void
 }
 
-const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) => {
+const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, testId, setValue }) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
+    const [internalTestId, setInternalTestId] = useState<string>("")
     const [name, setName] = useState<string | undefined>(undefined)
     const [type, setType] = useState<string | undefined>(undefined)
     const [loaded, setLoaded] = useState(false)
@@ -26,6 +28,13 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
         setType(`.${fileType}`)
         setLoaded(true)
     }, [fileType, fileName])
+
+    useEffect(() => {
+        if(testId === undefined)
+            return
+
+        setInternalTestId(testId)
+    }, [testId])
 
     function openFileInput() {
         if(inputRef.current === null)
@@ -67,7 +76,9 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
     }
 
     return (
-        <div className={styles.file__item}>
+        <div 
+            className={styles.file__item}
+        >
             <LoadingOverlay
                 visible={loader}
                 overlayBlur={2}
@@ -90,6 +101,7 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
                             ref={inputRef}
                             onChangeCapture={fileChange}
                             accept={type}
+                            data-testId={`${internalTestId}-input`}
                         />
 
                         <ActionIcon
@@ -99,6 +111,7 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
                             radius={"md"}
                             sx={{ borderWidth: 2, zIndex: 3 }}
                             onClick={() => openFileInput()}
+                            data-testId={`${internalTestId}-click`}
                         >
                             {fileUploaded
                                 ? <IconBraces size={28} stroke={"2"} color={"#d0bfff"} />
@@ -107,7 +120,12 @@ const FileInput: React.FC<IFileInputProps> = ({ fileType, fileName, setValue }) 
                         </ActionIcon>
 
                         <Stack spacing={0}>
-                            <div className={styles.file__name}>{name}</div>
+                            <div 
+                                className={styles.file__name}
+                                data-testId={internalTestId}
+                            >
+                                {name}
+                            </div>
 
                             <Group spacing={2.5}>
                                 <IconCode size={14} color={"#d0bfff"} />

@@ -31,6 +31,8 @@ interface IViewProps {
     setNodes: Dispatch<SetStateAction<IQuantaRFNode[]>>,
     setEdges: Dispatch<SetStateAction<IQuantaRFEdge[]>>,
     setReactFlowInstance: Dispatch<SetStateAction<ReactFlowInstance | null>>,
+    internalTesting: boolean,
+    children?: React.ReactNode,
     closeStoreModal: () => void,
     toggleEngineWrapper: () => void,
     toggleEngineCache: () => void,
@@ -58,6 +60,8 @@ const QuantaEditorView: React.FC<IViewProps> = memo(({
     setNodes,
     setEdges,
     setReactFlowInstance,
+    internalTesting,
+    children,
     closeStoreModal,
     toggleEngineWrapper,
     toggleEngineCache,
@@ -76,7 +80,7 @@ const QuantaEditorView: React.FC<IViewProps> = memo(({
                 toggleEngineCache={toggleEngineCache}
             />
 
-            <ExecutionContext fileId={fileId} editorData={editorData}>
+            <ExecutionContext fileId={fileId} editorData={editorData} internalTesting={internalTesting}>
                 <QuantaEditorContext.Provider value={memoValue}>
                     <>
                         <EngineWrapper
@@ -113,16 +117,22 @@ const QuantaEditorView: React.FC<IViewProps> = memo(({
                             </ModalManager.Modal>
                         </ModalManager>
 
-                        <QuantaFlow
-                            nodes={nodes}
-                            edges={edges}
-                            quantaStore={quantaStore}
-                            setNodes={setNodes}
-                            setEdges={setEdges}
-                            setReactFlowInstance={setReactFlowInstance}
-                            projectLoaded={projectLoaded}
-                            fileId={fileId}
-                        />
+                        {internalTesting
+                            ? children
+                            : (
+                                <QuantaFlow
+                                    nodes={nodes}
+                                    edges={edges}
+                                    internalTesting={internalTesting}
+                                    quantaStore={quantaStore}
+                                    setNodes={setNodes}
+                                    setEdges={setEdges}
+                                    setReactFlowInstance={setReactFlowInstance}
+                                    projectLoaded={projectLoaded}
+                                    fileId={fileId}
+                                />
+                            )
+                        }
                     </>
                 </QuantaEditorContext.Provider>
             </ExecutionContext>

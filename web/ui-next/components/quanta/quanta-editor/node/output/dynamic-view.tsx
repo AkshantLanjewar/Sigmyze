@@ -25,19 +25,23 @@ const DynamicOutputView: React.FC<IViewProps> = memo(({
 }) => {
     return (
         <div className={styles.dynamic__node}>
-            <div className={styles.title}>{output.groupTitle}</div>
+            <div className={styles.title} data-testId={"output-group-title"}>{output.groupTitle}</div>
 
-            {renderedOutputs.map((step) => (
-                <NodeOutput
-                    output={step}
-                    nodeId={nodeId}
-                    parentId={parentId}
-                    focused={focused}
-                    unfocus={() => { }}
-                    editType={editType}
-                    deleteStoreField={deleteStoreField}
-                />
-            ))}
+            <div className={styles.dynamic__items} data-testId={"output-group-children"}>
+                {renderedOutputs.map((step, i) => (
+                    <NodeOutput
+                        output={step}
+                        nodeId={nodeId}
+                        parentId={parentId}
+                        focused={focused}
+                        unfocus={() => { }}
+                        editType={editType}
+                        deleteStoreField={deleteStoreField}
+                        index={i}
+                        testId={`output-${i}::child`}
+                    />
+                ))}
+            </div>
         </div>
     )
 })

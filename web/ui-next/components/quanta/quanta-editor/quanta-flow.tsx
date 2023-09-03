@@ -22,10 +22,21 @@ interface IQuantaFlowProps {
     setEdges: Dispatch<SetStateAction<IQuantaRFEdge[]>>,
     setReactFlowInstance: Dispatch<SetStateAction<ReactFlowInstance<any, any> | null>>,
     projectLoaded: boolean,
-    fileId: string
+    fileId: string,
+    internalTesting: boolean
 }
 
-const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, setNodes, setEdges, setReactFlowInstance, projectLoaded, fileId }) => {
+const QuantaFlow: React.FC<IQuantaFlowProps> = ({ 
+    nodes, 
+    edges, 
+    quantaStore, 
+    setNodes, 
+    setEdges, 
+    setReactFlowInstance, 
+    projectLoaded, 
+    fileId,
+    internalTesting 
+}) => {
     const { getIterNodeType, viewOnly } = useContext(QuantaEditorContext) as IQuantaEditorGlobals
     const { executionResults } = useContext(ExecutionContextData) as IExecutionEngineContext
     const { getSchema, setEditorProject } = useContext(QuantaContextData) as IQuantaState
@@ -35,7 +46,7 @@ const QuantaFlow: React.FC<IQuantaFlowProps> = ({ nodes, edges, quantaStore, set
     useEffect(() => {
         if(projectLoaded === false)
             return
-        if(viewOnly === true)
+        if(viewOnly === true || internalTesting === true)
             return
 
         setEditorProject(fileId, nodes, edges, quantaStore, executionResults)

@@ -8,12 +8,13 @@ interface IOutputRendererProps {
     nodeId?: string,
     focused: boolean,
     unfocus: () => void,
-    parentId?: string
+    parentId?: string,
+    index: number
 }
 
-const OutputRenderer: React.FC<IOutputRendererProps> = memo(({ output, nodeId, focused, unfocus, parentId }) => {
+const OutputRenderer: React.FC<IOutputRendererProps> = memo(({ output, nodeId, focused, unfocus, parentId, index }) => {
     return (
-        <>
+        <div data-testId={`output-${index}`}>
             {output.dynamicSocket
                 ? (
                     <DynamicOutput 
@@ -30,10 +31,11 @@ const OutputRenderer: React.FC<IOutputRendererProps> = memo(({ output, nodeId, f
                         focused={focused}
                         unfocus={unfocus}
                         parentId={parentId}
+                        index={index}
                     />
                 )
             }
-        </>
+        </div>
     )
 })
 

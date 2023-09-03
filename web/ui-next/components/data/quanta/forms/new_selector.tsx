@@ -17,13 +17,15 @@ const NewSelectorForm: React.FC<INewSelectorFormProps> = ({ closeModal }) => {
             type: "text",
             name: "Selector Name",
             id: "selector_name",
-            icon: <IconWriting />
+            icon: <IconWriting />,
+            testId: "selector-name"
         },
         {
             type: "text",
             name: "Selector Id",
             id: "selector_id",
-            icon: <IconBoxMargin />
+            icon: <IconBoxMargin />,
+            testId: "selector-id"
         }
     ] as IQuantaFormField[]
 

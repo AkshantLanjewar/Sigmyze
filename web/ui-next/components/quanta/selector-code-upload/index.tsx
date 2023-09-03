@@ -6,9 +6,41 @@ import ModalManager from '../../ui/modal-manager'
 import { SelectorPaneContextData } from '../selector-pane/context'
 import { ISelectorPaneState } from '../selector-pane/context/types'
 import dynamic from 'next/dynamic'
-import { WebContainer } from '@webcontainer/api'
 import { QuantaUIContextData } from '../../data/quanta/ui-context'
 import { IQuantaUIState } from '../../data/quanta/ui-context/state'
+import { WebContainer } from '@webcontainer/api'
+
+/**
+ * Here will be the testing specs in order to ensure that the SelectorCodeUpload function integrates properly into the website
+ * 
+ * There will be 3 tests in order to determine this
+ * A mount test, to make sure the data works without any data loaded into the SelectorPaneContext
+ * Then a test with dummy data to ensure it reacts to changes in the state
+ * And finally, and E2E test, where the upload feature is tested, and the form is validated, if possible look into creating a dummy zip file to upload
+ * 
+ * The TestId's being inserted is as follows
+ *  - upload-button -> this is the button that initiates the modal
+ *  - code-title -> this is the title component on the button
+ *  - source-input -> this is the file input in the form we need to validate
+ * 
+ * Mount Test
+ *  - code-title = Upload Source Code
+ * 
+ * Dummy Data Test
+ *  - dummy-object schema(IQuantaSelectorCode):
+ *      - containerId: ""
+ *      - schemaId: ""
+ *      - schemaName: "Dummy Name"
+ *      - schemaItems: []
+ *      - sourceCode: ""
+ *      - defaultValue: ""
+ *  - code-title = Dummy Name
+ * 
+ * E2E Test
+ *  - validate code-title = Upload Source Code
+ *  - click on upload-button
+ *  - validate source-input = Source Code
+ */
 
 const UploadModal = dynamic(() => import('./upload-modal'), { ssr: false })
 
@@ -29,7 +61,7 @@ const SelectorCodeUpload: React.FC = ({ }) => {
             return
 
         let webcontainer = getContainer()
-        containerRef.current = webcontainer
+        containerRef.current = webcontainer 
     }, [webcontainerCreated, getContainer])
 
     useEffect(() => {
@@ -58,6 +90,7 @@ const SelectorCodeUpload: React.FC = ({ }) => {
 
             <UnstyledButton 
                 className={styles.file__button}
+                data-testId={"upload-button"}
                 onClick={() => setModalState("upload")}
             >
                 <ActionIcon
@@ -70,7 +103,10 @@ const SelectorCodeUpload: React.FC = ({ }) => {
                 </ActionIcon>
 
                 <Stack spacing={5}>
-                    <div className={styles.file__name}>
+                    <div 
+                        className={styles.file__name}
+                        data-testId={"code-title"}
+                    >
                         {codeTitle
                             ? codeTitle
                             : ("Upload Source Code")

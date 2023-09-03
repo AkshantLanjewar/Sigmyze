@@ -1,6 +1,21 @@
 import { IconGavel, IconListCheck, IconChartAreaLine, IconCalendarEvent } from "@tabler/icons"
 import { IQuantaNodeInstructions } from "../../types/types"
 
+/**
+ * this is the test to make sure the apply data rule node works within the rest of the codebase
+ * 
+ * Mount Test Requirements:
+ *  - title = Apply Data Rule
+ *  - there are 3 input blocks
+ *      - input 0 = Rule
+ *      - input 1 = Chart Data
+ *      - input 2 = dynamic input -> title = Data Rule
+ *          - it has 1 group child
+ *          -  child 0 = Last Date Collected
+ *  - there is one output block
+ *      - output 0 = Chart Data
+ */
+
 const ApplyDataRule = {
     name: "Apply Data Rule",
     icon: <IconGavel />,

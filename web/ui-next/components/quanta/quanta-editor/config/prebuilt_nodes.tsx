@@ -15,7 +15,7 @@ import {
 } from "./nodes"
 
 const prebuildNodeDict = {
-    start: StartNode, // created callstack
+    start: StartNode, // created callstack [tested]
     iter: IterNode, // created clalstack
     sdmx_data_parser: SDMXDataParser, // created callstack
     sdmx_data_mapper: SDMXDataMapper, // created callstack
@@ -25,8 +25,8 @@ const prebuildNodeDict = {
     get_sdmx_field_value: GetSDMXFieldValue, // created callstack
     build_fields: BuildField, // created callstack
     string_to_date: StringToDate, // created callstack
-    add_indicator: AddIndicator,
-    update_indicator: UpdateIndicator
+    add_indicator: AddIndicator, //created callstack
+    update_indicator: UpdateIndicator //created callstack
 } as { [key: string]: IQuantaNodeInstructions }
 
 export default prebuildNodeDict

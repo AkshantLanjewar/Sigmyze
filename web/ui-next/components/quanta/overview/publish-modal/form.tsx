@@ -45,19 +45,22 @@ const PublishForm: React.FC<IFormProps> = ({ close }) => {
             name: "Dataset Title",
             type: "text",
             icon: <IconSignature />,
-            id: "title"
+            id: "title",
+            testId: "publish-title-input"
         },
         {
             name: "Dataset ID",
             id: "dataset_id",
             type: "text",
-            icon: <IconWritingSign />
+            icon: <IconWritingSign />,
+            testId: "publish-dataset-id"
         },
         {
             name: "Dataset Description",
             id: "description",
             type: "text",
-            icon: <IconBook2 />
+            icon: <IconBook2 />,
+            testId: "publish-dataset-description"
         },
         {
             id: "dynamicPublic",
@@ -78,11 +81,12 @@ const PublishForm: React.FC<IFormProps> = ({ close }) => {
             name: "Visibility",
             id: "visibility",
             type: "segment",
+            testId: "publish-dataset-segment",
             segmentItems: [
                 {
                     value: "public",
                     name: "Public",
-                    icon: <IconWorldWww />
+                    icon: <IconWorldWww />,
                 },
                 {
                     value: "private",

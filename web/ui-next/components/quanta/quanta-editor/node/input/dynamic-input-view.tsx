@@ -21,16 +21,20 @@ const DynamicInputView: React.FC<IViewProps> = memo(({
 }) => {
     return (
         <div className={styles.dynamic__node}>
-            <div className={styles.title}>{input.groupTitle}</div>
+            <div className={styles.title} data-testId={"input-group-title"}>{input.groupTitle}</div>
 
-            {childSockets.map((step) => (
-                <InputRenderer
-                    input={step}
-                    nodeId={nodeId}
-                    focused={focused}
-                    data={data}
-                />
-            ))}
+            <div className={styles.dynamic__items} data-testId={"input-group-children"}>
+                {childSockets.map((step, i) => (
+                    <InputRenderer
+                        input={step}
+                        nodeId={nodeId}
+                        focused={focused}
+                        data={data}
+                        index={i}
+                        isChild={true}
+                    />
+                ))}
+            </div>
         </div>
     )
 })

@@ -13,6 +13,11 @@ interface IQuantaFormField {
     type?: QuantaFormType,
 
     /**
+     * this is the testing id inserted into the elements container
+     */
+    testId?: string,
+
+    /**
      * input name
      */
     name?: string,

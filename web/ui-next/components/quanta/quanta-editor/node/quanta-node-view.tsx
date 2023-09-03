@@ -8,6 +8,7 @@ import InputRenderer from "./input/input-renderer"
 import OutputRenderer from "./output/OutputRenderer"
 import NodeControl from "./node-control"
 import NodeActionMenu from "./action-menu/action-menu"
+import { v4 } from "uuid"
 
 interface IViewProps {
     focused: boolean,
@@ -38,7 +39,7 @@ const QuantaNodeView: React.FC<IViewProps> = memo(({
             >
                 <NodeLoader executing={executing} />
 
-                <div className={styles.node__title}>
+                <div className={styles.node__title} data-testId={"node-title"}>
                     {instructions.icon}
 
                     <div className={styles.title}>
@@ -56,31 +57,41 @@ const QuantaNodeView: React.FC<IViewProps> = memo(({
                         />
                     )}
 
-                    {instructions.inputs?.map((step) => (
-                        <InputRenderer
-                            input={step}
-                            nodeId={data.nodeId}
-                            focused={focused}
-                            data={data}
-                        />
-                    ))}
+                    <div className={styles.socket__renderer} data-testId={"inputs"}>
+                        {instructions.inputs?.map((step, i) => (
+                            <InputRenderer
+                                input={step}
+                                nodeId={data.nodeId}
+                                focused={focused}
+                                data={data}
+                                index={i}
+                            />
+                        ))}
+                    </div>
 
-                    {instructions.outputs?.map((step) => (
-                        <OutputRenderer
-                            output={step}
-                            nodeId={data.nodeId}
-                            focused={focused}
-                            unfocus={unfocus}
-                            parentId={parentId}
-                        />
-                    ))}
+                    <div className={styles.socket__renderer} data-testId={"outputs"}>
+                        {instructions.outputs?.map((step, i) => (
+                            <OutputRenderer
+                                output={step}
+                                nodeId={data.nodeId}
+                                focused={focused}
+                                unfocus={unfocus}
+                                parentId={parentId}
+                                key={step.socketId}
+                                index={i}
+                            />
+                        ))}
+                    </div>
 
-                    {instructions.controls?.map((step) => (
-                        <NodeControl 
-                            control={step}
-                            nodeId={data.nodeId}
-                        />
-                    ))}
+                    <div className={styles.socket__renderer} data-testId={"controls"}>
+                        {instructions.controls?.map((step, index) => (
+                            <NodeControl 
+                                control={step}
+                                nodeId={data.nodeId}
+                                index={index}
+                            />
+                        ))}
+                    </div>
 
                     <NodeActionMenu 
                         instructions={instructions}

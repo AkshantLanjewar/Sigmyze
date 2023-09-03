@@ -38,6 +38,12 @@ $delay: .5s;
         }
     }
 
+    .socket__renderer {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
     .node__body {
         display: flex;
         flex-direction: column;
@@ -53,6 +59,12 @@ $delay: .5s;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 5px;
+
+            .dynamic__items {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
 
             .title {
                 font-size: 12px;

@@ -8,16 +8,18 @@ import { IExecutionEngineContext, INodeExecutionResult, ISocketResp, ISocketResp
 import { QuantaContextData } from "../../../../data/quanta/context"
 import { IQuantaState } from "../../../../data/quanta/types"
 import { IQuantaEditorProject } from "../../../../data/quanta/types/project"
+import { IconStack2 } from "@tabler/icons"
 
 interface IExecutionContextProps {
     fileId: string,
     editorData: IQuantaEditorProject | undefined,
+    internalTesting: boolean,
     children?: React.ReactNode
 }
 
 const ExecutionContextData = createContext<IExecutionEngineContext | null>(null)
 
-const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children, editorData }) => {
+const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children, internalTesting, editorData }) => {
     const { loggedIn, loaded } = useContext(UserContextData) as IUserContext
     const { getEditorProject } = useContext(QuantaContextData) as IQuantaState
 
@@ -133,7 +135,23 @@ const ExecutionContext: React.FC<IExecutionContextProps> = ({ fileId, children, 
         if(editorData === undefined)
             return
 
-        setExecutionResults([ ...editorData.executionResults ])
+        let nExecutionResults = [] as INodeExecutionResult[]
+        for(let i = 0; i < editorData.executionResults.length; i++) {
+            let executionResult = editorData.executionResults[i]
+            let computedSockets = executionResult.computedSockets
+            for(let x = 0; x < computedSockets.length; x++) {
+                let computedSocket = computedSockets[x]
+                if(internalTesting === true)
+                    computedSocket.icon = <IconStack2 />
+
+                computedSockets[x] = computedSocket
+            }
+
+            executionResult.computedSockets = computedSockets
+            nExecutionResults.push(executionResult)
+        }
+
+        setExecutionResults([ ...nExecutionResults ])
     }, [editorData])
     
     let contextData = {} as IExecutionEngineContext

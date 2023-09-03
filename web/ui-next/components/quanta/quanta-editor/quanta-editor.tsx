@@ -55,7 +55,9 @@ interface IQuantaEditorProps {
     fileId: string,
     fileName: string,
     viewMode?: boolean,
-    editorData?: IQuantaEditorProject
+    editorData?: IQuantaEditorProject,
+    children?: React.ReactNode,
+    testMode?: boolean
 }
 
 /**
@@ -63,7 +65,14 @@ interface IQuantaEditorProps {
  */
 const QuantaEditorContext = createContext<IQuantaEditorGlobals | null>(null)
 
-const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode, editorData }) => {
+const QuantaEditor: React.FC<IQuantaEditorProps> = ({ 
+    fileId, 
+    fileName, 
+    viewMode, 
+    editorData,
+    children,
+    testMode 
+}) => {
     /**
      * This is a list of nodes within the editor
      * State managed by both react flow and component
@@ -151,6 +160,8 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
     const openStoreModal = useCallback(() => setStoreModal('store'), [])
     const closeStoreModal = useCallback(() => setStoreModal(null), [])
 
+    const [internalTesting, setInternalTesting] = useState(false)
+
     /**
      * Ref for the react flow element
      */
@@ -160,6 +171,13 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
      * greater quanta context
      */
     const quantaContext = useContext(QuantaContextData)
+
+    useEffect(() => {
+        if(testMode === undefined)
+            return
+
+        setInternalTesting(testMode)
+    }, [testMode])
 
     /**
      * This is the mount effect.
@@ -190,6 +208,7 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
             setQuantaStore({ ...editorData.quantaStore })
             setEditorType("create")
 
+            toggleUpdateStore()
             return
         }
 
@@ -417,6 +436,8 @@ const QuantaEditor: React.FC<IQuantaEditorProps> = ({ fileId, fileName, viewMode
             setNodes={setNodes}
             setEdges={setEdges}
             editorData={editorData}
+            internalTesting={internalTesting}
+            children={children}
             setReactFlowInstance={setReactFlowInstance}
             closeStoreModal={closeStoreModal}
             toggleEngineWrapper={toggleEngineWrapper}

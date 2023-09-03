@@ -42,7 +42,6 @@ function createStoreModal(
     openStoreModal: () => void
 ) {
     let storeKeys = Object.keys(quantaStore)
-    console.log(quantaStore)
     if(storeKeys.includes(modalKey) === false)
         return
 

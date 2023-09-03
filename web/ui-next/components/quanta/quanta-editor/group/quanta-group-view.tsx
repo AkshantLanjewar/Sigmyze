@@ -4,6 +4,7 @@ import { NodeResizer } from "@reactflow/node-resizer"
 import { Handle, Position } from "reactflow"
 import NodeLoader from "../node/node-loader"
 import NodeActionMenu from "../node/action-menu/action-menu"
+import { UnstyledButton } from "@mantine/core"
 
 interface IViewProps {
     selected: boolean,
@@ -41,8 +42,8 @@ const QuantaGroupView: React.FC<IViewProps> = memo(({
                 id={id}
             />
 
-            <div className={styles.quanta__group}>
-            <NodeLoader executing={executing} />
+            <UnstyledButton className={styles.quanta__group} data-testId={"node-group"}>
+                <NodeLoader executing={executing} />
 
                 <div className={styles.inner}>
                     <NodeActionMenu 
@@ -51,7 +52,7 @@ const QuantaGroupView: React.FC<IViewProps> = memo(({
                         nodeId={id}
                     />
                 </div>
-            </div>
+            </UnstyledButton>
         </>
     )
 })

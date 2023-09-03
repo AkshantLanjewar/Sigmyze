@@ -8,12 +8,17 @@ import styles from './ui-dropdown.module.scss'
 
 interface IUIDropdownItemProps {
     item: IUIDropdownItem,
+    internalTestId?: string,
     selectItem: (id: string) => void
 }
 
-const UIDropdownItem: React.FC<IUIDropdownItemProps> = ({ item, selectItem }) => {
+const UIDropdownItem: React.FC<IUIDropdownItemProps> = ({ item, internalTestId, selectItem }) => {
     return (
-        <div className={styles.menu__item} onClick={() => selectItem(item.id)}>
+        <div 
+            className={styles.menu__item} 
+            data-testId={`${internalTestId}-${item.id}`}
+            onClick={() => selectItem(item.id)}
+        >
             <ThemeIcon
                 color={"indigo"}
                 variant={"filled"}
@@ -41,11 +46,22 @@ interface IUIDropdownProps {
     radius?: MantineSize,
     position?: FloatingPosition,
     subscribeClose?: boolean,
-    disabled?: boolean
+    disabled?: boolean,
+    internalTestId?: string
 }
 
-const UIDropdown: React.FC<IUIDropdownProps> = 
-    ({ size, items, value, emitChange, expand, radius, position, subscribeClose, disabled}) => {
+const UIDropdown: React.FC<IUIDropdownProps> = ({ 
+    size, 
+    items, 
+    value, 
+    emitChange, 
+    expand, 
+    radius, 
+    position, 
+    subscribeClose, 
+    disabled, 
+    internalTestId 
+}) => {
     const [opened, setOpened] = useState(false)
 
     function selectItem(id: string) {
@@ -101,6 +117,7 @@ const UIDropdown: React.FC<IUIDropdownProps> =
                         size={size}
                         compact={expand ? false : true}
                         color={"indigo"}
+                        data-testId={`${internalTestId}-open`}
                     >
                         <Group align={"center"} spacing={10}>
                             <Group spacing={2.5}>
@@ -122,9 +139,13 @@ const UIDropdown: React.FC<IUIDropdownProps> =
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Stack spacing={"sm"}>
+                    <Stack spacing={"sm"} data-testId={`${internalTestId}-target`}>
                         {items?.map((step) => (
-                            <UIDropdownItem item={step} selectItem={selectItem} />
+                            <UIDropdownItem 
+                                item={step} 
+                                selectItem={selectItem} 
+                                internalTestId={internalTestId}
+                            />
                         ))}
                     </Stack>
                 </Menu.Dropdown>

@@ -1,6 +1,6 @@
 import { ActionIcon, Button } from '@mantine/core'
 import { IconPhotoPlus, IconPlayerPlay, IconWorldUpload } from '@tabler/icons'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { QuantaContextData } from '../../data/quanta/context'
 import { IQuantaState } from '../../data/quanta/types'
 import EditableText from '../../ui/editable-text/editable-text'
@@ -15,7 +15,45 @@ import PublishModal from './publish-modal'
 import PublishButton from './publish-button'
 import UnpublishModal from './unpublish-modal'
 
-const QuantaOverviewView: React.FC = ({ }) => {
+/**
+ *  NOTE: Here are all the testing requirements for the overview page and its related subcomponents in this directory
+ *  The overview view contains tests for a lot of varied components, and as such, needs to be split up into groups
+ *  of unit tests that need to be written
+ * 
+ *  Unit Tests:
+ *      PreviewButton Unit Test
+ *          - check that previewbutton = Preview
+ *      SelectorViewModal Unit Test  
+ *          - cancel-preview = Cancel 
+ * 
+ *      PublishButton Unit Test
+ *          - check that publish-button = Publish
+ *      PublishModal Unit Test
+ *          - title-input = Dataset Title
+ *          - dataset-id = Dataset ID
+ *          - dataset-description = Dataset Description
+ *          - dataset-semgent = Public & Local
+ *  OverviewBaseE2E Tests:
+ *      PreviewButton E2E Test
+ *          - check if preview modal has opened
+ *      PublishButton E2E Test
+ *          - check if publish modal has opened
+ *  
+ *  BaseLocators:
+ *      - data-testId={"preview-button"} -> this is the button that activates the preview modal
+ *      - data-testId={"cancel-preview"} -> this is the button that cancels the preview modal
+ *      - data-testId={"publish-button"} -> this is the button that activates the publish modal
+ *      - publish-title-input -> this is the title input for the publish form
+ *      - publish-dataset-id -> this is the datasetId input for the publish form
+ *      - publish-dataset-description -> this is the description for the dataset
+ *      - publish-dataset-segment -> this is the segment control for the form
+ */
+
+interface IQuantaOverviewProps {
+    testing?: boolean
+}
+
+const QuantaOverviewView: React.FC<IQuantaOverviewProps> = ({ testing }) => {
     const [previewOpen, setPreviewOpen] = useState(false)
     const closePreview = useCallback(() => setPreviewOpen(false), [])
 
@@ -24,6 +62,15 @@ const QuantaOverviewView: React.FC = ({ }) => {
 
     const [unpublishOpen, setUnpublishOpen] = useState(false)
     const closeUnpublish = useCallback(() => setUnpublishOpen(false), [])
+
+    const [internalTesting, setInternalTesting] = useState(false)
+
+    useEffect(() => {
+        if(testing === undefined)
+            return
+
+        setInternalTesting(testing)
+    }, [testing])
 
     const quantaContext = useContext(QuantaContextData) as IQuantaState
     const quantaProject = quantaContext.project_data
@@ -77,6 +124,7 @@ const QuantaOverviewView: React.FC = ({ }) => {
                         <Button
                             radius={"xl"}
                             color={"indigo"}
+                            data-testId={"preview-button"}
                             onClick={() => setPreviewOpen(true)}
                         >
                             <IconPlayerPlay 
@@ -137,7 +185,10 @@ const QuantaOverviewView: React.FC = ({ }) => {
                 </div>
             </div>
 
-            <OverviewTabs />
+            {internalTesting
+                ? null
+                : <OverviewTabs />
+            }
         </div>
     )
 }

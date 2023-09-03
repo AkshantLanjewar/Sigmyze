@@ -32,7 +32,10 @@ const FormatterPreviewView: React.FC<IViewProps> = React.memo(({ title, short, f
                     styles={{ tooltip: { backgroundColor: "#08090A", fontWeight: "bold" } }}
                     withArrow
                 >
-                    <div className={styles.name}>
+                    <div 
+                        data-testId={"preview-title"}
+                        className={styles.name}
+                    >
                         {formatter(title)}
                     </div>
                 </Tooltip>
@@ -45,7 +48,10 @@ const FormatterPreviewView: React.FC<IViewProps> = React.memo(({ title, short, f
                     styles={{ tooltip: { backgroundColor: "#08090A", fontWeight: "bold" } }}
                     withArrow
                 >
-                    <div className={styles.indicator__id}>
+                    <div 
+                        data-testId={"preview-short"}
+                        className={styles.indicator__id}
+                    >
                         {formatter(short)}
                     </div>
                 </Tooltip>
@@ -108,7 +114,7 @@ const FormatterPreview: React.FC = ({ }) => {
     useEffect(() => {
         fetchTitleValue()
         fetchShortValue()
-    }, [textUpdated])
+    }, [textStore])
 
     useEffect(() => {
         if(indicators.length === 0)

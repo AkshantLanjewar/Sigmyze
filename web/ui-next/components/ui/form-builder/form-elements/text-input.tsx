@@ -1,14 +1,17 @@
 import { TextInput } from "@mantine/core"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 interface ITextInputQuanta {
     name?: string,
     icon?: JSX.Element,
     value?: string,
+    testingId?: string
     setValue?: (value: string) => void
 }
 
-const TextInputQuanta: React.FC<ITextInputQuanta> = ({ name, icon, value, setValue }) => {
+const TextInputQuanta: React.FC<ITextInputQuanta> = ({ name, icon, value, setValue, testingId }) => {
+    const [internalTestId, setInternalTestId] = useState<string>("")
+    
     useEffect(() => {
         if(setValue === undefined)
             return
@@ -16,8 +19,15 @@ const TextInputQuanta: React.FC<ITextInputQuanta> = ({ name, icon, value, setVal
             setValue("")
     }, [value])
 
+    useEffect(() => {
+        if(testingId === undefined)
+            return
+
+        setInternalTestId(testingId)
+    }, [testingId])
+
     return (
-        <>
+        <div data-testId={internalTestId}>
             {value !== undefined && (
                 <TextInput
                     label={name}
@@ -28,6 +38,7 @@ const TextInputQuanta: React.FC<ITextInputQuanta> = ({ name, icon, value, setVal
                     value={value}
                     onChange={(e) => setValue ? setValue(e.target.value) : null}
                     icon={icon}
+                    data-testId={`${testingId}-input`}
                     styles={{
                         icon: {
                             marginLeft: 10
@@ -38,7 +49,7 @@ const TextInputQuanta: React.FC<ITextInputQuanta> = ({ name, icon, value, setVal
                     }}
                 />
             )}
-        </>
+        </div>
     )
 }
 

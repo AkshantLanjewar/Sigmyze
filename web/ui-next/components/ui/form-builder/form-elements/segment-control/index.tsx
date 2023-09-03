@@ -6,14 +6,17 @@ import QuantaSegmentControlView from "./view";
 interface ISegmentedControlProps {
     value?: string,
     segmentItems?: ISegmentItem[],
+    testId?: string,
     setValue?: (val: string) => void
 }
 
 const QuantaSegmentControl: React.FC<ISegmentedControlProps> = ({
     value,
     segmentItems,
+    testId,
     setValue
 }) => {
+    const [internalTestId, setInternalTestId] = useState<string>("")
     const [internalValue, setInternalValue] = useState<string>('')
     const [internalItems, setInternalItems] = useState<SegmentedControlItem[]>([])
 
@@ -30,6 +33,13 @@ const QuantaSegmentControl: React.FC<ISegmentedControlProps> = ({
 
         setInternalValue(value)
     }, [value])
+
+    useEffect(() => {
+        if(testId === undefined)
+            return
+
+        setInternalTestId(testId)
+    }, [testId])
 
     useEffect(() => {
         if(segmentItems === undefined)
@@ -62,6 +72,7 @@ const QuantaSegmentControl: React.FC<ISegmentedControlProps> = ({
         <QuantaSegmentControlView
             value={internalValue}
             items={internalItems}
+            internalTestId={internalTestId}
             setValue={internalSetValue}
         />
     )

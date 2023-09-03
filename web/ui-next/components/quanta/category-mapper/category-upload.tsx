@@ -6,6 +6,7 @@ import { IUIDropdownItem } from "../../ui/ui-dropdown/types"
 import { IconDatabase } from "@tabler/icons"
 import { showNotification } from "@mantine/notifications"
 import { IQuantaFormField } from "../quanta-editor/types/form"
+import { Buffer } from 'buffer'
 
 interface ICategoryUploadProps {
     closeModal: () => void
@@ -16,13 +17,15 @@ const formComponents = [
         type: "file",
         fileType: "json",
         name: "Category Definition",
-        id: "source"
+        id: "source",
+        testId: "file-upload"
     },
     {
         type: "dropdown",
         id: "map",
         name: "Map to Field",
-        manualDropdownItems: []
+        manualDropdownItems: [],
+        testId: "dropdown"
     }
 ] as IQuantaFormField[]
 

@@ -1,5 +1,5 @@
 import { Text } from "@mantine/core"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { IUIDropdownItem } from "../../ui-dropdown/types"
 import UIDropdown from "../../ui-dropdown/ui-dropdown"
 
@@ -7,10 +7,13 @@ interface IDropdownInput {
     items: IUIDropdownItem[],
     name?: string,
     value?: string,
+    testId?: string,
     setValue?: (value: string) => void
 }
 
-const DropdownInput: React.FC<IDropdownInput> = ({ items, name, value, setValue }) => {
+const DropdownInput: React.FC<IDropdownInput> = ({ items, name, value, testId, setValue }) => {
+    const [internalTestId, setInternalTestId] = useState<string>("")
+    
     useEffect(() => {
         if(items === undefined)
             return
@@ -20,8 +23,15 @@ const DropdownInput: React.FC<IDropdownInput> = ({ items, name, value, setValue 
             setValue(items[0].id)
     }, [items])
 
+    useEffect(() => {
+        if(testId === undefined)
+            return
+
+        setInternalTestId(testId)
+    }, [testId])
+
     return (
-        <div>
+        <div data-testId={internalTestId}>
             {value !== undefined && (
                 <>
                     <Text
@@ -40,6 +50,7 @@ const DropdownInput: React.FC<IDropdownInput> = ({ items, name, value, setValue 
                         expand={true}
                         radius={"sm"}
                         position={'bottom-start'}
+                        internalTestId={internalTestId}
                     />
                 </>
             )}

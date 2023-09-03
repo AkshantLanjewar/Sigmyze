@@ -30,6 +30,7 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
                         name={step.name}
                         icon={step.icon}
                         value={getValue(step.id!)}
+                        testingId={step.testId}
                         setValue={(id: string) => setValue(step.id!, id)}
                     />
                 )
@@ -50,6 +51,7 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
                         items={dropdownItems}
                         name={step.name}
                         value={getValue(step.id!)}
+                        testId={step.testId}
                         setValue={(value: string) => setValue(step.id!, value)}
                     />
                 )
@@ -59,18 +61,23 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
                 let alertTitle = step.alertTitle
                 let alertContent = step.alertContent
                 let alertColor = step.alertColor
-
+                
+                let alertTestId = ""
                 if(alertIcon === undefined || alertTitle === undefined || alertContent === undefined || alertColor === undefined)
                     return
+                if(step.testId !== undefined)
+                    alertTestId = step.testId
                 
                 output = (
-                    <Alert
-                        icon={alertIcon}
-                        color={alertColor}
-                        title={alertTitle}
-                    >
-                        {alertContent}
-                    </Alert>
+                    <div data-testId={alertTestId}>
+                        <Alert
+                            icon={alertIcon}
+                            color={alertColor}
+                            title={alertTitle}
+                        >
+                            {alertContent}
+                        </Alert>
+                    </div>
                 )
                 break
             case "file":
@@ -86,6 +93,7 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
                     <FileInput 
                         fileType={fileType}
                         fileName={fileName}
+                        testId={step.testId}
                         setValue={(val: any) => setValue(step.id!, val)}
                     /> 
                 )
@@ -98,6 +106,7 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
                 output = (
                     <QuantaSegmentControl
                         value={getValue(step.id!)}
+                        testId={step.testId}
                         setValue={(id: string) => setValue(step.id!, id)}
                         segmentItems={segmentItems}
                     />

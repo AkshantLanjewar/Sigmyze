@@ -7,10 +7,11 @@ import { IOrganization, IOrganizationController } from "./types"
 const OrganizationContextData = createContext<IOrganizationController | null>(null)
 
 interface IOrganizationContextProps {
+    testing?: boolean,
     children: React.ReactNode
 }
 
-const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) => {
+const OrganizationContext: React.FC<IOrganizationContextProps> = ({ testing, children }) => {
     //NOTE: Theese are the useState's in relation to the organization
     const [organizations, setOrganizations] = useState<IOrganization[]>([])
     const [selectedOrganization, setSelectedOrganization] = useState<string | null>(null)
@@ -33,6 +34,8 @@ const OrganizationContext: React.FC<IOrganizationContextProps> = ({ children }) 
 
     //FEATURE: This hook grabs data relating to the users organizations when they become logged in
     useEffect(() => {
+        if(testing === true)
+            return
         if(loggedIn === false)
             reset()
         if(loggedIn !== true)

@@ -87,6 +87,7 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
         <div>
             <UnstyledButton 
                 className={`${styles.schema__node} ${light && styles.light}`}
+                data-testId={schemaNode.name}
                 onClick={(e) => handleSchemaClick(e)}
             >
                 <div className={styles.name}>
@@ -114,7 +115,10 @@ const SchemaViewer: React.FC<ISchemaViewerProps> =
                         )
 
                         : (
-                            <div className={styles.text}>
+                            <div 
+                                className={styles.text}
+                                data-testId={schemaNode.nodeId}
+                            >
                                 {schemaNode.name}
                             </div>
                         )

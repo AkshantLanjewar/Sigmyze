@@ -12,6 +12,8 @@ interface IViewProps {
     nodeId: string | undefined,
     data: IQuantaRFNodeData | undefined,
     localType: IQuantaTypeRef | undefined,
+    index: number,
+    isChild?: boolean,
     editType: (socketId: string, newType: IQuantaTypeRef) => void
 }
 
@@ -22,10 +24,12 @@ const InputRendererView: React.FC<IViewProps> = memo(({
     nodeId,
     data,
     localType,
+    index,
+    isChild,
     editType
 }) => {
     return (
-        <div>
+        <div data-testId={`input-${index}${isChild ? "::child" : ""}`}>
             {input.dynamicSocket
                 ? (
                     <DynamicInput 
@@ -41,6 +45,7 @@ const InputRendererView: React.FC<IViewProps> = memo(({
                         focused={focused}
                         localType={localType}
                         editType={editType}
+                        child={isChild ? isChild : false}
                     />
                 )
             }
