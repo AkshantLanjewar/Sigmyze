@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "test": "playwright test -c playwright-ct.config.ts",
-    "prepare": "patch-package"
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@ant-design/plots": "^1.2.3",
