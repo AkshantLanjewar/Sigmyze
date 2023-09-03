@@ -1,4 +1,4 @@
-import LunarPage from "../../components/pages/lunar/page"
+import LunarRefresh from "../../components/lunar-refresh/page"
 
 export const DefaultIndicatorTable = {
     weo: "USA"
@@ -10,7 +10,7 @@ interface ILunarProps {
 const Lunar: React.FC<ILunarProps> = ({  }) => {
     return (
         <div>
-            <LunarPage />
+            <LunarRefresh />
         </div>
     )
 }

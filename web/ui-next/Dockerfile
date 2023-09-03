@@ -1,4 +1,5 @@
 FROM public.ecr.aws/docker/library/node:18-alpine
+FROM mcr.microsoft.com/playwright:v1.34.0-jammy
 
 ENV PORT 3000
 
@@ -13,7 +14,6 @@ RUN yarn
 COPY . /usr/src/app
 
 #before we run the app we need to run the tests
-RUN npx playwright install --with-deps chromium
 RUN yarn test
 
 # start app
