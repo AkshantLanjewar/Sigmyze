@@ -1,5 +1,5 @@
 FROM public.ecr.aws/docker/library/node:18-alpine
-FROM mcr.microsoft.com/playwright:v1.34.0-jammy
+FROM mcr.microsoft.com/playwright:v1.37.1-jammy
 
 ENV PORT 3000
 
