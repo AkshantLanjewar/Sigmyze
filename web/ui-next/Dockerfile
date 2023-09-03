@@ -12,6 +12,10 @@ RUN yarn
 # Copying source files
 COPY . /usr/src/app
 
+#before we run the app we need to run the tests
+RUN npx playwright install --with-deps chromium
+RUN yarn test
+
 # start app
 RUN yarn build
 EXPOSE 3000
