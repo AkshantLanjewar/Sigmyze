@@ -4,6 +4,7 @@ import { IIndicator } from "../components/data/datasets/DatasetsTypes"
 import IndexPage from "../components/pages/index/index"
 import ApplicationLayout from "../components/nav-elements/application-layout"
 import { DefaultIndicatorTable } from "./lunar"
+import Script from "next/script"
 
 export default function Home(props: any) {
 	return (
@@ -17,6 +18,17 @@ export default function Home(props: any) {
 			>
 				<div style={{ width: '100%', height: '100%' }}>
 					<IndexPage indicators={props.indicators} />
+
+					<Script src="https://www.googletagmanager.com/gtag/js?id=G-5H0YHQRSPE" />
+					<Script id="google-analytics">
+						{`
+						window.dataLayer = window.dataLayer || [];
+						function gtag(){dataLayer.push(arguments);}
+						gtag('js', new Date());
+				
+						gtag('config', 'GA_MEASUREMENT_ID');
+						`}
+					</Script>
 				</div>
 			</ApplicationLayout>
 		</>
