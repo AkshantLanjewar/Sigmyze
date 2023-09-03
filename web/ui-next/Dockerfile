@@ -22,7 +22,5 @@ RUN yarn test
 RUN yarn build
 EXPOSE 3000
 
-USER node
-
 # Launch app with PM2
 CMD ["pm2-runtime", "start", "npm", "--", "start"]
