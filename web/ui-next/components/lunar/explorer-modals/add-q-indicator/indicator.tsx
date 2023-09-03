@@ -75,7 +75,7 @@ const IndicatorFormStep: React.FC<IRawFragmentTemplateProps> = ({ collectedBefor
                 return
 
             let primedDataset = await primeDataset(datasetId)
-            if(primedDataset === undefined)
+            if(primedDataset === undefined || primedDataset.schemas === undefined || primedDataset.selectors === undefined)
                 return
 
             //we need to collect the following in order to display the selector sequence
