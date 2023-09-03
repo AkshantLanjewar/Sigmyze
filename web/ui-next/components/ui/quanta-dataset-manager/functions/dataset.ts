@@ -77,7 +77,7 @@ const fetchIndicatorText = async (
     formatIndicatorText: (datasetId: string, indicatorId: string, text: string) => Promise<string | undefined>
 ) => {
     let dataset = await primeDataset(datasetId)
-    if(dataset === undefined)
+    if(dataset === undefined || dataset.textStore === undefined)
         return
 
     let textStore = dataset.textStore

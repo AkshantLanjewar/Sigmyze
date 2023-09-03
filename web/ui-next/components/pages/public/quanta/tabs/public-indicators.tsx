@@ -21,7 +21,7 @@ const PublicIndicatorsPanel: React.FC<IPublicIndicatorsProps> = ({ datasetId }) 
     useEffect(() => {
         async function main() {
             let dataset = await primeDataset(datasetId)
-            if(dataset === undefined)
+            if(dataset === undefined || dataset.schemas === undefined || dataset.selectors === undefined)
                 return
 
             setCategorization({ ...dataset.categorization })
