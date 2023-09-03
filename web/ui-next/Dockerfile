@@ -7,6 +7,8 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock /usr/src/app/
+COPY patches ./patches
+
 RUN npm install pm2 -g
 RUN yarn
 
