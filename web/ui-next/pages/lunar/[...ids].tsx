@@ -1,10 +1,10 @@
 import { ILunarProps } from "."
-import LunarPage from "../../components/pages/lunar/page"
+import LunarRefresh from "../../components/lunar-refresh/page"
 
 const Lunar: React.FC<ILunarProps> = ({ }) => {
     return (
         <div>
-            <LunarPage />
+            <LunarRefresh />
         </div>
     )
 }

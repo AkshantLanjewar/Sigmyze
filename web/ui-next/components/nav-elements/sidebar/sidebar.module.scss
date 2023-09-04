@@ -2,6 +2,11 @@ $dark-9: var(--mantine-color-dark-9);
 $dark-5: var(--mantine-color-dark-5);
 $indigo-6: var(--mantine-color-indigo-6);
 
+//colors to map with js
+$gray: #C1C2C5;
+$red: #FF6B6B;
+$blue: #4C6EF5;
+
 .sidebarWrapper {
     width: 80px;
     height: 100%;
@@ -17,19 +22,65 @@ $indigo-6: var(--mantine-color-indigo-6);
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        
         gap: 10px;
+        padding: 10px 0px;
 
         &.border {
-            padding: 0 0 32px;
             border-bottom: 2px solid $dark-5;
         }
 
         &.stacks {
-            padding: 32px 0;
+            padding: 10px 0;
 
             .element.active {
                 background-color: #7048E8;
                 color: #FFFFFF;
+            }
+        }
+
+        .buttonElement {
+            display: flex;
+            padding: 13px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            border-radius: 8px;
+            border: 2px solid;
+
+            &:active {
+                transform: translateY(0.0625rem);
+            }
+
+            &.gray {
+                border-color: $gray;
+                color: $gray;
+
+                &:hover {
+                    background-color: $gray;
+                    color: #FFFFFF;
+                }
+            }
+
+            &.red {
+                border-color: $red;
+                color: $red;
+
+                &:hover {
+                    background-color: $red;
+                    color: #FFFFFF;
+                }
+            }
+
+            &.blue {
+                border-color: $blue;
+                color: $blue;
+
+                &:hover {
+                    background-color: $blue;
+                    color: #FFFFFF;
+                }
             }
         }
 
@@ -58,7 +109,7 @@ $indigo-6: var(--mantine-color-indigo-6);
         }
 
         &.default { 
-            padding: 0px 0px 32px; 
+            padding: 0px 0px 10px; 
         }
     }
 }
