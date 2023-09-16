@@ -5,9 +5,21 @@ import DriveCreateItem from './drive-create-item'
 import styles from './sidebar.module.scss'
 import { IPortalButton } from '../../lunar-refresh/types'
 import React from 'react'
+import PortalButtons from './portal-buttons'
 
+/**
+ * theese are the props required so that the sidebar component will work correctly
+ */
 interface ISidebarProps {
+    /**
+     * this is the url location that we want to be set active
+     * ex: /, /lunar, /quanta etc...
+     */
     location: string,
+
+    /**
+     * theese are an optional list of portal buttons that need to be rendered
+     */
     portalButtons?: IPortalButton[]
 }
 
@@ -26,25 +38,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ location, portalButtons }) => {
         <Navbar width={{ base: 80 }}>
             <div className={styles.sidebarWrapper}>
                 {portalButtons
-                    ? (
-                        <div className={`${styles.elements} ${styles.border}`} data-testId={'button-portal'}>
-                            {portalButtons.map((step, index) => {
-                                if(step.buttonIcon === undefined)
-                                    return
-
-                                return (
-                                    <UnstyledButton 
-                                        className={`${styles.buttonElement} ${styles[step.buttonColor]}`}
-                                        key={`sidebar-portal-${step.buttonId}`}
-                                        onClick={() => step.onClick()}
-                                        data-testId={`button-${index}`}
-                                    >
-                                        {React.cloneElement(step.buttonIcon, { "data-testId": step.buttonId })}
-                                    </UnstyledButton>
-                                )
-                            })}
-                        </div>
-                    )
+                    ? <PortalButtons portalButtons={portalButtons} />
                     : null
                 }
 

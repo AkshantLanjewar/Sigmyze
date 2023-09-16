@@ -80,7 +80,10 @@ test('mount test', async ({ mount }) => {
 
     const component = await mount(
         <ApplicationTestingWrapper>
-            <FileTreeView fileSystem={mockFilesystem} />
+            <FileTreeView 
+                fileSystem={mockFilesystem}
+                activeItemId={undefined} 
+            />
         </ApplicationTestingWrapper>
     )
 
@@ -105,7 +108,10 @@ test('folder mount test', async ({ mount }) => {
 
     const component = await mount(
         <ApplicationTestingWrapper>
-            <FileTreeView fileSystem={mockFilesystem} />
+            <FileTreeView 
+                fileSystem={mockFilesystem}
+                activeItemId={undefined} 
+            />
         </ApplicationTestingWrapper>
     )
 
@@ -138,7 +144,10 @@ test('chart mount test', async ({ mount }) => {
 
     const component = await mount(
         <ApplicationTestingWrapper>
-            <FileTreeView fileSystem={mockFilesystem} />
+            <FileTreeView 
+                fileSystem={mockFilesystem}
+                activeItemId={undefined} 
+            />
         </ApplicationTestingWrapper>
     )
 
@@ -172,7 +181,10 @@ test('note mount test', async ({ mount }) => {
 
     const component = await mount(
         <ApplicationTestingWrapper>
-            <FileTreeView fileSystem={mockFilesystem} />
+            <FileTreeView 
+                fileSystem={mockFilesystem}
+                activeItemId={undefined} 
+            />
         </ApplicationTestingWrapper>
     )
 
@@ -211,7 +223,10 @@ test('child mount test', async ({ mount }) => {
 
     const component = await mount(
         <ApplicationTestingWrapper>
-            <FileTreeView fileSystem={mockFilesystem} />
+            <FileTreeView 
+                fileSystem={mockFilesystem}
+                activeItemId={undefined} 
+            />
         </ApplicationTestingWrapper>
     )
 

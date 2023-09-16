@@ -47,7 +47,12 @@ interface ISigmyzeFolder {
     /**
      * whether or not this folder should be opened on the file-tree mount
      */
-    openMount?: boolean
+    openMount?: boolean,
+
+    /**
+     * this is the persisted open state of the folder, which is saved to disk / memory
+     */
+    openState?: boolean
 }
 
 /**
@@ -78,8 +83,51 @@ interface ISigmyzeFile {
     fileId: string
 }
 
+/**
+ * this is the datastructure definition for the simple filesystem
+ * all filesystems that will be stored on a server, should use this format as it removes any project based abstractions
+ */
+interface ISimpleFilesystem {
+    /**
+     * theese are the folders within the simple filesystem
+     */
+    folders: ISimpleFolder[],
+
+    /**
+     * theese are the fileId's of the files stored within the root folder of the simple filesystem
+     */
+    files: string[]
+}
+
+/**
+ * this is the datastructure definition for the folder within the simple filesystem
+ */
+interface ISimpleFolder {
+    /**
+     * this is the name for the simplefolder
+     */
+    folderName: string,
+
+    /**
+     * this is the ID that was generated within the sigmyze filesystem for the simple folder
+     */
+    folderId: string,
+
+    /**
+     * theese are all the subfolders within the simplefolder
+     */
+    folders: ISimpleFolder[],
+
+    /**
+     * theese are all the fileID's within the simple folder
+     */
+    files: string[]
+}
+
 export type {
     ISigmyzeFilesystem,
     ISigmyzeFolder,
-    ISigmyzeFile
+    ISigmyzeFile,
+    ISimpleFilesystem,
+    ISimpleFolder
 }

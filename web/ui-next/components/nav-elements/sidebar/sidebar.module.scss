@@ -1,11 +1,46 @@
 $dark-9: var(--mantine-color-dark-9);
 $dark-5: var(--mantine-color-dark-5);
+$dark7: var(--mantine-color-dark-7);
 $indigo-6: var(--mantine-color-indigo-6);
 
 //colors to map with js
 $gray: #C1C2C5;
 $red: #FF6B6B;
 $blue: #4C6EF5;
+
+.portalMenuElement {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    width: 200px;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $dark7;
+    }
+
+    .title {
+        line-height: 1;
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 14px;
+        margin-bottom: 2px;
+        padding-top: 2px;
+    }
+
+    .desc {
+        font-size: 8px;
+        max-height: 45px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
 
 .sidebarWrapper {
     width: 80px;
