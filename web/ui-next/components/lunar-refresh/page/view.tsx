@@ -9,6 +9,7 @@ import FileTreeView from '../../ui/file-management/file-tree-view'
 import { ISigmyzeFilesystem } from '../../ui/file-management/types'
 import LunarDataManager from '../data-manager'
 import FileSystemWrapper from './file-system'
+import LunarViewport from './viewport'
 
 /**
  * Theese are all the props needed in order for the lunar view to work
@@ -82,9 +83,7 @@ const LunarRefreshView: React.FC<IViewProps> = memo(({
                             </div>
                         </div>
 
-                        <div className={styles.lunar__viewport} data-testId={'viewport'}>
-
-                        </div>
+                        <LunarViewport />
                     </div>
                 </div>
             </LunarDataManager>

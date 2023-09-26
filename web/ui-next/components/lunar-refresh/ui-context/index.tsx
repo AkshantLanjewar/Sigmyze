@@ -9,6 +9,8 @@ import NewNoteForm from "./forms/new-note"
 import { ISynchroMessage } from "./types"
 import { v4 } from "uuid"
 import NewChartForm from "./forms/new-chart"
+import { ILunarTab } from "../page/viewport/types"
+import { openTab } from "./functions"
 
 const LunarUIContextData = createContext<ILunarUIState | null>(null)
 
@@ -46,8 +48,12 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
 
     //this is the raw synchro message list
     const [synchroMessages, setSynchroMessages] = useState<ISynchroMessage[]>([])
+    //this is the list of all the active tabs within the viewport
+    const [tabs, setTabs] = useState<ILunarTab[]>([])
+    //this is the state which will determine which tab in the potential tablist will be active
+    const [activeTab, setActiveTab] = useState<string | null>(null)
     //this is how many synchro messages are left to be processed
-    const messagesLeft = useMemo(() => synchroMessages.length, [synchroMessages])
+    const messagesLeft: number = useMemo(() => synchroMessages.length, [synchroMessages])
 
     //internal methods
 
@@ -115,27 +121,45 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         setLoadedFilesystem({ ...newFilesystem })
     }, [loadedFilesystem])
 
+    /**
+     * NOTE: This method is shared out through the context.
+     * This is the callback for the function that opens a tab
+     */
+    const openTabCallback = useCallback((fileId: string) => {
+        if(loadedFilesystem === undefined)
+            return
+        
+        openTab(loadedFilesystem, fileId, tabs, setTabs, setActiveTab)
+    }, [loadedFilesystem, tabs])
+
     const value: ILunarUIState = useMemo(() => ({
         portalButtons,
         activeItemId,
         loadedFilesystem,
         debugMode,
         messagesLeft,
+        tabs,
+        activeTab,
+        setActiveTab,
         setItemActive,
         resetActive,
         setLoadedFilesystem,
         consumeSynchroMessage,
-        setFolderOpenState: setFolderOpenStateCallback
+        setFolderOpenState: setFolderOpenStateCallback,
+        openTab: openTabCallback
     }), [
         portalButtons,
         activeItemId,
         loadedFilesystem,
         debugMode,
         messagesLeft,
+        tabs,
+        activeTab,
         setItemActive,
         resetActive,
         consumeSynchroMessage,
-        setFolderOpenStateCallback
+        setFolderOpenStateCallback,
+        openTabCallback
     ])
 
     return (

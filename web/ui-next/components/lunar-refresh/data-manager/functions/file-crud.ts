@@ -116,4 +116,68 @@ const createFile = (
     return newFilesystem
 }
 
-export { createFile }
+/**
+ * NOTE: This function is only to be used within the grabFile function.
+ * @description
+ *  - this is a function that grabs the file from a folder recursively
+ * @param folder 
+ *  - this is the folder we are looking through
+ * @param fileId 
+ *  - this is the fileId for the file we want to find
+ */
+const grabFileRecurse = (folder: ISigmyzeFolder, fileId: string): ISigmyzeFile | undefined => {
+    //first go through the files
+    for(let i = 0; i < folder.files.length; i++) {
+        let file = folder.files[i]
+        if(file.fileId === fileId)
+            return file
+    }
+
+    //now we go through the folders to find the file
+    for(let i = 0; i < folder.folders.length; i++) {
+        let testFolder = folder.folders[i]
+        let file = grabFileRecurse(testFolder, fileId)
+        if(file !== undefined)
+            return file
+    }
+
+    return undefined
+}
+
+/**
+ * @description
+ *  - this is a function that helps grab a file frm the filesystem
+ * @param filesystem
+ *  - this is the filesystem where we want t find the file
+ * @param fileId
+ *  - this is the id of the file we are trying to find
+ */
+const grabFile = (
+    filesystem: ISigmyzeFilesystem | undefined,
+    fileId: string
+) => {
+    if(filesystem === undefined)
+        return undefined
+
+    //first we will go through the root to check if there is a file
+    for(let i = 0; i < filesystem.files.length; i++) {
+        let testFile = filesystem.files[i]
+        if(testFile.fileId === fileId)
+            return testFile
+    }
+
+    //now we iterate through the folders
+    for(let i = 0; i < filesystem.folders.length; i++) {
+        let folder = filesystem.folders[i]
+        let file = grabFileRecurse(folder, fileId)
+        if(file !== undefined)
+            return
+    }
+
+    return undefined
+}
+
+export { 
+    createFile,
+    grabFile 
+}

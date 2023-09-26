@@ -210,4 +210,5 @@ const View: React.FC<IViewProps> = memo(({
     </UnstyledButton>
 ))
 
+export { IconFileRenderer }
 export default FileTreeFile
