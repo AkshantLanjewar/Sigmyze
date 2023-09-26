@@ -52,6 +52,7 @@ const openTab = (
     //insert and update the tabs
     let newTabs = [ ...tabs, newTab ]
     setTabs([ ...newTabs ])
+    setActiveTab(newTab.tabId)
 }
 
 export { openTab }

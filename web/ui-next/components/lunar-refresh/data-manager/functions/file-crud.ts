@@ -14,7 +14,7 @@ import { ISigmyzeFile, ISigmyzeFilesystem, ISigmyzeFolder } from "../../../ui/fi
 const createFileTemplate = (
     fileName: string, 
     fileType: string,
-    addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void
+    addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void,
 ): ISigmyzeFile => {
     let sigmyzeFile =  {
         fileName: fileName,
@@ -52,7 +52,7 @@ const insertFileIntoFolder = (
     activeFolderId: string, 
     fileName: string, 
     fileType: string,
-    addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void
+    addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void,
 ) => {
     let newFolder = folder
     if(newFolder.folderId === activeFolderId) {
@@ -74,6 +74,21 @@ const insertFileIntoFolder = (
 }
 
 /**
+ * This is the datastructure definition for the create file output
+ */
+interface ICreateFileOutput {
+    /**
+     * this is the final edited sigmyze filesystem
+     */
+    filesystem: ISigmyzeFilesystem | undefined,
+
+    /**
+     * this is the id of the file being created
+     */
+    fileId: string
+}
+
+/**
  * @description
  *  - this is the root function that handles the creation of a file within the filesystem
  * @param filesystem 
@@ -92,16 +107,30 @@ const createFile = (
     activeFolderId: string | undefined,
     fileName: string,
     fileType: string,
-    addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void
+    addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void,
 ) => {
-    if(activeFolderId === undefined || filesystem === undefined)
-        return undefined
+    //now we set up the output options
+    let fileOutput = {} as ICreateFileOutput
+    fileOutput.filesystem = undefined
+
+    //helper functions to edit the file output id
+    const setOutputFileId = (fileId: string) => {
+        fileOutput.fileId = fileId
+    }
+
+    if(activeFolderId === undefined || filesystem === undefined) {
+        fileOutput.fileId = "null"
+        fileOutput.filesystem = undefined
+        return fileOutput
+    }
 
     let newFilesystem = filesystem
     let newFolders = [] as ISigmyzeFolder[]
     if(activeFolderId === "root") {
         newFilesystem.files.push(createFileTemplate(fileName, fileType, addCreateSynchroMessage))
-        return newFilesystem
+
+        fileOutput.filesystem = newFilesystem
+        return fileOutput
     }
 
     //now we are going to iterate thru the folders and check where to insert the file based on the given active folder id
@@ -113,7 +142,8 @@ const createFile = (
     }
 
     newFilesystem.folders = newFolders
-    return newFilesystem
+    fileOutput.filesystem = newFilesystem
+    return fileOutput
 }
 
 /**

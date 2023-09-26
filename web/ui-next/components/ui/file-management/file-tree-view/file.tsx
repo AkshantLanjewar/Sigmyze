@@ -66,14 +66,22 @@ interface IFileTreeFileProps {
      * @param itemType 
      *  this is the type of object being set active, so other parameters, such as portal buttons and active folder may be correctly set as well
      */
-    setItemActive?: (itemId: string, itemType: string) => void
+    setItemActive?: (itemId: string, itemType: string) => void,
+
+    /**
+     * @description
+     *  - this is the function that opens a new tab within the viewport
+     * @param fileId 
+     *  - this is the id of the file we want to open in the viewport
+     */
+    openTab: (fileId: string) => void 
 }
 
 /**
  * NOTE: This component should only be used within the context of the FileTreeView component
  * this component renders a FileTreeFile within the editor, and adds appropriate amounts of padding when necessary
  */
-const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChild, activeItemId, setItemActive }) => {
+const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChild, activeItemId, setItemActive, openTab }) => {
     //this is the parsed file type, undefined if not set
     const [fileType, setFileType] = useState<string | undefined>(undefined)
     //this is the padding for the element
@@ -137,6 +145,7 @@ const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChil
             file={file}
             active={active}
             onClickHandler={onClickHandler}
+            openTab={openTab}
         />
     )
 }
@@ -178,7 +187,15 @@ interface IViewProps {
     /**
      * this is the function that is called when the file button is clicked
      */
-    onClickHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    onClickHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+
+    /**
+     * @description
+     *  - this is the function that opens a new tab within the viewport
+     * @param fileId 
+     *  - this is the id of the file we want to open in the viewport
+     */
+    openTab: (fileId: string) => void 
 }
 
 const View: React.FC<IViewProps> = memo(({ 
@@ -188,14 +205,18 @@ const View: React.FC<IViewProps> = memo(({
     fileType, 
     file, 
     active,
-    onClickHandler 
+    onClickHandler,
+    openTab 
 }) => (
     <UnstyledButton 
         className={`${styles.element} ${active ? styles.active : ""}`}
         data-testId={`container-element-${index}${isChild ? "::child" : ""}`}
         data-testValue={`element-${fileType}`}
         style={{ paddingLeft: paddingLeft }}
-        onClick={(e) => onClickHandler(e)}
+        onClick={(e) => {
+            openTab(file.fileId)
+            onClickHandler(e)
+        }}
     >
         <div className={styles.wrapper}>
             {fileType

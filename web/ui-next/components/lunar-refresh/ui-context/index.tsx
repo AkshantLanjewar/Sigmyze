@@ -98,16 +98,36 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
     }, [loadedFilesystem, activeFolderId])
 
     /**
+     * NOTE: This method is shared out through the context.
+     * This is the callback for the function that opens a tab
+     */
+    const openTabCallback = useCallback((fileId: string) => {
+        if(loadedFilesystem === undefined)
+            return
+        
+        openTab(loadedFilesystem, fileId, tabs, setTabs, setActiveTab)
+    }, [loadedFilesystem, tabs])
+
+    /**
      * NOTE: This method is to only be used within the form components.
      * This is the callback for the method that creates a file in the activeFolderID's directory
      */
     const createFileCallback = useCallback((fileName: string, fileType: string) => {
-        let newFilesystem = createFile(loadedFilesystem, activeFolderId, fileName, fileType, addCreateSynchroMessage)
-        if(newFilesystem === undefined)
-            return
+        let newFilesystem = createFile(
+            loadedFilesystem, 
+            activeFolderId, 
+            fileName, 
+            fileType, 
+            addCreateSynchroMessage,
+        )
 
-        setLoadedFilesystem({ ...newFilesystem })
-    }, [addCreateSynchroMessage, loadedFilesystem, activeFolderId])
+        let sigmyzeFilesystem = newFilesystem.filesystem
+        if(sigmyzeFilesystem === undefined || newFilesystem.fileId === "null")
+            return
+        
+        setLoadedFilesystem({ ...sigmyzeFilesystem })
+        openTabCallback(newFilesystem.fileId)
+    }, [addCreateSynchroMessage, openTabCallback, loadedFilesystem, activeFolderId])
 
     /**
      * NOTE: This method is shared out through the context.
@@ -120,17 +140,6 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
 
         setLoadedFilesystem({ ...newFilesystem })
     }, [loadedFilesystem])
-
-    /**
-     * NOTE: This method is shared out through the context.
-     * This is the callback for the function that opens a tab
-     */
-    const openTabCallback = useCallback((fileId: string) => {
-        if(loadedFilesystem === undefined)
-            return
-        
-        openTab(loadedFilesystem, fileId, tabs, setTabs, setActiveTab)
-    }, [loadedFilesystem, tabs])
 
     const value: ILunarUIState = useMemo(() => ({
         portalButtons,

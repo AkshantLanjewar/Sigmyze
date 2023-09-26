@@ -1,21 +1,61 @@
 // setFolderOpenState -> context function
 
-import { useContext } from "react"
+import { useCallback, useContext } from "react"
 import { ISigmyzeFilesystem } from "../../../ui/file-management/types"
 import { LunarUIContextData } from "../../ui-context"
 import { ILunarUIState } from "../../ui-context/state"
 import FileTreeView from "../../../ui/file-management/file-tree-view"
 
+/**
+ * Theese are all the props required for the filesystem wrapper to work
+ */
 interface IFilesystemWrapperProps {
+    /**
+     * this is the filesystem that will be rendered
+     */
     fileSystem: ISigmyzeFilesystem,
+
+    /**
+     * this is the itemId of the active item within the filesystem
+     */
     activeItemId: string | undefined,
+
+    /**
+     * @description
+     *  - this is the function that handles the changing of the active item within the filetree
+     * @param itemId 
+     *  - this is the id of the new active item
+     * @param itemType 
+     *  - this is the type of the new item.
+     *  - NOTE: This field is used to update the side portal buttons
+     */
     setItemActive: (itemId: string, itemType: string) => void,
-    resetActive: () => void
+
+    /**
+     * @description
+     *  - this is the function that resets the activeId to the root folder in the filesystem
+     */
+    resetActive: () => void,
+
+    /**
+     * @description
+     *  - this is the function that opens a new tab within the viewport
+     * @param fileId 
+     *  - this is the id of the file we want to open in the viewport
+     */
+    openTab?: (fileId: string) => void
 }
 
-const FileSystemWrapper: React.FC<IFilesystemWrapperProps> = ({ fileSystem, activeItemId, setItemActive, resetActive }) => {
+const FileSystemWrapper: React.FC<IFilesystemWrapperProps> = ({ fileSystem, activeItemId, setItemActive, resetActive, openTab }) => {
     const { setFolderOpenState } = useContext(LunarUIContextData) as ILunarUIState
     
+    const openTabCallback = useCallback((fileId: string) =>  {
+        if(openTab === undefined)
+            return
+
+        openTab(fileId)
+    }, [openTab])
+
     return (
         <>
             <FileTreeView 
@@ -24,6 +64,7 @@ const FileSystemWrapper: React.FC<IFilesystemWrapperProps> = ({ fileSystem, acti
                 setItemActive={setItemActive}
                 resetActive={resetActive}
                 setFolderOpenState={setFolderOpenState}
+                openTab={openTabCallback}
             />
         </>
     )

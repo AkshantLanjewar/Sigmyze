@@ -42,6 +42,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
     //this is the state of the modal controller within the UI context
     const [modalState, setModalState] = useState<string | null>(null)
 
+    
+
     /**
      * NOTE: This is an internal function, and should not be used outside of this component.
      * This function sets the list of rendered buttons by matching the portalId with preset buttons created in portal-buttons.tsx.

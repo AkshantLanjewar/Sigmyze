@@ -1,16 +1,16 @@
 import { Tabs } from '@mantine/core'
 import styles from '../lunar-refresh.module.scss'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, memo } from 'react'
 import { ILunarTab } from './types'
 import { IconFileRenderer } from '../../../ui/file-management/file-tree-view/file'
 
 interface IViewProps {
     activeTab: string | null,
     tabs: ILunarTab[]
-    setActiveTab: (val: string | null) => void
+    setActiveTab: (val: string | null) => void,
 }
 
-const LunarViewportView: React.FC<IViewProps> = ({ activeTab, tabs, setActiveTab }) => {
+const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, setActiveTab }) => {
     return (
         <div className={styles.lunar__viewport} data-testId={'viewport'}>
             <Tabs
@@ -26,6 +26,7 @@ const LunarViewportView: React.FC<IViewProps> = ({ activeTab, tabs, setActiveTab
                             value={step.tabId}
                             data-testId={`viewport-tab-${index}`}
                             icon={IconFileRenderer(step.tabType)}
+                            data-testValue={`${activeTab === step.tabId ? 'active' : ''}`}
                         >
                             {step.tabName}
                         </Tabs.Tab>
@@ -38,6 +39,6 @@ const LunarViewportView: React.FC<IViewProps> = ({ activeTab, tabs, setActiveTab
             </Tabs>
         </div>
     )
-}
+})
 
 export default LunarViewportView
