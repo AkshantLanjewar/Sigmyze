@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form"
 import { showNotification } from "@mantine/notifications"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { FormEvent, useContext, useEffect, useState } from "react"
+import { FormEvent, useCallback, useContext, useEffect, useState } from "react"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import { UserResendVerification } from "../../data/user/user-api"
@@ -20,7 +20,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
         },
     })
 
-    const { loaded, loggedIn, verified, authData, verify } = useContext(UserContextData) as IUserContext
+    const { loaded, loggedIn, verified, authData, verify, logout } = useContext(UserContextData) as IUserContext
     const router = useRouter()
 
     function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -62,6 +62,18 @@ const VerifyPageComponent: React.FC = ({ }) => {
 
         main()
     }
+
+    const logoutCallback = useCallback(() => {
+        async function main() {
+            let token = authData?.token
+            if(logout === undefined || token === undefined)
+                return
+
+            await logout(token)
+        }
+
+        main()
+    }, [logout, authData])
 
     useEffect(() => {
         if(loaded !== true)
@@ -126,7 +138,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
                     </Link>
                 </div>
 
-                <Link href={"#"}>
+                <Link href={"#"} onClick={() => logoutCallback()}>
                     <div className={styles.actionText}>
                         <span className={styles.link}>
                             Logout
