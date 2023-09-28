@@ -323,7 +323,7 @@ const View: React.FC<IViewProps> = memo(({
 }) => (
     <div
         data-testId={`container-folder-${index}${appendChild ? "::child" : ""}`} 
-        data-testValue={'element-folder'}
+        data-testvalue={'element-folder'}
         style={{ width: "100%" }}
     >
         <UnstyledButton 

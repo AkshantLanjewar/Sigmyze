@@ -31,7 +31,7 @@ const PortalButtons: React.FC<IPortalButtonsProps> = memo(({ portalButtons }) =>
                     onClick={() => step.onClick()}
                     data-testId={`button-${index}`}
                 >
-                    <div data-testId={step.buttonId}>
+                    <div data-testId={step.buttonId} style={{ height: 24 }}>
                         {React.cloneElement(step.buttonIcon, { "data-testId": step.buttonId })}
                     </div>
                 </UnstyledButton>

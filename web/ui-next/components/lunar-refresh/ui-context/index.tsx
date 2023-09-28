@@ -105,7 +105,7 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         if(loadedFilesystem === undefined)
             return
         
-        openTab(loadedFilesystem, fileId, tabs, setTabs, setActiveTab)
+        openTab(loadedFilesystem, fileId, tabs, setTabs, setActiveTab, setItemActive)
     }, [loadedFilesystem, tabs])
 
     /**

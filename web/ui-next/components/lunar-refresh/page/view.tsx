@@ -46,7 +46,7 @@ const LunarRefreshView: React.FC<IViewProps> = memo(({
     setItemActive,
     resetActive 
 }) => (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: "100%", height: "100%" }}>
         <QuantaDatasetManager>
             <LunarDataManager>
                 <div style={{ width: "100%", height: "100%" }}>

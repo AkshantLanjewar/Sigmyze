@@ -21,7 +21,8 @@ const openTab = (
     fileId: string,
     tabs: ILunarTab[],
     setTabs: (tabs: ILunarTab[]) => void,
-    setActiveTab: (tabId: string | null) => void
+    setActiveTab: (tabId: string | null) => void,
+    setItemActive: (itemId: string, itemType: string) => void
 ) => {
     let file = grabFile(filesystem, fileId)
     if(file === undefined)
@@ -53,6 +54,8 @@ const openTab = (
     let newTabs = [ ...tabs, newTab ]
     setTabs([ ...newTabs ])
     setActiveTab(newTab.tabId)
+    //now we want to set the active file aswell so the sidepanel updates in sync
+    setItemActive(file.fileId, fileType)
 }
 
 export { openTab }

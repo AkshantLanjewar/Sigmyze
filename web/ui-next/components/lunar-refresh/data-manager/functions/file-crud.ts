@@ -15,6 +15,7 @@ const createFileTemplate = (
     fileName: string, 
     fileType: string,
     addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void,
+    setOutputFileId: (fileId: string) => void
 ): ISigmyzeFile => {
     let sigmyzeFile =  {
         fileName: fileName,
@@ -27,6 +28,7 @@ const createFileTemplate = (
     let parsedFileType = fileTypeSplit[1]
 
     addCreateSynchroMessage(fileName, parsedFileType, sigmyzeFile.fileId)
+    setOutputFileId(sigmyzeFile.fileId)
     return sigmyzeFile
 }
 
@@ -53,10 +55,11 @@ const insertFileIntoFolder = (
     fileName: string, 
     fileType: string,
     addCreateSynchroMessage: (fileName: string, fileType: string, fileId: string) => void,
+    setOutputFileId: (fileId: string) => void
 ) => {
     let newFolder = folder
     if(newFolder.folderId === activeFolderId) {
-        newFolder.files.push(createFileTemplate(fileName, fileType, addCreateSynchroMessage))
+        newFolder.files.push(createFileTemplate(fileName, fileType, addCreateSynchroMessage, setOutputFileId))
         return newFolder
     }
 
@@ -64,7 +67,7 @@ const insertFileIntoFolder = (
     //go through all the child folders to see if it can be inserted there
     for(let i = 0; i < newFolder.folders.length; i++) {
         let childFolder = newFolder.folders[i]
-        childFolder = insertFileIntoFolder(childFolder, activeFolderId, fileName, fileType, addCreateSynchroMessage)
+        childFolder = insertFileIntoFolder(childFolder, activeFolderId, fileName, fileType, addCreateSynchroMessage, setOutputFileId)
 
         newChildFolders.push(childFolder)
     }
@@ -127,7 +130,7 @@ const createFile = (
     let newFilesystem = filesystem
     let newFolders = [] as ISigmyzeFolder[]
     if(activeFolderId === "root") {
-        newFilesystem.files.push(createFileTemplate(fileName, fileType, addCreateSynchroMessage))
+        newFilesystem.files.push(createFileTemplate(fileName, fileType, addCreateSynchroMessage, setOutputFileId))
 
         fileOutput.filesystem = newFilesystem
         return fileOutput
@@ -136,7 +139,7 @@ const createFile = (
     //now we are going to iterate thru the folders and check where to insert the file based on the given active folder id
     for(let i = 0; i < newFilesystem.folders.length; i++) {
         let folder = newFilesystem.folders[i]
-        folder = insertFileIntoFolder(folder, activeFolderId, fileName, fileType, addCreateSynchroMessage)
+        folder = insertFileIntoFolder(folder, activeFolderId, fileName, fileType, addCreateSynchroMessage, setOutputFileId)
 
         newFolders.push(folder)
     }
@@ -200,8 +203,10 @@ const grabFile = (
     for(let i = 0; i < filesystem.folders.length; i++) {
         let folder = filesystem.folders[i]
         let file = grabFileRecurse(folder, fileId)
-        if(file !== undefined)
-            return
+        if(file === undefined)
+            continue
+
+        return file
     }
 
     return undefined
