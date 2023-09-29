@@ -5,6 +5,7 @@ import styles from './file-tree-view.module.scss'
 import { IconChevronDown, IconFolder } from "@tabler/icons"
 import { Collapse, UnstyledButton } from "@mantine/core"
 import FileTreeFile from "./file"
+import { isChildActive } from "./functions"
 
 const BASE_PADDING = 15
 const PADDING_INCREMENT = 23
@@ -172,6 +173,17 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
 
         setPaddingLeft(computedPadding)
     }, [order])
+
+    /**
+     * this effect determines if a child element is active or not
+     * if a child element is indeed active, then we will set this folder's open state to opened
+     */
+    useEffect(() => {
+        if(activeItemId === undefined)
+            return
+        if(isChildActive(folder, activeItemId) === true)
+            setOpened(true)
+    }, [activeItemId, folder])
 
     /**
      * this function handles when the folder is clicked on, so as to toggle the 

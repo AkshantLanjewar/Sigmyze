@@ -23,4 +23,15 @@ interface ILunarTab {
     fileId: string
 }
 
-export type { ILunarTab }
+/**
+ * this is the data structure definition for a lunar pane that corresponds to a lunar tab
+ */
+interface ILunarPane {
+    paneId: string,
+    paneContent: JSX.Element
+}
+
+export type { 
+    ILunarTab,
+    ILunarPane 
+}
