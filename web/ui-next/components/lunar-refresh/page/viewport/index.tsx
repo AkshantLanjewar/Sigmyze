@@ -16,7 +16,10 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ }) => {
         let newPanes: ILunarPane[] = []
         for(let i = 0; i < tabs.length; i++) {
             let tab = tabs[i]
-            let newPane = { paneId: tab.tabId } as ILunarPane
+            let newPane = { 
+                paneId: tab.tabId, 
+                paneType: tab.tabType 
+            } as ILunarPane
 
             //now we need to compute what jsx will be on there for the tab's content
             switch(tab.tabType) {

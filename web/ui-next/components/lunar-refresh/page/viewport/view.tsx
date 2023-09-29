@@ -43,8 +43,9 @@ const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, 
                         style={{ flexGrow: 1 }}
                         value={step.paneId}
                         data-testId={'viewport-display'}
+                        data-testvalue={step.paneType}
                     >
-                        
+                        {step.paneContent}
                     </Tabs.Panel>
                 ))}
             </Tabs>

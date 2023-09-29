@@ -27,7 +27,19 @@ interface ILunarTab {
  * this is the data structure definition for a lunar pane that corresponds to a lunar tab
  */
 interface ILunarPane {
+    /**
+     * this is the linked tabId in order to sync up with the tabs
+     */
     paneId: string,
+
+    /**
+     * this is the type of the pane, used to set the testValue of a tabpane
+     */
+    paneType: string,
+
+    /**
+     * this is the jsx element that we want to be stored within the lunar pane
+     */
     paneContent: JSX.Element
 }
 
