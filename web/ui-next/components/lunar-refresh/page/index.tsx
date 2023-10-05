@@ -140,7 +140,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         let newHydratedPortalButtons = hydratePortalButtons(portalButtons, { 
             "new-folder": () => openModal('new-folder-modal'),
             "new-note": () => openModal('new-note-modal'),
-            "new-chart": () => openModal('new-chart-modal')
+            "new-chart": () => openModal('new-chart-modal'),
+            "delete-folder": () => openModal('delete-folder-modal')
         })
 
         setHydratedPortalButtons([...newHydratedPortalButtons])
@@ -152,7 +153,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             description=""
             location="/lunar"
             protectedView={true}
-            portalButtons={portalButtons}
+            portalButtons={hydratedPortalButtons}
         >
             <LunarUIContext
                 portalButtons={hydratedPortalButtons}

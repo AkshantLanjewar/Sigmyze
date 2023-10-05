@@ -225,6 +225,13 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
                                 createFile={createFileCallback}
                             />
                         </ModalManager.Modal>
+
+                        <ModalManager.Modal
+                            id="delete-folder-modal"
+                            title="Delete Folder"
+                        >
+                            
+                        </ModalManager.Modal>
                     </ModalManager>
 
                     {children}
