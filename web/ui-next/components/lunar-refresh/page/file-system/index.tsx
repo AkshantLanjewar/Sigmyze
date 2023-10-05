@@ -36,23 +36,12 @@ interface IFilesystemWrapperProps {
      *  - this is the function that resets the activeId to the root folder in the filesystem
      */
     resetActive: () => void,
-
-    /**
-     * @description
-     *  - this is the function that opens a new tab within the viewport
-     * @param fileId 
-     *  - this is the id of the file we want to open in the viewport
-     */
-    openTab?: (fileId: string) => void
 }
 
-const FileSystemWrapper: React.FC<IFilesystemWrapperProps> = ({ fileSystem, activeItemId, setItemActive, resetActive, openTab }) => {
-    const { setFolderOpenState } = useContext(LunarUIContextData) as ILunarUIState
+const FileSystemWrapper: React.FC<IFilesystemWrapperProps> = ({ fileSystem, activeItemId, setItemActive, resetActive }) => {
+    const { setFolderOpenState, openTab } = useContext(LunarUIContextData) as ILunarUIState
     
     const openTabCallback = useCallback((fileId: string) =>  {
-        if(openTab === undefined)
-            return
-
         openTab(fileId)
     }, [openTab])
 

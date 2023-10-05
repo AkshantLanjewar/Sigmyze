@@ -23,6 +23,10 @@ const PortalButtons: React.FC<IPortalButtonsProps> = memo(({ portalButtons }) =>
                 return
             if(step.portalMenu !== undefined)
                 return <PortalMenuButton button={step} index={index} portalMenu={step.portalMenu} />
+
+            let isDisabled = false
+            if(step.disabled !== undefined)
+                isDisabled = step.disabled
             
             return (
                 <UnstyledButton
@@ -30,6 +34,7 @@ const PortalButtons: React.FC<IPortalButtonsProps> = memo(({ portalButtons }) =>
                     key={`sidebar-portal-${step.buttonId}`}
                     onClick={() => step.onClick()}
                     data-testId={`button-${index}`}
+                    disabled={isDisabled}
                 >
                     <div data-testId={step.buttonId} style={{ height: 24 }}>
                         {React.cloneElement(step.buttonIcon, { "data-testId": step.buttonId })}

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useCallback, useMemo, useState } from "react"
+import { Dispatch, SetStateAction, createContext, useCallback, useEffect, useMemo, useState } from "react"
 import { ILunarUIState } from "./state"
 import { IPortalButton } from "../types"
 import { ISigmyzeFilesystem } from "../../ui/file-management/types"
@@ -10,7 +10,7 @@ import { ISynchroMessage } from "./types"
 import { v4 } from "uuid"
 import NewChartForm from "./forms/new-chart"
 import { ILunarTab } from "../page/viewport/types"
-import { openTab } from "./functions"
+import { closeTab, openTab } from "./functions"
 
 const LunarUIContextData = createContext<ILunarUIState | null>(null)
 
@@ -90,12 +90,15 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
      * This is the callback for the method that creates a folder in the current activeFolderId directory.
      */
     const createFolderCallback = useCallback((folderName: string) => {
-        let newFilesystem = createFolder(activeFolderId, folderName, loadedFilesystem)
-        if(newFilesystem === undefined)
+        let newFilesystemOutput = createFolder(activeFolderId, folderName, loadedFilesystem)
+        if(newFilesystemOutput === undefined)
             return
 
+        let newFilesystem = newFilesystemOutput.filesystem
         setLoadedFilesystem({ ...newFilesystem })
-    }, [loadedFilesystem, activeFolderId])
+        if(newFilesystemOutput.folderId !== undefined)
+            setItemActive(newFilesystemOutput.folderId, "folder")
+    }, [loadedFilesystem, activeFolderId, setItemActive])
 
     /**
      * NOTE: This method is shared out through the context.
@@ -107,6 +110,18 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         
         openTab(loadedFilesystem, fileId, tabs, setTabs, setActiveTab, setItemActive)
     }, [loadedFilesystem, tabs])
+
+    /**
+     * NOTE: This method is shared throghout the context.
+     * This is the callback for the function that closes a tab
+     */
+    const closeTabCallback = useCallback((tabId: string) => {
+        let newTab = closeTab(tabId, tabs, activeTab, setTabs, resetActive)
+        if(newTab === undefined)
+            return
+
+        openTabCallback(newTab.fileId)
+    }, [tabs, activeTab, openTabCallback, resetActive])
 
     /**
      * NOTE: This method is to only be used within the form components.
@@ -155,7 +170,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         setLoadedFilesystem,
         consumeSynchroMessage,
         setFolderOpenState: setFolderOpenStateCallback,
-        openTab: openTabCallback
+        openTab: openTabCallback,
+        closeTab: closeTabCallback
     }), [
         portalButtons,
         activeItemId,
@@ -168,7 +184,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         resetActive,
         consumeSynchroMessage,
         setFolderOpenStateCallback,
-        openTabCallback
+        openTabCallback,
+        closeTabCallback
     ])
 
     return (

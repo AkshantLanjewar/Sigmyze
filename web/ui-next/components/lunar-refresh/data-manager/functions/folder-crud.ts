@@ -6,8 +6,10 @@ import { ISigmyzeFilesystem, ISigmyzeFolder } from "../../../ui/file-management/
  *  - this function is meant to create a simple folder object based on a name
  * @param folderName
  *  - this is the name of the folder we are trying to create
+ * @param setOutputFolderId
+ *  - this is the function that handles the setting of the folderId
  */
-const createFolderHelper = (folderName: string) => {
+const createFolderHelper = (folderName: string, setOutputFolderId: (folderId: string) => void) => {
     let folder: ISigmyzeFolder = {
         folderName: folderName,
         folderId: v4(),
@@ -16,6 +18,7 @@ const createFolderHelper = (folderName: string) => {
         openState: false
     }
 
+    setOutputFolderId(folder.folderId)
     return folder
 }
 
@@ -31,11 +34,18 @@ const createFolderHelper = (folderName: string) => {
  *  - this is the id of the folder we want to insert the new folder into
  * @param folderName
  *  - this is the name of the new folder we want to be created
+ * @param setOutputFolderId
+ *  - this is the function that handles the setting of the folderId
  */
-const insertFolder = (folder: ISigmyzeFolder, activeFolderId: string, folderName: string) => {
+const insertFolder = (
+    folder: ISigmyzeFolder, 
+    activeFolderId: string, 
+    folderName: string,
+    setOutputFolderId: (folderId: string) => void
+) => {
     let newFolder = folder
     if(newFolder.folderId === activeFolderId) {
-        newFolder.folders.push(createFolderHelper(folderName))
+        newFolder.folders.push(createFolderHelper(folderName, setOutputFolderId))
         return newFolder
     }
 
@@ -44,13 +54,18 @@ const insertFolder = (folder: ISigmyzeFolder, activeFolderId: string, folderName
     let folders = newFolder.folders
     for(let i = 0; i < folders.length; i++) {
         let innerFolder = folders[i]
-        innerFolder = insertFolder(innerFolder, activeFolderId, folderName)
+        innerFolder = insertFolder(innerFolder, activeFolderId, folderName, setOutputFolderId)
 
         newInnerFolders.push(innerFolder)
     }
 
     newFolder.folders = newInnerFolders
     return newFolder
+}
+
+interface ICreateFolderOutput {
+    filesystem: ISigmyzeFilesystem,
+    folderId: string | undefined
 }
 
 /**
@@ -66,7 +81,7 @@ const insertFolder = (folder: ISigmyzeFolder, activeFolderId: string, folderName
 const createFolder = (
     activeFolderId: string | undefined, 
     folderName: string, 
-    filesystem: ISigmyzeFilesystem | undefined
+    filesystem: ISigmyzeFilesystem | undefined,
 ) => {
     let newFilesystem = filesystem
     if(activeFolderId === undefined || newFilesystem === undefined)
@@ -74,15 +89,27 @@ const createFolder = (
 
     //since we can only create folders within folders and the root we will only iterate through the folders to create a folder
     let newFolders = [] as ISigmyzeFolder[]
+    let outputFolderId: string | undefined = undefined
+
+    //here is a helper method so that we can track the value of hte created folder id
+    const setOutputFolderId = (folderId: string) => {
+        outputFolderId = folderId
+    }
+
     for(let i = 0; i < newFilesystem.folders.length; i++) {
         let folder = newFilesystem.folders[i]
-        folder = insertFolder(folder, activeFolderId, folderName)
+        folder = insertFolder(folder, activeFolderId, folderName, setOutputFolderId)
 
         newFolders.push(folder)
     }
 
     newFilesystem.folders = newFolders
-    return newFilesystem
+    //create the output object
+    let outputObject = {} as ICreateFolderOutput
+    outputObject.filesystem = newFilesystem
+    outputObject.folderId = outputFolderId
+
+    return outputObject
 }
 
 /**

@@ -48,10 +48,16 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
      * NOTE: This is an internal function, and should not be used outside of this component.
      * This function sets the list of rendered buttons by matching the portalId with preset buttons created in portal-buttons.tsx.
      */
-    const assignPortalButtons = useCallback((portalId: string) => {
+    const assignPortalButtons = useCallback((portalId: string, itemId: string) => {
         switch(portalId) {
             case "folder":
-                setPortalButtons([ ...PORTAL_BUTTONS_FOLDER ])
+                let folderPortalButtons = PORTAL_BUTTONS_FOLDER
+                if(itemId === "project-root")
+                    folderPortalButtons[1].disabled = true
+                else
+                    folderPortalButtons[1].disabled = false
+
+                setPortalButtons([ ...folderPortalButtons ])
                 break
             case "chart":
                 setPortalButtons([ ...PORTAL_BUTTONS_CHART ])
@@ -73,7 +79,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         if(itemType === "folder")
             setActiveFolderId(itemId)
 
-        assignPortalButtons(itemType)
+        assignPortalButtons(itemType, itemId)
         setActiveItemId(itemId)
     }, [])
 
@@ -109,7 +115,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         if(testingPortal === undefined)
             return
 
-        assignPortalButtons(testingPortal)
+        assignPortalButtons(testingPortal, "")
         setActiveItemId('testing')
         setDebugMode(true)
     }, [testingPortal])

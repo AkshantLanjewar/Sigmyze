@@ -87,11 +87,13 @@ interface ILunarUIState {
     setFolderOpenState: (folderId: string, openState: boolean) => void,
 
     /**
-     * this is the functin that opens a tab within the viewport
+     * this is the function that opens a tab within the viewport
      * @param fileId    
      *  - the id of the file who we want to open a tab for
      */
     openTab: (fileId: string) => void
+
+    closeTab: (tabId: string) => void
 }
 
 export type { ILunarUIState }

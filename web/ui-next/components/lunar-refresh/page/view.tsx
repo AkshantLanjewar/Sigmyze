@@ -60,11 +60,11 @@ const LunarRefreshView: React.FC<IViewProps> = memo(({
 
                                     <div>
                                         <UnstyledButton>
-                                            <TbFolderPlus size={10} />
+                                            <TbFolderPlus size={14} />
                                         </UnstyledButton>
 
                                         <UnstyledButton>
-                                            <TbIrregularPolyhedronPlus size={10} />
+                                            <TbIrregularPolyhedronPlus size={14} />
                                         </UnstyledButton>
                                     </div>
                                 </div>

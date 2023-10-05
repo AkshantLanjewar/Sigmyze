@@ -58,4 +58,72 @@ const openTab = (
     setItemActive(file.fileId, fileType)
 }
 
-export { openTab }
+/**
+ * @description
+ *  - this function handles the closing of a tab, and if the tab was active, left shift the current active tab to the tab that was to the left.
+ * @param tabId 
+ *  - this is the id of the tab we are going to delete
+ * @param tabs 
+ *  - this is the list of active tabs within the editor
+ * @param activeItemId
+ *  - this is the active file or folder within the ui-context
+ * @param setTabs
+ *  - this is the function that allows us to update the tabs within the editor
+ * @param resetActive
+ *  - this function resets the active item to the root folder
+ */
+const closeTab = (
+    tabId: string, 
+    tabs: ILunarTab[],
+    activeItemId: string | null,
+    setTabs: (tabs: ILunarTab[]) => void,
+    resetActive: () => void
+) => {
+    let newTabs: ILunarTab[] = []
+    //we want to make a copy of the tab list so we can handle the left-shift later
+    let tabsCopy = tabs
+    //we want to store the delete index for the later left-shift
+    let deleteIndex: number | undefined = undefined
+
+    //we will first go through and delete the tab from the tab list
+    for(let i = 0; i < tabs.length; i++) {
+        let tab = tabs[i]
+        if(tab.tabId === tabId) {
+            deleteIndex = i
+            continue
+        }
+
+        newTabs.push(tab)
+    }
+
+    if(deleteIndex === undefined)
+        return
+
+    setTabs([ ...newTabs ])
+    //if the tab is active, we want to shift the active tab over 1 space to the left
+    if(tabId === activeItemId) {
+        let newActiveIndex: number | undefined = 0
+
+        //if there are no tabs we want to reset the active item to the root folder
+        if(newTabs.length === 0) {
+            resetActive()
+            newActiveIndex = undefined
+        }
+        //if the delete index was at the end of the list, we want to set the active index to deleteIndex - 1
+        else if(deleteIndex === tabsCopy.length - 1)
+            newActiveIndex = deleteIndex - 1
+        else if(deleteIndex !== tabsCopy.length - 1)
+            newActiveIndex = deleteIndex
+
+        //if there is an active index, we want to set the focus to that tab
+        if(newActiveIndex !== undefined) {
+            let newActiveTab = newTabs[newActiveIndex]
+            return newActiveTab
+        }
+    }
+}
+
+export { 
+    openTab,
+    closeTab 
+}

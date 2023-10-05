@@ -1,8 +1,34 @@
-import { Tabs } from '@mantine/core'
+import { ActionIcon, Tabs } from '@mantine/core'
 import styles from '../lunar-refresh.module.scss'
-import { Dispatch, SetStateAction, memo } from 'react'
+import { Dispatch, SetStateAction, memo, useContext } from 'react'
 import { ILunarPane, ILunarTab } from './types'
 import { IconFileRenderer } from '../../../ui/file-management/file-tree-view/file'
+import { LunarUIContextData } from '../../ui-context'
+import { ILunarUIState } from '../../ui-context/state'
+import { IconX } from '@tabler/icons'
+
+interface ICloseButtonProps {
+    tabId: string
+}
+
+const CloseButton: React.FC<ICloseButtonProps> = ({ tabId }) => {
+    const { closeTab } = useContext(LunarUIContextData) as ILunarUIState
+
+    return (
+        <ActionIcon
+            variant={"transparent"}
+            color="red"
+            aria-label="close"
+            onClick={(e) => {
+                e.stopPropagation()
+                closeTab(tabId)
+            }}
+            size={"sm"}
+        >
+            <IconX style={{ width: '70%', height: '70%' }} stroke={1.5} />
+        </ActionIcon>
+    )
+}
 
 /**
  * NOTE: The data-testId viewport-display only goes on the tab panels
@@ -12,10 +38,11 @@ interface IViewProps {
     activeTab: string | null,
     tabs: ILunarTab[],
     panes: ILunarPane[],
-    setActiveTab: (val: string | null) => void,
+    paneType: string | undefined,
+    setActiveTab: (val: string | null) => void
 }
 
-const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, setActiveTab }) => {
+const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, paneType, setActiveTab }) => {
     return (
         <div className={styles.lunar__viewport} data-testId={'viewport'}>
             <Tabs
@@ -32,22 +59,28 @@ const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, 
                             data-testId={`viewport-tab-${index}`}
                             icon={IconFileRenderer(step.tabType)}
                             data-testValue={`${activeTab === step.tabId ? 'active' : ''}`}
+                            rightSection={<CloseButton tabId={step.tabId} />}
+                            key={step.tabId + activeTab}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}
                         >
                             {step.tabName}
                         </Tabs.Tab>
                     ))}
                 </Tabs.List>
-
-                {panes.map((step) => (
-                    <Tabs.Panel
-                        style={{ flexGrow: 1 }}
-                        value={step.paneId}
-                        data-testId={'viewport-display'}
-                        data-testvalue={step.paneType}
-                    >
-                        {step.paneContent}
-                    </Tabs.Panel>
-                ))}
+                
+                <div data-testId={'viewport-display'} data-testvalue={paneType}>
+                    {panes.map((step) => (
+                        <Tabs.Panel
+                            style={{ flexGrow: 1 }}
+                            value={step.paneId}
+                        >
+                            {step.paneContent}
+                        </Tabs.Panel>
+                    ))}
+                </div>
             </Tabs>
         </div>
     )

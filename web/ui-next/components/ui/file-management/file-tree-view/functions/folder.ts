@@ -17,6 +17,13 @@ const isChildActive = (folder: ISigmyzeFolder, activeItemId: string) => {
             return true
     }
 
+    //then we want to look through the root folders in the folder
+    for(let i = 0; i < folder.folders.length; i++) {
+        let _folder = folder.folders[i]
+        if(_folder.folderId === activeItemId)
+            return true
+    }
+
     //now we want to recursively check all the folders within this folder
     for(let i = 0; i < folder.folders.length; i++) {
         let testFolder = folder.folders[i]
