@@ -41,8 +41,10 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ }) => {
     //TODO: Implement a system where we can get the pane type so we can add it to the div cuz mantine :(
     useEffect(() => {
         let activePane: ILunarPane | undefined = undefined
-        if(activeTab === undefined)
+        if(activeTab === undefined) {
+            setPaneType(undefined)
             return
+        }
 
         //loop through the panes to find the active pane
         for(let i = 0; i < panes.length; i++) {

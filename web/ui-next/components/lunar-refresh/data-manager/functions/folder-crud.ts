@@ -1,5 +1,6 @@
 import { v4 } from "uuid"
 import { ISigmyzeFilesystem, ISigmyzeFolder } from "../../../ui/file-management/types"
+import { pruneFolderFiles } from "./file-crud"
 
 /**
  * @description
@@ -113,6 +114,97 @@ const createFolder = (
 }
 
 /**
+ * NOTE: This function is only meant to be used within the context of the deleteFolder function.
+ * @description
+ *  - This function handles the deleting of a folder, and all the files within it
+ * @param folderId 
+ *  - this is the id of the folder we are trying to delete
+ * @param folders 
+ *  - this is the list of folders provided to the function
+ * @param addDeleteSynchroMessage 
+ *  - this is the function that sends a synchro message to delete a file's data
+ * @param closeTabFileId
+ *  - this is the function that closes a tab based on its fileId, used for pruning files
+ * @param setItemActive
+ *  - this is the function that handles the setting of the active item within the sidebar
+ * @param parentId
+ *  - this is the id of the parent folder when recursing through folders.
+ *  - Field is used due to the fact the project is created as the root folder
+ */
+const deleteFolderRecurse = (
+    folderId: string,
+    folders: ISigmyzeFolder[],
+    addDeleteSynchroMessage: (fileType: string, fileId: string) => void,
+    closeTabFileId: (fileId: string) => void,
+    setItemActive: (itemId: string, itemType: string) => void,
+    parentId?: string
+) => {
+    let newFolders: ISigmyzeFolder[] = []
+    for(let i = 0; i  < folders.length; i++) {
+        let folder = folders[i]
+        if(folder.folderId === folderId) {
+            pruneFolderFiles(folder, addDeleteSynchroMessage, closeTabFileId)
+            if(parentId !== undefined)
+                setItemActive(parentId, "folder")
+
+            continue
+        }
+
+        //now we need to go through and recursively do the folders
+        folder.folders = deleteFolderRecurse(
+            folderId, 
+            folder.folders, 
+            addDeleteSynchroMessage, 
+            closeTabFileId,
+            setItemActive,
+            folder.folderId
+        )
+
+        newFolders.push(folder)
+    }
+
+    return newFolders
+}
+
+/**
+ * @description
+ *  - this is the function that handles the deleting of a folder, and all of its file contents as well
+ * @param folderId 
+ *  - this is the id of the folder we want to delete
+ * @param filesystem 
+ *  - this is the filesystem where we are going to delete the folder
+ * @param addDeleteSynchroMessage 
+ *  - this is the function that sends a synchro message to delete a file's data
+ * @param setItemActive
+ *  - this is the function that handles the setting of the active item within the sidebar
+ * @param addCloseFileIdTabBulk
+ *  - this is the function that bulk adds close requests
+ */
+const deleteFolder = (
+    folderId: string,
+    filesystem: ISigmyzeFilesystem,
+    addDeleteSynchroMessage: (fileType: string, fileId: string) => void,
+    setItemActive: (itemId: string, itemType: string) => void,
+    addCloseFileIdTabBulk: (fileIds: string[]) => void
+) => {
+    let collectedCloseTabs: string[] = []
+    const collectCloseTab = (fileId: string) =>
+        collectedCloseTabs.push(fileId)
+
+    let newFilesystem = filesystem
+    newFilesystem.folders = deleteFolderRecurse(
+        folderId, 
+        newFilesystem.folders, 
+        addDeleteSynchroMessage, 
+        collectCloseTab,
+        setItemActive
+    )
+    
+    addCloseFileIdTabBulk(collectedCloseTabs)
+    return newFilesystem
+}
+
+/**
  * NOTE: This function is only meant to be used within the setFolderState function
  * usage outside may caused undefined behavior
  * 
@@ -180,4 +272,8 @@ const setFolderOpenState = (
     return newFilesystem
 }
 
-export { createFolder, setFolderOpenState }
+export { 
+    createFolder, 
+    setFolderOpenState,
+    deleteFolder 
+}

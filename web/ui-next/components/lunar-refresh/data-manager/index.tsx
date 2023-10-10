@@ -76,7 +76,7 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
     }, [charts])
 
     /**
-     * NOTE: This function should onlybe used within the data context
+     * NOTE: This function should only be used within the data context
      * 
      * @description
      *  - this is the function that handles the creation ofa new note within the data context.
@@ -92,6 +92,48 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
         }
 
         setNotes([ ...notes, newNote ])
+    }, [notes])
+
+    /**
+     * NOTE: This function should only be used within the data context
+     * 
+     * @description
+     *  - this is the function that handles the deletion of a chart within the data context
+     * @param fileId
+     *  - this is the id of the chart we are going to delete
+     */
+    const deleteChart = useCallback((fileId: string) => {
+        let newCharts: ILunarChart[] = []
+        for(let i = 0; i < charts.length; i++) {
+            let chart = charts[i]
+            if(chart.objectId === fileId)
+                continue
+
+            newCharts.push(chart)
+        }
+
+        setCharts([ ...newCharts ])
+    }, [charts])
+
+    /**
+     * NOTE: This function should only be used within the data context
+     * 
+     * @description
+     *  - this is the function that handles the deletion of a note within the data context
+     * @param fileId
+     *  - this is the id of the note we are going to delete
+     */
+    const deleteNote = useCallback((fileId: string) => {
+        let newNotes: ILunarNote[] = []
+        for(let i = 0; i < notes.length; i++) {
+            let note = notes[i]
+            if(note.objectId === fileId)
+                continue
+
+            newNotes.push(note)
+        }
+
+        setNotes([ ...newNotes ])
     }, [notes])
 
     /**
@@ -192,6 +234,18 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
                     createNewChart(fileName, fileId)
                 if(fileType === "note")
                     createNewNote(fileName, fileId)
+            case "DELETE":
+                //TODO: Implement delete synchro messages
+                let delete_split = messageData.split("::")
+                //here are the parts from the string
+                let fileTypeDelete = delete_split[0]
+                let fileIdDelete = delete_split[1]
+
+                if(fileTypeDelete === "chart")
+                    deleteChart(fileIdDelete)
+                if(fileTypeDelete === "note")
+                    deleteNote(fileIdDelete)
+                break
             default:
                 return
         }

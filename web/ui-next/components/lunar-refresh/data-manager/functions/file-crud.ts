@@ -77,6 +77,36 @@ const insertFileIntoFolder = (
 }
 
 /**
+ * @description
+ *  - This is the function that prunes all the file data when a folder is deleted
+ * @param folder 
+ *  - this is the folder that is being deleted
+ * @param addDeleteSynchroMessage 
+ *  - this is the function that sends a synchro message to delete a file's data
+ * @param closeTabFileId
+ *  - this is the function that closes a tab based on its fileId, used for pruning files
+ */
+const pruneFolderFiles = (
+    folder: ISigmyzeFolder,
+    addDeleteSynchroMessage: (fileType: string, fileId: string) => void,
+    closeTabFileId: (fileId: string) => void
+) => {
+    //first we want to go through and add all the file delete synchro messages
+    for(let i = 0; i < folder.files.length; i++) {
+        let file = folder.files[i]
+
+        closeTabFileId(file.fileId)
+        addDeleteSynchroMessage(file.fileType, file.fileId)
+    }
+
+    //then we want to go through and recursively prune all the subfolders as well
+    for(let i = 0; i < folder.folders.length; i++) {
+        let _folder = folder.folders[i]
+        pruneFolderFiles(_folder, addDeleteSynchroMessage, closeTabFileId)
+    }
+}
+
+/**
  * This is the datastructure definition for the create file output
  */
 interface ICreateFileOutput {
@@ -214,5 +244,6 @@ const grabFile = (
 
 export { 
     createFile,
-    grabFile 
+    grabFile,
+    pruneFolderFiles 
 }

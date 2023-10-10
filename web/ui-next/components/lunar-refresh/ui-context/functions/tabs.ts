@@ -58,6 +58,27 @@ const openTab = (
     setItemActive(file.fileId, fileType)
 }
 
+const closeTabFileId = (
+    fileId: string,
+    tabs: ILunarTab[],
+    activeItemId: string | null,
+    setTabs: (tabs: ILunarTab[]) => void,
+    resetActive: () => void
+) => {
+    //this is basically a wrapper function , so we need to find the tabid
+    let tabId: string | undefined = undefined
+    for(let i = 0; i < tabs.length; i++) {
+        let tab = tabs[i]
+        if(tab.fileId === fileId)
+            tabId = tab.tabId
+    }
+
+    if(tabId === undefined)
+        return
+
+    return closeTab(tabId, tabs, activeItemId, setTabs, resetActive)
+}
+
 /**
  * @description
  *  - this function handles the closing of a tab, and if the tab was active, left shift the current active tab to the tab that was to the left.
@@ -125,5 +146,6 @@ const closeTab = (
 
 export { 
     openTab,
-    closeTab 
+    closeTab,
+    closeTabFileId 
 }

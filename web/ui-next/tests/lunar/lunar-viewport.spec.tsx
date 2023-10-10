@@ -391,14 +391,14 @@ test('Lunar Refresh Viewport + Folder Deletion integration test', async ({ mount
     await expect(confirmCheckbox).toBeAttached()
 
     //now we need to check the submit button is disabled
-    await expect(submitButton).toHaveAttribute("disabled", "true")
+    await expect(submitButton).toBeDisabled()
 
     //now we want to check the checkbox
     const confirmCheckboxRaw = confirmCheckbox.locator('input')
     await confirmCheckboxRaw.click()
 
     //now we need to check the submit button is not disabled and click it
-    await expect(submitButton).not.toHaveAttribute("disabled", "true")
+    await expect(submitButton).not.toBeDisabled()
     await submitButton.click()
 
     //folder-0 has 0 children
@@ -406,7 +406,7 @@ test('Lunar Refresh Viewport + Folder Deletion integration test', async ({ mount
     await expect(projectFolderChildren.locator('> button')).toHaveCount(0)
 
     //viewport tabs has 0 children
-    await expect(viewportTabs.locator('> button')).toHaveCount(2)
+    await expect(viewportTabs.locator('> button')).toHaveCount(0)
 
     //we need to check if viewportViewport is undefined
     const viewportViewportValueUndefined = await viewportViewport.getAttribute('data-testValue')
@@ -414,6 +414,9 @@ test('Lunar Refresh Viewport + Folder Deletion integration test', async ({ mount
 
     //now we click on folder-0 again
     await projectFolder.locator('button').first().click()
+
+    //now we need to click on buttonZero again
+    await buttonZero.click()
 
     //click new note button
     await newNoteButton.click()
@@ -436,7 +439,7 @@ test('Lunar Refresh Viewport + Folder Deletion integration test', async ({ mount
     await expect(viewportNoteMatchTest).toBe("note")
 
     //now we want to close the dummy note
-    const dummyNoteTabClose = dummyNoteTab.locator(closeTabLocator)
+    const dummyNoteTabClose = dummyNoteTab.getByTestId(closeTabLocator)
     await dummyNoteTabClose.click()
 
     //now viewport-viewport should be undefined

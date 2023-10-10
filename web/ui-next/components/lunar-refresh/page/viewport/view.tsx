@@ -19,6 +19,7 @@ const CloseButton: React.FC<ICloseButtonProps> = ({ tabId }) => {
             variant={"transparent"}
             color="red"
             aria-label="close"
+            data-testId={'close-tab'}
             onClick={(e) => {
                 e.stopPropagation()
                 closeTab(tabId)
@@ -71,7 +72,7 @@ const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, 
                     ))}
                 </Tabs.List>
                 
-                <div data-testId={'viewport-display'} data-testvalue={paneType}>
+                <div data-testId={'viewport-display'} data-testvalue={paneType ? paneType : "undefined"}>
                     {panes.map((step) => (
                         <Tabs.Panel
                             style={{ flexGrow: 1 }}
