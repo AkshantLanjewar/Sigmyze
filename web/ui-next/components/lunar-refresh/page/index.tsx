@@ -42,14 +42,22 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
     //this is the state of the modal controller within the UI context
     const [modalState, setModalState] = useState<string | null>(null)
 
+    
+
     /**
      * NOTE: This is an internal function, and should not be used outside of this component.
      * This function sets the list of rendered buttons by matching the portalId with preset buttons created in portal-buttons.tsx.
      */
-    const assignPortalButtons = useCallback((portalId: string) => {
+    const assignPortalButtons = useCallback((portalId: string, itemId: string) => {
         switch(portalId) {
             case "folder":
-                setPortalButtons([ ...PORTAL_BUTTONS_FOLDER ])
+                let folderPortalButtons = PORTAL_BUTTONS_FOLDER
+                if(itemId === "project-root")
+                    folderPortalButtons[1].disabled = true
+                else
+                    folderPortalButtons[1].disabled = false
+
+                setPortalButtons([ ...folderPortalButtons ])
                 break
             case "chart":
                 setPortalButtons([ ...PORTAL_BUTTONS_CHART ])
@@ -71,7 +79,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         if(itemType === "folder")
             setActiveFolderId(itemId)
 
-        assignPortalButtons(itemType)
+        assignPortalButtons(itemType, itemId)
         setActiveItemId(itemId)
     }, [])
 
@@ -107,7 +115,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         if(testingPortal === undefined)
             return
 
-        assignPortalButtons(testingPortal)
+        assignPortalButtons(testingPortal, "")
         setActiveItemId('testing')
         setDebugMode(true)
     }, [testingPortal])
@@ -132,7 +140,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         let newHydratedPortalButtons = hydratePortalButtons(portalButtons, { 
             "new-folder": () => openModal('new-folder-modal'),
             "new-note": () => openModal('new-note-modal'),
-            "new-chart": () => openModal('new-chart-modal')
+            "new-chart": () => openModal('new-chart-modal'),
+            "folder-delete": () => openModal('delete-folder-modal')
         })
 
         setHydratedPortalButtons([...newHydratedPortalButtons])
@@ -144,7 +153,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             description=""
             location="/lunar"
             protectedView={true}
-            portalButtons={portalButtons}
+            portalButtons={hydratedPortalButtons}
         >
             <LunarUIContext
                 portalButtons={hydratedPortalButtons}

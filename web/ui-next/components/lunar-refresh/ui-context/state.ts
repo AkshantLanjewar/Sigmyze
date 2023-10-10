@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { IPortalButton } from "../types";
 import { ISigmyzeFilesystem } from "../../ui/file-management/types";
 import { ISynchroMessage } from "./types";
+import { ILunarTab } from "../page/viewport/types";
 
 /**
  * theese are the components that are shared from the Lunar UI Context
@@ -36,6 +37,23 @@ interface ILunarUIState {
     messagesLeft: number,
 
     /**
+     * theese are the tabs that are opened within the lunar viewport
+     */
+    tabs: ILunarTab[],
+
+    /**
+     * this is the active tab for the tab view
+     */
+    activeTab: string | null,
+
+    /**
+     * this is the function that can change the active tab
+     * @param activeTab 
+     *  - the new value for the active tab state.
+     */
+    setActiveTab: (activeTab: string | null) => void,
+
+    /**
      * this is the function that sets which nodeId should be active within the file tree displayed in the explorer.
      * @param itemId 
      *  this is the id of the item we want to be set active
@@ -66,7 +84,16 @@ interface ILunarUIState {
      * @param openState 
      *  this is the open state of the folder, wether it is opened or not
      */
-    setFolderOpenState: (folderId: string, openState: boolean) => void
+    setFolderOpenState: (folderId: string, openState: boolean) => void,
+
+    /**
+     * this is the function that opens a tab within the viewport
+     * @param fileId    
+     *  - the id of the file who we want to open a tab for
+     */
+    openTab: (fileId: string) => void
+
+    closeTab: (tabId: string) => void
 }
 
 export type { ILunarUIState }

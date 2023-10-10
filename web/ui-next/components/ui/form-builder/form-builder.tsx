@@ -10,7 +10,8 @@ interface IFormBuilderProps {
     defaultValue?: {[key: string]: any},
     loading?: boolean,
     loadingStr?: string,
-    submitText?: string
+    submitText?: string,
+    submitStoreDependency?: string
 }
 
 const FormBuilder: React.FC<IFormBuilderProps> = ({ 
@@ -19,9 +20,11 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({
     submit, 
     defaultValue, 
     loadingStr,
-    submitText 
+    submitText,
+    submitStoreDependency 
 }) => {
     const [valStore, setValStore] = useState<{[key: string]: any}>({})
+    const [submitDisabled, setSubmitDisabled] = useState(false)
 
     useEffect(() => {
         if(defaultValue === undefined)
@@ -38,6 +41,22 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({
 
         setValStore({ ...nValStore })
     }, [defaultValue])
+
+    useEffect(() => {
+        setSubmitDisabled(false)
+        if(submitStoreDependency === undefined)
+            return
+
+        let valKeys = Object.keys(valStore)
+        if(valKeys.includes(submitStoreDependency) === false)
+            return
+
+        let submitStoreValue = valStore[submitStoreDependency]
+        if(submitStoreValue === "true")
+            setSubmitDisabled(false)
+        else
+            setSubmitDisabled(true)
+    }, [submitStoreDependency, valStore])
 
     function getValue(id: string) {
         return valStore[id]
@@ -85,6 +104,7 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({
                         size={'xs'}
                         px={'xs'}
                         data-testId={'submit-button'}
+                        disabled={submitDisabled}
                         onClick={() => { submit(forms, valStore) }}
                     >
                         {submitText

@@ -32,7 +32,13 @@ interface IPortalButton {
      * NOTE: This field is optional, and is not critical to the functioning of the portal button.
      * This is the definition for if the portal button activates a menu or not.
      */
-    portalMenu?: IPortalButtonMenu
+    portalMenu?: IPortalButtonMenu,
+
+    /**
+     * NOTE: This field is optional and is not needed for a functioning portal button.
+     * This determines whether or not the portal button is disabled or not
+     */
+    disabled?: boolean
 }
 
 /**

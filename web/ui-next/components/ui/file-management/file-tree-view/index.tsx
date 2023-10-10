@@ -43,7 +43,15 @@ interface IFileTreeViewProps {
      * @param openState 
      *  this is the open state of the folder, wether it is opened or not
      */
-    setFolderOpenState?: (folderId: string, openState: boolean) => void
+    setFolderOpenState?: (folderId: string, openState: boolean) => void,
+
+    /**
+     * @description
+     *  - this is the function that opens a new tab within the viewport
+     * @param fileId 
+     *  - this is the id of the file we want to open in the viewport
+     */
+    openTab: (fileId: string) => void
 }
 
 const FileTreeView: React.FC<IFileTreeViewProps> = ({ 
@@ -51,7 +59,8 @@ const FileTreeView: React.FC<IFileTreeViewProps> = ({
     activeItemId,
     setItemActive,
     resetActive,
-    setFolderOpenState 
+    setFolderOpenState,
+    openTab 
 }) => {
     //theese are the root level folders in the filesystem
     const [folders, setFolders] = useState<ISigmyzeFolder[]>([])
@@ -86,6 +95,7 @@ const FileTreeView: React.FC<IFileTreeViewProps> = ({
             activeItemId={activeItemId}
             setItemActive={setItemActive}
             setFolderOpenStateCallback={setFolderOpenStateCallback}
+            openTab={openTab}
         />
     )
 }
@@ -126,10 +136,18 @@ interface IViewProps {
      * @param openState 
      *  this is the open state of the folder, wether it is opened or not
      */
-    setFolderOpenStateCallback: (folderId: string, openState: boolean) => void
+    setFolderOpenStateCallback: (folderId: string, openState: boolean) => void,
+
+    /**
+     * @description
+     *  - this is the function that opens a new tab within the viewport
+     * @param fileId 
+     *  - this is the id of the file we want to open in the viewport
+     */
+    openTab: (fileId: string) => void    
 }
 
-const View: React.FC<IViewProps> = memo(({ folders, files, activeItemId, setItemActive, setFolderOpenStateCallback }) => (
+const View: React.FC<IViewProps> = memo(({ folders, files, activeItemId, setItemActive, setFolderOpenStateCallback, openTab }) => (
     <div data-testid={'file-dropdown-container'} className={styles.dropdownContainer}>
         {folders.map((step, index) => (
             <FileTreeFolder 
@@ -141,6 +159,7 @@ const View: React.FC<IViewProps> = memo(({ folders, files, activeItemId, setItem
                 setItemActive={setItemActive}
                 key={`${step.folderId}-${step.folders.length}-${step.files.length}`}
                 setFolderOpenState={setFolderOpenStateCallback}
+                openTab={openTab}
             />
         ))}
 
@@ -152,6 +171,7 @@ const View: React.FC<IViewProps> = memo(({ folders, files, activeItemId, setItem
                 activeItemId={activeItemId}
                 setItemActive={setItemActive}
                 key={step.fileId}
+                openTab={openTab}
             />
         ))}
     </div>

@@ -32,4 +32,6 @@ interface ISynchroMessage {
     messageData: string
 }
 
+
+
 export type { ISynchroMessage }

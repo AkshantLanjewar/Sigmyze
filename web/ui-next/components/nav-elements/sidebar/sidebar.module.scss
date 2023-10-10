@@ -3,6 +3,7 @@ $dark-5: var(--mantine-color-dark-5);
 $dark7: var(--mantine-color-dark-7);
 $indigo-6: var(--mantine-color-indigo-6);
 
+
 //colors to map with js
 $gray: #C1C2C5;
 $red: #FF6B6B;
@@ -115,6 +116,19 @@ $blue: #4C6EF5;
                 &:hover {
                     background-color: $blue;
                     color: #FFFFFF;
+                }
+            }
+
+            &:disabled {
+                background-color: rgb(37, 38, 43);
+                border-color: rgb(37, 38, 43);
+                color: rgb(92, 95, 102);
+                cursor: not-allowed;
+
+                &:hover {
+                    background-color: rgb(37, 38, 43);
+                    border-color: rgb(37, 38, 43);
+                    color: rgb(92, 95, 102);
                 }
             }
         }

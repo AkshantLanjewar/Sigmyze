@@ -5,6 +5,7 @@ import styles from './file-tree-view.module.scss'
 import { IconChevronDown, IconFolder } from "@tabler/icons"
 import { Collapse, UnstyledButton } from "@mantine/core"
 import FileTreeFile from "./file"
+import { isChildActive } from "./functions"
 
 const BASE_PADDING = 15
 const PADDING_INCREMENT = 23
@@ -63,7 +64,15 @@ interface IFileTreeFolderProps {
      * @param openState 
      *  this is the open state of the folder, wether it is opened or not
      */
-    setFolderOpenState: (folderId: string, openState: boolean) => void
+    setFolderOpenState: (folderId: string, openState: boolean) => void,
+
+    /**
+     * @description
+     *  - this is the function that opens a new tab within the viewport
+     * @param fileId 
+     *  - this is the id of the file we want to open in the viewport
+     */
+    openTab: (fileId: string) => void 
 }
 
 /**
@@ -78,7 +87,8 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
     isChild, 
     activeItemId,
     setItemActive,
-    setFolderOpenState 
+    setFolderOpenState,
+    openTab 
 }) => {
     //theese are the child components of the folder
     const [folders, setFolders] = useState<ISigmyzeFolder[]>([])
@@ -165,6 +175,17 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
     }, [order])
 
     /**
+     * this effect determines if a child element is active or not
+     * if a child element is indeed active, then we will set this folder's open state to opened
+     */
+    useEffect(() => {
+        if(activeItemId === undefined)
+            return
+        if(isChildActive(folder, activeItemId) === true)
+            setOpened(true)
+    }, [activeItemId, folder])
+
+    /**
      * this function handles when the folder is clicked on, so as to toggle the 
      * folder open / close state
      */
@@ -197,6 +218,7 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
             onClickHandler={onClickHandler}
             setItemActive={setItemActive}
             setFolderOpenState={setFolderOpenState}
+            openTab={openTab}
         />
     )
 }
@@ -283,7 +305,15 @@ interface IViewProps {
      * @param openState 
      *  this is the open state of the folder, wether it is opened or not
      */
-    setFolderOpenState: (folderId: string, openState: boolean) => void
+    setFolderOpenState: (folderId: string, openState: boolean) => void,
+
+    /**
+     * @description
+     *  - this is the function that opens a new tab within the viewport
+     * @param fileId 
+     *  - this is the id of the file we want to open in the viewport
+     */
+    openTab: (fileId: string) => void 
 }
 
 const View: React.FC<IViewProps> = memo(({
@@ -300,11 +330,12 @@ const View: React.FC<IViewProps> = memo(({
     active,
     onClickHandler,
     setItemActive,
-    setFolderOpenState
+    setFolderOpenState,
+    openTab
 }) => (
     <div
         data-testId={`container-folder-${index}${appendChild ? "::child" : ""}`} 
-        data-testValue={'element-folder'}
+        data-testvalue={'element-folder'}
         style={{ width: "100%" }}
     >
         <UnstyledButton 
@@ -346,6 +377,7 @@ const View: React.FC<IViewProps> = memo(({
                         setItemActive={setItemActive}
                         key={`${step.folderId}-${step.folders.length}-${step.files.length}`}
                         setFolderOpenState={setFolderOpenState}
+                        openTab={openTab}
                     />
                 ))}
 
@@ -358,6 +390,7 @@ const View: React.FC<IViewProps> = memo(({
                         activeItemId={activeItemId}
                         setItemActive={setItemActive}
                         key={step.fileId}
+                        openTab={openTab}
                     />
                 ))}
             </div>

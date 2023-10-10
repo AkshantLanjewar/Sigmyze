@@ -45,6 +45,7 @@ const PORTAL_BUTTONS_FOLDER = [
         buttonColor: "red",
         buttonIcon: <IconTrash />,
         buttonId: "folder-delete",
+        disabled: false,
         onClick: () => {}
     }
 ] as IPortalButton[]
