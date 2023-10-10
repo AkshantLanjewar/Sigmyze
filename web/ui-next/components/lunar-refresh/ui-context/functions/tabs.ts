@@ -58,6 +58,20 @@ const openTab = (
     setItemActive(file.fileId, fileType)
 }
 
+/**
+ * @description
+ *  - this is the function that closes a tab based on a given fileId
+ * @param fileId 
+ *  - this is the fileId of the tab we want to close
+ * @param tabs 
+ *  - theese are the current tabs open within the editor
+ * @param activeItemId 
+ *  - this is the active item within the sidebar
+ * @param setTabs 
+ *  - this is the function that can update the open tabs within the editor
+ * @param resetActive 
+ *  - resets the active item in the sidebar to the root project folder
+ */
 const closeTabFileId = (
     fileId: string,
     tabs: ILunarTab[],

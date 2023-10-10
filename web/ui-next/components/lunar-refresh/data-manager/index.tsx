@@ -108,7 +108,7 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
             let chart = charts[i]
             if(chart.objectId === fileId)
                 continue
-
+            
             newCharts.push(chart)
         }
 

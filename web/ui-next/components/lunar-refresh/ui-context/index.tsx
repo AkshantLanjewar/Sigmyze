@@ -152,7 +152,11 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         openTabCallback(newTab.fileId)
     }, [tabs, activeTab, openTabCallback, resetActive])
 
-    //TODO: Implement Close Tab Queue add bulk
+    /**
+     * NOTE: Meant to only be used within the context.
+     * @description
+     *  - this is the function that adds a bulk amount of fileId's to the close tab queue
+     */
     const addCloseFileIdTabBulk = useCallback((fileIds: string[]) => {
         let newCloseTabQueue = closeTabQueue.current
         for(let i = 0; i < fileIds.length; i++) {
@@ -164,6 +168,11 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         setCloseTabLength(newCloseTabQueue.length)
     }, [])
 
+    /**
+     * NOTE: Meant to only be used within the context.
+     * @description
+     *  - this is the function that consumes a fileId in the closeFileIdTabQueue
+     */
     const consumeFileIdCloseQueue = useCallback(() => {
         let queueValue = closeTabQueue.current
         let consumedValue = queueValue.shift()
