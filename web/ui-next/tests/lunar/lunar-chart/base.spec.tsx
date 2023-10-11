@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/experimental-ct-react'
 import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider/next-13'
+import LunarRefresh from '../../../components/lunar-refresh/page'
 
 /**
  * NOTE: The goal of this test is to test the basic functionality of a chart. The testing should cover theese core features:
@@ -15,7 +16,7 @@ import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider
  *  - click button-0
  *  - page get new chart button
  *  - click new chart button
- *  - validate chart-name = New Folder Name
+ *  - validate chart-name = New Chart Name
  *  - type in swag
  *  - click submit button
  *  - refresh-chart is attached
@@ -39,6 +40,17 @@ import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider
  *  - y-axis is attached
  *  - y-axis contains 6
  */
+
+//utility function that add extensions to a locator
+const addExtensions = (base: string, extensions: string[]) => {
+    let outputString = base
+    for(let i = 0; i < extensions.length; i++) {
+        let extension = extensions[i]
+        outputString += `-${extension}`
+    }
+
+    return outputString
+}
 
 //locators for the tests are below
 
@@ -92,3 +104,121 @@ const xAxisLocator = "chart-x-axis"
  * This is the container for the y-axis in the chart
  */
 const yAxisLocator = "chart-y-axis"
+
+/**
+ * this is the container where all ui elements relating to the file
+ * dropdown viewer are going to be rendered
+ */
+const fileDropdownContainerLocator = "file-dropdown-container"
+
+/**
+ * this is the base used to find indexed files within the file tree viewer
+ * it is used in the format container-element-[x], where x is the index
+ */
+const containerElementBase = "container-element"
+
+test('Title Test', async ({ mount, page }) => {
+    const component = await mount (
+        <MemoryRouterProvider url={'/lunar'}>
+            <LunarRefresh debugMode={true} />
+        </MemoryRouterProvider>
+    )
+
+    //first we want to click button-0 to activate the create menu
+    const buttonZeroLocator = addExtensions(buttonBase, ["0"])
+    const buttonZero = component.getByTestId(buttonZeroLocator)
+    await buttonZero.click()
+
+    //then we want to get the new chart button and click it
+    const newChartButton = page.getByTestId(newChartButtonLocator)
+    await newChartButton.click()
+
+    //then we want to validate chart-name = New Chart Name
+    const chartNameInput = page.getByTestId(chartNameInputLocator)
+    await expect(chartNameInput).toContainText("New Chart Name")
+
+    //now we want to get the raw input and type in swag
+    const chartNameInputRaw = chartNameInput.locator('input')
+    await chartNameInputRaw.type("swag", { delay: 200 })
+
+    //get the submit button and click it
+    const submitButton = page.getByTestId(submitButtonLocator)
+    await submitButton.click()
+
+    //now we need to check the file-dropdown container is attached
+    const fileDropdownContainer = component.getByTestId(fileDropdownContainerLocator)
+    await expect(fileDropdownContainer).toBeAttached()
+
+    //now we need to check that container-element-0::child = swag
+    const chartContainerElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
+    const chartContainerElement = component.getByTestId(chartContainerElementLocator)
+    await expect(chartContainerElement).toContainText("swag")
+
+    //now we check that refreshChart is attached
+    const refreshChart = component.getByTestId(refreshChartLocator)
+    await expect(refreshChart).toBeAttached()
+
+    //we want to check chart-title = swag
+    const chartTitle = refreshChart.getByTestId(chartTitleLocator)
+    await expect(chartTitle).toContainText("swag")
+
+    //now we want to click on the chartTitle
+    await chartTitle.click()
+
+    //get the chart title input and type in Dummy Chart Title
+    const chartTitleInput = chartTitle.getByTestId(chartTitleInputLocator)
+    await chartTitleInput.locator('input').type("Dummy Chart Title", { delay: 200 })
+
+    //click on viewport-tabs
+    const viewportTabs = component.getByTestId(viewportTabsLocator)
+    await viewportTabs.click()
+
+    //now the chartContainerElement = Dummy Chart Title
+    await expect(chartContainerElement).toContainText("Dummy Chart Title")
+})
+
+test('Chart Render Test', async({ mount, page }) => {
+    const component = await mount (
+        <MemoryRouterProvider url={'/lunar'}>
+            <LunarRefresh debugMode={true} />
+        </MemoryRouterProvider>
+    )
+
+    //first we want to click button-0 to activate the create menu
+    const buttonZeroLocator = addExtensions(buttonBase, ["0"])
+    const buttonZero = component.getByTestId(buttonZeroLocator)
+    await buttonZero.click()
+
+    //then we want to get the new chart button and click it
+    const newChartButton = page.getByTestId(newChartButtonLocator)
+    await newChartButton.click()
+
+    //then we want to validate chart-name = New Chart Name
+    const chartNameInput = page.getByTestId(chartNameInputLocator)
+    await expect(chartNameInput).toContainText("New Chart Name")
+
+    //now we want to get the raw input and type in swag
+    const chartNameInputRaw = chartNameInput.locator('input')
+    await chartNameInputRaw.type("swag", { delay: 200 })
+
+    //get the submit button and click it
+    const submitButton = page.getByTestId(submitButtonLocator)
+    await submitButton.click()
+
+    //now we need to check the file-dropdown container is attached
+    const fileDropdownContainer = component.getByTestId(fileDropdownContainerLocator)
+    await expect(fileDropdownContainer).toBeAttached()
+
+    //now we need to check that container-element-0::child = swag
+    const chartContainerElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
+    const chartContainerElement = component.getByTestId(chartContainerElementLocator)
+    await expect(chartContainerElement).toContainText("swag")
+
+    //check the x-axis contains September
+    const xAxis = component.getByTestId(xAxisLocator)
+    await expect(xAxis).toContainText("September")
+
+    //check that y-axis contains 6
+    const yAxis = component.getByTestId(yAxisLocator)
+    await expect(yAxis).toContainText("6")
+})

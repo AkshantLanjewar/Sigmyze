@@ -21,7 +21,9 @@ interface ILunarRefreshProps {
      * NOTE: This field is for testing purposes only.
      * This can override and load this fileSystem into the loadedFilesystem.
      */
-    mockFilesystem?: ISigmyzeFilesystem
+    mockFilesystem?: ISigmyzeFilesystem,
+
+    debugMode?: boolean
 }
 
 const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesystem }) => {
