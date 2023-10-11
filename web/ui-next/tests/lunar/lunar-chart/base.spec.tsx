@@ -39,3 +39,56 @@ import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider
  *  - y-axis is attached
  *  - y-axis contains 6
  */
+
+//locators for the tests are below
+
+/**
+ * this is the base to find indexed buttons within the button portal.
+ * it is used in the format button-[x] where x is the index of the button
+ */
+const buttonBase = "button"
+
+/**
+ * this is the button that activates the new-chart form
+ */
+const newChartButtonLocator = "new-chart"
+
+/**
+ * this is the locator for the chart name input in the chart-create form
+ */
+const chartNameInputLocator = "chart-name"
+
+/**
+ * this is the locator for the submit button in all generated forms
+ */
+const submitButtonLocator = "submit-button"
+
+/**
+ * this is the locator for the tabs container in the viewport
+ */
+const viewportTabsLocator = "viewport-tabs"
+
+/**
+ * This is the locator that is the container for all the chart elements in a refresh-chart
+ */
+const refreshChartLocator = "refreshChart"
+
+/**
+ * This is the button / title for the chart
+ */
+const chartTitleLocator = "chart-title"
+
+/**
+ * This is the input for when the chart title is in edit mode
+ */
+const chartTitleInputLocator = "chart-title-input"
+
+/**
+ * This is the container for the x-axis in the chart
+ */
+const xAxisLocator = "chart-x-axis"
+
+/**
+ * This is the container for the y-axis in the chart
+ */
+const yAxisLocator = "chart-y-axis"
