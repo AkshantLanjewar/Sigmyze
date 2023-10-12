@@ -3,6 +3,7 @@ import LunarViewportView from "./view"
 import { LunarUIContextData } from "../../ui-context"
 import { ILunarUIState } from "../../ui-context/state"
 import { ILunarPane } from "./types"
+import RefreshChart from "../../refresh-chart"
 
 interface ILunarViewportProps { }
 
@@ -28,6 +29,9 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ }) => {
 
             //now we need to compute what jsx will be on there for the tab's content
             switch(tab.tabType) {
+                case "chart":
+                    newPane.paneContent = <RefreshChart fileId={tab.fileId} />
+                    break
                 default:
                     newPane.paneContent = <div />
             }

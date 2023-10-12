@@ -31,6 +31,12 @@ interface ILunarUIState {
     debugMode: boolean,
 
     /**
+     * This is whether or not the editor is in debug mode.
+     * Used for testing only.
+     */
+    editorDebugMode: boolean,
+
+    /**
      * theese are how many synchro messages are left for the data context to consume.
      * other components may hook onto it, but this is primarliy meant as a pipe between the UI context and the data context.
      */

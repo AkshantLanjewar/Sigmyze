@@ -6,6 +6,9 @@ import { convertSigmyzeToSimple, convertSimpleFilesystem, generateDefaultProject
 import { ISigmyzeFilesystem, ISimpleFilesystem } from "../../ui/file-management/types"
 import { LunarUIContextData } from "../ui-context"
 import { ILunarUIState } from "../ui-context/state"
+import useRefreshChartData from "./hooks/refresh-chart-data"
+import useRefreshNoteData from "./hooks/refresh-note-data"
+import useRefreshFilesystem from "./hooks/refresh-filesystem-data"
 
 const LunarDataManagerData = createContext<ILunarDataManagerState | null>(null)
 
@@ -16,125 +19,27 @@ interface ILunarDataManagerProps {
 const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
     //this is the lunar project being loaded in
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
-    //this is the charts in the project (detached for easier editing)
-    const [charts, setCharts] = useState<ILunarChart[]>([])
-    //theese are the notes in the project (detached for easier editing)
-    const [notes, setNotes] = useState<ILunarNote[]>([])
-    //this is the simpleform version of the filesystem
-    const [fileSystem, setFilesystem] = useState<ISimpleFilesystem | undefined>(undefined)
-    //this flag is so that we dont update the tracked simplefilesystem when a change occurs to the more complex shape
-    const ignoreFilesystemSIG = useRef<boolean>(false)
-    //this flag is so that we dont update the sigmyzefilesystem when we update the filesystem
-    const ignoreFilesystemSIM = useRef<boolean>(false)
+
+    const { notes, createNewNote, deleteNote } = useRefreshNoteData()
+    const { charts, setCharts, createNewChart, deleteChart } = useRefreshChartData()
+    const { 
+        fileSystem, 
+        ignoreFilesystemSIG, 
+        ignoreFilesystemSIM, 
+        setFilesystem, 
+        updateDataFilesystem, 
+        updateUIFilesystem 
+    } = useRefreshFilesystem()
 
     const { authData } = useContext(UserContextData) as IUserContext
     const { 
         debugMode, 
         loadedFilesystem, 
-        setLoadedFilesystem, 
         resetActive, 
         activeItemId,
         messagesLeft,
         consumeSynchroMessage 
     } = useContext(LunarUIContextData) as ILunarUIState
-
-    //internal methods
-
-    /**
-     * this functions sets the necessary flags in order to make updating the ui filesystem easier
-     */
-    const updateUIFilesystem = useCallback((filesystem: ISigmyzeFilesystem) => {
-        ignoreFilesystemSIG.current = true
-        setLoadedFilesystem({ ...filesystem })
-    }, [])
-
-    /**
-     * this function sets the necessary flags in order to make updating the simple filesystem easier
-     */
-    const updateDataFilesystem = useCallback((fileSystem: ISimpleFilesystem) => {
-        ignoreFilesystemSIM.current = true
-        setFilesystem({ ...fileSystem })
-    }, [])
-
-    /**
-     * NOTE: This function should only be used within the data context
-     * 
-     * @description
-     *  - this is the function that handles the creation of a new chart within the data context.
-     * @param chartName
-     *  - this is the name for the new chart
-     * @param chartId
-     *  - this is the id for the new chart
-     */
-    const createNewChart = useCallback((chartName: string, chartId: string) => {
-        const newChart: ILunarChart = {
-            name: chartName,
-            objectId: chartId
-        }
-
-        setCharts([ ...charts, newChart ])
-    }, [charts])
-
-    /**
-     * NOTE: This function should only be used within the data context
-     * 
-     * @description
-     *  - this is the function that handles the creation ofa new note within the data context.
-     * @param name
-     *  - this is the name for the new note
-     * @param id
-     *  - this is the fileId for the new note
-     */
-    const createNewNote = useCallback((name: string, id: string) => {
-        const newNote: ILunarNote = {
-            name: name,
-            objectId: id
-        }
-
-        setNotes([ ...notes, newNote ])
-    }, [notes])
-
-    /**
-     * NOTE: This function should only be used within the data context
-     * 
-     * @description
-     *  - this is the function that handles the deletion of a chart within the data context
-     * @param fileId
-     *  - this is the id of the chart we are going to delete
-     */
-    const deleteChart = useCallback((fileId: string) => {
-        let newCharts: ILunarChart[] = []
-        for(let i = 0; i < charts.length; i++) {
-            let chart = charts[i]
-            if(chart.objectId === fileId)
-                continue
-            
-            newCharts.push(chart)
-        }
-
-        setCharts([ ...newCharts ])
-    }, [charts])
-
-    /**
-     * NOTE: This function should only be used within the data context
-     * 
-     * @description
-     *  - this is the function that handles the deletion of a note within the data context
-     * @param fileId
-     *  - this is the id of the note we are going to delete
-     */
-    const deleteNote = useCallback((fileId: string) => {
-        let newNotes: ILunarNote[] = []
-        for(let i = 0; i < notes.length; i++) {
-            let note = notes[i]
-            if(note.objectId === fileId)
-                continue
-
-            newNotes.push(note)
-        }
-
-        setNotes([ ...newNotes ])
-    }, [notes])
 
     /**
      * this effect handles the loading of project data
@@ -179,7 +84,7 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
 
         let generatedFilesystem = convertSimpleFilesystem(lunarProject.name, fileSystem, charts, notes)
         updateUIFilesystem(generatedFilesystem)
-    }, [fileSystem, lunarProject, charts, notes])
+    }, [fileSystem])
 
 
     /**

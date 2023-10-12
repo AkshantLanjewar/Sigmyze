@@ -83,7 +83,7 @@ const viewportTabsLocator = "viewport-tabs"
 /**
  * This is the locator that is the container for all the chart elements in a refresh-chart
  */
-const refreshChartLocator = "refreshChart"
+const refreshChartLocator = "refresh-chart"
 
 /**
  * This is the button / title for the chart
@@ -120,7 +120,7 @@ const containerElementBase = "container-element"
 test('Title Test', async ({ mount, page }) => {
     const component = await mount (
         <MemoryRouterProvider url={'/lunar'}>
-            <LunarRefresh debugMode={true} />
+            <LunarRefresh defaultDebugMode={true} />
         </MemoryRouterProvider>
     )
 
@@ -180,7 +180,7 @@ test('Title Test', async ({ mount, page }) => {
 test('Chart Render Test', async({ mount, page }) => {
     const component = await mount (
         <MemoryRouterProvider url={'/lunar'}>
-            <LunarRefresh debugMode={true} />
+            <LunarRefresh defaultDebugMode={true} />
         </MemoryRouterProvider>
     )
 
