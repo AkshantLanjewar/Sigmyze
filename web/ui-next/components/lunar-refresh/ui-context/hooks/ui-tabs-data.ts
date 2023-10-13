@@ -1,8 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { ILunarTab } from "../../page/viewport/types"
-import { LunarUIContextData } from ".."
-import { ILunarUIState } from "../state"
 import { closeTab, closeTabFileId, openTab } from "../functions"
+import { ISigmyzeFilesystem } from "../../../ui/file-management/types"
 
 /**
  * @description
@@ -31,9 +30,11 @@ import { closeTab, closeTabFileId, openTab } from "../functions"
  * @emits consumeFileIdCloseQueue
  *  - this is the function that consumes a fileId from the closeQueue
  */
-const useUITabs = () => {
-    const { loadedFilesystem, setItemActive, resetActive } = useContext(LunarUIContextData) as ILunarUIState
-
+const useUITabs = (
+    loadedFilesystem: ISigmyzeFilesystem | undefined,
+    setItemActive: (itemId: string, itemType: string) => void,
+    resetActive: () => void
+) => {
     //this is the list of all the active tabs within the viewport
     const [tabs, setTabs] = useState<ILunarTab[]>([])
     //this is the state which will determine which tab in the potential tablist will be active

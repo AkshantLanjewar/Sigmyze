@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { IPortalButton } from "../types";
-import { ISigmyzeFilesystem } from "../../ui/file-management/types";
+import { ISigmyzeFile, ISigmyzeFilesystem } from "../../ui/file-management/types";
 import { ISynchroMessage } from "./types";
 import { ILunarTab } from "../page/viewport/types";
 
@@ -99,7 +99,19 @@ interface ILunarUIState {
      */
     openTab: (fileId: string) => void
 
+    /**
+     * this is the function that closes a tab
+     * @param tabId 
+     *  - the id of the tab to be closed
+     */
     closeTab: (tabId: string) => void
+
+    /**
+     * this is the function that gets a file by its id
+     * @param fileId
+     *  - this is the fileId of the file we want
+     */
+    getFileById: (fileId: string) => ISigmyzeFile | undefined
 }
 
 export type { ILunarUIState }

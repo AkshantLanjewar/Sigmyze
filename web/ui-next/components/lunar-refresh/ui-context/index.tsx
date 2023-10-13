@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { Dispatch, SetStateAction, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { ILunarUIState } from "./state"
 import { IPortalButton } from "../types"
 import { ISigmyzeFilesystem } from "../../ui/file-management/types"
@@ -12,6 +12,7 @@ import NewChartForm from "./forms/new-chart"
 import DeleteFolderForm from "./forms/delete-folder"
 import useUITabs from "./hooks/ui-tabs-data"
 import useSynchroMessage from "./hooks/ui-synchro-data"
+import useSigmyzeFilesystemUtil from "./hooks/ui-filesystem-data"
 
 const LunarUIContextData = createContext<ILunarUIState | null>(null)
 
@@ -45,6 +46,7 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
     children
 }) => {
     //state hooks
+    const { getFileById } = useSigmyzeFilesystemUtil(loadedFilesystem)
     const { synchroQueueLength, addCreateSynchroMessage, addDeleteSynchroMessage, consumeSynchroMessage } = useSynchroMessage()
     const { 
         tabs, 
@@ -53,7 +55,7 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         closeTabCallback ,
         openTabCallback,
         addCloseFileIdTabBulk,
-    } = useUITabs()
+    } = useUITabs(loadedFilesystem, setItemActive, resetActive)
 
     //internal methods
     /**
@@ -140,7 +142,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         consumeSynchroMessage,
         setFolderOpenState: setFolderOpenStateCallback,
         openTab: openTabCallback,
-        closeTab: closeTabCallback
+        closeTab: closeTabCallback,
+        getFileById
     }), [
         portalButtons,
         activeItemId,
@@ -155,7 +158,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         consumeSynchroMessage,
         setFolderOpenStateCallback,
         openTabCallback,
-        closeTabCallback
+        closeTabCallback,
+        getFileById
     ])
 
     return (

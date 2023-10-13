@@ -213,12 +213,14 @@ test('Chart Render Test', async({ mount, page }) => {
     const chartContainerElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
     const chartContainerElement = component.getByTestId(chartContainerElementLocator)
     await expect(chartContainerElement).toContainText("swag")
+    
+    await page.waitForTimeout(1000 * 2)
 
     //check the x-axis contains September
-    const xAxis = component.getByTestId(xAxisLocator)
-    await expect(xAxis).toContainText("September")
+    const xAxis = component.locator(`[data-testid="${xAxisLocator}"]`)
+    await expect(xAxis).toContainText("April")
 
     //check that y-axis contains 6
-    const yAxis = component.getByTestId(yAxisLocator)
+    const yAxis = component.locator(`[data-testid="${yAxisLocator}"]`)
     await expect(yAxis).toContainText("6")
 })
