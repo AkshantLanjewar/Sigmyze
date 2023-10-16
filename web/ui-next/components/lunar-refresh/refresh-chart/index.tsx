@@ -45,6 +45,8 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         loadChart()
     }, [loadChart])
 
+    //TODO: Now we have to implement the title, and its editing functionality
+
     return (
         <div 
             data-testId={"refresh-chart"}
@@ -57,8 +59,6 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
                 position: 'relative' 
             }}
         >
-            
-
             <RefreshEngine 
                 height={height}
                 width={width}
