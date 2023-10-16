@@ -7,6 +7,8 @@ import { AxisBottom, AxisLeft } from '@visx/axis'
 import { LinePath } from '@visx/shape'
 import { curveBasis, curveCatmullRom, curveMonotoneX } from '@vx/curve'
 import { Group } from '@visx/group'
+import { Motion, spring } from 'react-motion'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface IRefreshEngineProps {
     width: number,
@@ -14,6 +16,13 @@ interface IRefreshEngineProps {
 }
 
 const RefreshEngine: React.FC<IRefreshEngineProps> = ({ width, height }) => {
+    //whether or not the tooltip is open
+    const [tooltipOpen, setTooltipOpen] = useState(false)
+    //the x position of the tooltip line
+    const [lineLeftPos, setLineLeftPos] = useState<number>(0)
+    //theese are the refs for the line-paths based on their rendered index
+    const collectedLineRefs = useRef<{[key: number]: SVGPathElement | null}>({})
+
     /**
      * NOTE: Need to replace data with Quanta compatible data
      */
@@ -53,6 +62,42 @@ const RefreshEngine: React.FC<IRefreshEngineProps> = ({ width, height }) => {
         range: [yMax, 0],
         domain: [0, 6]
     })
+
+    const collectLineRef = useCallback((element: SVGPathElement | null, index: number) => {
+        let collectedRefs = collectedLineRefs.current
+        collectedRefs[index] = element
+
+        collectedLineRefs.current = collectedRefs
+    }, [])
+
+    const getPathYFromX = useCallback((index: number, x: number) => {
+        let collectedRefs = collectedLineRefs.current
+        if(Object.keys(collectedRefs).includes(`${index}`) === false)
+            return
+
+        let pathRef = collectedRefs[index]
+        if(pathRef === null)
+            return
+
+        const maxIterations = 100
+        
+        let lengthStart = 0
+        let lengthEnd = pathRef.getTotalLength()
+        // get the point and setup while var
+        let point = pathRef.getPointAtLength((lengthEnd + lengthStart) / 2)
+        let iterations = 0
+
+        //while thru and find the path
+        while(x < point.x || x > point.x) {
+            const midpoint = (lengthStart + lengthEnd) / 2
+            point = pathRef.getPointAtLength(midpoint)
+        }
+    }, [])
+
+    useEffect(() => {
+        let vertLineLeft = xScale(data[0].date)
+        setLineLeftPos(vertLineLeft)
+    }, [data])
 
     return (
         <div className={styles.engine__container}>
@@ -109,7 +154,24 @@ const RefreshEngine: React.FC<IRefreshEngineProps> = ({ width, height }) => {
                         strokeLinecap="round"
                         stroke='#5865f2'
                         shapeRendering="geometricPrecision"
+                        innerRef={(e) => collectLineRef(e, 0)}
                     /> 
+
+                    <Motion
+                        defaultStyle={{ opacity: 0, x: lineLeftPos }}
+                        style={{
+                            opacity: spring(tooltipOpen ? 1 : 0),
+                            x: spring(lineLeftPos)
+                        }}
+                    >
+                        {styles => {
+                            return (
+                                <g>
+    
+                                </g>
+                            )
+                        }}
+                    </Motion>
                 </Group>
             </svg>
         </div>

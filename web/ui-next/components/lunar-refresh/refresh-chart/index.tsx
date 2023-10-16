@@ -57,6 +57,8 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
                 position: 'relative' 
             }}
         >
+            
+
             <RefreshEngine 
                 height={height}
                 width={width}
