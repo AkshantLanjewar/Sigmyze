@@ -4,6 +4,7 @@ import { ILunarUIState } from "../ui-context/state"
 import useRefreshChartState from "./hooks/refresh-chart-data"
 import RefreshEngine from "./engine"
 import { useElementSize } from "@mantine/hooks"
+import ChartTitle from "./chart-title"
 
 interface IRefreshChartProps {
     /**
@@ -14,7 +15,7 @@ interface IRefreshChartProps {
 }
 
 const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
-    const { editorDebugMode, getFileById } = useContext(LunarUIContextData) as ILunarUIState
+    const { editorDebugMode, getFileById, editFileTitle } = useContext(LunarUIContextData) as ILunarUIState
 
     //custom hooks are initiated here
     const { 
@@ -22,7 +23,7 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         containerRef,
         height,
         width,
-        editChartTitle 
+        editChartTitle, 
     } = useRefreshChartState()
 
     /**
@@ -37,6 +38,11 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         let fileName = file.fileName
         editChartTitle(fileName)
     }, [fileId, editorDebugMode, getFileById])
+
+    /**
+     * NOTE: This method is to only be used by the chart-title component
+     * this is a wrapper for the editFileTitle, so we can edit this file's title
+     */
 
     /**
      * This is the effect that handles the loading of the chart data
@@ -59,6 +65,11 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
                 position: 'relative' 
             }}
         >
+            <ChartTitle
+                chartTitle={chartTitle}
+                editChartTitle={editChartTitle}
+            />
+
             <RefreshEngine 
                 height={height}
                 width={width}

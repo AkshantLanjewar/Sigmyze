@@ -46,8 +46,16 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
     children
 }) => {
     //state hooks
-    const { getFileById } = useSigmyzeFilesystemUtil(loadedFilesystem)
-    const { synchroQueueLength, addCreateSynchroMessage, addDeleteSynchroMessage, consumeSynchroMessage } = useSynchroMessage()
+    const { 
+        synchroQueueLength, 
+        addCreateSynchroMessage, 
+        addDeleteSynchroMessage, 
+        consumeSynchroMessage,
+        addEditTitleSynchroMessage 
+    } = useSynchroMessage()
+
+    const { getFileById, editFileTitle } = useSigmyzeFilesystemUtil(loadedFilesystem, setLoadedFilesystem, addEditTitleSynchroMessage)
+
     const { 
         tabs, 
         activeTab, 
@@ -143,7 +151,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         setFolderOpenState: setFolderOpenStateCallback,
         openTab: openTabCallback,
         closeTab: closeTabCallback,
-        getFileById
+        getFileById,
+        editFileTitle
     }), [
         portalButtons,
         activeItemId,
@@ -159,7 +168,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         setFolderOpenStateCallback,
         openTabCallback,
         closeTabCallback,
-        getFileById
+        getFileById,
+        editFileTitle
     ])
 
     return (

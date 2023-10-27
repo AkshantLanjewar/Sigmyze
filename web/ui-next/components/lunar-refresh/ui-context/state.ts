@@ -111,7 +111,8 @@ interface ILunarUIState {
      * @param fileId
      *  - this is the fileId of the file we want
      */
-    getFileById: (fileId: string) => ISigmyzeFile | undefined
+    getFileById: (fileId: string) => ISigmyzeFile | undefined,
+    editFileTitle: (fileId: string, fileType: string, newTitle: string) => void
 }
 
 export type { ILunarUIState }

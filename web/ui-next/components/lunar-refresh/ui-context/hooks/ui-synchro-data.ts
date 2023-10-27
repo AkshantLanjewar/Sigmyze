@@ -65,6 +65,26 @@ const useSynchroMessage = () => {
     }, [])
 
     /**
+     * NOTE: this method is to only be used internally within the UI context.
+     * This is a helper method that adds a synchro message to edit a file's title
+     */
+    const addEditTitleSynchroMessage = useCallback((fileType: string, fileId: string, fileName: string) => {
+        let fileData = `TITLE::${fileType}::${fileId}::${fileName}`
+        const newMessage: ISynchroMessage = {
+            messageId: v4(),
+            messageType: "EDIT",
+            messageData: fileData
+        }
+
+        //construct new queue
+        let oldSynchroMessages = synchroMessageQueue.current
+        let newSynchroMessages = [ ...oldSynchroMessages, newMessage ]
+        //set ref and update the length
+        synchroMessageQueue.current = newSynchroMessages
+        setSynchroQueueLength(newSynchroMessages.length)
+    }, [])
+
+    /**
      * NOTE: This method is shared out through the context.
      * This method pops a synchro message from the synchroMessages list, returns the message and removes the item from the list.
      */
@@ -81,7 +101,8 @@ const useSynchroMessage = () => {
         synchroQueueLength,
         addCreateSynchroMessage,
         addDeleteSynchroMessage,
-        consumeSynchroMessage
+        consumeSynchroMessage,
+        addEditTitleSynchroMessage
     }
 }
 
