@@ -4,12 +4,25 @@ import { IconBallpen } from "@tabler/icons"
 import { useCallback, useEffect, useRef } from "react"
 import sanitizeHtml from 'sanitize-html'
 
+/**
+ * @description
+ *  - theese are the props for the ChartTitle component to work
+ */
 interface IChartTitleProps {
+    /**
+     * This is the FileId for the chart the title is in
+     */
+    fileId: string,
+
+    /**
+     * This is the controlled state for the chart title
+     */
     chartTitle: string | undefined,
-    editChartTitle: (newTitle: string) => void
+    editChartTitle: (newTitle: string, filesystemUpdate?: boolean) => void,
+    editFileTitle: (fileId: string, fileType: string, newTitle: string) => void
 }
 
-const ChartTitle: React.FC<IChartTitleProps> = ({ chartTitle, editChartTitle }) => {
+const ChartTitle: React.FC<IChartTitleProps> = ({ fileId, chartTitle, editChartTitle, editFileTitle }) => {
     const textRef = useRef<HTMLSpanElement>(null)
     
     const onContentBlur = useCallback((event: React.FocusEvent<HTMLSpanElement, Element>) => {
@@ -18,8 +31,10 @@ const ChartTitle: React.FC<IChartTitleProps> = ({ chartTitle, editChartTitle }) 
             allowedAttributes: {}
         }
 
-        editChartTitle(sanitizeHtml(event.currentTarget.innerHTML, sanitizeConf))
-    }, [])
+        let sanitizedTitle = sanitizeHtml(event.currentTarget.innerHTML, sanitizeConf)
+        editChartTitle(sanitizedTitle)
+        editFileTitle(fileId, "chart", sanitizedTitle)
+    }, [editFileTitle])
 
     const onClick = useCallback(() => {
         if(textRef.current === null)
@@ -41,13 +56,14 @@ const ChartTitle: React.FC<IChartTitleProps> = ({ chartTitle, editChartTitle }) 
     return (
         <div 
             className={styles.chart__title}
-            data-testId={'chart-name'}
+            data-testId={'chart-title'}
         >
             <UnstyledButton onClick={() => onClick()}>
                 {chartTitle && (
                     <span 
                         contentEditable
                         tabIndex={0}
+                        onClick={e => e.stopPropagation()}
                         onBlur={e => onContentBlur(e)}
                         dangerouslySetInnerHTML={{__html: chartTitle}}
                         ref={textRef}

@@ -28,7 +28,7 @@ const useRefreshChartState = () => {
     //this is the width of the container
     const [width, setWidth] = useState(0)
 
-    const editChartTitle = useCallback((newTitle: string) => {
+    const editChartTitle = useCallback((newTitle: string, filesystemUpdate?: boolean) => {
         setChartTitle(newTitle)
     }, [])
 

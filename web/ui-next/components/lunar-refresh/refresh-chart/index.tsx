@@ -66,8 +66,10 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
             }}
         >
             <ChartTitle
+                fileId={fileId}
                 chartTitle={chartTitle}
                 editChartTitle={editChartTitle}
+                editFileTitle={editFileTitle}
             />
 
             <RefreshEngine 

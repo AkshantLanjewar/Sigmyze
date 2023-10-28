@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { ILunarTab } from "../../page/viewport/types"
 import { closeTab, closeTabFileId, openTab } from "../functions"
 import { ISigmyzeFilesystem } from "../../../ui/file-management/types"
+import { grabFile } from "../../data-manager/functions"
 
 /**
  * @description
@@ -120,6 +121,32 @@ const useUITabs = (
 
         closeTabFileIdCallback(consumedValue)
     }, [closeTabLength])
+
+    /**
+     * This is an effect that reconstructs the tab name's based on any change to the filesystem (may have performance impacts)
+     */
+    useEffect(() => {
+        if(loadedFilesystem === undefined)
+            return
+
+        //iterate through the tabs that are currently open
+        let newTabs: ILunarTab[] = []
+        for(let i = 0; i < tabs.length; i++) {
+            let tab = tabs[i]
+            let tabFileId = tab.fileId
+
+            //get the new file
+            let file = grabFile(loadedFilesystem, tabFileId)
+            if(file === undefined)
+                continue
+
+            tab.tabName = file.fileName
+            newTabs.push(tab)
+        }
+
+        //set the updated tabs
+        setTabs([ ...newTabs ])
+    }, [loadedFilesystem])
 
     return {
         tabs,

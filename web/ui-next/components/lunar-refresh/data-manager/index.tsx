@@ -20,8 +20,21 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
     //this is the lunar project being loaded in
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
 
-    const { notes, createNewNote, deleteNote } = useRefreshNoteData()
-    const { charts, setCharts, createNewChart, deleteChart } = useRefreshChartData()
+    const { 
+        notes, 
+        createNewNote, 
+        deleteNote,
+        editNoteName 
+    } = useRefreshNoteData()
+
+    const { 
+        charts, 
+        setCharts, 
+        createNewChart, 
+        deleteChart,
+        editChartName 
+    } = useRefreshChartData()
+
     const { 
         fileSystem, 
         ignoreFilesystemSIG, 
@@ -150,6 +163,28 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
                     deleteChart(fileIdDelete)
                 if(fileTypeDelete === "note")
                     deleteNote(fileIdDelete)
+                break
+            case "EDIT":
+                let editSplit = messageData.split("::")
+                //here is the edit function we are going to be using from the root split
+                let editFunction = editSplit[0]
+                //case through all the edit functions 
+                switch(editFunction) {
+                    case "TITLE":
+                        //here are all the components from the title function data
+                        let titleFileType = editSplit[1]
+                        let titleFileId = editSplit[2]
+                        let titleFileName = editSplit[3]
+
+                        if(titleFileType === "chart")
+                            editChartName(titleFileId, titleFileName)
+                        if(titleFileType === "note")
+                            editNoteName(titleFileId, titleFileName)
+                        break
+                    default:
+                        break
+                }
+
                 break
             default:
                 return

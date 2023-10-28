@@ -165,9 +165,8 @@ test('Title Test', async ({ mount, page }) => {
     //now we want to click on the chartTitle
     await chartTitle.click()
 
-    //get the chart title input and type in Dummy Chart Title
-    const chartTitleInput = chartTitle.getByTestId(chartTitleInputLocator)
-    await chartTitleInput.locator('input').type("Dummy Chart Title", { delay: 200 })
+    //since content-editable, page keyboard type
+    await page.keyboard.type('Dummy Chart Title')
 
     //click on viewport-tabs
     const viewportTabs = component.getByTestId(viewportTabsLocator)
