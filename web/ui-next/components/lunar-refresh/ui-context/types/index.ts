@@ -1,4 +1,4 @@
-type SynchroMessageType = "CREATE" | "DELETE"
+type SynchroMessageType = "CREATE" | "DELETE" | "EDIT"
 
 /**
  * This is the type definition for a synchronization message between the UI and Data

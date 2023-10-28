@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { IPortalButton } from "../types";
-import { ISigmyzeFilesystem } from "../../ui/file-management/types";
+import { ISigmyzeFile, ISigmyzeFilesystem } from "../../ui/file-management/types";
 import { ISynchroMessage } from "./types";
 import { ILunarTab } from "../page/viewport/types";
 
@@ -29,6 +29,12 @@ interface ILunarUIState {
      * Certain features, such as loading in projects based on the url will be turned off when debugMode is enabled
      */
     debugMode: boolean,
+
+    /**
+     * This is whether or not the editor is in debug mode.
+     * Used for testing only.
+     */
+    editorDebugMode: boolean,
 
     /**
      * theese are how many synchro messages are left for the data context to consume.
@@ -93,7 +99,20 @@ interface ILunarUIState {
      */
     openTab: (fileId: string) => void
 
+    /**
+     * this is the function that closes a tab
+     * @param tabId 
+     *  - the id of the tab to be closed
+     */
     closeTab: (tabId: string) => void
+
+    /**
+     * this is the function that gets a file by its id
+     * @param fileId
+     *  - this is the fileId of the file we want
+     */
+    getFileById: (fileId: string) => ISigmyzeFile | undefined,
+    editFileTitle: (fileId: string, fileType: string, newTitle: string) => void
 }
 
 export type { ILunarUIState }

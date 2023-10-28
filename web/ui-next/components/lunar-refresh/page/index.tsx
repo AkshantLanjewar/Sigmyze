@@ -21,10 +21,16 @@ interface ILunarRefreshProps {
      * NOTE: This field is for testing purposes only.
      * This can override and load this fileSystem into the loadedFilesystem.
      */
-    mockFilesystem?: ISigmyzeFilesystem
+    mockFilesystem?: ISigmyzeFilesystem,
+
+    /**
+     * NOTE: This is not meant to be used in a production context. For testing purposes only.
+     * This is to indicate to components that the page is in debug mode.
+     */
+    defaultDebugMode?: boolean
 }
 
-const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesystem }) => {
+const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesystem, defaultDebugMode }) => {
     //this is the title for the page TODO: implement dynamic title
     const [title, setTitle] = useState<string>("Sigmyze::Lunar")
     //theese are the portal buttons that are rendered in the side navbar
@@ -41,7 +47,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
     const [hydratedPortalButtons, setHydratedPortalButtons] = useState<IPortalButton[]>([])
     //this is the state of the modal controller within the UI context
     const [modalState, setModalState] = useState<string | null>(null)
-
+    //whether or not the editor is in debugMode
+    const [editorDebugMode, setEditorDebugMode] = useState<boolean>(false)
     
 
     /**
@@ -121,6 +128,16 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
     }, [testingPortal])
 
     /**
+     * This is the effect that handles the setting of the editor debug mode based on the defaultDebugMode prop
+     */
+    useEffect(() => {
+        if(defaultDebugMode === undefined)
+            return
+
+        setEditorDebugMode(defaultDebugMode)
+    }, [defaultDebugMode])
+
+    /**
      * this is the effect that handles the setting of the mockFilesystem
      */
     useEffect(() => {
@@ -161,6 +178,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
                 activeFolderId={activeFolderId}
                 loadedFilesystem={loadedFilesystem}
                 debugMode={debugMode}
+                editorDebugMode={editorDebugMode}
                 modalState={modalState}
                 closeModal={closeModal}
                 setItemActive={setItemActive}

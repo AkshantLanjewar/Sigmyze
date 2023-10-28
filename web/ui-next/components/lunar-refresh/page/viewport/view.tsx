@@ -52,6 +52,12 @@ const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, 
                 color='indigo'
                 value={activeTab}
                 onTabChange={setActiveTab}
+                style={{
+                    display: 'flex',
+                    flexDirection: "column",
+                    flexGrow: 1,
+                    width: "100%"
+                }}
             >
                 <Tabs.List data-testId={'viewport-tabs'}>
                     {tabs.map((step, index) => (
@@ -72,15 +78,38 @@ const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, 
                     ))}
                 </Tabs.List>
                 
-                <div data-testId={'viewport-display'} data-testvalue={paneType ? paneType : "undefined"}>
-                    {panes.map((step) => (
-                        <Tabs.Panel
-                            style={{ flexGrow: 1 }}
-                            value={step.paneId}
-                        >
-                            {step.paneContent}
-                        </Tabs.Panel>
-                    ))}
+                <div 
+                    data-testId={'viewport-display'} 
+                    data-testvalue={paneType ? paneType : "undefined"}
+                    style={{ 
+                        display: 'flex',
+                        flexGrow: 1,
+                        position: 'relative' 
+                    }}
+                >
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            right: 0,
+
+                            overflowY: 'auto'
+                        }}
+                    >
+                        {panes.map((step) => (
+                            <Tabs.Panel 
+                                value={step.paneId}
+                                style={{
+                                    height: "100%" ,
+                                    width: "100%" 
+                                }}
+                            >
+                                {step.paneContent}
+                            </Tabs.Panel>
+                        ))}
+                    </div>
                 </div>
             </Tabs>
         </div>
