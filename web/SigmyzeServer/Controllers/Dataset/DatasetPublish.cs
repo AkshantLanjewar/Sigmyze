@@ -78,6 +78,7 @@ public partial class DatasetController
         return await SerializeJSON(msg);
     }
 
+    [Authorize]
     [HttpGet("published/{datasetId}/authorized")]
     [MapToApiVersion("2.0")]
     public async Task<IActionResult> IsDatasetAuthorized(string datasetId)
@@ -88,6 +89,13 @@ public partial class DatasetController
         if(document == null || document.QuantaId == null)
         {
             msg.Error = false;
+            return await SerializeJSON(msg);
+        }
+
+        //if the published dataset is public, they are authorized to see it
+        if(document.Public == true)
+        {
+            msg.Error = true;
             return await SerializeJSON(msg);
         }
 

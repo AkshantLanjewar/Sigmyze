@@ -28,14 +28,16 @@ public partial class DatasetController
         }
 
         //now we need to construct the data cache object
-        response.ShellObject = new DatasetCacheObject();
-        response.ShellObject.Categorization = projectDocument.ProjectData!.Store!.Categorization;
-        response.ShellObject.DatasetDescription = projectDocument.ProjectData.DatasetDescription;
-        response.ShellObject.DatasetId = projectDocument.ProjectData.DatasetId;
-        response.ShellObject.DatasetName = projectDocument.ProjectData.DatasetName;
-        response.ShellObject.Selectors = projectDocument.ProjectData.Store.Selectors;
-        response.ShellObject.TextStore = projectDocument.ProjectData.Store.TextStore;
-        response.ShellObject.Schemas = projectDocument.ProjectData.DatasetSchema;
+        response.ShellObject = new DatasetCacheObject
+        {
+            Categorization = projectDocument.ProjectData!.Store!.Categorization,
+            DatasetDescription = projectDocument.ProjectData.DatasetDescription,
+            DatasetId = projectDocument.ProjectData.DatasetId,
+            DatasetName = projectDocument.ProjectData.DatasetName,
+            Selectors = projectDocument.ProjectData.Store.Selectors,
+            TextStore = projectDocument.ProjectData.Store.TextStore,
+            Schemas = projectDocument.ProjectData.DatasetSchema
+        };
 
         return await SerializeJSON(response);
     }
