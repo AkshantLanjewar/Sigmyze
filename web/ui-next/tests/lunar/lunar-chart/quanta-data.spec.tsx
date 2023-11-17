@@ -96,14 +96,52 @@ const toolbarIndicatorDeleteLocator = "toolbar-indicator-delete"
 const addIndicatorFlowContainerLocator = "add-indicator-flow-container"
 //legend delete button
 const legendDeleteLocator = "legend-delete"
+
 /**
  * this is the locator for the chart name input in the chart-create form
  */
 const chartNameInputLocator = "chart-name"
+
 /**
  * this is the locator for the submit button in all generated forms
  */
 const submitButtonLocator = "submit-button"
+
+/**
+ * this is the base to find indexed folders within the file tree viewer
+ * it is used in the format container-folder-[x], where x is the index
+ */
+const containerFolderBase = "container-folder"
+/**
+ * this is the base used to find indexed files within the file tree viewer
+ * it is used in the format container-element-[x], where x is the index
+ */
+const containerElementBase = "container-element"
+
+/**
+ * this is the container where all of a folder's children are stored
+ */
+const folderChildrenLocator = "folder-children"
+
+/**
+ * This is the container where all of an element's children are stored
+ */
+const elementChildrenLocator = "element-children"
+
+/**
+ * this is the locator for the tabs container in the viewport
+ */
+const viewportTabsLocator = "viewport-tabs"
+
+/**
+ * this is the locator for a viewport tab within the viewport tabs container
+ */
+const viewportTabBase = "viewport-tab"
+
+/**
+ * this is the locator for the close button within a tab
+ */
+const closeTabLocator = "close-tab"
 
 //here are all the tests for the spec
 
@@ -240,6 +278,57 @@ const addIndicatorSelectorPaneTEST = async (component: MountResult, page: Page) 
     await expect(addIndicatorButton).not.toBeDisabled()
 }
 
+const addIndicatorChartRenderTEST = async (component: MountResult, page: Page) => {
+    //call the previous step
+    await addIndicatorSelectorPaneTEST(component, page)
+
+    //get the add indicator button and click it
+    const addIndicatorButton = page.getByTestId(addIndicatorButtonLocator)
+    await addIndicatorButton.click()
+
+    //check that line renderer has one child
+    const lineRenderer = component.locator(`#${lineRendererLocator}`)
+    await expect(lineRenderer.locator('> path')).toHaveCount(1)
+
+    //now get the legend and check it has one child
+    const legendContainer = component.getByTestId(legendContainerLocator)
+    await expect(legendContainer.locator('> div')).toHaveCount(1)
+
+    //get the indicator element from the legend
+    const legendElementLocator = addExtensions(legendBase, ["0"])
+    const legendElement = legendContainer.getByTestId(legendElementLocator)
+    await expect(legendElement).toContainText("Qatar::NGDP_FY")
+
+    //now we have to get the chart element from the filetree
+    const rootFolderLocator = addExtensions(containerFolderBase, ["0"])
+    const rootFolder = component.getByTestId(rootFolderLocator)
+    const rootFolderChildren = rootFolder.getByTestId(folderChildrenLocator)
+
+    const chartElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
+    const chartElement = rootFolderChildren.getByTestId(chartElementLocator)
+    const chartElementChildren = chartElement.getByTestId(elementChildrenLocator)
+    await expect(chartElementChildren.locator('> div')).toHaveCount(1)
+
+    //check that the element child has title Qatar::NGDP_FY
+    const indicatorElementLocator = chartElementLocator
+    const indicatorElement = chartElementChildren.getByTestId(indicatorElementLocator)
+    await expect(indicatorElement).toContainText("Qatar::NGDP_FY")
+
+    //now we have to get the tab-0 and close it
+    const rootTabLocator = addExtensions(viewportTabBase, ["0"])
+    const viewportTabs = component.getByTestId(viewportTabsLocator)
+    const rootTab = viewportTabs.getByTestId(rootTabLocator)
+
+    const rootTabClose = rootTab.getByTestId(closeTabLocator)
+    await rootTabClose.click()
+
+    //click on the chart element
+    await chartElement.click()
+
+    //check that line renderer has one child
+    await expect(lineRenderer.locator('> path')).toHaveCount(1)
+}
+
 test('[Add Indicator]: Modal Base', async ({ mount, page }) => {
     const component = await mount (
         <MemoryRouterProvider url={'/lunar'}>
@@ -278,4 +367,20 @@ test('[Add Indicator]: Indicator Selector Pane Test', async ({ mount, page }) =>
     )
 
     await addIndicatorSelectorPaneTEST(component, page)
+})
+
+test('[Add Indicator]: Chart Render / Legend Test', async ({ mount, page }) => {
+    //set up th emocked routes before the mount
+    await quantaPublicPublishedDatasetsROUTE(page)
+    await quantaPrimeDatasetROUTE(page)
+    await quantaSelectIndicatorLengthROUTE(page)
+    await quantaSelectPagedIndicatorsROUTE(page)
+
+    const component = await mount (
+        <MemoryRouterProvider url={'/lunar'}>
+            <LunarRefresh defaultDebugMode={true}  />
+        </MemoryRouterProvider>
+    )
+
+    await addIndicatorChartRenderTEST(component, page)
 })
