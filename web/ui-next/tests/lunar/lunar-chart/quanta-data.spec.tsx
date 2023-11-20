@@ -329,6 +329,79 @@ const addIndicatorChartRenderTEST = async (component: MountResult, page: Page) =
     await expect(lineRenderer.locator('> path')).toHaveCount(1)
 }
 
+const deleteIndicatorModalTEST = async (component: MountResult, page: Page) => {
+    //call the previous step
+    await addIndicatorChartRenderTEST(component, page)
+
+    //get the chart and click on it in the filetree
+    const rootFolderLocator = addExtensions(containerFolderBase, ["0"])
+    const rootFolder = component.getByTestId(rootFolderLocator)
+    const rootFolderChildren = rootFolder.getByTestId(folderChildrenLocator)
+
+    const chartElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
+    const chartElement = rootFolderChildren.getByTestId(chartElementLocator)
+    await chartElement.click()
+
+    //now we have to get the chart settings button from the toolbar
+    const settingsToolbarButtonLocator = addExtensions(buttonPortalButtonBase, ["1"])
+    const settingsToolbarButton = component.getByTestId(settingsToolbarButtonLocator)
+    await settingsToolbarButton.click()
+
+    //validate that the chart settings modal container is attached
+    const chartSettingsModal = page.getByTestId(chartSettingsModalLocator)
+    await expect(chartSettingsModal).toBeAttached()
+
+    //check that there is one section in the modal
+    await expect(chartSettingsModal.locator('> div')).toHaveCount(1)
+
+    //get section-0's title
+    const indicatorSectionLocator = addExtensions(sectionBase, ["0"])
+    const indicatorSection = chartSettingsModal.getByTestId(indicatorSectionLocator)
+    const indicatorSectionTitle = indicatorSection.getByTestId("section-title")
+    await expect(indicatorSectionTitle).toContainText("Chart Indicators")
+
+    //validate that there is one indicator in the section
+    const indicatorSettingsContainer = indicatorSection.getByTestId(chartIndicatorSettingsLocators)
+    await expect(indicatorSettingsContainer.locator('> div')).toHaveCount(1)
+
+    //get the dummy indicator from the settings
+    const dummyIndicatorLocator = addExtensions(chartIndicatorSettingsBase, ["0"])
+    const dummyIndicator = indicatorSettingsContainer.getByTestId(dummyIndicatorLocator)
+    await expect(dummyIndicator).toContainText("Qatar::NGDP_FY")
+
+    //get the delete button and click it
+    const dummyIndicatorDelete = dummyIndicator.getByTestId(chartIndicatorSettingDelete)
+    await dummyIndicatorDelete.click()
+
+    //check there is a cancel button attached
+    const indicatorCancel = chartSettingsModal.getByTestId(indicatorCancelLocator)
+    await expect(indicatorCancel).toBeAttached()
+
+    //check that there is a delete button and it is disabled
+    const indicatorDelete = chartSettingsModal.getByTestId(indicatorDeleteLocator)
+    await expect(indicatorDelete).toBeDisabled()
+
+    //check that there is an alert warning attached
+    const indicatorWarning = chartSettingsModal.getByTestId(indicatorWarningLocator)
+    await expect(indicatorWarning).toBeAttached()
+
+    //there is a confirm checkbox attached
+    const indicatorCheckbox = chartSettingsModal.getByTestId(indicatorCheckboxLocator)
+    await expect(indicatorCheckbox).toBeAttached()
+
+    //now click on the raw input element
+    const indicatorCheckboxRAW = indicatorCheckbox.locator('input')
+    await indicatorCheckboxRAW.click()
+
+    //check the delete button isnt disabled and then click it
+    await expect(indicatorDelete).not.toBeDisabled()
+    await indicatorDelete.click()
+
+    //check that line renderer has 0 children
+    const lineRenderer = component.locator(`#${lineRendererLocator}`)
+    await expect(lineRenderer.locator('> path')).toHaveCount(0)
+}
+
 test('[Add Indicator]: Modal Base', async ({ mount, page }) => {
     const component = await mount (
         <MemoryRouterProvider url={'/lunar'}>
@@ -383,4 +456,20 @@ test('[Add Indicator]: Chart Render / Legend Test', async ({ mount, page }) => {
     )
 
     await addIndicatorChartRenderTEST(component, page)
+})
+
+test('[Delete Indicator]: Settings Modal Test', async ({ mount, page }) => {
+     //set up th emocked routes before the mount
+     await quantaPublicPublishedDatasetsROUTE(page)
+     await quantaPrimeDatasetROUTE(page)
+     await quantaSelectIndicatorLengthROUTE(page)
+     await quantaSelectPagedIndicatorsROUTE(page)
+
+     const component = await mount (
+        <MemoryRouterProvider url={'/lunar'}>
+            <LunarRefresh defaultDebugMode={true}  />
+        </MemoryRouterProvider>
+    )
+
+    await deleteIndicatorModalTEST(component, page)
 })
