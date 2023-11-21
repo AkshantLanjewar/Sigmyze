@@ -435,6 +435,27 @@ const deleteIndicatorToolbarTEST = async (component: MountResult, page: Page) =>
     await deleteIndicatorModalFLOW(component, page)
 }
 
+const deleteIndicatorChartLegendTEST = async (component: MountResult, page: Page) => {
+    //call the previous step
+    await addIndicatorChartRenderTEST(component, page)
+
+    //now get the legend and check it has one child
+    const legendContainer = component.getByTestId(legendContainerLocator)
+    await expect(legendContainer.locator('> div')).toHaveCount(1)
+
+    //get the indicator element from the legend
+    const legendElementLocator = addExtensions(legendBase, ["0"])
+    const legendElement = legendContainer.getByTestId(legendElementLocator)
+    await expect(legendElement).toContainText("Qatar::NGDP_FY")
+
+    //get the close button and click on it
+    const legendDelete = legendElement.getByTestId(legendDeleteLocator)
+    await legendDelete.click()
+
+    //test the delete flow
+    await deleteIndicatorModalFLOW(component, page)
+}
+
 test('[Add Indicator]: Modal Base', async ({ mount, page }) => {
     const component = await mount (
         <MemoryRouterProvider url={'/lunar'}>
@@ -521,4 +542,20 @@ test('[Delete Indicator]: Indicator Toolbar Test', async ({ mount, page }) => {
    )
 
    await deleteIndicatorToolbarTEST(component, page)
+})
+
+test('[Delete Indicator]: Chart Legend Test', async ({ mount, page }) => {
+    //set up th emocked routes before the mount
+    await quantaPublicPublishedDatasetsROUTE(page)
+    await quantaPrimeDatasetROUTE(page)
+    await quantaSelectIndicatorLengthROUTE(page)
+    await quantaSelectPagedIndicatorsROUTE(page)
+
+    const component = await mount (
+       <MemoryRouterProvider url={'/lunar'}>
+           <LunarRefresh defaultDebugMode={true}  />
+       </MemoryRouterProvider>
+   )
+
+   await deleteIndicatorChartLegendTEST(component, page)
 })
