@@ -14,6 +14,17 @@ interface IProductionSelectorFrameProps {
     schemas: ProjectSchemas[],
     textStore: IQuantaTextStore,
     selectionIndex: number | undefined,
+
+    /**
+     * This is the amount of selectors that are currently being rendered
+     */
+    selectorsLength: number,
+    
+    /**
+     * this is the index for this production frame
+     */
+    index: number,
+
     setSelectorValue: (selectorId: string, value: string) => void,
     setSelectedIndicator: (indicatorId: string) => void,
     selectedValues: {
@@ -29,6 +40,8 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
     textStore,
     selectionIndex,
     selectedValues,
+    selectorsLength,
+    index,
     setSelectorValue ,
     setSelectedIndicator
 }) => {
@@ -41,6 +54,20 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
     const intialSelection = useRef<boolean>(false)
     const iframeRef = useRef<HTMLIFrameElement | null>(null)
     const containerRef = useRef<HTMLDivElement | null>(null)
+
+    //this is the effect that focuses the container if it is the last rendered frame
+    useEffect(() => {
+        if(index !== selectorsLength - 1)
+            return
+        
+        setTimeout(() => {
+            let container = iframeRef.current
+            if(container === null)
+                return
+
+            container.scrollIntoView({ behavior: 'smooth' })
+        }, 250)
+    }, [selectorsLength, index])
 
     useEffect(() => {
         let sourceCode = selector.selectorCode

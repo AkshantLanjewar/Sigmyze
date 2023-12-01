@@ -1,6 +1,6 @@
 import { Modal } from "@mantine/core"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { SelectDatasetFragment } from "./fragments"
+import { SelectDatasetFragment, SelectIndicatorFragment } from "./fragments"
 import ButtonRenderer, { IRenderedButton } from "./button-renderer"
 
 interface IAddIndicatorFlowProps {
@@ -46,6 +46,9 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
     //this is the dataset id that was collected in the inital part of the flow
     const [datasetId, setDatasetId] = useState<string | undefined>(undefined)
 
+    //this is the indicator id that we collect
+    const [indicatorId, setIndicatorId] = useState<string | undefined>(undefined)
+
     //this is the method to open the modal into a fresh add indicator state
     const openAddFlow = useCallback(() => {
         setOpen(true)
@@ -57,12 +60,19 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
         setFormIndex(-1)
         setFormStage(undefined)
         setDatasetId(undefined)
+        setIndicatorId(undefined)
 
         if(delay === true)
             setTimeout(() => setFormFragment(undefined), 200)
         else
             setFormFragment(undefined)
     }, [])
+
+    //this is the function that the dataset fragment calls to continue the UX flow
+    const datasetContinue = useCallback(() => setFormIndex(1), [])
+
+    //this is the function that resets the flow back to dataset select
+    const datasetPrevious = useCallback(() => setFormIndex(0), [])
 
     //this is the effect that primes the component to be ready
     useEffect(() => {
@@ -83,6 +93,9 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
     //this is the effect that updates any modal state based on what state the form is in
     useEffect(() => {
         setFormButtons([])
+        setTitle(undefined)
+        setFormStage(undefined)
+        setFormFragment(undefined)
 
         switch(formIndex) {
             case 0:
@@ -90,9 +103,27 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
                 setFormStage("dataset")
                 setFormFragment((
                     <SelectDatasetFragment 
+                        previousId={datasetId}
                         setFormButtons={setFormButtons} 
                         resetFlow={resetFlow}
                         setDatasetId={setDatasetId}
+                        datasetContinue={datasetContinue}
+                    />
+                ))
+
+                break
+            case 1:
+                if(datasetId === undefined)
+                    return
+
+                setTitle("Select Indicator")
+                setFormStage("indicator")
+                setFormFragment((
+                    <SelectIndicatorFragment 
+                        datasetId={datasetId}
+                        setFormButtons={setFormButtons}
+                        datasetPrevious={datasetPrevious}
+                        setIndicatorId={setIndicatorId}
                     />
                 ))
 
@@ -104,7 +135,7 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
 
     //this is the effect that handles the undisabling of the continue button during the dataset stage
     useEffect(() => {
-        if(formIndex !== 0 || datasetId === undefined)
+        if(formIndex !== 0 || datasetId === undefined || formButtons.length < 2)
             return
 
         let newButtons = formButtons
@@ -112,16 +143,32 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
         setFormButtons([ ...newButtons ])
     }, [formButtons, formIndex, datasetId])
 
+    useEffect(() => {
+        if(formIndex !== 1 || indicatorId === undefined || formButtons.length < 2)
+            return
+
+        let newButtons = formButtons
+        newButtons[1].disabled = false
+        setFormButtons([ ...newButtons ])
+    }, [formButtons, formIndex, indicatorId])
+
     return (
         <Modal
             opened={open}
-            onClose={() => closeModal()}
+            onClose={() => resetFlow(true)}
             title={title}
             transition={"rotate-left"}
             transitionDuration={200}
             exitTransitionDuration={200}
             size={"60%"}
+            overlayBlur={4}
             centered
+            styles={{
+                modal: { 
+                    backgroundColor: "rgb(16, 17, 19)",
+                    border: "2px solid #25262B" 
+                }
+            }}
         >
             <div data-testId={"add-indicator-flow-container"} data-stage={formStage}>
                 {formFragment}

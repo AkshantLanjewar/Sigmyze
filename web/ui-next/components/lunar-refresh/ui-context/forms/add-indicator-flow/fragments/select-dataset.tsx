@@ -61,6 +61,11 @@ const DatasetCard: React.FC<IDatasetCardProps> = ({
 
 interface ISelectDatasetFragmentProps {
     /**
+     * This is the already active datasetId, just in case there is a previous called
+     */
+    previousId: string | undefined,
+
+    /**
      * This is the function that sets the form's current rendered buttons
      */
     setFormButtons: (buttons: IRenderedButton[]) => void,
@@ -73,13 +78,20 @@ interface ISelectDatasetFragmentProps {
     /**
      * This is the function that sets the selected dataset in the flow
      */
-    setDatasetId: (id: string) => void
+    setDatasetId: (id: string) => void,
+
+    /**
+     * This is the function that continues the UX flow
+     */
+    datasetContinue: () => void
 }
 
 const SelectDatasetFragment: React.FC<ISelectDatasetFragmentProps> = ({ 
+    previousId,
     setFormButtons, 
     resetFlow, 
-    setDatasetId 
+    setDatasetId,
+    datasetContinue 
 }) => {
     /**
      * This is a list of collected cards.
@@ -117,7 +129,7 @@ const SelectDatasetFragment: React.FC<ISelectDatasetFragmentProps> = ({
                 display: "Continue",
                 testId: "dataset-continue",
                 disabled: true,
-                onClick: (e) => {}
+                onClick: (e) => datasetContinue()
             }
         ]
 
@@ -148,6 +160,14 @@ const SelectDatasetFragment: React.FC<ISelectDatasetFragmentProps> = ({
         setSelected(datasetId)
         setDatasetId(datasetId)
     }, [])
+
+    //this is the effect that runs if a previous id was already assigned, so we can maintain the UI state
+    useEffect(() => {
+        if(previousId === undefined)
+            return
+
+        setSelected(previousId)
+    }, [previousId])
 
     return (
         <Box pos={"relative"}>

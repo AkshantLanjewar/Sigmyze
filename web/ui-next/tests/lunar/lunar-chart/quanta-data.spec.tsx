@@ -229,7 +229,7 @@ const addIndicatorSelectorPaneTEST = async (component: MountResult, page: Page) 
 
     //now we have to check there is an element with an id = country-USA
     const countrySelectorFrameLocator = countrySelectorIFrame.frameLocator(":scope")
-    const countrySelectorUSA = countrySelectorFrameLocator.locator("#country-USA")
+    const countrySelectorUSA = countrySelectorFrameLocator.locator("#country-MEX")
     await expect(countrySelectorUSA).toBeAttached()
 
     //now click on the USA country and 2 frames should be attached

@@ -41,6 +41,8 @@ const View: React.FC<IViewProps> = React.memo(({
                             textStore={textStore}
                             selectionIndex={selectionIndex}
                             selectedValues={selectedValues}
+                            selectorsLength={selectors.length}
+                            index={index}
                             setSelectorValue={setSelectorValue}
                             setSelectedIndicator={setSelectedIndicator}
                         />
