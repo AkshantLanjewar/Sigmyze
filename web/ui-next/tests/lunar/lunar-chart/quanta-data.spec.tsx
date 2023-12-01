@@ -146,6 +146,8 @@ const closeTabLocator = "close-tab"
 //here are all the tests for the spec
 
 //here are testing steps bundled as functions for easier use
+
+//TEST PASSED
 const openAddIndicatorModalTEST = async (component: MountResult, page: Page) => {
     //first we want to get the toolbar create button (button-0)
     const toolbarCreateButtonLocator = addExtensions(buttonPortalButtonBase, ["0"])
@@ -180,7 +182,7 @@ const openAddIndicatorModalTEST = async (component: MountResult, page: Page) => 
 
 const addIndicatorDatasetPaneTEST = async (component: MountResult, page: Page) => {
     //call the previous stage
-    openAddIndicatorModalTEST(component, page)
+    await openAddIndicatorModalTEST(component, page)
 
     //now we need to validate that there are 2 datasets that are returned
     const addIndicatorFlowContainer = page.getByTestId(addIndicatorFlowContainerLocator)
@@ -190,7 +192,7 @@ const addIndicatorDatasetPaneTEST = async (component: MountResult, page: Page) =
     //now we need to get the first dataset card and check the title = dummy-dataset
     const dummyDatasetCardLocator = addExtensions(datasetBase, ["0"])
     const dummyDatasetCard = datasetsContainer.getByTestId(dummyDatasetCardLocator)
-    await expect(dummyDatasetCard).toContain("dummy-dataset")
+    await expect(dummyDatasetCard).toContainText("dummy-dataset")
 
     //check that there is a cancel button
     const datasetCancelButton = page.getByTestId(datasetCancelLocator)

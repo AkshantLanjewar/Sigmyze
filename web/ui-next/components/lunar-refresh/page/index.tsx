@@ -6,6 +6,8 @@ import LunarRefreshView from "./view"
 import LunarUIContext from "../ui-context"
 import { hydratePortalButtons } from "../data-manager/functions"
 import ApplicationLayout from "../../nav-elements/application-layout"
+import AddIndicatorFlow from "../ui-context/forms/add-indicator-flow"
+import QuantaDatasetManager from "../../ui/quanta-dataset-manager"
 
 /**
  * Theese are the props required so the LunarRefresh page can successfully mount
@@ -49,7 +51,12 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
     const [modalState, setModalState] = useState<string | null>(null)
     //whether or not the editor is in debugMode
     const [editorDebugMode, setEditorDebugMode] = useState<boolean>(false)
-    
+
+    //this is a controlled toggle to activate the add indicator UX flow
+    const [addIndicatorFlowToggle, setAddIndicatorFlowToggle] = useState<boolean>(false)
+    const openAddIndicatorFlow = useCallback(() => {
+        setAddIndicatorFlowToggle(!addIndicatorFlowToggle)
+    }, [addIndicatorFlowToggle])
 
     /**
      * NOTE: This is an internal function, and should not be used outside of this component.
@@ -158,11 +165,12 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             "new-folder": () => openModal('new-folder-modal'),
             "new-note": () => openModal('new-note-modal'),
             "new-chart": () => openModal('new-chart-modal'),
-            "folder-delete": () => openModal('delete-folder-modal')
+            "folder-delete": () => openModal('delete-folder-modal'),
+            "chart-add": () => openAddIndicatorFlow()
         })
 
         setHydratedPortalButtons([...newHydratedPortalButtons])
-    }, [portalButtons])
+    }, [portalButtons, openAddIndicatorFlow])
 
     return (
         <ApplicationLayout
@@ -172,26 +180,32 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             protectedView={true}
             portalButtons={hydratedPortalButtons}
         >
-            <LunarUIContext
-                portalButtons={hydratedPortalButtons}
-                activeItemId={activeItemId}
-                activeFolderId={activeFolderId}
-                loadedFilesystem={loadedFilesystem}
-                debugMode={debugMode}
-                editorDebugMode={editorDebugMode}
-                modalState={modalState}
-                closeModal={closeModal}
-                setItemActive={setItemActive}
-                resetActive={resetActive}
-                setLoadedFilesystem={setLoadedFilesystem}
-            >
-                <LunarRefreshView
-                    fileSystem={loadedFilesystem}
+            <QuantaDatasetManager>
+                <LunarUIContext
+                    portalButtons={hydratedPortalButtons}
                     activeItemId={activeItemId}
+                    activeFolderId={activeFolderId}
+                    loadedFilesystem={loadedFilesystem}
+                    debugMode={debugMode}
+                    editorDebugMode={editorDebugMode}
+                    modalState={modalState}
+                    closeModal={closeModal}
                     setItemActive={setItemActive}
                     resetActive={resetActive}
-                />
-            </LunarUIContext>
+                    setLoadedFilesystem={setLoadedFilesystem}
+                >
+                    <>
+                        <AddIndicatorFlow activateFlow={addIndicatorFlowToggle} />
+
+                        <LunarRefreshView
+                            fileSystem={loadedFilesystem}
+                            activeItemId={activeItemId}
+                            setItemActive={setItemActive}
+                            resetActive={resetActive}
+                        />
+                    </>
+                </LunarUIContext>
+            </QuantaDatasetManager>
         </ApplicationLayout>
     )
 }

@@ -1,11 +1,7 @@
 import { memo } from 'react'
-import { IPortalButton } from '../types'
 import styles from './lunar-refresh.module.scss'
-import ApplicationLayout from '../../nav-elements/application-layout'
-import QuantaDatasetManager from '../../ui/quanta-dataset-manager'
 import { UnstyledButton } from '@mantine/core'
 import { TbFolderPlus, TbIrregularPolyhedronPlus } from 'react-icons/tb'
-import FileTreeView from '../../ui/file-management/file-tree-view'
 import { ISigmyzeFilesystem } from '../../ui/file-management/types'
 import LunarDataManager from '../data-manager'
 import FileSystemWrapper from './file-system'
@@ -47,47 +43,45 @@ const LunarRefreshView: React.FC<IViewProps> = memo(({
     resetActive 
 }) => (
     <div style={{ width: "100%", height: "100%" }}>
-        <QuantaDatasetManager>
-            <LunarDataManager>
-                <div style={{ width: "100%", height: "100%" }}>
-                    <div className={styles.lunar__container}>
-                        <div className={styles.lunar__toolbar} data-testId={'sidepanel'}>
-                            <div className={styles.lunar__stack}>
-                                <div className={styles.title__container} data-testId={'sidepanel-title'}>
-                                    <span>
-                                        Explorer
-                                    </span>
+        <LunarDataManager>
+            <div style={{ width: "100%", height: "100%" }}>
+                <div className={styles.lunar__container}>
+                    <div className={styles.lunar__toolbar} data-testId={'sidepanel'}>
+                        <div className={styles.lunar__stack}>
+                            <div className={styles.title__container} data-testId={'sidepanel-title'}>
+                                <span>
+                                    Explorer
+                                </span>
 
-                                    <div>
-                                        <UnstyledButton>
-                                            <TbFolderPlus size={14} />
-                                        </UnstyledButton>
+                                <div>
+                                    <UnstyledButton>
+                                        <TbFolderPlus size={14} />
+                                    </UnstyledButton>
 
-                                        <UnstyledButton>
-                                            <TbIrregularPolyhedronPlus size={14} />
-                                        </UnstyledButton>
-                                    </div>
+                                    <UnstyledButton>
+                                        <TbIrregularPolyhedronPlus size={14} />
+                                    </UnstyledButton>
                                 </div>
-
-                                {fileSystem
-                                    ? (
-                                        <FileSystemWrapper 
-                                            fileSystem={fileSystem} 
-                                            activeItemId={activeItemId}
-                                            setItemActive={setItemActive}
-                                            resetActive={resetActive}
-                                        />
-                                    )
-                                    : null
-                                }
                             </div>
-                        </div>
 
-                        <LunarViewport />
+                            {fileSystem
+                                ? (
+                                    <FileSystemWrapper 
+                                        fileSystem={fileSystem} 
+                                        activeItemId={activeItemId}
+                                        setItemActive={setItemActive}
+                                        resetActive={resetActive}
+                                    />
+                                )
+                                : null
+                            }
+                        </div>
                     </div>
+
+                    <LunarViewport />
                 </div>
-            </LunarDataManager>
-        </QuantaDatasetManager>
+            </div>
+        </LunarDataManager>
     </div>
 ))
 
