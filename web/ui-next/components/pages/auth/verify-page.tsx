@@ -3,7 +3,7 @@ import { useForm } from "@mantine/form"
 import { showNotification } from "@mantine/notifications"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { FormEvent, useContext, useEffect, useState } from "react"
+import { FormEvent, useCallback, useContext, useEffect, useState } from "react"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import { UserResendVerification } from "../../data/user/user-api"
@@ -20,7 +20,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
         },
     })
 
-    const userContext = useContext(UserContextData) as IUserContext
+    const { loaded, loggedIn, verified, authData, verify, logout } = useContext(UserContextData) as IUserContext
     const router = useRouter()
 
     function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -28,17 +28,17 @@ const VerifyPageComponent: React.FC = ({ }) => {
         e.preventDefault()
 
         async function main() {
-            if(userContext.verify === undefined) {
+            if(verify === undefined) {
                 setVisible(false);
                 return
             }
-            if(userContext.authData?.token === undefined) {
+            if(authData?.token === undefined) {
                 setVisible(false);
                 return
             }
 
             let code = form.values.token
-            await userContext.verify(userContext.authData.token, code)
+            await verify(authData.token, code)
             setVisible(false);
         }
 
@@ -47,7 +47,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
 
     function resendToken() {
         async function main() {
-            let token = userContext.authData?.token
+            let token = authData?.token
             if(token === undefined)
                 return
 
@@ -63,12 +63,27 @@ const VerifyPageComponent: React.FC = ({ }) => {
         main()
     }
 
+    const logoutCallback = useCallback(() => {
+        async function main() {
+            let token = authData?.token
+            if(logout === undefined || token === undefined)
+                return
+
+            await logout(token)
+        }
+
+        main()
+    }, [logout, authData])
+
     useEffect(() => {
-        if(userContext.loggedIn === false)
+        if(loaded !== true)
+            return
+
+        if(loggedIn === false)
             router.push('/')
-        if(userContext.verified === true)
+        if(verified === true)
             router.push('/drive')
-    }, [userContext.loggedIn, userContext.verified])
+    }, [loggedIn, verified, loaded])
     
     return (
         <>
@@ -123,7 +138,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
                     </Link>
                 </div>
 
-                <Link href={"#"}>
+                <Link href={"#"} onClick={() => logoutCallback()}>
                     <div className={styles.actionText}>
                         <span className={styles.link}>
                             Logout
