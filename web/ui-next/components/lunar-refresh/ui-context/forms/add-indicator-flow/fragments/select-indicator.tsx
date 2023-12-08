@@ -5,6 +5,7 @@ import { QuantaDatasetManagerData } from "../../../../../ui/quanta-dataset-manag
 import { IDatasetManagerState } from "../../../../../ui/quanta-dataset-manager/types"
 import DatasetSelectionView from "../../../../../quanta/selector-view"
 import { IRenderedButton } from "../button-renderer"
+import { IQuantaIndicatorLoc } from "../../../../data-manager/state"
 
 interface ISelectIndicatorFragmentProps {
     /**
@@ -25,14 +26,26 @@ interface ISelectIndicatorFragmentProps {
     /**
      * This is the function that sets the collected indicator id
      */
-    setIndicatorId: (id: string) => void
+    setIndicatorId: (id: string) => void,
+
+    /**
+     * This is the function that adds an indicator to the queue
+     */
+    addIndicator: (indicator: IQuantaIndicatorLoc) => void
+
+    /**
+     * This is the function that resets the entire flow
+     */
+    resetFlow: () => void
 }
 
 const SelectIndicatorFragment: React.FC<ISelectIndicatorFragmentProps> = ({ 
     datasetId,
     setFormButtons,
     datasetPrevious ,
-    setIndicatorId
+    setIndicatorId,
+    addIndicator,
+    resetFlow
 }) => {
     //whether or not the component is loading
     const [loading, setLoading] = useState<boolean>(false)
@@ -47,6 +60,8 @@ const SelectIndicatorFragment: React.FC<ISelectIndicatorFragmentProps> = ({
     const [selectors, setSelectors] = useState<IQuantaSelector[]>([])
     //this is the selected indicator within the dataset
     const [selectedIndicator, setSelectedIndicator] = useState<string>("")
+    //toggle to initiate the add indicator sequence
+    const [addToggle, setAddToggle] = useState<boolean>(false)
 
     const { primeDataset } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
     
@@ -69,7 +84,7 @@ const SelectIndicatorFragment: React.FC<ISelectIndicatorFragmentProps> = ({
                 display: "Add Indicator",
                 testId: "add-indicator",
                 disabled: true,
-                onClick: () => {}
+                onClick: () => setAddToggle(true)
             }
         ]
 
@@ -99,6 +114,23 @@ const SelectIndicatorFragment: React.FC<ISelectIndicatorFragmentProps> = ({
 
         setIndicatorId(selectedIndicator)
     }, [selectedIndicator])
+
+    /**
+     * This is the effect that runs when the add toggle runs
+     */
+    useEffect(() => {
+        if(addToggle === false || selectedIndicator.length === 0)
+            return
+
+        const addPackage: IQuantaIndicatorLoc = {
+            datasetId: datasetId,
+            indicatorId: selectedIndicator
+        }
+
+        addIndicator(addPackage)
+        setAddToggle(false)
+        resetFlow()
+    }, [addToggle, datasetId, selectedIndicator])
 
     return (
         <Box pos={"relative"}>

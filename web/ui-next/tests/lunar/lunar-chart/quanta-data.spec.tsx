@@ -312,7 +312,7 @@ const addIndicatorChartRenderTEST = async (component: MountResult, page: Page) =
     await expect(chartElementChildren.locator('> div')).toHaveCount(1)
 
     //check that the element child has title Qatar::NGDP_FY
-    const indicatorElementLocator = chartElementLocator
+    const indicatorElementLocator = chartElementLocator + "::tmp"
     const indicatorElement = chartElementChildren.getByTestId(indicatorElementLocator)
     await expect(indicatorElement).toContainText("Qatar::NGDP_FY")
 

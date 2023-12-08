@@ -1,5 +1,8 @@
 import { useCallback, useState } from "react"
-import { ILunarChart } from "../state"
+import { ILunarChart, IQuantaIndicatorLoc } from "../state"
+import { ISigmyzeFilesystem } from "../../../ui/file-management/types"
+import { IQuantaIndicatorText } from "../../../ui/quanta-dataset-manager/types"
+import { setChartIndicators } from "../../../ui/file-management/util"
 
 /**
  * @description
@@ -17,8 +20,14 @@ import { ILunarChart } from "../state"
  * @function editChartName
  *  - NOTE: this function should not be used by external functions
  *  - this is the function that changes a chart's name
+ * @function addChartIndicator
+ *  - this is the function that adds an indicator to the chart
  */
-const useRefreshChartData = () => {
+const useRefreshChartData = (
+    loadedFilesystem: ISigmyzeFilesystem | undefined,
+    updateUIFilesystem: (filesystem: ISigmyzeFilesystem) => void,
+    fetchIndicatorText: (datasetId: string, indicatorId: string) => Promise<IQuantaIndicatorText | undefined>
+) => {
     //this is the charts in the project (detached for easier editing)
     const [charts, setCharts] = useState<ILunarChart[]>([])
 
@@ -35,7 +44,8 @@ const useRefreshChartData = () => {
     const createNewChart = useCallback((chartName: string, chartId: string) => {
         const newChart: ILunarChart = {
             name: chartName,
-            objectId: chartId
+            objectId: chartId,
+            indicators: []
         }
 
         setCharts([ ...charts, newChart ])
@@ -85,12 +95,58 @@ const useRefreshChartData = () => {
         setCharts([ ...newCharts ])
     }, [charts])
 
+    /**
+     * This is the function that adds an indicator to the chart data
+     */
+    const addChartIndicator = (fileId: string, indicator: IQuantaIndicatorLoc) => {
+        let newCharts: ILunarChart[] = []
+        for(let i = 0; i < charts.length; i++) {
+            let chart = charts[i]
+            if(chart.objectId === fileId)
+                chart.indicators.push(indicator)
+
+            newCharts.push(chart)
+        }
+
+        setCharts([ ...newCharts ])
+    }
+
+    /**
+     * This is the function that handles the updating of the sigmyze filesystem 
+     * when a chart has an indicator appended
+     */
+    const updateSigmyzeIndicators = useCallback((fileId: string) => {
+        async function main() {
+            if(loadedFilesystem === undefined)
+                return
+
+            //we need to find the chart to get the list of indicators we need
+            let chart: ILunarChart | undefined = undefined
+            for(let i = 0; i < charts.length; i++) {
+                let _chart = charts[i]
+                if(_chart.objectId === fileId)
+                    chart = _chart
+            }
+
+            if(chart === undefined)
+                return
+
+            let indicators = chart.indicators
+            let newFilesystem = await setChartIndicators(loadedFilesystem, fileId, indicators, fetchIndicatorText)
+            updateUIFilesystem(newFilesystem)
+        }
+
+        main()
+    }, [charts, loadedFilesystem])
+
     return {
         charts,
         setCharts,
         createNewChart,
         deleteChart,
-        editChartName
+        editChartName,
+        addChartIndicator,
+        updateSigmyzeIndicators
     }
 }
 

@@ -9,6 +9,8 @@ import { ILunarUIState } from "../ui-context/state"
 import useRefreshChartData from "./hooks/refresh-chart-data"
 import useRefreshNoteData from "./hooks/refresh-note-data"
 import useRefreshFilesystem from "./hooks/refresh-filesystem-data"
+import { QuantaDatasetManagerData } from "../../ui/quanta-dataset-manager"
+import { IDatasetManagerState } from "../../ui/quanta-dataset-manager/types"
 
 const LunarDataManagerData = createContext<ILunarDataManagerState | null>(null)
 
@@ -20,20 +22,15 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
     //this is the lunar project being loaded in
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
 
+    const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
+
     const { 
         notes, 
+        setNotes,
         createNewNote, 
         deleteNote,
         editNoteName 
     } = useRefreshNoteData()
-
-    const { 
-        charts, 
-        setCharts, 
-        createNewChart, 
-        deleteChart,
-        editChartName 
-    } = useRefreshChartData()
 
     const { 
         fileSystem, 
@@ -53,6 +50,16 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
         messagesLeft,
         consumeSynchroMessage 
     } = useContext(LunarUIContextData) as ILunarUIState
+
+    const { 
+        charts, 
+        setCharts, 
+        createNewChart, 
+        deleteChart,
+        editChartName,
+        addChartIndicator,
+        updateSigmyzeIndicators 
+    } = useRefreshChartData(loadedFilesystem, updateUIFilesystem, fetchIndicatorText)
 
     /**
      * this effect handles the loading of project data
@@ -79,7 +86,7 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
         let newCharts = lunarProject.charts
         setCharts([ ...newCharts ])
         let newNotes = lunarProject.notes
-        setCharts([ ...newNotes ])
+        setNotes([ ...newNotes ])
         let newFileSystem = lunarProject.fileSystem
         setFilesystem({ ...newFileSystem })
     }, [lunarProject])
@@ -193,8 +200,10 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
 
     const value: ILunarDataManagerState = useMemo(() => ({
         charts,
-        notes
-    }), [charts, notes])
+        notes,
+        addChartIndicator,
+        updateSigmyzeIndicators
+    }), [charts, notes, addChartIndicator, updateSigmyzeIndicators])
 
     return (
         <>
@@ -207,4 +216,5 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
     )
 }
 
+export { LunarDataManagerData }
 export default LunarDataManager

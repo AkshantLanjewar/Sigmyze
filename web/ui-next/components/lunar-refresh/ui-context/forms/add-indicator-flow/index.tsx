@@ -1,7 +1,9 @@
 import { Modal } from "@mantine/core"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { SelectDatasetFragment, SelectIndicatorFragment } from "./fragments"
 import ButtonRenderer, { IRenderedButton } from "./button-renderer"
+import { LunarUIContextData } from "../.."
+import { ILunarUIState } from "../../state"
 
 interface IAddIndicatorFlowProps {
     /**
@@ -48,6 +50,9 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
 
     //this is the indicator id that we collect
     const [indicatorId, setIndicatorId] = useState<string | undefined>(undefined)
+
+    //here we import the function to add an indicator to the queue
+    const { addIndicator } = useContext(LunarUIContextData) as ILunarUIState
 
     //this is the method to open the modal into a fresh add indicator state
     const openAddFlow = useCallback(() => {
@@ -124,6 +129,8 @@ const AddIndicatorFlow: React.FC<IAddIndicatorFlowProps> = ({ activateFlow }) =>
                         setFormButtons={setFormButtons}
                         datasetPrevious={datasetPrevious}
                         setIndicatorId={setIndicatorId}
+                        addIndicator={addIndicator}
+                        resetFlow={resetFlow}
                     />
                 ))
 

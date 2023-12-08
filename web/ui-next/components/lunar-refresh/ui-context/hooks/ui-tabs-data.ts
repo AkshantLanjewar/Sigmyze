@@ -44,6 +44,8 @@ const useUITabs = (
     const closeTabQueue = useRef<string[]>([])
     //this is the length of the closeTabQueue, used to handle the consumption of the queue
     const [closeTabLength, setCloseTabLength] = useState<number>(0)
+    //this is the active file within the editor
+    const [activeFile, setActiveFile] = useState<string | null>(null)
 
     /**
      * NOTE: This method is shared out through the context.
@@ -110,6 +112,25 @@ const useUITabs = (
         return consumedValue
     }, [])
 
+    //this is the effect that sets the active fileId
+    useEffect(() => {
+        setActiveFile(null)
+        if(activeTab === null)
+            return
+
+        let activeFileId: string | undefined = undefined
+        for(let i = 0; i < tabs.length; i++) {
+            let tab = tabs[i]
+            if(tab.tabId === activeTab)
+                activeFileId = tab.fileId
+        }
+
+        if(activeFileId === undefined)
+            return
+
+        setActiveFile(activeFileId)
+    }, [tabs, activeTab])
+
     //effect that consumes a close tab queue (fileId)
     useEffect(() => {
         if(closeTabLength === 0)
@@ -151,6 +172,7 @@ const useUITabs = (
     return {
         tabs,
         activeTab,
+        activeFile,
         closeTabQueue,
         closeTabLength,
         setTabs,

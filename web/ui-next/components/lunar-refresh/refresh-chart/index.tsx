@@ -1,10 +1,12 @@
-import { useCallback, useContext, useEffect } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { LunarUIContextData } from "../ui-context"
 import { ILunarUIState } from "../ui-context/state"
 import useRefreshChartState from "./hooks/refresh-chart-data"
 import RefreshEngine from "./engine"
-import { useElementSize } from "@mantine/hooks"
 import ChartTitle from "./chart-title"
+import { ILunarDataManagerState, IQuantaIndicatorLoc } from "../data-manager/state"
+import { LunarDataManagerData } from "../data-manager"
+import ChartLegend from "./chart-legend"
 
 interface IRefreshChartProps {
     /**
@@ -15,7 +17,31 @@ interface IRefreshChartProps {
 }
 
 const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
-    const { editorDebugMode, getFileById, editFileTitle } = useContext(LunarUIContextData) as ILunarUIState
+    //these are the indicators that will be rendered within the chart
+    const [indicators, setIndicators] = useState<IQuantaIndicatorLoc[]>([])
+    //this is the toggle that updates the UI filetree
+    const [updateUIToggle, setUpdateUIToggle] = useState<boolean>(false)
+
+    /**
+     * this is the method that adds an indicator to the internal indicator list
+     */
+    const addIndicator = (indicator: IQuantaIndicatorLoc) => {
+        let newIndicators = indicators
+        newIndicators.push(indicator)
+
+        setIndicators([ ...newIndicators ])
+    }
+
+    const { 
+        editorDebugMode, 
+        activeFile, 
+        addQueueLength,
+        consumeIndicator,
+        getFileById, 
+        editFileTitle 
+    } = useContext(LunarUIContextData) as ILunarUIState
+
+    const { addChartIndicator, updateSigmyzeIndicators } = useContext(LunarDataManagerData) as ILunarDataManagerState
 
     //custom hooks are initiated here
     const { 
@@ -38,6 +64,37 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         let fileName = file.fileName
         editChartTitle(fileName)
     }, [fileId, editorDebugMode, getFileById])
+
+    /**
+     * This is the effect that updates the UI filesystem with the updated
+     * indicators. called by toggle so that components can properly update
+     */
+    useEffect(() => {
+        if(updateUIToggle === false)
+            return
+
+        //call the function
+        updateSigmyzeIndicators(fileId)
+        setUpdateUIToggle(false)
+    }, [updateUIToggle, fileId])
+
+
+    /**
+     * This is the effect that handles the consuming of an add indicator request
+     * if this is the current active file within the UI
+     */
+    useEffect(() => {
+        if(fileId !== activeFile  || addQueueLength === 0)
+            return
+
+        let newIndicator = consumeIndicator()
+        if(newIndicator === undefined)
+            return
+
+        addIndicator(newIndicator)
+        addChartIndicator(fileId, newIndicator)
+        setUpdateUIToggle(true)
+    }, [fileId, activeFile, addQueueLength])
 
     /**
      * NOTE: This method is to only be used by the chart-title component
@@ -72,9 +129,12 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
                 editFileTitle={editFileTitle}
             />
 
+            <ChartLegend indicators={indicators} />
+
             <RefreshEngine 
                 height={height}
                 width={width}
+                indicators={indicators}
             />
         </div>
     )

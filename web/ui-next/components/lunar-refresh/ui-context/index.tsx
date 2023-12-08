@@ -13,6 +13,7 @@ import DeleteFolderForm from "./forms/delete-folder"
 import useUITabs from "./hooks/ui-tabs-data"
 import useSynchroMessage from "./hooks/ui-synchro-data"
 import useSigmyzeFilesystemUtil from "./hooks/ui-filesystem-data"
+import { useAddQueue } from "./hooks/ui-add-indicator"
 
 const LunarUIContextData = createContext<ILunarUIState | null>(null)
 
@@ -59,11 +60,14 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
     const { 
         tabs, 
         activeTab, 
+        activeFile,
         setActiveTab, 
         closeTabCallback ,
         openTabCallback,
         addCloseFileIdTabBulk,
     } = useUITabs(loadedFilesystem, setItemActive, resetActive)
+
+    const { messages, addIndicator, consumeIndicator } = useAddQueue()
 
     //internal methods
     /**
@@ -137,13 +141,17 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
     const value: ILunarUIState = useMemo(() => ({
         portalButtons,
         activeItemId,
+        activeFile,
         loadedFilesystem,
         debugMode,
         editorDebugMode,
         messagesLeft: synchroQueueLength,
+        addQueueLength: messages,
         tabs,
         activeTab,
         setActiveTab,
+        addIndicator,
+        consumeIndicator,
         setItemActive,
         resetActive,
         setLoadedFilesystem,
@@ -156,11 +164,13 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
     }), [
         portalButtons,
         activeItemId,
+        activeFile,
         loadedFilesystem,
         debugMode,
         editorDebugMode,
         synchroQueueLength,
         tabs,
+        messages,
         activeTab,
         setItemActive,
         resetActive,
