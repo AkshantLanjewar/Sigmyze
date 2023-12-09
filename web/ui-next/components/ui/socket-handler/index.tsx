@@ -45,7 +45,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
         setSocketHandlers([ ...nHandlers ])
     }
 
-    const connect: Function = useCallback(() => {
+    const connect: Function = () => {
         if(loaded === false || loggedIn === false || testMode === true)
             return
         if(socketCreated === true)
@@ -68,16 +68,8 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
         newWebsocket.onclose = () => {
             setWebSocket(null)
             setSocketCreated(false)
-            if(dontRecreate === true)
-                return
-
-            console.log('[info]: connection dropped, connecting again in 5 seconds')
-            setTimeout(() => {
-                console.log('[info]: connecting')
-                connect()
-            }, 1000 * 5)
         }
-    }, [loaded, loggedIn, socketCreated, addMessage, dontRecreate, testMode])
+    }
 
     useEffect(() => {
         if(testMode === true)
@@ -94,13 +86,6 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
             setDontRecreate(true)
         }
     }, [testMode])
-
-    useEffect(() => {
-        if(testMode === true)
-            return
-        
-        connect() // persists connection
-    }, [loaded, loggedIn, socketCreated])
 
     //handles the inbound messaging
     useEffect(() => {
