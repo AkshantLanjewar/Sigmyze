@@ -51,6 +51,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
         if(socketCreated === true)
             return
 
+        console.debug(`connecting to ${wsServer}`)
         const newWebsocket = new WebSocket(wsServer + '/')
 
         newWebsocket.onerror = err => console.error(err)
@@ -71,7 +72,6 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
             if(dontRecreate === true)
                 return
 
-            console.log('[info]: connection dropped, connecting again in 5 seconds')
             setTimeout(() => {
                 console.log('[info]: connecting')
                 connect()

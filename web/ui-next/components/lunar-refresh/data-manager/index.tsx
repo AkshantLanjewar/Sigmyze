@@ -21,6 +21,11 @@ interface ILunarDataManagerProps {
 const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
     //this is the lunar project being loaded in
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
+    
+    //this is the ref that tracks whether or not the charts have been loaded
+    const chartInitialLoad = useRef<boolean>(false)
+    //this is the state for the context on whether or not the chartdata has been loaded
+    const [chartLoaded, setChartLoaded] = useState<boolean>(false)
 
     const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
 
