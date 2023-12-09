@@ -18,7 +18,7 @@ const parseIncomingQuery = (
                 let schemaName = pipelineLinks?.category
                 if(typeof schemaName === 'string')
                     queryObject.fieldKey = schemaName
-                else if(typeof schemaName !== 'string' && categorization !== undefined) {
+                if(typeof schemaName !== 'string' && categorization !== undefined) {
                     let categoriesMap = categorization.categoriesMap
                     let category = queryObject.stringField
                     let mapsTo = categorization.mapsTo
