@@ -111,7 +111,7 @@ const VerifyPageComponent: React.FC = ({ }) => {
                             label={"Verification Code"}
                             size={"md"}
                             variant={"filled"}
-                            type={"email"}
+                            type={"text"}
                             placeholder={"Code from E-Mail"}
                             styles={{ input: { height: 40 } }}
                             {...form.getInputProps('token')}
