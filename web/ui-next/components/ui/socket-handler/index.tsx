@@ -85,7 +85,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
             setSocketCreated(false)
             setDontRecreate(true)
         }
-    }, [testMode])
+    }, [testMode, loaded, loggedIn])
 
     //handles the inbound messaging
     useEffect(() => {
