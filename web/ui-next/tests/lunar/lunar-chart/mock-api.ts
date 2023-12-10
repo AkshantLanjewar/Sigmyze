@@ -9,6 +9,7 @@ import { IDatasetCacheObject } from "../../../components/ui/quanta-dataset-manag
 
 import mockPagedIndicators from './mock-resp/paged-indicators.json'
 import mockPrimeDataset from './mock-resp/prime.json'
+import mockIndicator from './mock-resp/indicator.json'
 
 const quantaPublicPublishedDatasetsROUTE = async (page: Page) => {
     await page.route('*/**/api/v2/dataset/published/public', async (route: Route) => {
@@ -65,9 +66,17 @@ const quantaPrimeDatasetROUTE = async (page: Page) => {
     })
 }
 
+const quantaSelectIndicator = async (page: Page) => {
+    await page.route('*/**/api/v2/dataset/select/indicator/dummy-datasetID/d5a1e253-75a1-4525-9a8e-98d8ba8e1845', async (route: Route) => {
+        let outputJSON = mockIndicator
+        await route.fulfill({ contentType: "application/json", body: JSON.stringify(outputJSON), status: 200 })
+    })
+}
+
 export { 
     quantaPublicPublishedDatasetsROUTE, 
     quantaPrimeDatasetROUTE,
     quantaSelectIndicatorLengthROUTE,
-    quantaSelectPagedIndicatorsROUTE 
+    quantaSelectPagedIndicatorsROUTE,
+    quantaSelectIndicator 
 }

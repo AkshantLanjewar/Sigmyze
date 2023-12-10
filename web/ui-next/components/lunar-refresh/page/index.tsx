@@ -32,13 +32,15 @@ interface ILunarRefreshProps {
     defaultDebugMode?: boolean
 }
 
+//TODO: Convert loaded filesystem to string so react can detect the changes
+
 const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesystem, defaultDebugMode }) => {
     //this is the title for the page TODO: implement dynamic title
     const [title, setTitle] = useState<string>("Sigmyze::Lunar")
     //theese are the portal buttons that are rendered in the side navbar
     const [portalButtons, setPortalButtons] = useState<IPortalButton[]>([])
     //this is the filesystem for the loaded lunar project
-    const [loadedFilesystem, setLoadedFilesystem] = useState<ISigmyzeFilesystem | undefined>(undefined)
+    const [loadedFilesystem, setLoadedFilesystem] = useState<string | undefined>(undefined)
     //this is the current active folderId within the file explorer
     const [activeFolderId, setActiveFolderId] = useState<string | undefined>(undefined)
     //this is the current active itemId (both folder and file id's) within the file explorer
@@ -153,7 +155,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             return
         }
 
-        setLoadedFilesystem({ ...mockFilesystem })
+        setLoadedFilesystem(JSON.stringify(mockFilesystem))
         setDebugMode(true)
     }, [mockFilesystem])
 
@@ -198,7 +200,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
                         <AddIndicatorFlow activateFlow={addIndicatorFlowToggle} />
 
                         <LunarRefreshView
-                            fileSystem={loadedFilesystem}
+                            fileSystem={loadedFilesystem ? JSON.parse(loadedFilesystem) : undefined}
                             activeItemId={activeItemId}
                             setItemActive={setItemActive}
                             resetActive={resetActive}

@@ -22,7 +22,12 @@ interface ILunarDataManagerState {
     /**
      * This is the function that adds indicator children to a file in the view component
      */
-    updateSigmyzeIndicators: (fileId: string) => void
+    updateSigmyzeIndicators: (fileId: string) => void,
+
+    /**
+     * This is the function that gets all the indicators for a specific chart
+     */
+    getChartIndicators: (fileId: string) => IQuantaIndicatorLoc[]
 }
 
 /**

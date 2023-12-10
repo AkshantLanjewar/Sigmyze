@@ -97,7 +97,7 @@ interface ILunarUIState {
     /**
      * this is the method that allows you to edit the explorer's filesystem datastructure.
      */
-    setLoadedFilesystem: Dispatch<SetStateAction<ISigmyzeFilesystem | undefined>>,
+    setLoadedFilesystem: (x: ISigmyzeFilesystem | undefined) => void,
 
     /**
      * This function pops the first synchro message off the synchro messages and returns it, if there is a message

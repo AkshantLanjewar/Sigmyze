@@ -17,7 +17,7 @@ const setChartIndicatorFILE = async (
             continue
 
         children.push({
-            icon: <IconRadar size={12} />,
+            icon: "radar",
             text: indicatorText.short
         })
     }

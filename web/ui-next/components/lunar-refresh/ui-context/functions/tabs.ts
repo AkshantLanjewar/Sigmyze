@@ -28,19 +28,21 @@ const openTab = (
     if(file === undefined)
         return
 
+    //we need to get the splitted type
+    console.log(file)
+    let typeSplit = file.fileType.split("::")
+    let fileType = typeSplit[1]
+
     //now we need to check if the fileId has already been created within the viewport, if it has we want to focus it
     for(let i = 0; i < tabs.length; i++) {
         let tab = tabs[i]
         if(tab.fileId === fileId) {
             //we want to focus and set this tab as active now
             setActiveTab(tab.tabId)
+            setItemActive(fileId, fileType)
             return
         }
     }
-
-    //we need to get the splitted type
-    let typeSplit = file.fileType.split("::")
-    let fileType = typeSplit[1]
 
     //now we need to createa new tab to insert
     const newTab: ILunarTab = {

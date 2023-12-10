@@ -38,19 +38,21 @@ const PathRenderer: React.FC<IPathRendererProps> = ({
 }) => {
     return (
         <>
-            {renderedSeries.map((step, index) => (
-                <LinePath
-                    key={`${index}-${step.indicatorId}`}
-                    innerRef={(e) => collectLineRef(e, index)}
-                    data={step.data}
-                    x={(d) => dateScale!(d.date)}
-                    y={(d) => rightScale!(d.value)}
-                    curve={curveBasis}
-                    strokeLinecap="round"
-                    stroke='#5865f2'
-                    shapeRendering="geometricPrecision"
-                />
-            ))}
+            <div id="line-renderer">
+                {renderedSeries.map((step, index) => (
+                    <LinePath
+                        key={`${index}-${step.indicatorId}`}
+                        innerRef={(e) => collectLineRef(e, index)}
+                        data={step.data}
+                        x={(d) => dateScale!(d.date)}
+                        y={(d) => rightScale!(d.value)}
+                        curve={curveBasis}
+                        strokeLinecap="round"
+                        stroke='#5865f2'
+                        shapeRendering="geometricPrecision"
+                    />
+                ))}
+            </div>
         </>
     )
 }

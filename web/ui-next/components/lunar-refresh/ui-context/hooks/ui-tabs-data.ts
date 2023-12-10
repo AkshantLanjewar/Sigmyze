@@ -32,7 +32,7 @@ import { grabFile } from "../../data-manager/functions"
  *  - this is the function that consumes a fileId from the closeQueue
  */
 const useUITabs = (
-    loadedFilesystem: ISigmyzeFilesystem | undefined,
+    loadedFilesystem: string | undefined,
     setItemActive: (itemId: string, itemType: string) => void,
     resetActive: () => void
 ) => {
@@ -51,11 +51,15 @@ const useUITabs = (
      * NOTE: This method is shared out through the context.
      * This is the callback for the function that opens a tab
      */
-    const openTabCallback = useCallback((fileId: string) => {
+    const openTabCallback = useCallback((fileId: string, rawData?: string) => {
         if(loadedFilesystem === undefined)
             return
         
-        openTab(loadedFilesystem, fileId, tabs, setTabs, setActiveTab, setItemActive)
+        let parsed: ISigmyzeFilesystem = JSON.parse(loadedFilesystem)
+        if(rawData !== undefined)
+            parsed = JSON.parse(rawData)
+
+        openTab(parsed, fileId, tabs, setTabs, setActiveTab, setItemActive)
     }, [loadedFilesystem, tabs])
 
     /**
@@ -152,12 +156,13 @@ const useUITabs = (
 
         //iterate through the tabs that are currently open
         let newTabs: ILunarTab[] = []
+        let parsed: ISigmyzeFilesystem = JSON.parse(loadedFilesystem)
         for(let i = 0; i < tabs.length; i++) {
             let tab = tabs[i]
             let tabFileId = tab.fileId
 
             //get the new file
-            let file = grabFile(loadedFilesystem, tabFileId)
+            let file = grabFile(parsed, tabFileId)
             if(file === undefined)
                 continue
 

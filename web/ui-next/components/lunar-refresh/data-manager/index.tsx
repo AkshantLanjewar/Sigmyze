@@ -21,6 +21,8 @@ interface ILunarDataManagerProps {
 const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
     //this is the lunar project being loaded in
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
+    //this is the flag to skip the filesystem reload
+    const skipFilesystem = useRef<boolean>(false)
     
     //this is the ref that tracks whether or not the charts have been loaded
     const chartInitialLoad = useRef<boolean>(false)
@@ -63,8 +65,16 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
         deleteChart,
         editChartName,
         addChartIndicator,
-        updateSigmyzeIndicators 
-    } = useRefreshChartData(loadedFilesystem, updateUIFilesystem, fetchIndicatorText)
+        updateSigmyzeIndicators,
+        getChartIndicators 
+    } = useRefreshChartData(
+        lunarProject, 
+        loadedFilesystem, 
+        skipFilesystem,
+        updateUIFilesystem, 
+        fetchIndicatorText,
+        setLunarProject
+    )
 
     /**
      * this effect handles the loading of project data
@@ -92,6 +102,11 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
         setCharts([ ...newCharts ])
         let newNotes = lunarProject.notes
         setNotes([ ...newNotes ])
+        if(skipFilesystem.current === true) {
+            skipFilesystem.current = false
+            return
+        }
+
         let newFileSystem = lunarProject.fileSystem
         setFilesystem({ ...newFileSystem })
     }, [lunarProject])
@@ -207,8 +222,15 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
         charts,
         notes,
         addChartIndicator,
-        updateSigmyzeIndicators
-    }), [charts, notes, addChartIndicator, updateSigmyzeIndicators])
+        updateSigmyzeIndicators,
+        getChartIndicators
+    }), [
+        charts, 
+        notes, 
+        addChartIndicator, 
+        updateSigmyzeIndicators,
+        getChartIndicators
+    ])
 
     return (
         <>

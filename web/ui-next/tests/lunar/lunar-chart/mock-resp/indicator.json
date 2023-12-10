@@ -1,0 +1,223 @@
+{
+    "status": {
+        "error": false,
+        "msg": "retreived"
+    },
+    "indicator": {
+        "field": {
+            "datasetFields": [
+                {
+                    "fieldKey": "i_short",
+                    "fieldType": "string",
+                    "stringField": "NGDP_FY",
+                    "dateField": null
+                },
+                {
+                    "fieldKey": "i_object",
+                    "fieldType": "string",
+                    "stringField": "Qatar",
+                    "dateField": null
+                },
+                {
+                    "fieldKey": "i_long",
+                    "fieldType": "string",
+                    "stringField": "Gross domestic product corresponding to fiscal year, current prices",
+                    "dateField": null
+                }
+            ]
+        },
+        "chartData": [
+            {
+                "xValue": 631153037,
+                "yValue": 22.809,
+                "isProjection": false
+            },
+            {
+                "xValue": 662689037,
+                "yValue": 20.308,
+                "isProjection": false
+            },
+            {
+                "xValue": 694225037,
+                "yValue": 23.238,
+                "isProjection": false
+            },
+            {
+                "xValue": 725847437,
+                "yValue": 21.127,
+                "isProjection": false
+            },
+            {
+                "xValue": 757383437,
+                "yValue": 21.643,
+                "isProjection": false
+            },
+            {
+                "xValue": 788919437,
+                "yValue": 24.973,
+                "isProjection": false
+            },
+            {
+                "xValue": 820455437,
+                "yValue": 28.249,
+                "isProjection": false
+            },
+            {
+                "xValue": 852077837,
+                "yValue": 36.314,
+                "isProjection": false
+            },
+            {
+                "xValue": 883613837,
+                "yValue": 30.895,
+                "isProjection": false
+            },
+            {
+                "xValue": 915149837,
+                "yValue": 41.007,
+                "isProjection": false
+            },
+            {
+                "xValue": 946685837,
+                "yValue": 65.828,
+                "isProjection": false
+            },
+            {
+                "xValue": 978308237,
+                "yValue": 63.692,
+                "isProjection": false
+            },
+            {
+                "xValue": 1009844237,
+                "yValue": 70.375,
+                "isProjection": false
+            },
+            {
+                "xValue": 1041380237,
+                "yValue": 86.325,
+                "isProjection": false
+            },
+            {
+                "xValue": 1072916237,
+                "yValue": 111.569,
+                "isProjection": false
+            },
+            {
+                "xValue": 1104538637,
+                "yValue": 162.476,
+                "isProjection": false
+            },
+            {
+                "xValue": 1136074637,
+                "yValue": 213.409,
+                "isProjection": false
+            },
+            {
+                "xValue": 1167610637,
+                "yValue": 276.591,
+                "isProjection": false
+            },
+            {
+                "xValue": 1199146637,
+                "yValue": 409.942,
+                "isProjection": false
+            },
+            {
+                "xValue": 1230769037,
+                "yValue": 321.032,
+                "isProjection": false
+            },
+            {
+                "xValue": 1262305037,
+                "yValue": 435.734,
+                "isProjection": false
+            },
+            {
+                "xValue": 1293841037,
+                "yValue": 610.702,
+                "isProjection": false
+            },
+            {
+                "xValue": 1325377037,
+                "yValue": 680.074,
+                "isProjection": false
+            },
+            {
+                "xValue": 1356999437,
+                "yValue": 723.369,
+                "isProjection": false
+            },
+            {
+                "xValue": 1388535437,
+                "yValue": 750.658,
+                "isProjection": false
+            },
+            {
+                "xValue": 1420071437,
+                "yValue": 588.733,
+                "isProjection": false
+            },
+            {
+                "xValue": 1451607437,
+                "yValue": 552.305,
+                "isProjection": false
+            },
+            {
+                "xValue": 1483229837,
+                "yValue": 586.401,
+                "isProjection": false
+            },
+            {
+                "xValue": 1514765837,
+                "yValue": 667.339,
+                "isProjection": false
+            },
+            {
+                "xValue": 1546301837,
+                "yValue": 641.991,
+                "isProjection": false
+            },
+            {
+                "xValue": 1577837837,
+                "yValue": 525.657,
+                "isProjection": false
+            },
+            {
+                "xValue": 1609460237,
+                "yValue": 654.025,
+                "isProjection": false
+            },
+            {
+                "xValue": 1640996237,
+                "yValue": 805.784,
+                "isProjection": false
+            },
+            {
+                "xValue": 1672532237,
+                "yValue": 851.877,
+                "isProjection": false
+            },
+            {
+                "xValue": 1704068237,
+                "yValue": 847.446,
+                "isProjection": false
+            },
+            {
+                "xValue": 1735690637,
+                "yValue": 860.657,
+                "isProjection": false
+            },
+            {
+                "xValue": 1767226637,
+                "yValue": 895.996,
+                "isProjection": false
+            },
+            {
+                "xValue": 1798762637,
+                "yValue": 932.61,
+                "isProjection": false
+            }
+        ],
+        "indicatorId": "d5a1e253-75a1-4525-9a8e-98d8ba8e1845"
+    }
+}

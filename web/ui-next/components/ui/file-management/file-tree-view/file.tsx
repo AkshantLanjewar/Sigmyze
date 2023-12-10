@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { ISigmyzeFile, ISigmyzeFileChild } from '../types'
 import styles from './file-tree-view.module.scss'
 import { Collapse, UnstyledButton } from '@mantine/core'
-import { IconChartAreaLine, IconFileDescription } from '@tabler/icons'
+import { IconChartAreaLine, IconFileDescription, IconRadar } from '@tabler/icons'
 
 const BASE_PADDING = 15
 const PADDING_INCREMENT = 23
@@ -20,6 +20,8 @@ const IconFileRenderer = (fileType: string): React.ReactNode => {
             return <IconChartAreaLine size={18} />
         case "note":
             return <IconFileDescription size={18} fill='white' color='#c1c2c5' />
+        case "radar":
+            return <IconRadar size={18} />
         default:
             return null
     }
@@ -223,10 +225,9 @@ const View: React.FC<IViewProps> = memo(({
     onClickHandler,
     openTab 
 }) => (
-    <>
+    <div data-testId={`container-element-${index}${isChild ? "::child" : ""}`}>
         <UnstyledButton 
             className={`${styles.element} ${active ? styles.active : ""}`}
-            data-testId={`container-element-${index}${isChild ? "::child" : ""}`}
             data-testValue={`element-${fileType}`}
             style={{ paddingLeft: paddingLeft }}
             onClick={(e) => {
@@ -246,30 +247,32 @@ const View: React.FC<IViewProps> = memo(({
             </div>
         </UnstyledButton>
 
-        <Collapse
-            in={active}
-            transitionDuration={100}
-            transitionTimingFunction="linear"
-        >
-            <div data-testId={"element-children"}>
-                {fileChildren.map((step, index) => (
-                    <div 
-                        data-testId={`container-element-${index}::child::tmp`}
-                        className={styles.element}
-                        style={{ paddingLeft: paddingLeft + PADDING_INCREMENT }}
-                    >
-                        <div className={styles.wrapper}>
-                            {step.icon}
+        {fileChildren.length > 0 && (
+            <Collapse
+                in={active}
+                transitionDuration={100}
+                transitionTimingFunction="linear"
+            >
+                <div data-testId={"element-children"}>
+                    {fileChildren.map((step, index) => (
+                        <div 
+                            data-testId={`container-element-${index}::child::tmp`}
+                            className={styles.element}
+                            style={{ paddingLeft: paddingLeft + PADDING_INCREMENT }}
+                        >
+                            <div className={styles.wrapper}>
+                                {IconFileRenderer(step.icon)}
 
-                            <div className={styles.name}>
-                                {step.text}
+                                <div className={styles.name}>
+                                    {step.text}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-        </Collapse>
-    </>
+                    ))}
+                </div>
+            </Collapse>
+        )}
+    </div>
 ))
 
 export { IconFileRenderer }

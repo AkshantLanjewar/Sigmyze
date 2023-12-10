@@ -62,7 +62,7 @@ interface ISigmyzeFileChild {
     /**
      * This is the icon that will be displayed alongside the child's text
      */
-    icon: React.ReactElement,
+    icon: string,
 
     /**
      * This is the text that the child will display

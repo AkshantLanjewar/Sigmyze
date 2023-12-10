@@ -21,14 +21,14 @@ interface ILunarUIContextProps {
     portalButtons: IPortalButton[],
     activeItemId: string | undefined,
     activeFolderId: string | undefined,
-    loadedFilesystem: ISigmyzeFilesystem | undefined,
+    loadedFilesystem: string | undefined,
     debugMode: boolean,
     editorDebugMode: boolean,
     modalState: string | null,
     closeModal: () => void,
     setItemActive: (itemId: string, itemType: string) => void,
     resetActive: () => void,
-    setLoadedFilesystem: Dispatch<SetStateAction<ISigmyzeFilesystem | undefined>>,
+    setLoadedFilesystem: Dispatch<SetStateAction<string | undefined>>,
     children: React.ReactNode
 }
 
@@ -75,12 +75,13 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
      * This is the callback for the method that creates a folder in the current activeFolderId directory.
      */
     const createFolderCallback = useCallback((folderName: string) => {
-        let newFilesystemOutput = createFolder(activeFolderId, folderName, loadedFilesystem)
+        let parsed = loadedFilesystem ? JSON.parse(loadedFilesystem) : undefined
+        let newFilesystemOutput = createFolder(activeFolderId, folderName, parsed)
         if(newFilesystemOutput === undefined)
             return
 
         let newFilesystem = newFilesystemOutput.filesystem
-        setLoadedFilesystem({ ...newFilesystem })
+        setLoadedFilesystem(JSON.stringify(newFilesystem))
         if(newFilesystemOutput.folderId !== undefined)
             setItemActive(newFilesystemOutput.folderId, "folder")
     }, [loadedFilesystem, activeFolderId, setItemActive])
@@ -94,15 +95,16 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
             return
         
         //TODO: Implement a feature to set the active item to the parent in the sidebar
+        let parsed = JSON.parse(loadedFilesystem)
         let newFilesystem = deleteFolder(
             folderId, 
-            loadedFilesystem, 
+            parsed, 
             addDeleteSynchroMessage,
             setItemActive,
             addCloseFileIdTabBulk
         )
 
-        setLoadedFilesystem({ ...newFilesystem })
+        setLoadedFilesystem(JSON.stringify(newFilesystem))
     }, [loadedFilesystem, addDeleteSynchroMessage, setItemActive])
 
     /**
@@ -110,8 +112,9 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
      * This is the callback for the method that creates a file in the activeFolderID's directory
      */
     const createFileCallback = useCallback((fileName: string, fileType: string) => {
+        let parsed = loadedFilesystem ? JSON.parse(loadedFilesystem) : undefined
         let newFilesystem = createFile(
-            loadedFilesystem, 
+            parsed, 
             activeFolderId, 
             fileName, 
             fileType, 
@@ -122,8 +125,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         if(sigmyzeFilesystem === undefined || newFilesystem.fileId === "null")
             return
         
-        setLoadedFilesystem({ ...sigmyzeFilesystem })
-        openTabCallback(newFilesystem.fileId)
+        setLoadedFilesystem(JSON.stringify(sigmyzeFilesystem))
+        openTabCallback(newFilesystem.fileId, JSON.stringify(sigmyzeFilesystem))
     }, [addCreateSynchroMessage, openTabCallback, loadedFilesystem, activeFolderId])
 
     /**
@@ -131,18 +134,19 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
      * This is the callback for the function that sets the requested folder's openState
      */
     const setFolderOpenStateCallback = useCallback((folderId: string, openState: boolean) => {
-        let newFilesystem = setFolderOpenState(loadedFilesystem, folderId, openState)
+        let parsed = loadedFilesystem ? JSON.parse(loadedFilesystem) : undefined
+        let newFilesystem = setFolderOpenState(parsed, folderId, openState)
         if(newFilesystem === undefined)
             return
 
-        setLoadedFilesystem({ ...newFilesystem })
+        setLoadedFilesystem(JSON.stringify(newFilesystem))
     }, [loadedFilesystem])
 
     const value: ILunarUIState = useMemo(() => ({
         portalButtons,
         activeItemId,
         activeFile,
-        loadedFilesystem,
+        loadedFilesystem: loadedFilesystem ? JSON.parse(loadedFilesystem) : undefined,
         debugMode,
         editorDebugMode,
         messagesLeft: synchroQueueLength,
@@ -154,7 +158,7 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         consumeIndicator,
         setItemActive,
         resetActive,
-        setLoadedFilesystem,
+        setLoadedFilesystem: (x: ISigmyzeFilesystem | undefined) => setLoadedFilesystem(x ? JSON.stringify(x) : undefined),
         consumeSynchroMessage,
         setFolderOpenState: setFolderOpenStateCallback,
         openTab: openTabCallback,

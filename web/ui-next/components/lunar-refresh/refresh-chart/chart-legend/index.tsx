@@ -40,7 +40,8 @@ const ChartLegend: React.FC<IChartLegendProps> = ({ indicators }) => {
         <div className={styles.legend__container} data-testId={"legend"}>
             {legendElements.map((step, index) => (
                 <div className={styles.legend__element} data-testId={`legend-item-${index}`}>
-                    <b>{step}</b>
+                    <div className={styles.ball} />
+                    <b style={{ paddingTop: 2 }}>{step}</b>
                 </div>
             ))}
         </div>

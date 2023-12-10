@@ -41,7 +41,11 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         editFileTitle 
     } = useContext(LunarUIContextData) as ILunarUIState
 
-    const { addChartIndicator, updateSigmyzeIndicators } = useContext(LunarDataManagerData) as ILunarDataManagerState
+    const { 
+        addChartIndicator, 
+        updateSigmyzeIndicators,
+        getChartIndicators 
+    } = useContext(LunarDataManagerData) as ILunarDataManagerState
 
     //custom hooks are initiated here
     const { 
@@ -56,7 +60,8 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
      * this is the method that loads the chart data
      */
     const loadChart = useCallback(() => {
-        //first we want to get the title for the chart
+
+        //we want to get the title for the chart
         let file = getFileById(fileId)
         if(file === undefined)
             return
@@ -64,6 +69,14 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         let fileName = file.fileName
         editChartTitle(fileName)
     }, [fileId, editorDebugMode, getFileById])
+
+    /**
+     * this is the effect that loads any existing indicators from the data context
+     */
+    useEffect(() => {
+        let _indicators = getChartIndicators(fileId)
+        setIndicators([ ..._indicators ])
+    }, [fileId])
 
     /**
      * This is the effect that updates the UI filesystem with the updated
@@ -76,7 +89,7 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         //call the function
         updateSigmyzeIndicators(fileId)
         setUpdateUIToggle(false)
-    }, [updateUIToggle, fileId])
+    }, [updateUIToggle, fileId, updateSigmyzeIndicators])
 
 
     /**

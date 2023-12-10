@@ -5,7 +5,7 @@ import LunarRefresh from '../../../components/lunar-refresh/page'
 import { IStatus } from '../../../components/data/datasets/DatasetsTypes'
 import { IDatasetCard } from '../../../components/data/quanta/dataset-api'
 import { IDatasetCacheObject } from '../../../components/ui/quanta-dataset-manager/types'
-import { quantaPrimeDatasetROUTE, quantaPublicPublishedDatasetsROUTE, quantaSelectIndicatorLengthROUTE, quantaSelectPagedIndicatorsROUTE } from './mock-api'
+import { quantaPrimeDatasetROUTE, quantaPublicPublishedDatasetsROUTE, quantaSelectIndicator, quantaSelectIndicatorLengthROUTE, quantaSelectPagedIndicatorsROUTE } from './mock-api'
 
 /**
  * NOTE: The testing spec is provided in the obsidian documentation for easier viewing. 
@@ -309,6 +309,8 @@ const addIndicatorChartRenderTEST = async (component: MountResult, page: Page) =
     const chartElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
     const chartElement = rootFolderChildren.getByTestId(chartElementLocator)
     const chartElementChildren = chartElement.getByTestId(elementChildrenLocator)
+
+    await page.waitForTimeout(1000 * 2.5)
     await expect(chartElementChildren.locator('> div')).toHaveCount(1)
 
     //check that the element child has title Qatar::NGDP_FY
@@ -504,6 +506,7 @@ test('[Add Indicator]: Chart Render / Legend Test', async ({ mount, page }) => {
     await quantaPrimeDatasetROUTE(page)
     await quantaSelectIndicatorLengthROUTE(page)
     await quantaSelectPagedIndicatorsROUTE(page)
+    await quantaSelectIndicator(page)
 
     const component = await mount (
         <MemoryRouterProvider url={'/lunar'}>
@@ -520,6 +523,7 @@ test('[Delete Indicator]: Settings Modal Test', async ({ mount, page }) => {
      await quantaPrimeDatasetROUTE(page)
      await quantaSelectIndicatorLengthROUTE(page)
      await quantaSelectPagedIndicatorsROUTE(page)
+     await quantaSelectIndicator(page)
 
      const component = await mount (
         <MemoryRouterProvider url={'/lunar'}>
@@ -536,6 +540,7 @@ test('[Delete Indicator]: Indicator Toolbar Test', async ({ mount, page }) => {
     await quantaPrimeDatasetROUTE(page)
     await quantaSelectIndicatorLengthROUTE(page)
     await quantaSelectPagedIndicatorsROUTE(page)
+    await quantaSelectIndicator(page)
 
     const component = await mount (
        <MemoryRouterProvider url={'/lunar'}>
@@ -552,6 +557,7 @@ test('[Delete Indicator]: Chart Legend Test', async ({ mount, page }) => {
     await quantaPrimeDatasetROUTE(page)
     await quantaSelectIndicatorLengthROUTE(page)
     await quantaSelectPagedIndicatorsROUTE(page)
+    await quantaSelectIndicator(page)
 
     const component = await mount (
        <MemoryRouterProvider url={'/lunar'}>
