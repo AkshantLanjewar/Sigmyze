@@ -3,6 +3,7 @@ import { IPortalButton } from "../types";
 import { ISigmyzeFile, ISigmyzeFilesystem } from "../../ui/file-management/types";
 import { ISynchroMessage } from "./types";
 import { ILunarTab } from "../page/viewport/types";
+import { IQuantaIndicatorLoc } from "../data-manager/state";
 
 /**
  * theese are the components that are shared from the Lunar UI Context
@@ -53,6 +54,26 @@ interface ILunarUIState {
     activeTab: string | null,
 
     /**
+     * this is the active fileId for the active tab
+     */
+     activeFile: string | null,
+
+     /**
+      * this is the add message queue length
+      */
+     addQueueLength: number,
+
+     /**
+      * This is a function that adds a quanta indicator to the queue
+      */
+     addIndicator: (indicator: IQuantaIndicatorLoc) => void,
+
+     /**
+      * This is the function that consumes an indicator from the queue
+      */
+     consumeIndicator: () => IQuantaIndicatorLoc | undefined
+
+    /**
      * this is the function that can change the active tab
      * @param activeTab 
      *  - the new value for the active tab state.
@@ -76,7 +97,7 @@ interface ILunarUIState {
     /**
      * this is the method that allows you to edit the explorer's filesystem datastructure.
      */
-    setLoadedFilesystem: Dispatch<SetStateAction<ISigmyzeFilesystem | undefined>>,
+    setLoadedFilesystem: (x: ISigmyzeFilesystem | undefined) => void,
 
     /**
      * This function pops the first synchro message off the synchro messages and returns it, if there is a message

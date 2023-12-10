@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { ISigmyzeFile, ISigmyzeFolder } from "../types"
 
 import styles from './file-tree-view.module.scss'
@@ -104,14 +104,18 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
     //whether or not the folder is active or note
     const [active, setActive] = useState(false)
 
+    //this is the ref to stop the mount from running again
+    const openMountRun = useRef<boolean>(false)
+
     /**
      * this effect makes sure that the folder is opened if the openMount option is set to true
      */
     useEffect(() => {
-        if(folder.openMount === undefined)
+        if(folder.openMount === undefined || openMountRun.current === true)
             return
 
         setOpened(folder.openMount)
+        openMountRun.current = true
     }, [folder])
 
     /**
@@ -136,6 +140,7 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
             isActive = true
 
         setActive(isActive)
+        setOpened(true)
     }, [activeItemId, folder])
 
     /**

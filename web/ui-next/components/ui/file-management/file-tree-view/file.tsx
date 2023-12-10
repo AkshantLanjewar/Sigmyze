@@ -1,8 +1,8 @@
 import { memo, useCallback, useEffect, useState } from 'react'
-import { ISigmyzeFile } from '../types'
+import { ISigmyzeFile, ISigmyzeFileChild } from '../types'
 import styles from './file-tree-view.module.scss'
-import { UnstyledButton } from '@mantine/core'
-import { IconChartAreaLine, IconFileDescription } from '@tabler/icons'
+import { Collapse, UnstyledButton } from '@mantine/core'
+import { IconChartAreaLine, IconFileDescription, IconRadar } from '@tabler/icons'
 
 const BASE_PADDING = 15
 const PADDING_INCREMENT = 23
@@ -20,6 +20,8 @@ const IconFileRenderer = (fileType: string): React.ReactNode => {
             return <IconChartAreaLine size={18} />
         case "note":
             return <IconFileDescription size={18} fill='white' color='#c1c2c5' />
+        case "radar":
+            return <IconRadar size={18} />
         default:
             return null
     }
@@ -88,12 +90,20 @@ const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChil
     const [paddingLeft, setPaddingLeft] = useState(0)
     //whether or not this component is the active element
     const [active, setActive] = useState(false)
+    //these are the children to be displayed if it has any
+    const [fileChildren, setFileChildren] = useState<ISigmyzeFileChild[]>([])
 
     /**
      * this effect aims to parse a fileType from the raw file type
-     * provided in the file prop
+     * provided in the file prop, as well as update the internal fileChildren
+     * state.
      */
     useEffect(() => {
+        //first let us get the file children
+        let children = file.children
+        if(children !== undefined)
+            setFileChildren([ ...children ])
+
         let typeSplit = file.fileType.split("::")
         if(typeSplit.length < 2)
             return
@@ -144,6 +154,7 @@ const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChil
             fileType={fileType}
             file={file}
             active={active}
+            fileChildren={fileChildren}
             onClickHandler={onClickHandler}
             openTab={openTab}
         />
@@ -185,6 +196,11 @@ interface IViewProps {
     active: boolean,
 
     /**
+     * These ar the children to be displayed for the file
+     */
+    fileChildren: ISigmyzeFileChild[],
+
+    /**
      * this is the function that is called when the file button is clicked
      */
     onClickHandler: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
@@ -205,30 +221,58 @@ const View: React.FC<IViewProps> = memo(({
     fileType, 
     file, 
     active,
+    fileChildren,
     onClickHandler,
     openTab 
 }) => (
-    <UnstyledButton 
-        className={`${styles.element} ${active ? styles.active : ""}`}
-        data-testId={`container-element-${index}${isChild ? "::child" : ""}`}
-        data-testValue={`element-${fileType}`}
-        style={{ paddingLeft: paddingLeft }}
-        onClick={(e) => {
-            openTab(file.fileId)
-            onClickHandler(e)
-        }}
-    >
-        <div className={styles.wrapper}>
-            {fileType
-                ? IconFileRenderer(fileType)
-                : null
-            }
+    <div data-testId={`container-element-${index}${isChild ? "::child" : ""}`}>
+        <UnstyledButton 
+            className={`${styles.element} ${active ? styles.active : ""}`}
+            data-testValue={`element-${fileType}`}
+            style={{ paddingLeft: paddingLeft }}
+            onClick={(e) => {
+                openTab(file.fileId)
+                onClickHandler(e)
+            }}
+        >
+            <div className={styles.wrapper}>
+                {fileType
+                    ? IconFileRenderer(fileType)
+                    : null
+                }
 
-            <div className={styles.name}>
-                {file.fileName}
+                <div className={styles.name}>
+                    {file.fileName}
+                </div>
             </div>
-        </div>
-    </UnstyledButton>
+        </UnstyledButton>
+
+        {fileChildren.length > 0 && (
+            <Collapse
+                in={active}
+                transitionDuration={100}
+                transitionTimingFunction="linear"
+            >
+                <div data-testId={"element-children"}>
+                    {fileChildren.map((step, index) => (
+                        <div 
+                            data-testId={`container-element-${index}::child::tmp`}
+                            className={styles.element}
+                            style={{ paddingLeft: paddingLeft + PADDING_INCREMENT }}
+                        >
+                            <div className={styles.wrapper}>
+                                {IconFileRenderer(step.icon)}
+
+                                <div className={styles.name}>
+                                    {step.text}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </Collapse>
+        )}
+    </div>
 ))
 
 export { IconFileRenderer }

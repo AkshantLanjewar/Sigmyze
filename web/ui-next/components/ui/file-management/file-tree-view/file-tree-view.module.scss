@@ -1,6 +1,6 @@
 .dropdownContainer {
-    min-width: 200px;
-    max-width: 300px;
+    min-width: 275px;
+    max-width: 275px;
     height: 100%;
     width: 100%;
 
@@ -19,6 +19,8 @@
         display: flex;
         align-items: center;
         align-self: stretch;
+
+        text-overflow: clip;
 
         &.active {
             background: #25262B;
@@ -46,6 +48,10 @@
                 font-style: normal;
                 font-weight: 700;
                 line-height: normal;
+
+                overflow: hidden;
+                -webkit-line-clamp: 1;
+                white-space: nowrap;
             }
         }
     }

@@ -56,6 +56,21 @@ interface ISigmyzeFolder {
 }
 
 /**
+ * this is the unique datastructure meant for the optional children of a sigmyze file
+ */
+interface ISigmyzeFileChild {
+    /**
+     * This is the icon that will be displayed alongside the child's text
+     */
+    icon: string,
+
+    /**
+     * This is the text that the child will display
+     */
+    text: string
+}
+
+/**
  * this is the datastructure definition for the sigmyze file
  */
 interface ISigmyzeFile {
@@ -80,7 +95,13 @@ interface ISigmyzeFile {
     /**
      * this is the id of the file, used to refer to the file and make changes
      */
-    fileId: string
+    fileId: string,
+
+    /**
+     * this is the children that are rendered with the file (not stored outside of sigmyze filesystem)
+     * they are not to be displayed unless the file is focused
+     */
+    children?: ISigmyzeFileChild[]
 }
 
 /**
@@ -129,5 +150,6 @@ export type {
     ISigmyzeFolder,
     ISigmyzeFile,
     ISimpleFilesystem,
-    ISimpleFolder
+    ISimpleFolder,
+    ISigmyzeFileChild
 }

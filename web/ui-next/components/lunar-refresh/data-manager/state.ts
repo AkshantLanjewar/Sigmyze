@@ -12,7 +12,22 @@ interface ILunarDataManagerState {
     /**
      * theese are notes that have been created within the current loaded project
      */
-    notes: ILunarNote[]
+    notes: ILunarNote[],
+
+    /**
+     * this is the function that adds an indicator to a chart
+     */
+    addChartIndicator: (fileId: string, indicator: IQuantaIndicatorLoc) => void,
+
+    /**
+     * This is the function that adds indicator children to a file in the view component
+     */
+    updateSigmyzeIndicators: (fileId: string) => void,
+
+    /**
+     * This is the function that gets all the indicators for a specific chart
+     */
+    getChartIndicators: (fileId: string) => IQuantaIndicatorLoc[]
 }
 
 /**
@@ -47,6 +62,21 @@ interface ILunarProject {
 }
 
 /**
+ * This is the definition for a quanta indicator that will be used
+ */
+interface IQuantaIndicatorLoc {
+    /**
+     * This is the ID for the dataset
+     */
+    datasetId: string,
+
+    /**
+     * This is the ID for the indicator that we are requesting
+     */
+    indicatorId: string
+}
+
+/**
  * this is the data definition for a lunar chart item
  */
 interface ILunarChart {
@@ -58,7 +88,12 @@ interface ILunarChart {
     /**
      * this is the file id for the chart, same concept as using v4() from uuid
      */
-    objectId: string
+    objectId: string,
+
+    /**
+     * These are the indicators that are supposed to be rendered within the chart
+     */
+    indicators: IQuantaIndicatorLoc[]
 }
 
 /**
@@ -78,6 +113,7 @@ interface ILunarNote {
 
 export type { 
     ILunarDataManagerState,
+    IQuantaIndicatorLoc,
     ILunarProject,
     ILunarChart,
     ILunarNote 
