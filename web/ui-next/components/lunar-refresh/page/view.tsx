@@ -22,6 +22,11 @@ interface IViewProps {
     activeItemId: string | undefined,
 
     /**
+     * This is the settings flow toggle to be passed to the data manager
+     */
+    settingsFlowToggle: boolean,
+
+    /**
      * this is the function passed to the file tree that can set the active item within the file tree
      * @param itemId 
      *  this is the id of the item we want to be set active
@@ -39,11 +44,12 @@ interface IViewProps {
 const LunarRefreshView: React.FC<IViewProps> = memo(({ 
     fileSystem,
     activeItemId,
+    settingsFlowToggle,
     setItemActive,
     resetActive 
 }) => (
     <div style={{ width: "100%", height: "100%" }}>
-        <LunarDataManager>
+        <LunarDataManager settingsFlowToggle={settingsFlowToggle}>
             <div style={{ width: "100%", height: "100%" }}>
                 <div className={styles.lunar__container}>
                     <div className={styles.lunar__toolbar} data-testId={'sidepanel'}>

@@ -20,7 +20,11 @@ interface IDatasetCacheObject {
     //stores data relating to the formatters
     textStore?: IQuantaTextStore; //added
     //schemas for the dataset
-    schemas?: ProjectSchemas[] //added
+    schemas?: ProjectSchemas[] //added,
+    /**
+     * This is when the cache object was retreived
+     */
+    timestamp?: number
 }
 
 interface IQuantaIndicatorShell {

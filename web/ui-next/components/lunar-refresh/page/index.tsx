@@ -60,6 +60,10 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         setAddIndicatorFlowToggle(!addIndicatorFlowToggle)
     }, [addIndicatorFlowToggle])
 
+    //this is a controlled toggle to activate the settings page for the chart
+    const [settingsFlowToggle, setSettingsFlowToggle] = useState<boolean>(false)
+    const openSettingsFlow = useCallback(() => setSettingsFlowToggle((step) => !step), [])
+
     /**
      * NOTE: This is an internal function, and should not be used outside of this component.
      * This function sets the list of rendered buttons by matching the portalId with preset buttons created in portal-buttons.tsx.
@@ -168,7 +172,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             "new-note": () => openModal('new-note-modal'),
             "new-chart": () => openModal('new-chart-modal'),
             "folder-delete": () => openModal('delete-folder-modal'),
-            "chart-add": () => openAddIndicatorFlow()
+            "chart-add": () => openAddIndicatorFlow(),
+            "chart-settings": () => openSettingsFlow()
         })
 
         setHydratedPortalButtons([...newHydratedPortalButtons])
@@ -202,6 +207,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
                         <LunarRefreshView
                             fileSystem={loadedFilesystem ? JSON.parse(loadedFilesystem) : undefined}
                             activeItemId={activeItemId}
+                            settingsFlowToggle={settingsFlowToggle}
                             setItemActive={setItemActive}
                             resetActive={resetActive}
                         />

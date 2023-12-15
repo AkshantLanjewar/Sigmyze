@@ -38,7 +38,7 @@ const PathRenderer: React.FC<IPathRendererProps> = ({
 }) => {
     return (
         <>
-            <div id="line-renderer">
+            <g id="line-renderer">
                 {renderedSeries.map((step, index) => (
                     <LinePath
                         key={`${index}-${step.indicatorId}`}
@@ -52,7 +52,7 @@ const PathRenderer: React.FC<IPathRendererProps> = ({
                         shapeRendering="geometricPrecision"
                     />
                 ))}
-            </div>
+            </g>
         </>
     )
 }

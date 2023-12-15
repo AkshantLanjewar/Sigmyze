@@ -11,14 +11,20 @@ import useRefreshNoteData from "./hooks/refresh-note-data"
 import useRefreshFilesystem from "./hooks/refresh-filesystem-data"
 import { QuantaDatasetManagerData } from "../../ui/quanta-dataset-manager"
 import { IDatasetManagerState } from "../../ui/quanta-dataset-manager/types"
+import SettingsFlow from "./forms/settings"
 
 const LunarDataManagerData = createContext<ILunarDataManagerState | null>(null)
 
 interface ILunarDataManagerProps {
+    /**
+     * this is the settings flow toggle meant to activate the flow
+     */
+    settingsFlowToggle: boolean
+
     children: React.ReactNode
 }
 
-const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
+const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle, children }) => {
     //this is the lunar project being loaded in
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
     //this is the flag to skip the filesystem reload
@@ -236,6 +242,8 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ children }) => {
         <>
             <LunarDataManagerData.Provider value={value}>
                 <div style={{ width: "100%", height: "100%" }}>
+                    <SettingsFlow settingsFlowToggle={settingsFlowToggle} />
+
                     {children}
                 </div>
             </LunarDataManagerData.Provider>

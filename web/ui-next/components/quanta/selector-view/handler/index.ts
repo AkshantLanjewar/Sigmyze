@@ -9,6 +9,8 @@ import {
     queryIndicatorsPagePublicHandler, 
     querySelectedIndicatorsPagePublicHandler 
 } from "./data"
+import { IQuantaQuery } from "../../selector-frame/types"
+import { IQuantaIndicator } from "../../quanta-indicator-manager/types"
 
 const productionMessageHandler = async (
     selectorId: string,
@@ -25,6 +27,12 @@ const productionMessageHandler = async (
     selectorLinks: ISelectorLinks,
     setSelectorValue: (selectorId: string, value: string) => void,
     setSelectedIndicator: (indicatorId: string) => void,
+    queryIndicatorsLength: (datasetId: string, query: IQuantaQuery[]) => Promise<number | undefined>,
+    indicatorsLength: (datasetId: string) => Promise<number | undefined>,
+    selectIndicators: (datasetId: string, query: IQuantaQuery[]) => Promise<IQuantaIndicator[] | undefined>,
+    queryIndicatorsPaged: (datasetId: string, pageLength: number, page: number) => Promise<IQuantaIndicator[] | undefined>,
+    selectIndicatorsPaged: (datasetId: string, query: IQuantaQuery[], pageLength: number, page: number) => Promise<IQuantaIndicator[] | undefined>,
+    fetchIndicator: (datasetId: string, indicatorId: string) => Promise<IQuantaIndicator | undefined>,
 ) => { 
     switch(messageFunction) {
         case "ping":
@@ -51,7 +59,8 @@ const productionMessageHandler = async (
                 categorization,
                 pipelineLinks,
                 getSchema,
-                postMessage
+                postMessage,
+                queryIndicatorsLength
             )
 
             break
@@ -59,7 +68,8 @@ const productionMessageHandler = async (
             await indicatorsLengthPublic(
                 data,
                 publicToken,
-                postMessage
+                postMessage,
+                indicatorsLength
             )
                 
             break
@@ -70,7 +80,8 @@ const productionMessageHandler = async (
                 postMessage,
                 categorization,
                 pipelineLinks,
-                getSchema
+                getSchema,
+                selectIndicators
             )
             
             break
@@ -78,7 +89,8 @@ const productionMessageHandler = async (
             await queryIndicatorsPagePublicHandler(
                 data,
                 publicToken,
-                postMessage
+                postMessage,
+                queryIndicatorsPaged
             )
 
             break
@@ -89,7 +101,8 @@ const productionMessageHandler = async (
                 categorization,
                 pipelineLinks,
                 getSchema,
-                postMessage
+                postMessage,
+                selectIndicatorsPaged
             )
                 
             break
@@ -97,7 +110,8 @@ const productionMessageHandler = async (
             await queryIndicatorIdPublicHandler(
                 data,
                 publicToken,
-                postMessage
+                postMessage,
+                fetchIndicator
             )
             
             break
