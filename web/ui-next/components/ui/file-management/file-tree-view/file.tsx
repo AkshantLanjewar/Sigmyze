@@ -322,11 +322,12 @@ const View: React.FC<IViewProps> = memo(({
     openTab,
     onClickChildHandler 
 }) => (
-    <div data-testId={`container-element-${index}${isChild ? "::child" : ""}`}>
+    <>
         <UnstyledButton 
             className={`${styles.element} ${active ? styles.active : ""}`}
-            data-testValue={`element-${fileType}`}
             style={{ paddingLeft: paddingLeft }}
+            data-testId={`container-element-${index}${isChild ? "::child" : ""}`}
+            data-testValue={`element-${fileType}`}
             onClick={(e) => {
                 openTab(file.fileId)
                 onClickHandler(e)
@@ -370,7 +371,7 @@ const View: React.FC<IViewProps> = memo(({
                 </div>
             </Collapse>
         )}
-    </div>
+    </>
 ))
 
 export { IconFileRenderer }
