@@ -22,6 +22,8 @@ import { setChartIndicators } from "../../../ui/file-management/util"
  *  - this is the function that changes a chart's name
  * @function addChartIndicator
  *  - this is the function that adds an indicator to the chart
+ * @function deleteChartIndicator
+ *  - this is the functoin that deletes an indicator from a specified chart
  */
 const useRefreshChartData = (
     lunarProject: ILunarProject | undefined,
@@ -139,6 +141,41 @@ const useRefreshChartData = (
     }
 
     /**
+     * This is the function that deletes an indicator from the chart data
+     */
+    const deleteChartIndicator = (fileId: string, indicator: IQuantaIndicatorLoc) => {
+        if(lunarProject === undefined)
+            return
+
+        let newLunarProject = lunarProject
+        let newCharts: ILunarChart[] = []
+        for(let i = 0; i < lunarProject.charts.length; i++) {
+            let chart = lunarProject.charts[i]
+            if(chart.objectId !== fileId) {
+                newCharts.push(chart)
+                continue
+            }
+
+            //now we want to remove the specified indicator from this chart
+            let newChartIndicators: IQuantaIndicatorLoc[] = []
+            for(let x = 0; x < chart.indicators.length; x++) {
+                let _indicator = chart.indicators[x]
+                if(_indicator.datasetId === indicator.datasetId && _indicator.indicatorId === indicator.indicatorId)
+                    continue
+
+                newChartIndicators.push(_indicator)
+            }
+
+            chart.indicators = newChartIndicators
+            newCharts.push(chart)
+        }
+
+        newLunarProject.charts = newCharts
+        skipFilesystem.current = true
+        setLunarProject({ ...newLunarProject })
+    }
+
+    /**
      * @description
      *  - This is the function that gets the indicators from the loaded chart projects
      * 
@@ -193,7 +230,8 @@ const useRefreshChartData = (
         editChartName,
         addChartIndicator,
         updateSigmyzeIndicators,
-        getChartIndicators
+        getChartIndicators,
+        deleteChartIndicator
     }
 }
 

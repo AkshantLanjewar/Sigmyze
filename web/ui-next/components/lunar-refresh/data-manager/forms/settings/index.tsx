@@ -1,6 +1,8 @@
 import { Modal } from "@mantine/core"
 import { useCallback, useEffect, useRef, useState } from "react"
 import SettingsFragment from "./fragments/settings"
+import { IQuantaIndicatorLoc } from "../../state"
+import DeleteIndicatorFragment from "./fragments/delete-indicator"
 
 interface ISettingsFlowProps {
     /**
@@ -19,6 +21,9 @@ const SettingsFlow: React.FC<ISettingsFlowProps> = ({ settingsFlowToggle }) => {
     //this is the current title for the modal
     const [modalTitle, setModalTitle] = useState<string | undefined>(undefined)
 
+    //if an event is happening this is the indicator that event is relating too
+    const eventIndicator = useRef<IQuantaIndicatorLoc | null>(null)
+
     //this is the current fragment for the modal
     const fragment = useRef<React.ReactElement | null>(null)
 
@@ -31,7 +36,9 @@ const SettingsFlow: React.FC<ISettingsFlowProps> = ({ settingsFlowToggle }) => {
         setOpen(false)
         setFragmentId(undefined)
         setModalTitle(undefined)
+
         fragment.current = null
+        eventIndicator.current = null
     }, [])
 
     //this is the function that initalizes the flow
@@ -49,7 +56,6 @@ const SettingsFlow: React.FC<ISettingsFlowProps> = ({ settingsFlowToggle }) => {
             initialFlowJank.current = false
             return
         }
-
         
         initFlow()
     }, [settingsFlowToggle])
@@ -67,7 +73,24 @@ const SettingsFlow: React.FC<ISettingsFlowProps> = ({ settingsFlowToggle }) => {
                 //first we want to set the modal title to Chart Settings
                 setModalTitle("Chart Settings")
                 //then we want to set the fragment to the correct component
-                fragment.current = <SettingsFragment />
+                fragment.current = (
+                    <SettingsFragment 
+                        eventIndicator={eventIndicator} 
+                        setFragmentId={setFragmentId}
+                    />
+                )
+
+                break
+            case "delete::indicator":
+                //first we want to set the modal title to Delete Indicator
+                setModalTitle("Delete Indicator")
+                //then we want to set the fragment to the delete indicator component
+                fragment.current = (
+                    <DeleteIndicatorFragment 
+                        eventIndicator={eventIndicator}
+                        setFragmentId={setFragmentId}
+                    />
+                )
 
                 break
             default:

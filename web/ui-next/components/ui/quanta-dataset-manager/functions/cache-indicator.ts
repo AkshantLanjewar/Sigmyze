@@ -1,4 +1,4 @@
-import { Dispatch, MutableRefObject, SetStateAction } from "react"
+import { Dispatch, MutableRefObject, SetStateAction, cache } from "react"
 import { GetDatasetIndicatorById } from "../../../data/quanta/dataset-api"
 import QuantaFormattingEngine from "../../formatting-engine"
 import { IDatasetCache, IQuantaIndicatorText } from "../types"
@@ -36,12 +36,9 @@ const fetchIndicatorCache = async (
         for(let i = 0; i < datasetIndicators.length; i++) {
             let indicator = datasetIndicators[i]
             if(indicator.indicator.indicatorId === indicatorId) {
-                bodyIndex = i
-
                 //now we have to check if the indicator is stale or not
-                const day = 1000 * 60 * 60 * 8
-                const dayAgo = Date.now() - day
-                if(indicator.timestamp < dayAgo)
+                bodyIndex = i
+                if(indicator.timestamp < indicator.expires)
                     return indicator.indicator
             }
         }
@@ -49,12 +46,15 @@ const fetchIndicatorCache = async (
         indicatorCache.current[datasetId] = []
     }
 
+    console.log(indicatorCache.current)
     let fetchedIndicator = await GetDatasetIndicatorById(datasetId, indicatorId)
     if(fetchedIndicator === undefined)
         return
 
+    const day = 1000 * 60 * 60 * 16
     let newBody: ICachedIndicator = {
         timestamp: Date.now(),
+        expires: Date.now() + day, 
         indicator: fetchedIndicator
     }
 

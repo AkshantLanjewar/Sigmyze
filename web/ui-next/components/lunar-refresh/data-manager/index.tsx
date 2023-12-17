@@ -72,7 +72,8 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         editChartName,
         addChartIndicator,
         updateSigmyzeIndicators,
-        getChartIndicators 
+        getChartIndicators,
+        deleteChartIndicator 
     } = useRefreshChartData(
         lunarProject, 
         loadedFilesystem, 
@@ -229,13 +230,15 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         notes,
         addChartIndicator,
         updateSigmyzeIndicators,
-        getChartIndicators
+        getChartIndicators,
+        deleteChartIndicator
     }), [
         charts, 
         notes, 
         addChartIndicator, 
         updateSigmyzeIndicators,
-        getChartIndicators
+        getChartIndicators,
+        deleteChartIndicator
     ])
 
     return (

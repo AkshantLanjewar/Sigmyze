@@ -21,10 +21,16 @@ interface IDatasetCacheObject {
     textStore?: IQuantaTextStore; //added
     //schemas for the dataset
     schemas?: ProjectSchemas[] //added,
+
     /**
      * This is when the cache object was retreived
      */
-    timestamp?: number
+    timestamp?: number,
+
+    /**
+     * This is when the cache object is going to expire
+     */
+    expire?: number
 }
 
 interface IQuantaIndicatorShell {

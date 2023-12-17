@@ -140,7 +140,8 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
             isActive = true
 
         setActive(isActive)
-        setOpened(true)
+        if(opened === false)
+            setOpened(true)
     }, [activeItemId, folder])
 
     /**

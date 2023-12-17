@@ -11,7 +11,8 @@ interface IFormBuilderProps {
     loading?: boolean,
     loadingStr?: string,
     submitText?: string,
-    submitStoreDependency?: string
+    submitStoreDependency?: string,
+    buttonGroup?: React.ReactElement
 }
 
 const FormBuilder: React.FC<IFormBuilderProps> = ({ 
@@ -21,7 +22,8 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({
     defaultValue, 
     loadingStr,
     submitText,
-    submitStoreDependency 
+    submitStoreDependency,
+    buttonGroup 
 }) => {
     const [valStore, setValStore] = useState<{[key: string]: any}>({})
     const [submitDisabled, setSubmitDisabled] = useState(false)
@@ -86,33 +88,38 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({
                     />
                 ))}
 
-                <Group position={"right"}>
-                    <Button
-                        variant={'subtle'}
-                        color={'red'}
-                        size={'xs'}
-                        px={'xs'}
-                        data-testId={'cancel-button'}
-                        onClick={() => { closeModal() }}
-                    >
-                        Cancel
-                    </Button>
+                {buttonGroup
+                    ? buttonGroup
+                    : (
+                        <Group position={"right"}>
+                            <Button
+                                variant={'subtle'}
+                                color={'red'}
+                                size={'xs'}
+                                px={'xs'}
+                                data-testId={'cancel-button'}
+                                onClick={() => { closeModal() }}
+                            >
+                                Cancel
+                            </Button>
 
-                    <Button
-                        variant={'subtle'}
-                        color={'indigo'}
-                        size={'xs'}
-                        px={'xs'}
-                        data-testId={'submit-button'}
-                        disabled={submitDisabled}
-                        onClick={() => { submit(forms, valStore) }}
-                    >
-                        {submitText
-                            ? submitText
-                            : "Create"
-                        }
-                    </Button>
-                </Group>
+                            <Button
+                                variant={'subtle'}
+                                color={'indigo'}
+                                size={'xs'}
+                                px={'xs'}
+                                data-testId={'submit-button'}
+                                disabled={submitDisabled}
+                                onClick={() => { submit(forms, valStore) }}
+                            >
+                                {submitText
+                                    ? submitText
+                                    : "Create"
+                                }
+                            </Button>
+                        </Group>
+                    )
+                }
             </Stack>
         </div>
     )

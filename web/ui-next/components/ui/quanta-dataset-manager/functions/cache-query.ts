@@ -65,8 +65,9 @@ const insertIndicatorIntoCache = async (
         if(cachedIndicator.indicator.indicatorId === indicator.indicatorId)
             cacheIndex = i
     }
-
-    let cacheObject: ICachedIndicator = { timestamp, indicator }
+    
+    const day = 1000 * 60 * 60 * 16
+    let cacheObject: ICachedIndicator = { timestamp, indicator, expires: Date.now() + day }
     if(cacheIndex === undefined) {
         cachedIndicators.push(cacheObject)
         setICU((step) => !step)
@@ -124,10 +125,7 @@ const getQueryCacheIndicators = (
         return { bodyIndex, indicators: undefined }
 
     let timestamp = body.timestamp
-    const day = 1000 * 60 * 60 * 8
-    const dayAgo = Date.now() - day
-
-    if(timestamp > dayAgo)
+    if(timestamp < body.expires)
         return { bodyIndex, indicators: undefined }
 
     return {
@@ -183,10 +181,13 @@ const selectIndicatorsCache = async (
     }
 
     //creating the new body and inserting it
+    const day = 1000 * 60 * 60 * 16
+    const expires = Date.now() + day
     let newBody: ICachedQueryBody = {
         timestamp: Date.now(),
         query: queryStr,
-        indicators: indicatorLocs
+        indicators: indicatorLocs,
+        expires
     }
 
     if(bodyIndex === undefined) {
@@ -249,10 +250,13 @@ const selectIndicatorsPagedCache = async (
     }
 
     //creating the new body and inserting it
+    const day = 1000 * 60 * 60 * 16
+    const expires = Date.now() + day
     let newBody: ICachedQueryBody = {
         timestamp: Date.now(),
         query: querySTR,
-        indicators: indicatorLocs
+        indicators: indicatorLocs,
+        expires
     }
 
     if(bodyIndex === undefined) {
@@ -313,10 +317,13 @@ const queryIndicatorsPagedCache = async (
     }
 
     //creating the new body and inserting it
+    const day = 1000 * 60 * 60 * 16
+    const expires = Date.now() + day
     let newBody: ICachedQueryBody = {
         timestamp: Date.now(),
         query: querySTR,
-        indicators: indicatorLocs
+        indicators: indicatorLocs,
+        expires
     }
 
     if(bodyIndex === undefined) {

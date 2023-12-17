@@ -369,20 +369,13 @@ const deleteIndicatorModalTEST = async (component: MountResult, page: Page) => {
     //call the previous step
     await addIndicatorChartRenderTEST(component, page)
 
-    //get the chart and click on it in the filetree
-    const rootFolderLocator = addExtensions(containerFolderBase, ["0"])
-    const rootFolder = component.getByTestId(rootFolderLocator)
-    const rootFolderChildren = rootFolder.getByTestId(folderChildrenLocator)
-
-    const chartElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
-    const chartElement = rootFolderChildren.getByTestId(chartElementLocator)
-    await chartElement.click()
-
     //now we have to get the chart settings button from the toolbar
     const settingsToolbarButtonLocator = addExtensions(buttonPortalButtonBase, ["1"])
     const settingsToolbarButton = component.getByTestId(settingsToolbarButtonLocator)
     await settingsToolbarButton.click()
+    await settingsToolbarButton.click()
 
+    await page.waitForTimeout(1000 * 2.5)
     //validate that the chart settings modal container is attached
     const chartSettingsModal = page.getByTestId(chartSettingsModalLocator)
     await expect(chartSettingsModal).toBeAttached()

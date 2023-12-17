@@ -64,6 +64,21 @@ interface ILunarUIState {
      addQueueLength: number,
 
      /**
+      * These are the amount of delete messages left
+      */
+     delMessages: number,
+
+     /**
+      * This is the function that adds an indicator to the delete request queue
+      */
+     deleteIndicator: (indicator: IQuantaIndicatorLoc) => void,
+
+     /**
+      * This is the function that consumes a delete indicator request from the queue
+      */
+     consumeDELIndicator: () => IQuantaIndicatorLoc | undefined
+
+     /**
       * This is a function that adds a quanta indicator to the queue
       */
      addIndicator: (indicator: IQuantaIndicatorLoc) => void,

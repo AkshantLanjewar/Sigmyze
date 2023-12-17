@@ -12,13 +12,12 @@ import { IDatasetProjectCache, IDatasetCardCache } from "../types/hooks"
  *  - this is a function that validates whether or not a dataset cache object is valid
  */
 const validateShellObject = (shellObject: IDatasetCacheObject) => {
-    if(shellObject.timestamp === undefined)
-        return
+    if(shellObject.timestamp === undefined || shellObject.expire === undefined)
+        return false
 
     //calculate the date
-    const day = 1000 * 60 * 60 * 8
-    const dayAgo = Date.now() - day
-    return shellObject.timestamp < dayAgo
+    const day = shellObject.expire
+    return shellObject.timestamp < day
 }
 
 /**
@@ -60,7 +59,10 @@ const primeDatasetCache = async (
     }
 
     //now we update the dataset cache
+    const day = 1000 * 60 * 60 * 16
     resp.shellObject.timestamp = Date.now()
+    resp.shellObject.expire = resp.shellObject.timestamp + day
+
     datasetCache.current[datasetId] = resp.shellObject
     setDCU((step) => !step)
     return resp.shellObject
@@ -86,11 +88,10 @@ const fetchDatasetEditorCache = async (
         if(editorProject.project.datasetId === datasetId) {
             //now we have to calcualte whether or not this entry is stale
             let timestamp = editorProject.timestamp
-            const day = 1000 * 60 * 60 * 8
-            const dayAgo = Date.now() - day
+            let expires = editorProject.expires
 
             prevIndex = i
-            if(timestamp < dayAgo)
+            if(timestamp < expires)
                 return editorProject.project
         }
     }
@@ -118,10 +119,13 @@ const fetchDatasetEditorCache = async (
         updateEditor: response.updateEditor
     }
 
+    const day = 1000 * 60 * 60 * 8
+    const expires = Date.now() + day
+
     if(prevIndex !== undefined)
-        datasetEditorCache.current[prevIndex] = { timestamp, project }
+        datasetEditorCache.current[prevIndex] = { timestamp, project, expires }
     else {
-        datasetEditorCache.current.push({ timestamp, project })
+        datasetEditorCache.current.push({ timestamp, project, expires })
         setDEU((step) => !step)
     }
 
@@ -207,10 +211,9 @@ const getPublicDatasetCardsCache = async ( datasetCardCache: MutableRefObject<ID
     //first we want to check if there is an entry in the cache before we fetch a fresh set of cards
     if(datasetCardCache.current !== null) {
         let timestamp = datasetCardCache.current.timestamp
-        const day = 1000 * 60 * 60 * 8
-        const dayAgo = Date.now() - day
+        let expires = datasetCardCache.current.expires
 
-        if(timestamp < dayAgo)
+        if(timestamp < expires)
             return datasetCardCache.current.cardCache
     }
 
@@ -219,8 +222,11 @@ const getPublicDatasetCardsCache = async ( datasetCardCache: MutableRefObject<ID
     if(datasetCards === undefined)
         return
 
+    const day = 1000 * 60 * 60 * 8
     let timestamp = Date.now()
-    let newCache: IDatasetCardCache = { timestamp, cardCache: datasetCards }
+    const expires = timestamp + day
+
+    let newCache: IDatasetCardCache = { timestamp, cardCache: datasetCards, expires }
     datasetCardCache.current = newCache
     return datasetCards
 }

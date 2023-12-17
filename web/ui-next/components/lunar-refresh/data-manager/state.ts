@@ -27,7 +27,12 @@ interface ILunarDataManagerState {
     /**
      * This is the function that gets all the indicators for a specific chart
      */
-    getChartIndicators: (fileId: string) => IQuantaIndicatorLoc[]
+    getChartIndicators: (fileId: string) => IQuantaIndicatorLoc[],
+
+    /**
+     * this is the function that removes an indicator from the chart
+     */
+    deleteChartIndicator: (fileId: string, indicator: IQuantaIndicatorLoc) => void
 }
 
 /**

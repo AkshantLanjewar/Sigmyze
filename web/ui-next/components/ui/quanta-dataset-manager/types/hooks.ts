@@ -13,6 +13,11 @@ interface IDatasetCardCache {
     timestamp: number,
 
     /**
+     * This is when the dataset card entry expires
+     */
+    expires: number,
+
+    /**
      * this is the cache of cards that was collected
      */
     cardCache: IDatasetCard[]
@@ -26,6 +31,11 @@ interface IDatasetProjectCache {
      * This is the timestamp of when the data was collected
      */
     timestamp: number,
+
+    /**
+     * This is when the project cache entry expires
+     */
+    expires: number,
 
     /**
      * This is the specified dataset project that is being requested
@@ -43,6 +53,11 @@ interface ICachedIndicator {
     timestamp: number,
 
     /**
+     * this is the timestamp of when the cache entry is supposed to expire
+     */
+    expires: number,
+
+    /**
      * This is the indicator that has been cached
      */
     indicator: IQuantaIndicator
@@ -56,6 +71,11 @@ interface ICachedQueryBody {
      * This is the timestamp of when the data was collected
      */
     timestamp: number,
+
+    /**
+     * This is the timestamp for when the query entry expires
+     */
+    expires: number,
 
     /**
      * This is the query that was used 
@@ -86,6 +106,11 @@ interface ICachedLengthBody {
      * This is the timestamp of when the data was collected
      */
     timestamp: number,
+
+    /**
+     * This is the timestamp of when the entry expires
+     */
+    expires: number,
 
     /**
      * This is the query that was used 

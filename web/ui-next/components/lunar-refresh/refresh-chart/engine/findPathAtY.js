@@ -37,3 +37,5 @@ export default function getPathYFromX(x, path, name, error) {
 
 	return pathYCache[key]
 }
+
+export { getPathYFromX }

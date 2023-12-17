@@ -67,6 +67,18 @@ const useQuantaChartData = (
     //this is the accessor to access the y field from the data
     const yAccessor = useCallback((d: IRenderedSeries) => d.value, [])
 
+    /**
+     * @description
+     *  - this is a simple utility function used to reset the chart to its vanilla state
+     */
+    const resetData = useCallback(() => {
+        setLoading(false)
+        setRenderedSeries([])
+
+        dateScale.current = null
+        rightScale.current = null
+    }, [])
+
     //this is the effect that fetches the indicators whenever it is updated
     useEffect(() => {
         async function main() {
@@ -92,6 +104,11 @@ const useQuantaChartData = (
 
     //this is the effect that constructs all the necessary structures in order for the chart to render
     useEffect(() => {
+        if(fetched.length === 0) {
+            resetData()
+            return
+        }
+
         //we need to convert our raw indicators into the data struct that will be rendered
         let series: IRenderedSeries[] = []
         for(let i = 0; i < fetched.length; i++) {

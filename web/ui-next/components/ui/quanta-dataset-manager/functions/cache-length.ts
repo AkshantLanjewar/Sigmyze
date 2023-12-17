@@ -43,10 +43,7 @@ const getQueryLength = (
         return { bodyIndex, length: undefined }
 
     let timestamp = body.timestamp
-    const day = 1000 * 60 * 60 * 8
-    const dayAgo = Date.now() - day
-
-    if(timestamp > dayAgo)
+    if(timestamp < body.expires)
         return { bodyIndex, length: undefined }
 
     return {
@@ -85,10 +82,14 @@ const queryIndicatorsLengthCache = async (
     if(length === undefined)
         return
 
+    //create the body
+    const day = 1000 * 60 * 60 * 16
+    const expires = Date.now() + day
     let newBody: ICachedLengthBody = {
         timestamp: Date.now(),
         query: querySTR,
-        length: length
+        length: length,
+        expires
     }
 
     if(bodyIndex === undefined) {
@@ -117,10 +118,14 @@ const indicatorsLengthCache = async (
     if(length === undefined)
         return
 
+    //create the body
+    const day = 1000 * 60 * 60 * 16
+    const expires = Date.now() + day
     let newBody: ICachedLengthBody = {
         timestamp: Date.now(),
         query: querySTR,
-        length: length
+        length: length,
+        expires
     }
 
     if(bodyIndex === undefined){

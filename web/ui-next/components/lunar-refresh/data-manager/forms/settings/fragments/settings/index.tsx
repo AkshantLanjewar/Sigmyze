@@ -1,13 +1,14 @@
-import { useContext, useEffect, useState } from 'react'
+import { Dispatch, MutableRefObject, SetStateAction, useContext, useEffect, useState } from 'react'
 import styles from './settings.module.scss'
-import { LunarUIContextData } from '../../../../ui-context'
-import { ILunarUIState } from '../../../../ui-context/state'
-import { LunarDataManagerData } from '../../..'
-import { ILunarDataManagerState, IQuantaIndicatorLoc } from '../../../state'
-import { IDatasetManagerState, IQuantaIndicatorText } from '../../../../../ui/quanta-dataset-manager/types'
-import { QuantaDatasetManagerData } from '../../../../../ui/quanta-dataset-manager'
+import { LunarUIContextData } from '../../../../../ui-context'
+import { ILunarUIState } from '../../../../../ui-context/state'
+import { LunarDataManagerData } from '../../../..'
+import { ILunarDataManagerState, IQuantaIndicatorLoc } from '../../../../state'
+import { IDatasetManagerState, IQuantaIndicatorText } from '../../../../../../ui/quanta-dataset-manager/types'
+import { QuantaDatasetManagerData } from '../../../../../../ui/quanta-dataset-manager'
 import { ActionIcon, Tooltip } from '@mantine/core'
 import { IconTrash } from '@tabler/icons'
+import ChartSettingsIndicator from './settings-indicator'
 
 /**
  * This is the type definition for an indicator rendered within the settings fragment
@@ -25,10 +26,18 @@ interface ISettingIndicator {
 }
 
 interface ISettingFragmentsProps {
+    /**
+     * This is the ref that tracks the active indicator during an event state change
+     */
+    eventIndicator: MutableRefObject<IQuantaIndicatorLoc | null>,
 
+    /**
+     * This is the function that sets the settings modal's current fragment
+     */
+    setFragmentId: Dispatch<SetStateAction<string | undefined>>
 }
 
-const SettingsFragment: React.FC<ISettingFragmentsProps> = ({ }) => {
+const SettingsFragment: React.FC<ISettingFragmentsProps> = ({ eventIndicator, setFragmentId }) => {
     //these are the RAW indicators that are currently rendered in the chart at the time of mount
     const [rawIndicators, setRawIndicators] = useState<IQuantaIndicatorLoc[]>([])
 
@@ -88,45 +97,16 @@ const SettingsFragment: React.FC<ISettingFragmentsProps> = ({ }) => {
                 </div>
 
                 <div 
-                    data-testId={"chart-indicator-settings"}
+                    data-testId={"chart-indicators-settings"}
                     className={`${styles.indicators}`}
                 >
                     {indicators.map((step, index) => (
-                        <div
-                            data-testId={`chart-setting-indicator-${index}`}
-                            className={styles.indicator}
-                        >
-                            <div className={styles.text__wrapper}>
-                                <span className={styles.ball} />
-                                
-                                <div className={styles.name}>
-                                    {step.indicatorText.short}
-                                </div>
-                            </div>
-
-                            <div className={styles.action__wrapper}>
-                                <Tooltip
-                                    position={"bottom"}
-                                    color={"dark"}
-                                    offset={10}
-                                    withArrow
-                                    label={"Delete Indicator"}
-                                    openDelay={100}
-                                    transitionDuration={300}
-                                    transition={"slide-down"}
-                                >
-                                    <ActionIcon
-                                        size={"md"}
-                                        radius={"sm"}
-                                        variant={"subtle"}
-                                        color='red'
-                                        data-testId={"indicator-delete"}
-                                    >
-                                        <IconTrash style={{ width: '70%', height: '70%' }} stroke={2} />
-                                    </ActionIcon>
-                                </Tooltip>
-                            </div>
-                        </div>
+                        <ChartSettingsIndicator
+                            index={index}
+                            indicator={step}
+                            eventIndicator={eventIndicator}
+                            setFragmentId={setFragmentId}
+                        />
                     ))}
                 </div>
             </div>
@@ -134,4 +114,6 @@ const SettingsFragment: React.FC<ISettingFragmentsProps> = ({ }) => {
     )
 }
 
+
+export type { ISettingIndicator }
 export default SettingsFragment

@@ -32,19 +32,38 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         setIndicators([ ...newIndicators ])
     }
 
+    /**
+     * This is the method that deletes an indicator from the internal indicator list
+     */
+    const deleteIndicator = (indicator: IQuantaIndicatorLoc) => {
+        let newIndicators: IQuantaIndicatorLoc[] = []
+        for(let i = 0; i < indicators.length; i++) {
+            let _indicator = indicators[i]
+            if(indicator.datasetId === _indicator.datasetId && indicator.indicatorId === _indicator.indicatorId)
+                continue
+
+            newIndicators.push(_indicator)
+        }
+
+        setIndicators([ ...newIndicators ])
+    }
+
     const { 
         editorDebugMode, 
         activeFile, 
         addQueueLength,
         consumeIndicator,
         getFileById, 
-        editFileTitle 
+        editFileTitle,
+        delMessages,
+        consumeDELIndicator 
     } = useContext(LunarUIContextData) as ILunarUIState
 
     const { 
         addChartIndicator, 
         updateSigmyzeIndicators,
-        getChartIndicators 
+        getChartIndicators,
+        deleteChartIndicator 
     } = useContext(LunarDataManagerData) as ILunarDataManagerState
 
     //custom hooks are initiated here
@@ -108,6 +127,23 @@ const RefreshChart: React.FC<IRefreshChartProps> = ({ fileId }) => {
         addChartIndicator(fileId, newIndicator)
         setUpdateUIToggle(true)
     }, [fileId, activeFile, addQueueLength])
+
+    /**
+     * This is the effect that handles the consuming of a delete indicator request
+     * if this is the current active file within the UI
+     */
+    useEffect(() => {
+        if(fileId !== activeFile || delMessages === 0)
+            return
+
+        let deleteIndicatorQ = consumeDELIndicator()
+        if(deleteIndicatorQ === undefined)
+            return
+
+        deleteIndicator(deleteIndicatorQ)
+        deleteChartIndicator(fileId, deleteIndicatorQ)
+        setUpdateUIToggle(true)
+    }, [fileId, activeFile, delMessages])
 
     /**
      * NOTE: This method is to only be used by the chart-title component

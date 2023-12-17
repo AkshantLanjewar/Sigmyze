@@ -67,7 +67,14 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         addCloseFileIdTabBulk,
     } = useUITabs(loadedFilesystem, setItemActive, resetActive)
 
-    const { messages, addIndicator, consumeIndicator } = useAddQueue()
+    const { 
+        messages, 
+        addIndicator, 
+        consumeIndicator,
+        delMessages,
+        deleteIndicator,
+        consumeDELIndicator 
+    } = useAddQueue()
 
     //internal methods
     /**
@@ -164,7 +171,10 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         openTab: openTabCallback,
         closeTab: closeTabCallback,
         getFileById,
-        editFileTitle
+        editFileTitle,
+        delMessages,
+        deleteIndicator,
+        consumeDELIndicator
     }), [
         portalButtons,
         activeItemId,
@@ -183,7 +193,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         openTabCallback,
         closeTabCallback,
         getFileById,
-        editFileTitle
+        editFileTitle,
+        delMessages
     ])
 
     return (
