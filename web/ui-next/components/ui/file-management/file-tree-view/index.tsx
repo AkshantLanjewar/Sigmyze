@@ -1,10 +1,11 @@
-import { memo, useCallback, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, memo, useCallback, useEffect, useState } from "react"
 import { ISigmyzeFile, ISigmyzeFilesystem, ISigmyzeFolder } from "../types"
 
 import styles from './file-tree-view.module.scss'
 import FileTreeFolder from "./folder"
 import FileTreeFile from "./file"
 import { v4 } from "uuid"
+import { IQuantaIndicatorLoc } from "../../../lunar-refresh/data-manager/state"
 
 /**
  * theese are the props needed for the FileTreeView component to function
@@ -51,7 +52,22 @@ interface IFileTreeViewProps {
      * @param fileId 
      *  - this is the id of the file we want to open in the viewport
      */
-    openTab: (fileId: string) => void
+    openTab: (fileId: string) => void,
+
+    /**
+     * @description
+     *  - this is the function passed to the file tree which can set the active set of portal buttons
+     * @param portalId 
+     *  - this is the type of portal buttons we want to be rendered
+     * @param itemId 
+     *  - this is the id of the item being requested NOTE: only needed for folders
+     */
+    assignPortalButtons?: (portalId: string, itemId: string) => void,
+
+    /**
+     * Function that sets the event indicator
+     */
+    setEventIndicator?: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>
 }
 
 const FileTreeView: React.FC<IFileTreeViewProps> = ({ 
@@ -60,7 +76,9 @@ const FileTreeView: React.FC<IFileTreeViewProps> = ({
     setItemActive,
     resetActive,
     setFolderOpenState,
-    openTab 
+    openTab ,
+    assignPortalButtons,
+    setEventIndicator
 }) => {
     //theese are the root level folders in the filesystem
     const [folders, setFolders] = useState<ISigmyzeFolder[]>([])
@@ -96,6 +114,8 @@ const FileTreeView: React.FC<IFileTreeViewProps> = ({
             setItemActive={setItemActive}
             setFolderOpenStateCallback={setFolderOpenStateCallback}
             openTab={openTab}
+            assignPortalButtons={assignPortalButtons}
+            setEventIndicator={setEventIndicator}
         />
     )
 }
@@ -144,10 +164,34 @@ interface IViewProps {
      * @param fileId 
      *  - this is the id of the file we want to open in the viewport
      */
-    openTab: (fileId: string) => void    
+    openTab: (fileId: string) => void,
+    
+    /**
+     * @description
+     *  - this is the function passed to the file tree which can set the active set of portal buttons
+     * @param portalId 
+     *  - this is the type of portal buttons we want to be rendered
+     * @param itemId 
+     *  - this is the id of the item being requested NOTE: only needed for folders
+     */
+    assignPortalButtons?: (portalId: string, itemId: string) => void,
+
+    /**
+     * Function that sets the event indicator
+     */
+    setEventIndicator?: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>
 }
 
-const View: React.FC<IViewProps> = memo(({ folders, files, activeItemId, setItemActive, setFolderOpenStateCallback, openTab }) => (
+const View: React.FC<IViewProps> = memo(({ 
+    folders, 
+    files, 
+    activeItemId, 
+    setItemActive, 
+    setFolderOpenStateCallback, 
+    openTab, 
+    assignPortalButtons,
+    setEventIndicator 
+}) => (
     <div data-testid={'file-dropdown-container'} className={styles.dropdownContainer}>
         {folders.map((step, index) => (
             <FileTreeFolder 
@@ -160,6 +204,8 @@ const View: React.FC<IViewProps> = memo(({ folders, files, activeItemId, setItem
                 key={`${step.folderId}-${step.folders.length}-${step.files.length}`}
                 setFolderOpenState={setFolderOpenStateCallback}
                 openTab={openTab}
+                assignPortalButtons={assignPortalButtons}
+                setEventIndicator={setEventIndicator}
             />
         ))}
 
@@ -172,6 +218,8 @@ const View: React.FC<IViewProps> = memo(({ folders, files, activeItemId, setItem
                 setItemActive={setItemActive}
                 key={step.fileId}
                 openTab={openTab}
+                assignPortalButtons={assignPortalButtons}
+                setEventIndicator={setEventIndicator}
             />
         ))}
     </div>

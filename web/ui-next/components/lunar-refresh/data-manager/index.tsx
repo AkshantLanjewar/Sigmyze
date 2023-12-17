@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
-import { ILunarChart, ILunarDataManagerState, ILunarNote, ILunarProject } from "./state"
+import { ILunarChart, ILunarDataManagerState, ILunarNote, ILunarProject, IQuantaIndicatorLoc } from "./state"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import { convertSigmyzeToSimple, convertSimpleFilesystem, generateDefaultProject } from "./functions"
@@ -12,6 +12,7 @@ import useRefreshFilesystem from "./hooks/refresh-filesystem-data"
 import { QuantaDatasetManagerData } from "../../ui/quanta-dataset-manager"
 import { IDatasetManagerState } from "../../ui/quanta-dataset-manager/types"
 import SettingsFlow from "./forms/settings"
+import DeleteIndicatorFlow from "./forms/delete-indicator"
 
 const LunarDataManagerData = createContext<ILunarDataManagerState | null>(null)
 
@@ -19,12 +20,17 @@ interface ILunarDataManagerProps {
     /**
      * this is the settings flow toggle meant to activate the flow
      */
-    settingsFlowToggle: boolean
+    settingsFlowToggle: boolean,
+
+    /**
+     * This is the delete indicator flow toggle to be passed to the data manager
+     */
+    deleteIndicatorFlowToggle: boolean,
 
     children: React.ReactNode
 }
 
-const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle, children }) => {
+const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle, deleteIndicatorFlowToggle, children }) => {
     //this is the lunar project being loaded in
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
     //this is the flag to skip the filesystem reload
@@ -34,6 +40,9 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
     const chartInitialLoad = useRef<boolean>(false)
     //this is the state for the context on whether or not the chartdata has been loaded
     const [chartLoaded, setChartLoaded] = useState<boolean>(false)
+
+    //this is the indicator that is being handled during an event
+    const [eventIndicator, setEventIndicator] = useState<IQuantaIndicatorLoc | undefined>(undefined)
 
     const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
 
@@ -228,17 +237,21 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
     const value: ILunarDataManagerState = useMemo(() => ({
         charts,
         notes,
+        eventIndicator,
         addChartIndicator,
         updateSigmyzeIndicators,
         getChartIndicators,
-        deleteChartIndicator
+        deleteChartIndicator,
+        setEventIndicator
     }), [
         charts, 
         notes, 
         addChartIndicator, 
         updateSigmyzeIndicators,
         getChartIndicators,
-        deleteChartIndicator
+        deleteChartIndicator,
+        eventIndicator,
+        setEventIndicator
     ])
 
     return (
@@ -246,6 +259,7 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
             <LunarDataManagerData.Provider value={value}>
                 <div style={{ width: "100%", height: "100%" }}>
                     <SettingsFlow settingsFlowToggle={settingsFlowToggle} />
+                    <DeleteIndicatorFlow deleteIndicatorFlowToggle={deleteIndicatorFlowToggle} />
 
                     {children}
                 </div>

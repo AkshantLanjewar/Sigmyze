@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, memo, useCallback, useEffect, useRef, useState } from "react"
 import { ISigmyzeFile, ISigmyzeFolder } from "../types"
 
 import styles from './file-tree-view.module.scss'
@@ -6,6 +6,7 @@ import { IconChevronDown, IconFolder } from "@tabler/icons"
 import { Collapse, UnstyledButton } from "@mantine/core"
 import FileTreeFile from "./file"
 import { isChildActive } from "./functions"
+import { IQuantaIndicatorLoc } from "../../../lunar-refresh/data-manager/state"
 
 const BASE_PADDING = 15
 const PADDING_INCREMENT = 23
@@ -72,7 +73,22 @@ interface IFileTreeFolderProps {
      * @param fileId 
      *  - this is the id of the file we want to open in the viewport
      */
-    openTab: (fileId: string) => void 
+    openTab: (fileId: string) => void,
+    
+    /**
+     * @description
+     *  - this is the function passed to the file tree which can set the active set of portal buttons
+     * @param portalId 
+     *  - this is the type of portal buttons we want to be rendered
+     * @param itemId 
+     *  - this is the id of the item being requested NOTE: only needed for folders
+     */
+    assignPortalButtons?: (portalId: string, itemId: string) => void,
+
+    /**
+     * Function that sets the event indicator
+     */
+    setEventIndicator?: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>
 }
 
 /**
@@ -88,7 +104,9 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
     activeItemId,
     setItemActive,
     setFolderOpenState,
-    openTab 
+    openTab,
+    assignPortalButtons,
+    setEventIndicator 
 }) => {
     //theese are the child components of the folder
     const [folders, setFolders] = useState<ISigmyzeFolder[]>([])
@@ -225,6 +243,8 @@ const FileTreeFolder: React.FC<IFileTreeFolderProps> = ({
             setItemActive={setItemActive}
             setFolderOpenState={setFolderOpenState}
             openTab={openTab}
+            assignPortalButtons={assignPortalButtons}
+            setEventIndicator={setEventIndicator}
         />
     )
 }
@@ -319,7 +339,22 @@ interface IViewProps {
      * @param fileId 
      *  - this is the id of the file we want to open in the viewport
      */
-    openTab: (fileId: string) => void 
+    openTab: (fileId: string) => void,
+    
+    /**
+     * @description
+     *  - this is the function passed to the file tree which can set the active set of portal buttons
+     * @param portalId 
+     *  - this is the type of portal buttons we want to be rendered
+     * @param itemId 
+     *  - this is the id of the item being requested NOTE: only needed for folders
+     */
+    assignPortalButtons?: (portalId: string, itemId: string) => void,
+
+    /**
+     * Function that sets the event indicator
+     */
+    setEventIndicator?: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>
 }
 
 const View: React.FC<IViewProps> = memo(({
@@ -337,7 +372,9 @@ const View: React.FC<IViewProps> = memo(({
     onClickHandler,
     setItemActive,
     setFolderOpenState,
-    openTab
+    openTab,
+    assignPortalButtons,
+    setEventIndicator
 }) => (
     <div
         data-testId={`container-folder-${index}${appendChild ? "::child" : ""}`} 
@@ -384,6 +421,8 @@ const View: React.FC<IViewProps> = memo(({
                         key={`${step.folderId}-${step.folders.length}-${step.files.length}`}
                         setFolderOpenState={setFolderOpenState}
                         openTab={openTab}
+                        assignPortalButtons={assignPortalButtons}
+                        setEventIndicator={setEventIndicator}
                     />
                 ))}
 
@@ -397,6 +436,8 @@ const View: React.FC<IViewProps> = memo(({
                         setItemActive={setItemActive}
                         key={step.fileId}
                         openTab={openTab}
+                        assignPortalButtons={assignPortalButtons}
+                        setEventIndicator={setEventIndicator}
                     />
                 ))}
             </div>

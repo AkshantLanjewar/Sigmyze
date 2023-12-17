@@ -18,7 +18,8 @@ const setChartIndicatorFILE = async (
 
         children.push({
             icon: "radar",
-            text: indicatorText.short
+            text: indicatorText.short,
+            indicator
         })
     }
 

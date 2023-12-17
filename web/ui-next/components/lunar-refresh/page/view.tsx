@@ -27,6 +27,11 @@ interface IViewProps {
     settingsFlowToggle: boolean,
 
     /**
+     * This is the delete indicator flow toggle to be passed to the data manager
+     */
+    deleteIndicatorFlowToggle: boolean,
+
+    /**
      * this is the function passed to the file tree that can set the active item within the file tree
      * @param itemId 
      *  this is the id of the item we want to be set active
@@ -38,7 +43,17 @@ interface IViewProps {
     /**
      * this function resets the active Id to the project root folder
      */
-    resetActive: () => void
+    resetActive: () => void,
+
+    /**
+     * @description
+     *  - this is the function passed to the file tree which can set the active set of portal buttons
+     * @param portalId 
+     *  - this is the type of portal buttons we want to be rendered
+     * @param itemId 
+     *  - this is the id of the item being requested NOTE: only needed for folders
+     */
+    assignPortalButtons: (portalId: string, itemId: string) => void
 }
 
 const LunarRefreshView: React.FC<IViewProps> = memo(({ 
@@ -46,10 +61,15 @@ const LunarRefreshView: React.FC<IViewProps> = memo(({
     activeItemId,
     settingsFlowToggle,
     setItemActive,
-    resetActive 
+    resetActive,
+    assignPortalButtons,
+    deleteIndicatorFlowToggle 
 }) => (
     <div style={{ width: "100%", height: "100%" }}>
-        <LunarDataManager settingsFlowToggle={settingsFlowToggle}>
+        <LunarDataManager
+            settingsFlowToggle={settingsFlowToggle}
+            deleteIndicatorFlowToggle={deleteIndicatorFlowToggle}
+        >
             <div style={{ width: "100%", height: "100%" }}>
                 <div className={styles.lunar__container}>
                     <div className={styles.lunar__toolbar} data-testId={'sidepanel'}>
@@ -77,6 +97,7 @@ const LunarRefreshView: React.FC<IViewProps> = memo(({
                                         activeItemId={activeItemId}
                                         setItemActive={setItemActive}
                                         resetActive={resetActive}
+                                        assignPortalButtons={assignPortalButtons}
                                     />
                                 )
                                 : null

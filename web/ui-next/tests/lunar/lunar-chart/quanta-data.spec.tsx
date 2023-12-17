@@ -419,7 +419,7 @@ const deleteIndicatorToolbarTEST = async (component: MountResult, page: Page) =>
     const chartElement = rootFolderChildren.getByTestId(chartElementLocator)
     const chartElementChildren = chartElement.getByTestId(elementChildrenLocator)
 
-    const indicatorElementLocator = chartElementLocator
+    const indicatorElementLocator = chartElementLocator + "::tmp"
     const indicatorElement = chartElementChildren.getByTestId(indicatorElementLocator)
     await indicatorElement.click()
 

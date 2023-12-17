@@ -71,6 +71,15 @@ const PORTAL_BUTTONS_CHART = [
     }
 ] as IPortalButton[]
 
+const PORTAL_BUTTONS_INDICATOR = [
+    {
+        buttonColor: "red",
+        buttonIcon: <IconTrash />,
+        buttonId: "indicator-remove",
+        onClick: () => {}
+    }
+] as IPortalButton[]
+
 const PORTAL_BUTTONS_NOTE = [
     {
         buttonColor: "gray",
@@ -89,5 +98,6 @@ const PORTAL_BUTTONS_NOTE = [
 export {
     PORTAL_BUTTONS_FOLDER,
     PORTAL_BUTTONS_CHART,
-    PORTAL_BUTTONS_NOTE
+    PORTAL_BUTTONS_NOTE,
+    PORTAL_BUTTONS_INDICATOR
 }

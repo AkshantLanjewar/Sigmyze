@@ -1,8 +1,9 @@
-import { memo, useCallback, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, memo, useCallback, useEffect, useState } from 'react'
 import { ISigmyzeFile, ISigmyzeFileChild } from '../types'
 import styles from './file-tree-view.module.scss'
 import { Collapse, UnstyledButton } from '@mantine/core'
 import { IconChartAreaLine, IconFileDescription, IconRadar } from '@tabler/icons'
+import { IQuantaIndicatorLoc } from '../../../lunar-refresh/data-manager/state'
 
 const BASE_PADDING = 15
 const PADDING_INCREMENT = 23
@@ -76,14 +77,39 @@ interface IFileTreeFileProps {
      * @param fileId 
      *  - this is the id of the file we want to open in the viewport
      */
-    openTab: (fileId: string) => void 
+    openTab: (fileId: string) => void,
+    
+    /**
+     * @description
+     *  - this is the function passed to the file tree which can set the active set of portal buttons
+     * @param portalId 
+     *  - this is the type of portal buttons we want to be rendered
+     * @param itemId 
+     *  - this is the id of the item being requested NOTE: only needed for folders
+     */
+    assignPortalButtons?: (portalId: string, itemId: string) => void,
+
+    /**
+     * Function that sets the event indicator
+     */
+    setEventIndicator?: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>
 }
 
 /**
  * NOTE: This component should only be used within the context of the FileTreeView component
  * this component renders a FileTreeFile within the editor, and adds appropriate amounts of padding when necessary
  */
-const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChild, activeItemId, setItemActive, openTab }) => {
+const FileTreeFile: React.FC<IFileTreeFileProps> = ({ 
+    index, 
+    file, 
+    order, 
+    isChild, 
+    activeItemId, 
+    setItemActive, 
+    openTab,
+    assignPortalButtons,
+    setEventIndicator 
+}) => {
     //this is the parsed file type, undefined if not set
     const [fileType, setFileType] = useState<string | undefined>(undefined)
     //this is the padding for the element
@@ -92,6 +118,30 @@ const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChil
     const [active, setActive] = useState(false)
     //these are the children to be displayed if it has any
     const [fileChildren, setFileChildren] = useState<ISigmyzeFileChild[]>([])
+    //this is the internally active element, used to track children within the file component
+    const [internalActive, setInternalActive] = useState<string | undefined>(undefined)
+
+    /**
+     * This is the effect that calculates whether or not the internal active is in the file's children
+     * if it isnt, it reverts focus back to the parent file
+     */
+    useEffect(() => {
+        if(internalActive === undefined)
+            return
+
+        let childExists = false
+        for(let i = 0; i < fileChildren.length; i++) {
+            let child = fileChildren[i]
+            if(child.text === internalActive)
+                childExists = true
+        }
+
+        if(childExists === false) {
+            setInternalActive(undefined)
+            assignPortalButtons ? assignPortalButtons("chart", "swag") : null
+            setEventIndicator ? setEventIndicator(undefined) : null
+        }
+    }, [fileChildren, internalActive])
 
     /**
      * this effect aims to parse a fileType from the raw file type
@@ -129,6 +179,8 @@ const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChil
         let isActive = false
         if(activeItemId === file.fileId)
             isActive = true
+        if(isActive === false && active === true && setEventIndicator !== undefined)
+            setEventIndicator(undefined)
 
         setActive(isActive)
     }, [file, activeItemId])
@@ -144,7 +196,28 @@ const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChil
 
         let fileId = file.fileId
         setItemActive(fileId, fileType)
-    }, [file, setItemActive, fileType])
+        setInternalActive(undefined)
+
+        if(setEventIndicator !== undefined)
+            setEventIndicator(undefined)
+    }, [file, setItemActive, fileType, setEventIndicator])
+
+    /**
+     * @description
+     *  - This is the function that handles when a file child is clicked
+     * @param childId
+     *  - this is the ID of the child element for the file
+     */
+    const onClickChildHandler = (childId: string, indicator?: IQuantaIndicatorLoc) => {
+        if(active === false)
+            return
+
+        setInternalActive(childId)
+        if(file.fileType === "quanta::chart" && indicator !== undefined) {
+            assignPortalButtons ? assignPortalButtons("indicator", "swag") : null
+            setEventIndicator ? setEventIndicator({ ...indicator }) : null
+        }
+    }
     
     return (
         <View
@@ -153,10 +226,13 @@ const FileTreeFile: React.FC<IFileTreeFileProps> = ({ index, file, order, isChil
             isChild={isChild}
             fileType={fileType}
             file={file}
-            active={active}
+            active={active && internalActive === undefined}
+            rActive={active}
             fileChildren={fileChildren}
+            internalActive={internalActive}
             onClickHandler={onClickHandler}
             openTab={openTab}
+            onClickChildHandler={onClickChildHandler}
         />
     )
 }
@@ -196,9 +272,19 @@ interface IViewProps {
     active: boolean,
 
     /**
+     * real active value
+     */
+    rActive: boolean,
+
+    /**
      * These ar the children to be displayed for the file
      */
     fileChildren: ISigmyzeFileChild[],
+
+    /**
+     * This is the item that is internally active
+     */
+    internalActive: string | undefined,
 
     /**
      * this is the function that is called when the file button is clicked
@@ -211,7 +297,15 @@ interface IViewProps {
      * @param fileId 
      *  - this is the id of the file we want to open in the viewport
      */
-    openTab: (fileId: string) => void 
+    openTab: (fileId: string) => void,
+    
+    /**
+     * @description
+     *  - this is the function that handles the onCLick event for a child element
+     * @param childId 
+     *  - the id of the child element
+     */
+    onClickChildHandler: (childId: string, indicator?: IQuantaIndicatorLoc) => void
 }
 
 const View: React.FC<IViewProps> = memo(({ 
@@ -221,9 +315,12 @@ const View: React.FC<IViewProps> = memo(({
     fileType, 
     file, 
     active,
+    rActive,
     fileChildren,
+    internalActive,
     onClickHandler,
-    openTab 
+    openTab,
+    onClickChildHandler 
 }) => (
     <div data-testId={`container-element-${index}${isChild ? "::child" : ""}`}>
         <UnstyledButton 
@@ -249,7 +346,7 @@ const View: React.FC<IViewProps> = memo(({
 
         {fileChildren.length > 0 && (
             <Collapse
-                in={active}
+                in={rActive}
                 transitionDuration={100}
                 transitionTimingFunction="linear"
             >
@@ -257,8 +354,9 @@ const View: React.FC<IViewProps> = memo(({
                     {fileChildren.map((step, index) => (
                         <div 
                             data-testId={`container-element-${index}::child::tmp`}
-                            className={styles.element}
+                            className={`${styles.element} ${step.text === internalActive ? styles.active : ""}`}
                             style={{ paddingLeft: paddingLeft + PADDING_INCREMENT }}
+                            onClick={() => onClickChildHandler(step.text, step.indicator)}
                         >
                             <div className={styles.wrapper}>
                                 {IconFileRenderer(step.icon)}

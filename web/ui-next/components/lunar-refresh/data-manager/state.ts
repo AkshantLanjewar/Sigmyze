@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react"
 import { ISimpleFilesystem } from "../../ui/file-management/types"
 
 /**
@@ -13,6 +14,11 @@ interface ILunarDataManagerState {
      * theese are notes that have been created within the current loaded project
      */
     notes: ILunarNote[],
+
+    /**
+     * This is the indicator actively being used during an event
+     */
+    eventIndicator: IQuantaIndicatorLoc | undefined,
 
     /**
      * this is the function that adds an indicator to a chart
@@ -32,7 +38,12 @@ interface ILunarDataManagerState {
     /**
      * this is the function that removes an indicator from the chart
      */
-    deleteChartIndicator: (fileId: string, indicator: IQuantaIndicatorLoc) => void
+    deleteChartIndicator: (fileId: string, indicator: IQuantaIndicatorLoc) => void,
+
+    /**
+     * Function that sets the event indicator
+     */
+    setEventIndicator: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>
 }
 
 /**

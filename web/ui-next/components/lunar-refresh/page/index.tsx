@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { IPortalButton } from "../types"
-import { PORTAL_BUTTONS_CHART, PORTAL_BUTTONS_FOLDER, PORTAL_BUTTONS_NOTE } from "./portal-buttons"
+import { PORTAL_BUTTONS_CHART, PORTAL_BUTTONS_FOLDER, PORTAL_BUTTONS_INDICATOR, PORTAL_BUTTONS_NOTE } from "./portal-buttons"
 import { ISigmyzeFilesystem } from "../../ui/file-management/types"
 import LunarRefreshView from "./view"
 import LunarUIContext from "../ui-context"
@@ -8,6 +8,7 @@ import { hydratePortalButtons } from "../data-manager/functions"
 import ApplicationLayout from "../../nav-elements/application-layout"
 import AddIndicatorFlow from "../ui-context/forms/add-indicator-flow"
 import QuantaDatasetManager from "../../ui/quanta-dataset-manager"
+import { useLunarToggles } from "./hooks"
 
 /**
  * Theese are the props required so the LunarRefresh page can successfully mount
@@ -54,15 +55,14 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
     //whether or not the editor is in debugMode
     const [editorDebugMode, setEditorDebugMode] = useState<boolean>(false)
 
-    //this is a controlled toggle to activate the add indicator UX flow
-    const [addIndicatorFlowToggle, setAddIndicatorFlowToggle] = useState<boolean>(false)
-    const openAddIndicatorFlow = useCallback(() => {
-        setAddIndicatorFlowToggle(!addIndicatorFlowToggle)
-    }, [addIndicatorFlowToggle])
-
-    //this is a controlled toggle to activate the settings page for the chart
-    const [settingsFlowToggle, setSettingsFlowToggle] = useState<boolean>(false)
-    const openSettingsFlow = useCallback(() => setSettingsFlowToggle((step) => !step), [])
+    const {
+        addIndicatorFlowToggle,
+        settingsFlowToggle,
+        deleteIndicatorFlowToggle,
+        openAddIndicatorFlow,
+        openSettingsFlow,
+        openDeleteIndicatorFlow
+    } = useLunarToggles()
 
     /**
      * NOTE: This is an internal function, and should not be used outside of this component.
@@ -84,6 +84,9 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
                 break
             case "note":
                 setPortalButtons([ ...PORTAL_BUTTONS_NOTE ])
+                break
+            case "indicator":
+                setPortalButtons([ ...PORTAL_BUTTONS_INDICATOR ])
                 break
             default:
                 return
@@ -173,7 +176,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             "new-chart": () => openModal('new-chart-modal'),
             "folder-delete": () => openModal('delete-folder-modal'),
             "chart-add": () => openAddIndicatorFlow(),
-            "chart-settings": () => openSettingsFlow()
+            "chart-settings": () => openSettingsFlow(),
+            "indicator-remove": () => openDeleteIndicatorFlow()
         })
 
         setHydratedPortalButtons([...newHydratedPortalButtons])
@@ -210,6 +214,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
                             settingsFlowToggle={settingsFlowToggle}
                             setItemActive={setItemActive}
                             resetActive={resetActive}
+                            assignPortalButtons={assignPortalButtons}
+                            deleteIndicatorFlowToggle={deleteIndicatorFlowToggle}
                         />
                     </>
                 </LunarUIContext>

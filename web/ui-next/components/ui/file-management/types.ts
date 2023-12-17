@@ -1,3 +1,5 @@
+import { IQuantaIndicatorLoc } from "../../lunar-refresh/data-manager/state"
+
 /**
  * this is the datastructure that defines how all filesystems will be stored in sigmyze
  */
@@ -67,7 +69,12 @@ interface ISigmyzeFileChild {
     /**
      * This is the text that the child will display
      */
-    text: string
+    text: string,
+
+    /**
+     * If the child has an associated indicator with it
+     */
+    indicator?: IQuantaIndicatorLoc
 }
 
 /**
