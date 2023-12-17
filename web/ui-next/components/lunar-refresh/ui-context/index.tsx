@@ -29,6 +29,12 @@ interface ILunarUIContextProps {
     setItemActive: (itemId: string, itemType: string) => void,
     resetActive: () => void,
     setLoadedFilesystem: Dispatch<SetStateAction<string | undefined>>,
+
+    /**
+     * This is the function that opens the delete indicator flow
+     */
+    openDeleteIndicatorFlow: () => void
+
     children: React.ReactNode
 }
 
@@ -44,6 +50,7 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
     setItemActive,
     resetActive,
     setLoadedFilesystem,
+    openDeleteIndicatorFlow,
     children
 }) => {
     //state hooks
@@ -174,7 +181,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         editFileTitle,
         delMessages,
         deleteIndicator,
-        consumeDELIndicator
+        consumeDELIndicator,
+        openDeleteIndicatorFlow
     }), [
         portalButtons,
         activeItemId,
@@ -194,7 +202,8 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         closeTabCallback,
         getFileById,
         editFileTitle,
-        delMessages
+        delMessages,
+        openDeleteIndicatorFlow
     ])
 
     return (

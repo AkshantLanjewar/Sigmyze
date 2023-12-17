@@ -148,7 +148,13 @@ interface ILunarUIState {
      *  - this is the fileId of the file we want
      */
     getFileById: (fileId: string) => ISigmyzeFile | undefined,
-    editFileTitle: (fileId: string, fileType: string, newTitle: string) => void
+
+    editFileTitle: (fileId: string, fileType: string, newTitle: string) => void,
+
+    /**
+     * This is the function that opens the delete indicator flow
+     */
+    openDeleteIndicatorFlow: () => void
 }
 
 export type { ILunarUIState }

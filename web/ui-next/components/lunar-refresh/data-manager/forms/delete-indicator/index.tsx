@@ -56,7 +56,7 @@ const DeleteIndicatorFlow: React.FC<IDeleteIndicatorFlowProps> = ({ deleteIndica
             if(eventIndicator === undefined)
                 return
 
-            let indicatorText = await fetchIndicatorText(eventIndicator.datasetId, eventIndicator.datasetId)
+            let indicatorText = await fetchIndicatorText(eventIndicator.datasetId, eventIndicator.indicatorId)
             if(indicatorText === undefined)
                 return
 

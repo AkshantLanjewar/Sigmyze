@@ -204,6 +204,7 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
                     setItemActive={setItemActive}
                     resetActive={resetActive}
                     setLoadedFilesystem={setLoadedFilesystem}
+                    openDeleteIndicatorFlow={openDeleteIndicatorFlow}
                 >
                     <>
                         <AddIndicatorFlow activateFlow={addIndicatorFlowToggle} />
