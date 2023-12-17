@@ -90,7 +90,7 @@ test('mount test', async ({ mount }) => {
     //make sure the container exists
     const fileDropdownContainer = component.getByTestId(fileDropdownContainerLocator)
     await expect(fileDropdownContainer).toBeAttached()
-    await expect(fileDropdownContainer).toHaveCSS('min-width', '200px')
+    await expect(fileDropdownContainer).toHaveCSS('min-width', '275px')
 })
 
 test('folder mount test', async ({ mount }) => {

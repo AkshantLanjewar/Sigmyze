@@ -308,7 +308,7 @@ const addIndicatorChartRenderTEST = async (component: MountResult, page: Page) =
 
     const chartElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
     const chartElement = rootFolderChildren.getByTestId(chartElementLocator)
-    const chartElementChildren = chartElement.getByTestId(elementChildrenLocator)
+    const chartElementChildren = rootFolderChildren.getByTestId(chartElementLocator + "-" + elementChildrenLocator)
 
     await page.waitForTimeout(1000 * 2.5)
     await expect(chartElementChildren.locator('> div')).toHaveCount(1)
@@ -417,7 +417,7 @@ const deleteIndicatorToolbarTEST = async (component: MountResult, page: Page) =>
 
     const chartElementLocator = addExtensions(containerElementBase, ["0"]) + "::child"
     const chartElement = rootFolderChildren.getByTestId(chartElementLocator)
-    const chartElementChildren = chartElement.getByTestId(elementChildrenLocator)
+    const chartElementChildren = rootFolderChildren.getByTestId(chartElementLocator + "-" + elementChildrenLocator)
 
     const indicatorElementLocator = chartElementLocator + "::tmp"
     const indicatorElement = chartElementChildren.getByTestId(indicatorElementLocator)

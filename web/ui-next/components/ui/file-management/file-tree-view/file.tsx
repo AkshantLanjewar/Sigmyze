@@ -351,7 +351,7 @@ const View: React.FC<IViewProps> = memo(({
                 transitionDuration={100}
                 transitionTimingFunction="linear"
             >
-                <div data-testId={"element-children"}>
+                <div data-testId={`container-element-${index}${isChild ? "::child" : ""}-element-children`}>
                     {fileChildren.map((step, index) => (
                         <div 
                             data-testId={`container-element-${index}::child::tmp`}

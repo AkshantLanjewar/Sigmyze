@@ -373,6 +373,7 @@ test('Lunar Refresh Viewport + Folder Deletion integration test', async ({ mount
 
     //now we click on folder-0 again
     await projectFolder.locator('button').first().click()
+    await projectFolder.locator('button').first().click()
     //now we want to click on the dummyFolder
     await dummyFolder.locator('button').first().click()
 
