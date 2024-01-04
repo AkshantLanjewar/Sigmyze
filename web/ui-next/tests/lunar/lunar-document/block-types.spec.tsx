@@ -66,6 +66,11 @@ const createDocumentPage = async (component: MountResult, page: Page) => {
     //create a chart so that we can add it into the document
     await addIndicatorChartRenderTEST(component, page)
 
+    //click the root folder
+    const containerFolderZeroLocator = addExtensions("container-folder", ["0"])
+    const containerFolderZero = component.getByTestId(containerFolderZeroLocator).locator('> button')
+    await containerFolderZero.click()
+
     //get the toolbar create button and click it
     const toolbarCreateButtonLocator = addExtensions(buttonPortalButtonBase, ["0"])
     const toolbarCreateButton = component.getByTestId(toolbarCreateButtonLocator)
@@ -130,7 +135,6 @@ const paragraphIMPL = async (component: MountResult, page: Page) => {
     const block = component.getByTestId(blockLocator)
     const blockContent = block.getByTestId(blockContentLocator)
 
-    await blockContent.click()
     await expect(block).toHaveAttribute('data-testValue', "paragraph")
 
     //check that the element is attached

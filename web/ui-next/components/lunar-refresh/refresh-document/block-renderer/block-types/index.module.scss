@@ -1,0 +1,14 @@
+.block__container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+
+    .block__paragraph {
+        display: block;
+        outline: 0px solid transparent;
+        
+        font-size: 1em;
+        flex-grow: 1;
+    }
+}

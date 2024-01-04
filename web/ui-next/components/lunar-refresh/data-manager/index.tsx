@@ -51,8 +51,10 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         setNotes,
         createNewNote, 
         deleteNote,
-        editNoteName 
-    } = useRefreshNoteData()
+        editNoteName,
+        fetchNoteBlocks,
+        updateNoteBlocks 
+    } = useRefreshNoteData(lunarProject, setLunarProject)
 
     const { 
         fileSystem, 
@@ -242,7 +244,9 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         updateSigmyzeIndicators,
         getChartIndicators,
         deleteChartIndicator,
-        setEventIndicator
+        setEventIndicator,
+        fetchNoteBlocks,
+        updateNoteBlocks
     }), [
         charts, 
         notes, 
@@ -251,7 +255,9 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         getChartIndicators,
         deleteChartIndicator,
         eventIndicator,
-        setEventIndicator
+        setEventIndicator,
+        fetchNoteBlocks,
+        updateNoteBlocks
     ])
 
     return (

@@ -1,0 +1,67 @@
+import NoteTopbar from "./topbar"
+import BlockRenderer from "./block-renderer"
+import useNoteData from "./hooks/note-data"
+import { useContext, useEffect, useRef } from "react"
+import { LunarUIContextData } from "../ui-context"
+import { ILunarUIState } from "../ui-context/state"
+import { LunarDataManagerData } from "../data-manager"
+import { ILunarDataManagerState } from "../data-manager/state"
+import useNoteFocus from "./hooks/note-focus"
+
+interface IRefreshDocumentProps {
+    /**
+     * This is the FileID used to retreive data from the data context
+     */
+    fileId: string
+}
+
+const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
+    const { getFileById, editFileTitle } = useContext(LunarUIContextData) as ILunarUIState
+    const { fetchNoteBlocks, updateNoteBlocks } = useContext(LunarDataManagerData) as ILunarDataManagerState
+
+    const {
+        blocks,
+        title,
+        changeNoteTitle,
+        updateNoteBlock
+    } = useNoteData(fileId, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks)
+
+    const { hasRequest, consumeFocusRequest, createFocusRequest } = useNoteFocus()
+
+    //this is the ref that handles the initial load
+    const initialLoad = useRef<boolean>(true)
+
+    useEffect(() => {
+        if(initialLoad.current === false || blocks.length === 0)
+            return
+
+        let rootBlock = blocks[0]
+        createFocusRequest(rootBlock.blockId)
+        initialLoad.current = false
+    }, [blocks])
+
+    return (
+        <div
+            style={{
+                height: "100%", 
+                width: "100%",
+                background: "#101113",
+                display: "block",
+                position: 'relative'
+            }}
+        >
+            <NoteTopbar />
+
+            <BlockRenderer
+                blocks={blocks}
+                title={title}
+                hasRequest={hasRequest}
+                editNoteName={changeNoteTitle}
+                updateNoteBlock={updateNoteBlock}
+                consumeFocusRequest={consumeFocusRequest}
+            />
+        </div>
+    )
+}
+
+export default RefreshDocument

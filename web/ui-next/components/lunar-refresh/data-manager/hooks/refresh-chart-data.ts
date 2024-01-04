@@ -210,7 +210,6 @@ const useRefreshChartData = (
                     chart = _chart
             }
 
-            console.log(chart)
             if(chart === undefined)
                 return
 

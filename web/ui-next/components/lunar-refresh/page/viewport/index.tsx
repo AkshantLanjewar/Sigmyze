@@ -4,6 +4,7 @@ import { LunarUIContextData } from "../../ui-context"
 import { ILunarUIState } from "../../ui-context/state"
 import { ILunarPane } from "./types"
 import RefreshChart from "../../refresh-chart"
+import RefreshDocument from "../../refresh-document"
 
 interface ILunarViewportProps { }
 
@@ -31,6 +32,9 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ }) => {
             switch(tab.tabType) {
                 case "chart":
                     newPane.paneContent = <RefreshChart fileId={tab.fileId} />
+                    break
+                case "note":
+                    newPane.paneContent = <RefreshDocument fileId={tab.fileId} />
                     break
                 default:
                     newPane.paneContent = <div />

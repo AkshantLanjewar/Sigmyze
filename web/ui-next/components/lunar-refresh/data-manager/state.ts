@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import { ISimpleFilesystem } from "../../ui/file-management/types"
+import { INoteBlock } from "../refresh-document/types"
 
 /**
  * This is the dataset description for the fields shared in the Data Manager context
@@ -43,7 +44,17 @@ interface ILunarDataManagerState {
     /**
      * Function that sets the event indicator
      */
-    setEventIndicator: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>
+    setEventIndicator: Dispatch<SetStateAction<IQuantaIndicatorLoc | undefined>>,
+
+    /**
+     * Function that fetches the blocks from a note
+     */
+    fetchNoteBlocks: (fileId: string) => INoteBlock[] | undefined,
+
+    /**
+     * function that updates the blocks in a note
+     */
+    updateNoteBlocks: (fileId: string, blocks: INoteBlock[]) => void
 }
 
 /**
@@ -124,7 +135,12 @@ interface ILunarNote {
     /**
      * this is the file id for the note, same concept as using v4() from uuid
      */
-    objectId: string
+    objectId: string,
+
+    /**
+     * These are the blocks that are stored within the note
+     */
+    blocks: INoteBlock[]
 }
 
 export type { 
