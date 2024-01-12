@@ -1,5 +1,6 @@
-import { INoteBlock } from '../types'
+import { Blocks, INoteBlock } from '../types'
 import { NoteParagraph } from './block-types'
+import NoteHeading from './block-types/heading'
 import styles from './index.module.scss'
 import NoteTitle from './note-title'
 
@@ -32,7 +33,12 @@ const BLOCK_SWITCH = (
     /**
      * This is the function that consumes a focus request
      */
-    consumeFocusRequest: (blockId: string) => boolean
+    consumeFocusRequest: (blockId: string) => boolean,
+
+    /**
+     * This is the function that updates a note block
+     */
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
 ) => {
     switch(step.blockType) {
         case "paragraph":
@@ -43,6 +49,27 @@ const BLOCK_SWITCH = (
                     endblock={index === (blocksLength - 1)}
                     updateNoteBlock={updateNoteBlock} 
                     consumeFocusRequest={consumeFocusRequest}
+                    changeNoteBlock={changeNoteBlock}
+                />
+            )
+        case "heading::1":
+        case "heading::2":
+        case "heading::3":
+        case "heading::4":
+        case "heading::5":
+        case "heading::6":
+            const headingSplit = step.blockType.split("::")
+            const order = parseInt(headingSplit[1])
+
+            return (
+                <NoteHeading
+                    block={step}
+                    hasRequest={hasRequest}
+                    endblock={index === (blocksLength - 1)}
+                    order={order}
+                    updateNoteBlock={updateNoteBlock} 
+                    consumeFocusRequest={consumeFocusRequest}
+                    changeNoteBlock={changeNoteBlock}
                 />
             )
         default:
@@ -79,7 +106,12 @@ interface IBlockRendererProps {
     /**
      * This is the function that consumes a focus request
      */
-    consumeFocusRequest: (blockId: string) => boolean
+    consumeFocusRequest: (blockId: string) => boolean,
+
+    /**
+     * This is the function that updates a note block
+     */
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
 }
 
 const BlockRenderer: React.FC<IBlockRendererProps> = ({ 
@@ -88,7 +120,8 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     hasRequest, 
     editNoteName, 
     updateNoteBlock,
-    consumeFocusRequest 
+    consumeFocusRequest,
+    changeNoteBlock 
 }) => {
     return (
         <div className={styles.document__wrapper}>
@@ -103,13 +136,22 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                 <div
                     data-testId={"document-container"}
                     className={styles.document__renderer}
+                    style={{ flexGrow: 1 }}
                 >
                     {blocks.map((step, index) => (
                         <div 
                             data-testId={`document-block-${index}`}
                             data-testValue={step.blockType}
                         >
-                            {BLOCK_SWITCH(step, hasRequest, index, blocks.length, updateNoteBlock, consumeFocusRequest)}
+                            {BLOCK_SWITCH(
+                                step, 
+                                hasRequest, 
+                                index, 
+                                blocks.length, 
+                                updateNoteBlock, 
+                                consumeFocusRequest,
+                                changeNoteBlock
+                            )}
                         </div>
                     ))}
                 </div>

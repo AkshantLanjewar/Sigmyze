@@ -19,14 +19,15 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
     const { getFileById, editFileTitle } = useContext(LunarUIContextData) as ILunarUIState
     const { fetchNoteBlocks, updateNoteBlocks } = useContext(LunarDataManagerData) as ILunarDataManagerState
 
+    const { hasRequest, consumeFocusRequest, createFocusRequest } = useNoteFocus()
+
     const {
         blocks,
         title,
         changeNoteTitle,
-        updateNoteBlock
-    } = useNoteData(fileId, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks)
-
-    const { hasRequest, consumeFocusRequest, createFocusRequest } = useNoteFocus()
+        updateNoteBlock,
+        changeNoteBlock
+    } = useNoteData(fileId, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks, createFocusRequest)
 
     //this is the ref that handles the initial load
     const initialLoad = useRef<boolean>(true)
@@ -59,6 +60,7 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 editNoteName={changeNoteTitle}
                 updateNoteBlock={updateNoteBlock}
                 consumeFocusRequest={consumeFocusRequest}
+                changeNoteBlock={changeNoteBlock}
             />
         </div>
     )

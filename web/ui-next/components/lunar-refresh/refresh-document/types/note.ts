@@ -9,6 +9,11 @@ type TextBlocks = "paragraph" | "heading::1" | "heading::2" | "heading::3" | "he
 type MediaBlocks = "media::image" | "media::chart"
 
 /**
+ * These are all the block types
+ */
+type Blocks = TextBlocks | MediaBlocks
+
+/**
  * This is the datastructure definition for a block within a note in the refresh note editor
  */
 interface INoteBlock {
@@ -20,7 +25,7 @@ interface INoteBlock {
     /**
      * This is the type the block can be. It is the union of all possible block types within the editor
      */
-    blockType: TextBlocks | MediaBlocks,
+    blockType: Blocks,
 
     /**
      * This is the content of the block. Stored in string form so changes can be easily detected.
@@ -31,5 +36,6 @@ interface INoteBlock {
 export type { 
     INoteBlock,
     TextBlocks,
-    MediaBlocks 
+    MediaBlocks,
+    Blocks 
 }

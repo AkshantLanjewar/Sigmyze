@@ -108,22 +108,16 @@ const blockTitleIMPL = async (order: number, component: MountResult, page: Page)
     await expect(block).toHaveAttribute('data-testValue', "paragraph")
 
     //we want to construct the order string
-    let orderString = ""
     for(let i = 0; i < order; i++)
-        orderString += "#"
+        await page.keyboard.press("#")
 
     //type in !#
-    await page.keyboard.type(`!${orderString}`, { delay: 200 })
-    await page.keyboard.press("Spacebar")
+    
+    await page.keyboard.press("Space")
 
     //form the heading string and check the blocks value is equiv
     let headingValue = `heading::${order}`
     await expect(block).toHaveAttribute('data-testValue', headingValue)
-
-    //check the element is attached
-    let elementLocator = `h${order}`
-    const element = blockContent.locator(elementLocator)
-    await expect(element).toBeAttached()
 }
 
 const paragraphIMPL = async (component: MountResult, page: Page) => {

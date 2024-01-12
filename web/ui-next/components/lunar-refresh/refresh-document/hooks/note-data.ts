@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { INoteBlock } from "../types"
+import { Blocks, INoteBlock } from "../types"
 import { ISigmyzeFile } from "../../../ui/file-management/types"
 
 const useNoteData = (
@@ -26,7 +26,12 @@ const useNoteData = (
     /**
      * This is the function that updates the data manager blocks for a note file
      */
-    updateNoteBlocks: (fileId: string, blocks: INoteBlock[]) => void
+    updateNoteBlocks: (fileId: string, blocks: INoteBlock[]) => void,
+    
+    /**
+     * This is the function that creates a focus request within the editor
+     */
+    createFocusRequest: (blockId: string) => void
 ) => {
     //these are the blocks that are to be rendered within the document editor
     const [blocks, setBlocks] = useState<INoteBlock[]>([])
@@ -68,6 +73,33 @@ const useNoteData = (
         updateNoteBlocks(fileId, newBlocks)
     }
 
+    /**
+     * @description
+     *  - this is the function that switches a blocks type
+     * @param blockId
+     *  - this is the id of the block whos type we are switching
+     * @param newType
+     *  - this is the new type of the block
+     * @param newContent
+     *  - since we are updating the block mid render, we need to update the text as well
+     */
+    const changeNoteBlock = (blockId: string, newType: Blocks, newContent: string) => {
+        let newBlocks: INoteBlock[] = []
+        for(let i = 0; i < blocks.length; i++) {
+            let block = blocks[i]
+            if(block.blockId === blockId) {
+                block.blockType = newType
+                block.blockContent = newContent
+            }
+
+            newBlocks.push(block)
+        }
+
+        setBlocks([ ...newBlocks ])
+        updateNoteBlocks(fileId, newBlocks)
+        createFocusRequest(blockId)
+    }
+
     //this is the effect that loads in the initial data from the file
     useEffect(() => {
         let file = getFileById(fileId)
@@ -83,7 +115,8 @@ const useNoteData = (
         blocks,
         title,
         changeNoteTitle,
-        updateNoteBlock
+        updateNoteBlock,
+        changeNoteBlock
     }
 }
 
