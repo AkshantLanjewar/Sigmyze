@@ -1,15 +1,15 @@
 import { useCallback, useImperativeHandle, useRef, useState } from "react";
-import { Blocks, INoteBlock } from "../../types";
+import { Blocks, INoteBlock } from "../../../types";
 import { useClickOutside } from "@mantine/hooks";
-import useTextCaptureHook from "./hooks/text-capture-hook";
-import useTextBlock from "./hooks/text-block";
-import styles from './index.module.scss'
+import useTextCaptureHook from "../hooks/text-capture-hook";
+import useTextBlock from "../hooks/text-block";
+import styles from '../index.module.scss'
 import { ActionIcon } from "@mantine/core";
-import useGrip from "./hooks/grip";
+import useGrip from "../hooks/grip";
 import { IconGripVertical } from "@tabler/icons";
 import React from "react";
-import getCaretPosition from './hooks/util'
-import useHeader from "./hooks/header";
+import getCaretPosition from '../hooks/util'
+import useHeader from "../hooks/header";
 
 const removeTicks = (val: string) => {
     const split = val.split(" ")

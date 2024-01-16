@@ -1,0 +1,46 @@
+$dark-9: var(--mantine-color-dark-8);
+$blue-6: var(--mantine-color-indigo-6);
+
+.chart__wrapper {
+    display: flex;
+
+    .chart__option {
+        margin-bottom: 0.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+    
+        border-radius: 0.5em;
+        background-color: $dark-9;
+        cursor: pointer;
+    
+        display: flex;
+        align-items:safe;
+        gap: 8px;
+    
+        span {
+            font-weight: 800;
+        }
+    
+        &.active {
+            border: 2px solid $blue-6;
+        }
+    }
+
+    .chart__preview__wrapper {
+        width: 650px;
+        display: flex;
+
+        justify-content: center;
+        align-items: center;
+
+        .chart__card {
+            width: 600px;
+            height: 300px;
+
+            border-radius: 8px;
+            background: $dark-9;
+        }
+    }
+}

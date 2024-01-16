@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 import { ISimpleFilesystem } from "../../ui/file-management/types"
 import { INoteBlock } from "../refresh-document/types"
+import { IChartLoc } from "../refresh-document/block-renderer/block-types/media/types"
 
 /**
  * This is the dataset description for the fields shared in the Data Manager context
@@ -54,7 +55,12 @@ interface ILunarDataManagerState {
     /**
      * function that updates the blocks in a note
      */
-    updateNoteBlocks: (fileId: string, blocks: INoteBlock[]) => void
+    updateNoteBlocks: (fileId: string, blocks: INoteBlock[]) => void,
+
+    /**
+     * function that retreives all the chart locators loaded within the project
+     */
+    getCharts: () => IChartLoc[]
 }
 
 /**

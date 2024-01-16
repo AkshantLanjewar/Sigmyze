@@ -20,16 +20,51 @@ import { ScaleLinear, ScaleTime } from 'd3'
 import { LoadingOverlay } from '@mantine/core'
 
 interface IRefreshEngineProps {
+    /**
+     * The width of the container
+     */
     width: number,
+
+    /**
+     * This is the height of the container
+     */
     height: number,
 
     /**
      * These are the indicators to be rendered within the chart
      */
-    indicators: IQuantaIndicatorLoc[]
+    indicators: IQuantaIndicatorLoc[],
+
+    /**
+     * this is the optional switch to hide the xAxis
+     */
+    hideXAxis?: boolean,
+
+    /**
+     * this is the optional switch to hide the yAxis
+     */
+    hideYAxis?: boolean,
+
+    /**
+     * This is the optional switch to hide the legend
+     */
+    hideLegend?: boolean,
+
+    /**
+     * This is the optional switch to invert the yAxis
+     */
+    invertYAxis?: boolean
 }
 
-const RefreshEngine: React.FC<IRefreshEngineProps> = ({ width, height, indicators }) => {
+const RefreshEngine: React.FC<IRefreshEngineProps> = ({ 
+    width, 
+    height, 
+    indicators,
+    hideXAxis,
+    hideYAxis,
+    hideLegend,
+    invertYAxis 
+}) => {
     const { fetchIndicator } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
 
     //theese are the refs for the line-paths based on their rendered index
@@ -106,6 +141,7 @@ const RefreshEngine: React.FC<IRefreshEngineProps> = ({ width, height, indicator
                         width={width} 
                         height={height}
                         ref={refreshRef}
+                        style={{ borderRadius: 8 }}
                     >
                         <rect x={0} y={0} width={width} height={height} fill="#101113" />   
                                         

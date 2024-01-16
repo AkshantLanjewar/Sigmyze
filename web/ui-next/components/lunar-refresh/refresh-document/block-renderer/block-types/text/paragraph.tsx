@@ -1,12 +1,12 @@
 import { useClickOutside } from "@mantine/hooks"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Blocks, INoteBlock } from "../../types"
-import styles from './index.module.scss'
+import { Blocks, INoteBlock } from "../../../types"
+import styles from '../index.module.scss'
 import { ActionIcon, Text } from "@mantine/core"
 import { IconGripVertical } from "@tabler/icons"
-import useTextCaptureHook from "./hooks/text-capture-hook"
-import useTextBlock from "./hooks/text-block"
-import useGrip from "./hooks/grip"
+import useTextCaptureHook from "../hooks/text-capture-hook"
+import useTextBlock from "../hooks/text-block"
+import useGrip from "../hooks/grip"
 
 interface INoteParagraphProps {
     /**

@@ -1,6 +1,6 @@
 import { Blocks, INoteBlock } from '../types'
-import { NoteParagraph } from './block-types'
-import NoteHeading from './block-types/heading'
+import { NoteChart, NoteParagraph } from './block-types'
+import NoteHeading from './block-types/text/heading'
 import styles from './index.module.scss'
 import NoteTitle from './note-title'
 
@@ -67,6 +67,16 @@ const BLOCK_SWITCH = (
                     hasRequest={hasRequest}
                     endblock={index === (blocksLength - 1)}
                     order={order}
+                    updateNoteBlock={updateNoteBlock} 
+                    consumeFocusRequest={consumeFocusRequest}
+                    changeNoteBlock={changeNoteBlock}
+                />
+            )
+        case "media::chart":
+            return (
+                <NoteChart
+                    block={step}
+                    hasRequest={hasRequest}
                     updateNoteBlock={updateNoteBlock} 
                     consumeFocusRequest={consumeFocusRequest}
                     changeNoteBlock={changeNoteBlock}

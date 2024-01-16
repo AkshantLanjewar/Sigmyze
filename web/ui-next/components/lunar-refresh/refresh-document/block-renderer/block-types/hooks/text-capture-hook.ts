@@ -65,6 +65,13 @@ const useTextCaptureHook = (
             case "#":
                 changeNoteBlock(blockId, "heading::1", text)
                 break
+            //chart 
+            case "@$":
+                changeNoteBlock(blockId, "media::chart", "")
+                break
+            //image
+            case "@#":
+                break
             default:
                 if(blockType === "paragraph")
                     return

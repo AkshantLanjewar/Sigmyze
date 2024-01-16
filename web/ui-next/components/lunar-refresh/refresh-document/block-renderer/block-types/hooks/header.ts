@@ -7,6 +7,14 @@ import { setUncaughtExceptionCaptureCallback } from "process"
  *  - this is the hook that encapsulates all the state needed for the header
  * @param block
  *  - this is the active block that is being rendered
+ * @param hasRequest
+ *  - this is whether or not there is a focus request message to be consumed
+ * @param consumeFocusRequest
+ *  - this is the function that consumes a focus request
+ * @param changeNoteBlock
+ *  - this is the function that updates a block's type
+ * @param updateNoteBlock
+ *  - this is the function that updates the content within a note block
  */
 const useHeader = (
     block: INoteBlock,
@@ -53,6 +61,10 @@ const useHeader = (
     //this is the calculated order
     const [cOrder, setCOrder] = useState<number>(1)
 
+    /**
+     * @description
+     *  - this is the function that sets the ticks content editable active
+     */
     const setTicksActive = () => {
         if(titleRef.current === null)
             return
@@ -60,8 +72,12 @@ const useHeader = (
         titleRef.current.blur()
         setFocusTick(!focusTick)
         setActive('tick')
-    }
+    }   
 
+    /**
+     * @description
+     *  - this is the function that runs when the title is focused
+     */
     const focusHandler = () => {
         setFocused(true)
         setActive('title')
@@ -70,6 +86,10 @@ const useHeader = (
             setTicksActive()
     }
 
+    /**
+     * @description
+     *  - this is the function that handles the blurring of either content editable completely
+     */
     const blurHandler = () => {
         if(tickRef.current === null || titleRef.current === null)
             return
@@ -117,6 +137,12 @@ const useHeader = (
         setTitleEdit(true)
     }, [resetT])
 
+    /**
+     * @description
+     *  - this is the function that fires when the keydown is pressed on the tick content editable
+     * @param event 
+     *  - the event that is being fired
+     */
     const keyDownListener = (event: KeyboardEvent) => {
         if(titleRef.current === null || tickRef.current === null)
             return
@@ -157,7 +183,9 @@ const useHeader = (
         }
         
         const text = tickRef.current.innerText
-        if(text.length === 0 || active !== "tick")
+        if(text.length === 0)
+            changeNoteBlock(block.blockId, "paragraph", text)
+        if(active !== "tick")
             return
 
         switch(text) {
