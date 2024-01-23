@@ -1,0 +1,16 @@
+.action__menu__wrapper {
+    position: absolute;
+    bottom: -40px;
+    right: 0px;
+    height: 75px;
+
+    .action {
+        position: relative;
+    }
+
+    .action_wrapper {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+}

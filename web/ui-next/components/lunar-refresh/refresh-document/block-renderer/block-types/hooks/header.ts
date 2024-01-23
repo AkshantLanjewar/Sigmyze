@@ -241,7 +241,7 @@ const useHeader = (
 
             titleRef.current.addEventListener("keyup", keyUpListener)
         }
-    }, [focused])
+    }, [focused, active])
 
     //effect to focus t 
     useEffect(() => {

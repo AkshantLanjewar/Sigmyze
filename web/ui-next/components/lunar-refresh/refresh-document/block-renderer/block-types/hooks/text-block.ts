@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { INoteBlock } from "../../../types"
 import { ConvertToFileExplorerData } from "../../../../../file-explorer/functions"
 
@@ -30,6 +30,11 @@ const useTextBlock = (
     consumeFocusRequest: (blockId: string) => boolean,
     order?: number
 ) => {
+    //focus bug flag one
+    const focusFlagOne = useRef<boolean>(true)
+    //focus bug flag two
+    const focusFlagTwo = useRef<boolean>(true)
+
     //this is the internal buffer for all changes that need to be applied
     const [buffer, setBuffer] = useState<string | undefined | null>(undefined)
 
@@ -78,6 +83,13 @@ const useTextBlock = (
     useEffect(() => {
         if(editableRef.current === null)
             return
+        if(focusFlagOne.current === true) {
+            focusFlagOne.current = false
+            return
+        } else if (focusFlagTwo.current === true) {
+            focusFlagTwo.current = false
+            return
+        }
         
         if(order !== undefined) {
             let prefix = ""

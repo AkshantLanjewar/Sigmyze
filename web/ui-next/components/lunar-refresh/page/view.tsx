@@ -105,7 +105,9 @@ const LunarRefreshView: React.FC<IViewProps> = memo(({
                         </div>
                     </div>
 
-                    <LunarViewport />
+                    <LunarViewport 
+                        setItemActive={setItemActive}
+                    />
                 </div>
             </div>
         </LunarDataManager>

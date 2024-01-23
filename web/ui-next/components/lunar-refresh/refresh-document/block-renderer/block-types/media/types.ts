@@ -1,3 +1,5 @@
+import { IQuantaIndicatorLoc } from "../../../../data-manager/state"
+
 interface IChartLoc {
     /**
      * this is the id for the chart's file
@@ -15,6 +17,11 @@ interface ISerializedNoteChart {
      * This is the file ID of the chart we are trying to link to the document
      */
     fileId: string,
+
+    /**
+     * These are the indicators for the chart
+     */
+    indicators: IQuantaIndicatorLoc[]
 
     /**
      * This field is to check whether or not the data has been marshaled properly from the block content
@@ -44,7 +51,13 @@ interface ISerializedNoteChart {
     /**
      * Whether or not to invert the yAxis position (default on left side)
      */
-    invertYAxis: boolean
+    invertYAxis: boolean,
+
+    /**
+     * Whether or not to display the title
+     */
+    showTitle: boolean
+
 }
 
 export type { ISerializedNoteChart, IChartLoc }

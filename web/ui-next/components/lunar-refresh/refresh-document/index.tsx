@@ -26,7 +26,9 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
         title,
         changeNoteTitle,
         updateNoteBlock,
-        changeNoteBlock
+        changeNoteBlock,
+        createRawBlock,
+        deleteNoteBlock
     } = useNoteData(fileId, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks, createFocusRequest)
 
     //this is the ref that handles the initial load
@@ -61,6 +63,8 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 updateNoteBlock={updateNoteBlock}
                 consumeFocusRequest={consumeFocusRequest}
                 changeNoteBlock={changeNoteBlock}
+                createRawBlock={createRawBlock}
+                deleteNoteBlock={deleteNoteBlock}
             />
         </div>
     )

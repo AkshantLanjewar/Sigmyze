@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react"
 import { IQuantaIndicatorLoc } from "../../data-manager/state"
 import RefreshEngine from "../engine"
+import StaticTitle from "../chart-title/static"
 
 interface IPortableRefreshChartProps {
     /**
@@ -20,10 +22,56 @@ interface IPortableRefreshChartProps {
     /**
      * This is the title of the chart
      */
-    title: string
+    title: string,
+
+    /**
+     * this is the optional switch to hide the xAxis
+     */
+    hideXAxis?: boolean,
+
+    /**
+     * this is the optional switch to hide the yAxis
+     */
+    hideYAxis?: boolean,
+
+    /**
+     * This is the optional switch to invert the yAxis
+     */
+    invertYAxis?: boolean,
+
+    /**
+     * show the title
+     */
+    showTitle?: boolean,
+
+    /**
+     * This is the custom background color
+     */
+    customBg?: string
 }
 
-const PortableRefreshChart: React.FC<IPortableRefreshChartProps> = ({ indicators, width, height, title }) => {
+const PortableRefreshChart: React.FC<IPortableRefreshChartProps> = ({ 
+    indicators, 
+    width, 
+    height, 
+    title,
+    hideXAxis,
+    hideYAxis,
+    invertYAxis,
+    showTitle,
+    customBg 
+}) => {
+    //whether or not to display the title
+    const [displayTitle, setDisplayTitle] = useState<boolean>(false)
+
+    //effect to set the displayTitle state
+    useEffect(() => {
+        if(showTitle === undefined)
+            return
+
+        setDisplayTitle(showTitle)
+    }, [showTitle])
+
     return (
         <div
             data-testId={"refresh-chart"}
@@ -36,10 +84,19 @@ const PortableRefreshChart: React.FC<IPortableRefreshChartProps> = ({ indicators
                 borderRadius: 8
             }}
         >
+            {displayTitle
+                ? <StaticTitle chartTitle={title} />
+                : null
+            }
+            
             <RefreshEngine
                 height={height}
                 width={width}
                 indicators={indicators}
+                hideXAxis={hideXAxis}
+                hideYAxis={hideYAxis}
+                invertYAxis={invertYAxis}
+                customBg={customBg}
             />
         </div>
     )

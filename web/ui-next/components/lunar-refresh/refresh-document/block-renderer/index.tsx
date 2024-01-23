@@ -38,7 +38,17 @@ const BLOCK_SWITCH = (
     /**
      * This is the function that updates a note block
      */
-    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
+
+    /**
+     * This is the function that inserts a RAW new block
+     */
+    createRawBlock: (type: Blocks) => void,
+
+    /**
+     * This is the function that deletes a block from the renderer
+     */
+    deleteNoteBlock: (blockId: string) => void
 ) => {
     switch(step.blockType) {
         case "paragraph":
@@ -80,6 +90,8 @@ const BLOCK_SWITCH = (
                     updateNoteBlock={updateNoteBlock} 
                     consumeFocusRequest={consumeFocusRequest}
                     changeNoteBlock={changeNoteBlock}
+                    createRawBlock={createRawBlock}
+                    deleteNoteBlock={deleteNoteBlock}
                 />
             )
         default:
@@ -121,7 +133,17 @@ interface IBlockRendererProps {
     /**
      * This is the function that updates a note block
      */
-    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
+
+    /**
+     * This is the function that inserts a RAW new block
+     */
+    createRawBlock: (type: Blocks) => void,
+
+    /**
+     * This is the function that deletes a block from the renderer
+     */
+    deleteNoteBlock: (blockId: string) => void
 }
 
 const BlockRenderer: React.FC<IBlockRendererProps> = ({ 
@@ -131,7 +153,9 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     editNoteName, 
     updateNoteBlock,
     consumeFocusRequest,
-    changeNoteBlock 
+    changeNoteBlock,
+    createRawBlock,
+    deleteNoteBlock 
 }) => {
     return (
         <div className={styles.document__wrapper}>
@@ -160,7 +184,9 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                                 blocks.length, 
                                 updateNoteBlock, 
                                 consumeFocusRequest,
-                                changeNoteBlock
+                                changeNoteBlock,
+                                createRawBlock,
+                                deleteNoteBlock
                             )}
                         </div>
                     ))}

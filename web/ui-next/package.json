@@ -69,7 +69,7 @@
     "normalize-url": "^8.0.0",
     "patch-package": "^8.0.0",
     "playwright-utilities": "^1.0.1",
-    "re-resizable": "^6.9.9",
+    "re-resizable": "^6.9.11",
     "react": "18.2.0",
     "react-chartjs-2": "^5.1.0",
     "react-contexify": "^6.0.0",

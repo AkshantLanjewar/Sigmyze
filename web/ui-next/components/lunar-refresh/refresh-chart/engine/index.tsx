@@ -18,6 +18,8 @@ import PathRenderer from './parts/path-renderer'
 import BallRenderer from './parts/ball-renderer'
 import { ScaleLinear, ScaleTime } from 'd3'
 import { LoadingOverlay } from '@mantine/core'
+import useCustomOptions from './hooks/customize'
+import ILunarRightAxis from './parts/right-axis'
 
 interface IRefreshEngineProps {
     /**
@@ -46,14 +48,14 @@ interface IRefreshEngineProps {
     hideYAxis?: boolean,
 
     /**
-     * This is the optional switch to hide the legend
-     */
-    hideLegend?: boolean,
-
-    /**
      * This is the optional switch to invert the yAxis
      */
-    invertYAxis?: boolean
+    invertYAxis?: boolean,
+
+    /**
+     * This is the custom background color
+     */
+    customBg?: string
 }
 
 const RefreshEngine: React.FC<IRefreshEngineProps> = ({ 
@@ -62,10 +64,28 @@ const RefreshEngine: React.FC<IRefreshEngineProps> = ({
     indicators,
     hideXAxis,
     hideYAxis,
-    hideLegend,
-    invertYAxis 
+    invertYAxis,
+    customBg 
 }) => {
+    //this is the hook that handles customization options
+    const {
+        hideHorizontal,
+        hideVertical,
+        invertVertical
+    } = useCustomOptions(hideXAxis, hideYAxis, invertYAxis)
+
     const { fetchIndicator } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
+
+    //state that controls the background color
+    const [fill, setFill] = useState<string>("#101113")
+
+    //effect that sets the fill if custom bg is present
+    useEffect(() => {
+        if(customBg === undefined)
+            return
+
+        setFill(customBg)
+    }, [customBg])
 
     //theese are the refs for the line-paths based on their rendered index
     const collectedLineRefs = useRef<{[key: number]: SVGPathElement | null}>({})
@@ -74,9 +94,9 @@ const RefreshEngine: React.FC<IRefreshEngineProps> = ({
 
     const margin: ISigmyzeMargin = {
         top: 20, 
-        left: 40, 
+        left: invertVertical ? 30 : 40, 
         bottom: 25, 
-        right: 45
+        right: invertVertical ? 50 : 45
     }
 
     const xMax = width - margin.left - margin.right
@@ -143,10 +163,24 @@ const RefreshEngine: React.FC<IRefreshEngineProps> = ({
                         ref={refreshRef}
                         style={{ borderRadius: 8 }}
                     >
-                        <rect x={0} y={0} width={width} height={height} fill="#101113" />   
+                        <rect x={0} y={0} width={width} height={height} fill={fill} />   
                                         
-                        <ILunarLeftAxis margin={margin} rightScale={rightScale} />
-                        <ILunarBottomAxis height={height} margin={margin} dateScale={dateScale} />
+                        {hideVertical
+                            ? null
+                            : (
+                                <>
+                                    {invertVertical
+                                        ? <ILunarRightAxis width={width} margin={margin} rightScale={rightScale} />
+                                        : <ILunarLeftAxis margin={margin} rightScale={rightScale} />
+                                    }
+                                </>
+                            )
+                        }
+                        
+                        {hideHorizontal
+                            ? null
+                            : <ILunarBottomAxis height={height} margin={margin} dateScale={dateScale} />
+                        }
 
                         <Group top={margin.top} left={margin.left}>
                             <PathRenderer

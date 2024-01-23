@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Blocks, INoteBlock } from "../types"
 import { ISigmyzeFile } from "../../../ui/file-management/types"
+import { v4 } from "uuid"
 
 const useNoteData = (
     /**
@@ -100,6 +101,55 @@ const useNoteData = (
         createFocusRequest(blockId)
     }
 
+    /**
+     * @description
+     *  - this is the RAW function to create a new block
+     * @param newType
+     *  - this is the new type for the block
+     */
+    const createRawBlock = (newType: Blocks) => {
+        let newBlocks = blocks
+        newBlocks.push({
+            blockId: v4(),
+            blockType: "paragraph",
+            blockContent: ""
+        })
+
+        setBlocks([ ...newBlocks ])
+        updateNoteBlocks(fileId, newBlocks)
+    }
+
+    /**
+     * @description
+     *  - this is the function that deletes a block from the editor
+     * @param blockId
+     *  - this is the id of the block we are trying to delete
+     */
+    const deleteNoteBlock = (blockId: string) => {
+        let newBlocks: INoteBlock[] = []
+        let deleteIndex: number | undefined = undefined
+        for(let i = 0; i < blocks.length; i++) {
+            let block = blocks[i]
+            if(block.blockId === blockId) {
+                deleteIndex = i
+                continue
+            }
+
+            newBlocks.push(block)
+        }
+
+        if(deleteIndex === undefined)
+            return
+        if(newBlocks.length - 1 < deleteIndex && deleteIndex !== 0)
+            deleteIndex = deleteIndex - 1
+        if(newBlocks.length === 0)
+            newBlocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "" })
+
+        setBlocks([ ...newBlocks ])
+        updateNoteBlocks(fileId, newBlocks)
+        createFocusRequest(newBlocks[deleteIndex].blockId)
+    }
+
     //this is the effect that loads in the initial data from the file
     useEffect(() => {
         let file = getFileById(fileId)
@@ -116,7 +166,9 @@ const useNoteData = (
         title,
         changeNoteTitle,
         updateNoteBlock,
-        changeNoteBlock
+        changeNoteBlock,
+        createRawBlock,
+        deleteNoteBlock
     }
 }
 
