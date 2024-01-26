@@ -76,28 +76,30 @@ const NoteChartModal: React.FC<INoteChartModalProps> = ({ blockId, open, cancel,
             centered
             size={widthToggle ? "70%" : "50%"}
         >
-            {step === "select" && (
-                <ChartSelectStage 
-                    selected={selectedChart}
-                    widthToggle={widthToggle}
-                    setSelected={setSelectedChart}
-                    setWidthToggle={setWidthToggle}
-                    cancel={cancel}
-                    continueStep={continueStep}
-                />
-            )}
+            <div data-testId={'select-chart-flow'} data-testValue={step}>
+                {step === "select" && (
+                    <ChartSelectStage 
+                        selected={selectedChart}
+                        widthToggle={widthToggle}
+                        setSelected={setSelectedChart}
+                        setWidthToggle={setWidthToggle}
+                        cancel={cancel}
+                        continueStep={continueStep}
+                    />
+                )}
 
-            {step === "settings" && (
-                <ChartSettings
-                    blockId={blockId}
-                    selected={selectedChart}
-                    selectedIndicators={selectedIndicators}
-                    previousStep={previousStep}
-                    updateNoteBlock={updateNoteBlock}
-                    updateChart={updateChart}
-                    createRawBlock={createRawBlock}
-                />
-            )}
+                {step === "settings" && (
+                    <ChartSettings
+                        blockId={blockId}
+                        selected={selectedChart}
+                        selectedIndicators={selectedIndicators}
+                        previousStep={previousStep}
+                        updateNoteBlock={updateNoteBlock}
+                        updateChart={updateChart}
+                        createRawBlock={createRawBlock}
+                    />
+                )}
+            </div>
         </Modal>
     )
 }

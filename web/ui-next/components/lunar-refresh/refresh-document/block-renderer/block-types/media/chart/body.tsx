@@ -91,6 +91,7 @@ const ChartBody: React.FC<IChartBodyProps> = ({
             className={`${styles.body__wrapper}`} 
             ref={ref}
             onClick={() => setActive(true)}
+            data-testId={'chart-block-body'}
         >
             <ResizeableWrapper
                 dims={dims}

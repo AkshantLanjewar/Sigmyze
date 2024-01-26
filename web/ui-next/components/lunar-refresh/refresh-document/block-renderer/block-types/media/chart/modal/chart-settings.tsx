@@ -172,6 +172,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
     return (
         <div 
             className={styles.chart__wrapper} 
+            data-testId={'chart-settings-stage'}
             style={{ 
                 alignItems: "center", 
                 flexDirection: "column",
@@ -202,6 +203,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
                             <Input.Wrapper label={"Chart Title"} pl={2.5} mb={20}>
                                 <Input
                                     placeholder="Type Chart Title Here"
+                                    data-testId={'chart-title'}
                                     variant={"filled"}
                                     radius={"xl"}
                                     pt={5}
@@ -220,6 +222,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
                                     color={"teal"}
                                     size={"md"}
                                     label={"Display Title"}
+                                    data-testId={'display-title-switch'}
                                     checked={showTitle}
                                     onChange={(e) => setShowTitle(e.currentTarget.checked)}
                                     labelPosition="right"
@@ -234,6 +237,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
                             <div>
                                 <Switch
                                     checked={!hideXAxis}
+                                    data-testId={'display-x-axis'}
                                     onChange={(e) => setHideXAxis(!e.currentTarget.checked)}
                                     color={"teal"}
                                     size={"md"}
@@ -254,6 +258,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
                                     onChange={(e) => setInvertYAxis(e.currentTarget.checked)}
                                     color={"teal"}
                                     size={"md"}
+                                    data-testId={'invert-y-axis'}
                                     label={"Invert Y Axis"}
                                     labelPosition="right"
                                     style={{ width: "100%", display: "flex" }}
@@ -268,6 +273,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
                                 <Switch
                                     checked={!hideYAxis}
                                     onChange={(e) => setHideYAxis(!e.currentTarget.checked)}
+                                    data-testId={'show-y-axis'}
                                     color={"teal"}
                                     size={"md"}
                                     label={"Show Y Axis"}
@@ -285,6 +291,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
 
             <Group position={"center"} pt={10} grow style={{ width: 225, margin: "0 auto" }}>
                 <Button 
+                    data-testId={'settings-cancel'}
                     color={"red"}
                     radius={"xl"}
                     onClick={() => payload ? cancelWrap() : previousStep()}
@@ -296,6 +303,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({
                 </Button>
 
                 <Button 
+                    data-testId={'settings-submit'}
                     color={"indigo"}
                     radius={"xl"}
                     onClick={() => submit()}

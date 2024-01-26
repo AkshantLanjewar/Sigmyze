@@ -83,13 +83,14 @@ const ChartSelectStage: React.FC<IChartSelectStageProps> = ({
     }, [])
 
     return (
-        <>
+        <div data-testId={'chart-select-stage'}>
             <div className={styles.chart__wrapper}>
-                <ScrollArea h={450} style={{ flexGrow: 1 }}>
-                    {charts.map((step) => (
+                <ScrollArea data-testId={'chart-options'} h={450} style={{ flexGrow: 1 }}>
+                    {charts.map((step, index) => (
                         <div 
                             className={`${styles.chart__option} ${step.fileId === selected?.fileId ? styles.active : null}`}
                             onClick={() => selectChart(step)}
+                            data-testId={`chart-option-${index}`}
                         >
                             <IconChartAreaLine size={22} />
 
@@ -99,7 +100,7 @@ const ChartSelectStage: React.FC<IChartSelectStageProps> = ({
                 </ScrollArea>
 
                 {indicators !== undefined && (
-                    <div className={styles.chart__preview__wrapper}>
+                    <div data-testId={'chart-preview'} className={styles.chart__preview__wrapper}>
                         <div className={styles.chart__card}>
                             <PortableRefreshChart
                                 indicators={indicators}
@@ -119,6 +120,7 @@ const ChartSelectStage: React.FC<IChartSelectStageProps> = ({
                     color="red"
                     radius={"xl"}
                     onClick={() => cancel()}
+                    data-testId={'select-cancel'}
                 >
                     Cancel
                 </Button>
@@ -128,11 +130,12 @@ const ChartSelectStage: React.FC<IChartSelectStageProps> = ({
                     radius={"xl"}
                     disabled={indicators === undefined}
                     onClick={() => continueStep(indicators)}
+                    data-testId={'select-continue'}
                 >
                     Continue
                 </Button>
             </Group>
-        </>
+        </div>
     )
 }
 

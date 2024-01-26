@@ -52,6 +52,87 @@ const noteNameInputLocator = "note-name"
  */
 const submitButtonLocator = "submit-button"
 
+/**
+ * This is the locator for the select chart flow wrapper
+ * testValue is the flow's step
+ */
+const selectChartFlowLocator = "select-chart-flow"
+
+/**
+ * this is the locator for the chart select stage
+ */
+const chartSelectStageLocator = "chart-select-stage"
+
+/**
+ * This is the wrapper for the chart options in the select stage
+ */
+const chartOptionsLocator = "chart-options"
+
+/**
+ * This is the base for a chart option within the select stage
+ */
+const chartOptionBase = "chart-option"
+
+/**
+ * This is the locator for the chart preview in the select stage
+ */
+const chartPreviewLocator = "chart-preview"
+
+/**
+ * This is the locator for the cancel button in the select stage
+ */
+const chartSelectCancelLocator = "select-cancel"
+
+/**
+ * This is the locator for the continue button in the select stage
+ */
+const chartSelectContinueLocator = "select-continue"
+
+/**
+ * This is the locator for the settings stage 
+ */
+const chartSettingsStageLocator = "chart-settings-stage"
+
+/**
+ * This is the locator for the display title switch in the settings stage
+ */
+const chartSettingsTitleSwitchLocator = "display-title-switch"
+
+/**
+ * this is the locator for the chart title input
+ */
+const chartTitleLocator = "chart-title"
+
+/**
+ * This is the locator for the display x axis switch
+ */
+const displayXAxisLocator = "display-x-axis"
+
+/**
+ * this is the locator for the invert y axis switch
+ */
+const invertYAxisLocator = "invert-y-axis"
+
+/**
+ * This is the locator for the show y axis switch
+ */
+const showYAxisLocator = "show-y-axis"
+
+/**
+ * This is the locator for the cancel button in the settings stage
+ */
+const settingsCancelLocator = "settings-cancel"
+
+/**
+ * This is the locator for the submit button in the settings modal
+ */
+const settingsSubmitLocator = "settings-submit"
+
+/**
+ * This is the locator for the chart block
+ */
+const chartBlockBodyLocator = "chart-block-body"
+
 const addExtensions = (base: string, extensions: string[]) => {
     let outputString = base
     for(let i = 0; i < extensions.length; i++) {
@@ -69,6 +150,7 @@ const createDocumentPage = async (component: MountResult, page: Page) => {
     //click the root folder
     const containerFolderZeroLocator = addExtensions("container-folder", ["0"])
     const containerFolderZero = component.getByTestId(containerFolderZeroLocator).locator('> button')
+    await containerFolderZero.click()
     await containerFolderZero.click()
 
     //get the toolbar create button and click it
@@ -204,42 +286,78 @@ const chartIMPL = async (component: MountResult, page: Page) => {
     await blockContent.click()
     await expect(block).toHaveAttribute('data-testValue', "paragraph")
 
-    //type in !$$
-    await page.keyboard.type(`!$$`, { delay: 200 })
-    await page.keyboard.press("Spacebar")
+    //type in @$
+    await page.keyboard.type(`@$`, { delay: 200 })
 
-    //check the refresh chart modal is attached
-    const addRefreshChart = page.getByTestId(addRefreshChartLocator)
-    await expect(addRefreshChart).toBeAttached()
+    //check the select chart flow is attached and value = [select] | settings
+    const selectChartFlow = page.getByTestId(selectChartFlowLocator)
+    await expect(selectChartFlow).toBeAttached()
+    await expect(selectChartFlow).toHaveAttribute("data-testValue", "select")
 
-    //check there is a cancel button attached
-    const cancelButton = page.getByTestId(addRefreshChartCancelLocator)
-    await expect(cancelButton).toBeAttached()
+    //make sure the chart select stage is attached
+    const chartSelectStage = selectChartFlow.getByTestId(chartSelectStageLocator)
+    await expect(chartSelectStage).toBeAttached()
 
-    //check the submit button is disabled
-    const submitButton = page.getByTestId(addRefreshChartSubmitLocator)
-    await expect(submitButton).toBeDisabled()
+    //make sure chart options has 1 child
+    const chartOptions = chartSelectStage.getByTestId(chartOptionsLocator)
+    await expect(chartOptions.locator('> div')).toHaveCount(1)
 
-    //check that refresh chart options has 1 child
-    const refreshChartOptions = addRefreshChart.getByTestId(addRefreshChartOptionsLocator)
-    await expect(refreshChartOptions.locator('> div')).toHaveCount(1)
+    //make sure chart preview is not attached
+    const chartPreview = chartSelectStage.getByTestId(chartPreviewLocator)
+    await expect(chartPreview).not.toBeAttached()
 
-    //check that refresh-chart-0 has title swag
-    const refreshChartLocator = addExtensions(addRefreshChartOptionBase, ["0"])
-    const refresHChart = refreshChartOptions.getByTestId(refreshChartLocator)
-    await expect(refresHChart).toContainText("swag")
+    //get chart-option-0 and click it
+    const chartOptionLocator = addExtensions(chartOptionBase, ["0"])
+    const chartOption = chartOptions.getByTestId(chartOptionLocator)
+    await expect(chartOption).toBeAttached()
+    await chartOption.click()
 
-    //click on the chart and the submit button also now works
-    await refresHChart.click()
-    await expect(submitButton).not.toBeDisabled()
-    await submitButton.click()
+    //make sure chart preview is attached
+    await expect(chartPreview).toBeAttached()
 
-    //check that the testValue is media::image
-    await expect(block).toHaveAttribute('data-testValue', "media::chart")
+    //make sure select cancel is attached
+    const selectCancel = chartSelectStage.getByTestId(chartSelectCancelLocator)
+    await expect(selectCancel).toBeAttached()
 
-    //check the size handles are attached
-    const sizeHandles = block.getByTestId(sizeHandlesLocator)
-    await expect(sizeHandles).toBeAttached()
+    //make sure select continue is attached
+    const selectContinue = chartSelectStage.getByTestId(chartSelectContinueLocator)
+    await expect(selectContinue).toBeAttached()
+    await selectContinue.click()
+
+    //check chart flow value = [settings]
+    await expect(selectChartFlow).toHaveAttribute("data-testValue", "settings")
+
+    //make sure the settings stage is attached
+    const chartSettingsStage = selectChartFlow.getByTestId(chartSettingsStageLocator)
+    await expect(chartSettingsStage).toBeAttached()
+
+    //make sure the title switch is attached
+    const titleSwitch = chartSettingsStage.getByTestId(chartSettingsTitleSwitchLocator)
+    await expect(titleSwitch).toBeAttached()
+
+    //check that the display x axis is attached
+    const displayXAxis = chartSettingsStage.getByTestId(displayXAxisLocator)
+    await expect(displayXAxis).toBeAttached()
+
+    //check that the invert y axis is attached
+    const invertYAxis = chartSettingsStage.getByTestId(invertYAxisLocator)
+    await expect(invertYAxis).toBeAttached()
+
+    //check that the show y axis is attached
+    const showYAxis = chartSettingsStage.getByTestId(showYAxisLocator)
+    await expect(showYAxis).toBeAttached()
+
+    //check the cancel button is attached
+    const settingsCancel = chartSettingsStage.getByTestId(settingsCancelLocator)
+    await expect(settingsCancel).toBeAttached()
+
+    //click the submit button
+    const settingsSubmit = chartSettingsStage.getByTestId(settingsSubmitLocator)
+    await settingsSubmit.click()
+
+    //check that block has block body
+    const chartBlockBody = block.getByTestId(chartBlockBodyLocator)
+    await expect(chartBlockBody).toBeAttached()
 }
 
 
