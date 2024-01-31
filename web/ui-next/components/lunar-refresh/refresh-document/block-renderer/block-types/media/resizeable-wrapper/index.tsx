@@ -47,7 +47,7 @@ const ResizeableWrapper: React.FC<IResizeableWrapperProps> = ({ dims, maintainAs
     
     return (
         <Resizable
-            maxWidth={700}
+            maxWidth={800}
             className={styles.resizeable__wrapper}
             lockAspectRatio={maintainAspectRatio}
             size={{ width: dims.x, height: dims.y }}

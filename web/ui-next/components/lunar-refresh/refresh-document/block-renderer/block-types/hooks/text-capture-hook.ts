@@ -71,6 +71,7 @@ const useTextCaptureHook = (
                 break
             //image
             case "@#":
+                changeNoteBlock(blockId, "media::image", "")
                 break
             default:
                 if(blockType === "paragraph")

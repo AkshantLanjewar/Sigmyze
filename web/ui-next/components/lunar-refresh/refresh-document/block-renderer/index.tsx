@@ -1,5 +1,6 @@
 import { Blocks, INoteBlock } from '../types'
 import { NoteChart, NoteParagraph } from './block-types'
+import NoteImage from './block-types/media/image'
 import NoteHeading from './block-types/text/heading'
 import styles from './index.module.scss'
 import NoteTitle from './note-title'
@@ -94,6 +95,20 @@ const BLOCK_SWITCH = (
                     deleteNoteBlock={deleteNoteBlock}
                 />
             )
+        case "media::image":
+            return (
+                <NoteImage
+                    block={step}
+                    hasRequest={hasRequest}
+                    consumeFocusRequest={consumeFocusRequest}
+                    changeNoteBlock={changeNoteBlock}
+                    updateNoteBlock={updateNoteBlock}
+                    createRawBlock={createRawBlock}
+                    deleteNoteBlock={deleteNoteBlock}
+                />
+            )
+            
+            break
         default:
             return undefined
     }

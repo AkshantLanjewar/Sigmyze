@@ -60,4 +60,30 @@ interface ISerializedNoteChart {
 
 }
 
-export type { ISerializedNoteChart, IChartLoc }
+interface ISerializedNoteImage {
+    /**
+     * This is the width of the image
+     */
+    width: number,
+
+    /**
+     * This is the height of the image
+     */
+    height: number,
+
+    /**
+     * This is the data of the image stored in base64 format
+     */
+    data: string,
+
+    /**
+     * This field is to check whether or not the data has been marshaled properly from the block content
+     */
+    marshalCheck?: string
+}
+
+export type { 
+    ISerializedNoteChart, 
+    IChartLoc,
+    ISerializedNoteImage 
+}

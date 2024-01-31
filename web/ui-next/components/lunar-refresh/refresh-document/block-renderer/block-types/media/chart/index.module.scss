@@ -20,6 +20,16 @@ $blue-6: var(--mantine-color-indigo-6);
             border: 2px solid $blue-6;
         }
     }
+
+    .body__image {
+        background-color: transparent;
+        position: relative;
+        border-radius: 8px;
+
+        &.active {
+            border: 2px solid $blue-6;
+        }
+    }
 }
 
 .chart__wrapper {

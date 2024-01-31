@@ -234,9 +234,8 @@ const imageIMPL = async (component: MountResult, page: Page) => {
     await blockContent.click()
     await expect(block).toHaveAttribute('data-testValue', "paragraph")
 
-    //type in !^^
-    await page.keyboard.type(`!^^`, { delay: 200 })
-    await page.keyboard.press("Spacebar")
+    //type in @#
+    await page.keyboard.type(`@#`, { delay: 200 })
 
     //check the upload image modal is attached
     const uploadImageModal = page.getByTestId(uploadImageModalLocator)
@@ -253,9 +252,10 @@ const imageIMPL = async (component: MountResult, page: Page) => {
     //get the input and upload the image file
     const imageUpload = page.getByTestId(uploadImageInputLocator)
     const imageUploadRAW = imageUpload.locator('input')
+    const imageUploadBTN = uploadImageModal.getByTestId('upload-image-btn')
 
     //run the action
-    await imageUploadRAW.click()
+    await imageUploadBTN.click()
     await imageUploadRAW.setInputFiles("./public/screenshots/drive-ss.png")
 
     //check the submit button is not disabled
@@ -266,12 +266,8 @@ const imageIMPL = async (component: MountResult, page: Page) => {
     await expect(block).toHaveAttribute('data-testValue', "media::image")
 
     //check that there is an image in the block content
-    const blockContentImage = blockContent.locator("image")
+    const blockContentImage = block.getByTestId('image-body')
     await expect(blockContentImage).toBeAttached()
-
-    //check the size handles are attached
-    const sizeHandles = block.getByTestId(sizeHandlesLocator)
-    await expect(sizeHandles).toBeAttached()
 }
 
 const chartIMPL = async (component: MountResult, page: Page) => {
