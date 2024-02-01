@@ -116,6 +116,14 @@ const useActionMenu = (ref: React.RefObject<HTMLElement>, focus: boolean) => {
         }
     }
 
+    /**
+     * @description
+     *  - this is the function that retreives the current query text
+     */
+    const getQueryText = () => {
+        return text.current
+    }
+
     //this is the effect that handles retreiving the menu position
     useEffect(() => {
         if(menuActive === false || ref.current === null)
@@ -159,7 +167,8 @@ const useActionMenu = (ref: React.RefObject<HTMLElement>, focus: boolean) => {
         menuActive,
         position,
         actionKeyDown,
-        actionKeyUp
+        actionKeyUp,
+        getQueryText
     }
 }
 

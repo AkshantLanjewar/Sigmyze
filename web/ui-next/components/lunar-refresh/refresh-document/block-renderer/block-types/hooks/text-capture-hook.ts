@@ -30,7 +30,7 @@ const useTextCaptureHook = (
     changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
     isHeading?: boolean
 ) => {
-    const { menuActive, position, actionKeyDown, actionKeyUp } = useActionMenu(ref, focus)
+    const { menuActive, position, actionKeyDown, actionKeyUp, getQueryText } = useActionMenu(ref, focus)
 
     /**
      * @description
@@ -86,11 +86,18 @@ const useTextCaptureHook = (
             ref.current.addEventListener("keyup", onKeyUp)
         else
             ref.current.addEventListener("keyup", actionKeyUp)
+
+        return () => {
+            ref.current?.removeEventListener("keydown", actionKeyDown)
+            ref.current?.removeEventListener("keyup", onKeyUp)
+            ref.current?.removeEventListener("keyup", actionKeyUp)
+        }
     }, [active, menuActive])
 
     return {
         menuActive,
-        position
+        position,
+        getQueryText
     }
 }
 

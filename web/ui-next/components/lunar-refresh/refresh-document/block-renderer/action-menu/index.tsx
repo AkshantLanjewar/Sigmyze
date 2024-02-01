@@ -15,10 +15,15 @@ interface IActionMenuProps {
     /**
      * this is the position of the action menu
      */
-    position: IQuantaXYPos
+    position: IQuantaXYPos,
+
+    /**
+     * This is the function that gets the query text
+     */
+    getQueryText: () => string | null
 }
 
-const ActionMenu: React.FC<IActionMenuProps> = ({ menuActive, position }) => {
+const ActionMenu: React.FC<IActionMenuProps> = ({ menuActive, position, getQueryText }) => {
     //whether or not to display the action menu
     const [display, setDisplay] = useState<boolean>(false)
     
@@ -27,7 +32,7 @@ const ActionMenu: React.FC<IActionMenuProps> = ({ menuActive, position }) => {
     //flag to disable display
     const disableDisplayF = useRef<boolean>(false)
 
-    const { active, trackRef } = useActionMenuState(animate)
+    const { active, blocks, trackRef } = useActionMenuState(animate, position, getQueryText)
 
     //effect that handles the animate / deanimate movement
     useEffect(() => {
@@ -78,7 +83,7 @@ const ActionMenu: React.FC<IActionMenuProps> = ({ menuActive, position }) => {
                                 >
                                     <ScrollArea h={"14rem"}>
                                         <div data-testId={'context-menu-options'}>
-                                            {BLOCK_REGSITRY.map((step, index) => {
+                                            {blocks.map((step, index) => {
                                                 const isActive = index === active
                                                 const rootClass = `${styles.context__menu__itm} ${isActive === true && styles.active}`
 

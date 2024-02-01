@@ -66,7 +66,14 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     } = useTextBlock(block, hasRequest, endblock, focus, editableRef, updateNoteBlock, consumeFocusRequest)
 
     //this is the hook that handles the textcapture logic
-    const { menuActive, position } = useTextCaptureHook(editableRef, active, block.blockId, block.blockType, active, changeNoteBlock)
+    const { menuActive, position, getQueryText } = useTextCaptureHook(
+        editableRef, 
+        active, 
+        block.blockId, 
+        block.blockType, 
+        active, 
+        changeNoteBlock
+    )
 
     //this is the click outside ref
     const ref = useClickOutside(() => {
@@ -89,6 +96,7 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
             <ActionMenu
                 menuActive={menuActive}
                 position={position}
+                getQueryText={getQueryText}
             />
 
             <ActionIcon

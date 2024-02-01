@@ -1,16 +1,25 @@
 import { P } from "@antv/g2plot"
 import { useEffect, useRef, useState } from "react"
-import { BLOCK_REGSITRY } from "../block-types"
+import { BLOCK_REGSITRY, IRegisteredNoteBlock } from "../block-types"
+import { IQuantaXYPos } from "../../../../quanta/quanta-editor/types/nodes"
+import { matchSorter } from 'match-sorter'
 
 /**
  * @description
  *  - this is the function that encapsulates all the state for the action menu component
  * @param menuOpen
  *  - whether or not the menu is open
+ * @param position
+ *  - this is the position of the action menu, when this changes there is a change to the text being typed
+ * @param getQueryText
+ *  - this is the function that returns the current query text
  */
-const useActionMenuState = (menuOpen: boolean) => {
+const useActionMenuState = (menuOpen: boolean, position: IQuantaXYPos, getQueryText: () => string | null) => {
     //this is the index of the active item within the menu
     const [active, setActive] = useState<number>(0)
+
+    //these are the blocks to be displayed
+    const [blocks, setBlocks] = useState<IRegisteredNoteBlock[]>(BLOCK_REGSITRY)
 
     //dictionary of refs we will use to focus elements into view on active change
     const refs = useRef<{[key: string]: HTMLDivElement | null}>({})
@@ -96,9 +105,25 @@ const useActionMenuState = (menuOpen: boolean) => {
 
         ref.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
     }, [active])
+
+    //effect that handles searching
+    useEffect(() => {
+        const query = getQueryText()
+        if(query === null || query.length === 0) {
+            setBlocks([ ...BLOCK_REGSITRY ])
+            return
+        }
+
+        const matched = matchSorter(BLOCK_REGSITRY, query, { keys: ["blockType", "name"] })
+        if(active > matched.length - 1)
+            setActive(matched.length - 1)
+
+        setBlocks([ ...matched ])
+    }, [position, active])
     
     return {
         active,
+        blocks,
         trackRef
     }
 }
