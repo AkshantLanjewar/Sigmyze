@@ -4,6 +4,7 @@ import styles from './index.module.scss'
 import { Motion, presets, spring } from 'react-motion'
 import { ScrollArea, ThemeIcon, Title } from '@mantine/core'
 import { BLOCK_REGSITRY, RegistryIcon } from '../block-types'
+import useActionMenuState from './state'
 
 interface IActionMenuProps {
     /**
@@ -26,8 +27,7 @@ const ActionMenu: React.FC<IActionMenuProps> = ({ menuActive, position }) => {
     //flag to disable display
     const disableDisplayF = useRef<boolean>(false)
 
-    //this is the index of the active item within the menu
-    const [active, setActive] = useState<number>(0)
+    const { active, trackRef } = useActionMenuState(animate)
 
     //effect that handles the animate / deanimate movement
     useEffect(() => {
@@ -87,7 +87,10 @@ const ActionMenu: React.FC<IActionMenuProps> = ({ menuActive, position }) => {
                                                         onMouseDown={e => e.preventDefault()}
                                                         data-testId={`context-menu-opt-${index}`}
                                                         data-testValue={step.blockType}
+                                                        data-active={`${isActive ? 'true' : 'false'}`}
                                                         className={rootClass}
+                                                        ref={ref => trackRef(index, ref)}
+                                                        
                                                     >
                                                         <ThemeIcon size={"lg"}>
                                                             <RegistryIcon block={step.blockType} />

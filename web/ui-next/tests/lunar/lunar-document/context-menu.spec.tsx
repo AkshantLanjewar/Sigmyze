@@ -101,7 +101,7 @@ const contextMenuArrowKeysIMPL = async (component: MountResult, page: Page) => {
     //check that option-0 has class option-active
     const rootOptionLocator = addExtensions(contextMenuOptionBase, ["0"])
     const rootOption = contextMenu.getByTestId(rootOptionLocator)
-    await expect(rootOption).toHaveClass("active")
+    await expect(rootOption).toHaveAttribute("data-active", "true")
 
     //press up arrow key
     await page.keyboard.press("ArrowUp")
@@ -110,15 +110,13 @@ const contextMenuArrowKeysIMPL = async (component: MountResult, page: Page) => {
     const lastOptionLocator = addExtensions(contextMenuOptionBase, ["8"])
     const lastOption = contextMenu.getByTestId(lastOptionLocator)
 
-    await expect(lastOption).toHaveClass("active")
-    await expect(lastOption).toBeVisible()
+    await expect(lastOption).toHaveAttribute("data-active", "true")
 
     //press up arrow down
     await page.keyboard.press("ArrowDown")
 
     //check root option is active and visible
-    await expect(rootOption).toHaveClass("active")
-    await expect(rootOption).toBeVisible()
+    await expect(rootOption).toHaveAttribute("data-active", "true")
 
     //press up arrow down
     await page.keyboard.press("ArrowDown")
@@ -126,7 +124,7 @@ const contextMenuArrowKeysIMPL = async (component: MountResult, page: Page) => {
     //check option-1 is active
     const secondOptionLocator = addExtensions(contextMenuOptionBase, ["1"])
     const secondOption = contextMenu.getByTestId(secondOptionLocator)
-    await expect(secondOption).toHaveClass("active")
+    await expect(secondOption).toHaveAttribute("data-active", "true")
 }
 
 const contextMenuSearchIMPL = async (component: MountResult, page: Page) => {

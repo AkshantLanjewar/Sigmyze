@@ -81,6 +81,9 @@ const useActionMenu = (ref: React.RefObject<HTMLElement>, focus: boolean) => {
             setMenuActive(true)
             toggleGetMenuPosition()
         }
+
+        if(text.current !== null && (event.key === "ArrowUp" || event.key === "ArrowDown"))
+            event.preventDefault()
     }
 
     /**
