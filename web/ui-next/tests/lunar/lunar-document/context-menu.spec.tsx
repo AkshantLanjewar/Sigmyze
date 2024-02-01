@@ -186,7 +186,7 @@ const contextMenuBlockChangeIMPL = async (component: MountResult, page: Page) =>
     await expect(block).toHaveAttribute('data-testValue', "paragraph")
 
     //type in !
-    await page.keyboard.type(`!h1`, { delay: 200 })
+    await page.keyboard.type(`!heading`, { delay: 200 })
     
     //check that the context menu is mounted
     const contextMenu = page.getByTestId(contextMenuLocator)
@@ -194,7 +194,7 @@ const contextMenuBlockChangeIMPL = async (component: MountResult, page: Page) =>
 
     //there are 1 divs within the context menu options
     const contextMenuOptions = contextMenu.getByTestId(contextMenuOptionsLocator)
-    await expect(contextMenuOptions.locator('> div')).toHaveCount(1)
+    await expect(contextMenuOptions.locator('> div')).toHaveCount(6)
 
     //get option 0 and check value = "heading::1"
     const rootOptionLocator = addExtensions(contextMenuOptionBase, ["0"])

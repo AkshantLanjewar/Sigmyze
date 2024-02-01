@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { BLOCK_REGSITRY, IRegisteredNoteBlock } from "../block-types"
 import { IQuantaXYPos } from "../../../../quanta/quanta-editor/types/nodes"
 import { matchSorter } from 'match-sorter'
+import { Blocks } from "../../types"
 
 /**
  * @description
@@ -14,7 +15,12 @@ import { matchSorter } from 'match-sorter'
  * @param getQueryText
  *  - this is the function that returns the current query text
  */
-const useActionMenuState = (menuOpen: boolean, position: IQuantaXYPos, getQueryText: () => string | null) => {
+const useActionMenuState = (
+    menuOpen: boolean, 
+    position: IQuantaXYPos, 
+    getQueryText: () => string | null,
+    changeBlockType: (newType: Blocks) => void
+) => {
     //this is the index of the active item within the menu
     const [active, setActive] = useState<number>(0)
 
@@ -82,6 +88,13 @@ const useActionMenuState = (menuOpen: boolean, position: IQuantaXYPos, getQueryT
                     setActive((step) => step + 1)    
 
                 break
+            case "Enter":
+                //change the block type
+                event.preventDefault()
+                const newBlock = blocks[active]
+                changeBlockType(newBlock.blockType)
+
+                break
             default:
                 return
         }
@@ -95,7 +108,7 @@ const useActionMenuState = (menuOpen: boolean, position: IQuantaXYPos, getQueryT
 
         document.addEventListener("keydown", onKeyDown)
         return () => document.removeEventListener("keydown", onKeyDown)
-    }, [menuOpen, active])
+    }, [menuOpen, active, blocks])
 
     //effect that focuses the menu item into view on the active change
     useEffect(() => {

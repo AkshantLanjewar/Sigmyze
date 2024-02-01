@@ -10,6 +10,7 @@ import { IconGripVertical } from "@tabler/icons";
 import React from "react";
 import getCaretPosition from '../hooks/util'
 import useHeader from "../hooks/header";
+import ActionMenu from "../../action-menu";
 
 const removeTicks = (val: string) => {
     const split = val.split(" ")
@@ -57,7 +58,12 @@ interface INoteHeadingProps {
     /**
      * This is the function that updates a note block
      */
-    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
+
+    /**
+     * This is the function that creates a focus request within the editor
+     */
+    createFocusRequest: (blockId: string) => void
 }
 
 const NoteHeading: React.FC<INoteHeadingProps> = ({
@@ -67,7 +73,8 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
     endblock,
     updateNoteBlock,
     consumeFocusRequest,
-    changeNoteBlock
+    changeNoteBlock,
+    createFocusRequest
 }) => {
     //this is the toggle to focus the ref that the hook subscribes to
     const [focus, setFocus] = useState<boolean>(false)
@@ -87,6 +94,9 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
         titleRef,
         titleEdit,
         cOrder,
+        menuActive,
+        position,
+        getQueryText,
         focusHandler,
         blurHandler,
         setTicksActive
@@ -131,6 +141,15 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
             ref={ref}
             className={styles.block__container}
         >
+            <ActionMenu
+                menuActive={menuActive}
+                position={position}
+                blockId={block.blockId}
+                getQueryText={getQueryText}
+                changeNoteBlock={changeNoteBlock}
+                createFocusRequest={createFocusRequest}
+            />
+
             <ActionIcon
                 variant={"subtle"}
                 size={"sm"}

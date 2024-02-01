@@ -65,6 +65,7 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 changeNoteBlock={changeNoteBlock}
                 createRawBlock={createRawBlock}
                 deleteNoteBlock={deleteNoteBlock}
+                createFocusRequest={createFocusRequest}
             />
         </div>
     )

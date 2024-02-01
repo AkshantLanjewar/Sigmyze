@@ -38,7 +38,12 @@ interface INoteParagraphProps {
     /**
      * This is the function that updates a note block
      */
-    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
+
+    /**
+     * This is the function that creates a focus request within the editor
+     */
+    createFocusRequest: (blockId: string) => void
 }
 
 const NoteParagraph: React.FC<INoteParagraphProps> = ({ 
@@ -47,7 +52,8 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     endblock, 
     updateNoteBlock, 
     consumeFocusRequest, 
-    changeNoteBlock 
+    changeNoteBlock,
+    createFocusRequest 
 }) => {
     //this is the ref for the paragraph component
     const editableRef = useRef<HTMLParagraphElement>(null)
@@ -96,7 +102,10 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
             <ActionMenu
                 menuActive={menuActive}
                 position={position}
+                blockId={block.blockId}
                 getQueryText={getQueryText}
+                changeNoteBlock={changeNoteBlock}
+                createFocusRequest={createFocusRequest}
             />
 
             <ActionIcon

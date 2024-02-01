@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Blocks, INoteBlock } from "../../../types"
 import { setUncaughtExceptionCaptureCallback } from "process"
+import useActionMenu from "./action-menu"
 
 /**
  * @description
@@ -60,6 +61,9 @@ const useHeader = (
 
     //this is the calculated order
     const [cOrder, setCOrder] = useState<number>(1)
+
+    //hook to use action menu state
+    const { menuActive, position, actionKeyDown, actionKeyUp, getQueryText } = useActionMenu(titleRef, active === "title")
 
     /**
      * @description
@@ -235,11 +239,26 @@ const useHeader = (
             tickRef.current.removeEventListener("keyup", keyUpListener)
 
             titleRef.current.removeEventListener("keyup", keyUpListener)
+            titleRef.current.removeEventListener("keyup", actionKeyUp)
+            titleRef.current.removeEventListener("keydown", actionKeyDown)
         } else {
             tickRef.current.addEventListener("keydown", keyDownListener)
             tickRef.current.addEventListener("keyup", keyUpListener)
 
             titleRef.current.addEventListener("keyup", keyUpListener)
+            titleRef.current.addEventListener("keyup", actionKeyUp)
+            titleRef.current.addEventListener("keydown", actionKeyDown)
+        }
+
+        return () => {
+            if(tickRef.current === null || titleRef.current === null)
+                return
+
+            tickRef.current?.removeEventListener("keydown", keyDownListener)
+            tickRef.current.removeEventListener("keyup", keyUpListener)
+            titleRef.current.removeEventListener("keyup", keyUpListener)
+            titleRef.current.removeEventListener("keyup", actionKeyUp)
+            titleRef.current.removeEventListener("keydown", actionKeyDown)
         }
     }, [focused, active])
 
@@ -264,6 +283,7 @@ const useHeader = (
         if(tickRef.current === null)
             return
 
+        tickRef.current.focus()
         tickRef.current.focus()
         const range = document.createRange()
         const selection = window.getSelection()
@@ -308,9 +328,12 @@ const useHeader = (
         titleRef,
         titleEdit,
         cOrder,
+        menuActive,
+        position,
         focusHandler,
         blurHandler,
-        setTicksActive
+        setTicksActive,
+        getQueryText
     }
 }
 
