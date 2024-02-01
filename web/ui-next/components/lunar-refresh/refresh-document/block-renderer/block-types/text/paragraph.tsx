@@ -7,6 +7,7 @@ import { IconGripVertical } from "@tabler/icons"
 import useTextCaptureHook from "../hooks/text-capture-hook"
 import useTextBlock from "../hooks/text-block"
 import useGrip from "../hooks/grip"
+import ActionMenu from "../../action-menu"
 
 interface INoteParagraphProps {
     /**
@@ -54,15 +55,6 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     //this is the toggle to focus the ref that the hook subscribes to
     const [focus, setFocus] = useState<boolean>(false)
 
-    //this is the click outside ref
-    const ref = useClickOutside(() => {
-        let element = editableRef.current
-        if(element === null)
-            return
-
-        element.blur()
-    })
-
     //load in the hook that handles all text functionality
     const {
         flush,
@@ -74,7 +66,16 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     } = useTextBlock(block, hasRequest, endblock, focus, editableRef, updateNoteBlock, consumeFocusRequest)
 
     //this is the hook that handles the textcapture logic
-    const {} = useTextCaptureHook(editableRef, active, block.blockId, block.blockType, changeNoteBlock)
+    const { menuActive, position } = useTextCaptureHook(editableRef, active, block.blockId, block.blockType, active, changeNoteBlock)
+
+    //this is the click outside ref
+    const ref = useClickOutside(() => {
+        let element = editableRef.current
+        if(element === null || menuActive === true)
+            return
+
+        element.blur()
+    })
 
     const skip = useRef<boolean>(false)
     //this is the hook that handles the grip logic
@@ -85,6 +86,11 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
             ref={ref}
             className={styles.block__container}
         >
+            <ActionMenu
+                menuActive={menuActive}
+                position={position}
+            />
+
             <ActionIcon
                 variant={"subtle"}
                 size={"sm"}

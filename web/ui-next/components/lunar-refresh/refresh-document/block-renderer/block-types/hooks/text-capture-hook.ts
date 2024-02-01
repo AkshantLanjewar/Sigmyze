@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Blocks } from "../../../types"
+import { IQuantaXYPos } from "../../../../../quanta/quanta-editor/types/nodes"
+import useActionMenu from "./action-menu"
 
 /**
  * @description
@@ -12,6 +14,8 @@ import { Blocks } from "../../../types"
  *  - this is the id for this block
  * @param blockType
  *  - this is the current block type
+ * @param focus
+ *  - this is whether or not the block is focused
  * @param changeNoteBlock
  *  - This is the function that updates a note block
  * @param ignore
@@ -22,32 +26,11 @@ const useTextCaptureHook = (
     active: boolean,
     blockId: string,
     blockType: Blocks,
+    focus: boolean,
     changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
     isHeading?: boolean
 ) => {
-    /**
-     * @description
-     *  - this is a subroutine that detects whether or not the first space has been pressed
-     * @returns
-     *  - this returns a boolean where true meaning a space is detected, a.k.a terminate or false to continue
-     */
-    const detectFirstSpace = useCallback(() => {
-        if(ref.current === null)
-            return true
-
-        //get the inner text value within the ref
-        const text = ref.current.innerText
-        const textSplit = text.split('')
-
-        //now loop through and check if there has been a space that has been pressed
-        for(let i = 0; i < textSplit.length; i++) {
-            let character = textSplit[i]
-            if(/\s/.test(character))
-                return true
-        }
-
-        return false
-    }, [])
+    const { menuActive, position, actionKeyDown, actionKeyUp } = useActionMenu(ref, focus)
 
     /**
      * @description
@@ -83,17 +66,32 @@ const useTextCaptureHook = (
         }
     }
 
+    
+
     //this is the effect that handles whenever the node is actively in editing mode
     useEffect(() => {
-        ref.current?.removeEventListener("keyup", onKeyUp)
-        if(active === false || ref.current === null)
+        if(ref.current === null)
             return
 
-        //we need to attach a handler that detects onKeyPress event
-        ref.current.addEventListener("keyup", onKeyUp)
-    }, [active])
+        ref.current.removeEventListener("keyup", onKeyUp)
+        ref.current.removeEventListener("keydown", actionKeyDown)
+        if(active === false)
+            return
 
-    return {}
+        //attach the handler that detectes the onkeydown
+        ref.current.addEventListener("keydown", actionKeyDown)
+
+        //we need to attach a handler that detects onKeyPress event
+        if(menuActive === false)
+            ref.current.addEventListener("keyup", onKeyUp)
+        else
+            ref.current.addEventListener("keyup", actionKeyUp)
+    }, [active, menuActive])
+
+    return {
+        menuActive,
+        position
+    }
 }
 
 export default useTextCaptureHook
