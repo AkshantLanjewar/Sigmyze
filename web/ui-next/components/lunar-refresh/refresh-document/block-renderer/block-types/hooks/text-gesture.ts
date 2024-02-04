@@ -13,13 +13,16 @@ import { useEffect } from "react"
  *  - function that groups a note block
  * @param appendNoteBlock
  *  - this is the function that appends a note block
+ * @param ungroupNoteBlock
+ *  - this is the function tha tungroups a note block
  */
 const useTextGestures = (
     active: boolean,
     blockId: string,
     editableRef: React.RefObject<HTMLElement>,
     groupNoteBlock: (blockId: string) => void,
-    appendNoteBlock: (blockId: string) => void
+    appendNoteBlock: (blockId: string) => void,
+    ungroupNoteBlock: (blockId: string) => void
 ) => {
     /**
      * @description
@@ -30,7 +33,11 @@ const useTextGestures = (
         switch(event.key) {
             case "Tab":
                 event.preventDefault()
-                groupNoteBlock(blockId)
+
+                if(event.shiftKey === false)
+                    groupNoteBlock(blockId)
+                else
+                    ungroupNoteBlock(blockId)
 
                 return
             case "Enter":

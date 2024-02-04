@@ -32,6 +32,11 @@ interface IGroupBlockProps {
      */
     blocksLength: number,
 
+    /** 
+     * Whether or not the blocks have been updated
+    */
+    blocksUpdated: boolean,
+
     /**
      * This is the function that updates a blocks content
      */
@@ -70,7 +75,12 @@ interface IGroupBlockProps {
     /**
      * this is the function that appends a note block
      */
-    appendNoteBlock: (blockId: string) => void
+    appendNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that ungroups a block
+     */
+    ungroupNoteBlock: (blockId: string) => void
 }
 
 const GroupBlock: React.FC<IGroupBlockProps> = ({ 
@@ -79,6 +89,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
     hasRequest, 
     index, 
     blocksLength, 
+    blocksUpdated,
     updateNoteBlock, 
     consumeFocusRequest, 
     changeNoteBlock, 
@@ -86,7 +97,8 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
     deleteNoteBlock, 
     createFocusRequest,
     groupNoteBlock,
-    appendNoteBlock 
+    appendNoteBlock,
+    ungroupNoteBlock 
 }) => {
     //this is the title block to be rendered
     const [titleBlock, setTitleBlock] = useState<INoteBlock | undefined>(undefined)
@@ -118,7 +130,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
         nTitleBlock.isGroup = false
         nTitleBlock.blockChildren = undefined
         setTitleBlock({ ...nTitleBlock })
-    }, [block])
+    }, [block, blocksUpdated])
 
     return (
         <div className={styles.block__container}>
@@ -155,6 +167,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                 hasRequest, 
                                 index, 
                                 children.length, 
+                                blocksUpdated,
                                 updateNoteBlock, 
                                 consumeFocusRequest,
                                 changeNoteBlock,
@@ -163,6 +176,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                 createFocusRequest,
                                 groupNoteBlock,
                                 appendNoteBlock,
+                                ungroupNoteBlock,
                                 order + 1,
                                 true 
                             )
@@ -173,37 +187,40 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
 
                 <Collapse 
                     in={open}
-                    data-testId={'nested-children'} 
                     style={{ 
                         marginLeft: 11, 
-                        marginTop: 10, 
+                        marginTop: 5, 
                         borderLeft: "1.5px solid rgb(37 38 43)",
-                        paddingLeft: 35,
+                        paddingLeft: 25,
                         paddingBottom: 5
                     }}
                 >
-                    {children.map((step, index) => (
-                        <div
-                            data-testId={`document-block-${index}::child::${order}`}
-                            data-testValue={step.blockType}
-                        >
-                            {BLOCK_SWITCH(
-                                step, 
-                                hasRequest, 
-                                index, 
-                                children.length, 
-                                updateNoteBlock, 
-                                consumeFocusRequest,
-                                changeNoteBlock,
-                                createRawBlock,
-                                deleteNoteBlock,
-                                createFocusRequest,
-                                groupNoteBlock,
-                                appendNoteBlock,
-                                order + 1
-                            )}
-                        </div>
-                    ))}
+                    <div data-testId={'nested-children'}>
+                        {children.map((step, index) => (
+                            <div
+                                data-testId={`document-block-${index}::child::${order}`}
+                                data-testValue={step.blockType}
+                            >
+                                {BLOCK_SWITCH(
+                                    step, 
+                                    hasRequest, 
+                                    index, 
+                                    children.length, 
+                                    blocksUpdated,
+                                    updateNoteBlock, 
+                                    consumeFocusRequest,
+                                    changeNoteBlock,
+                                    createRawBlock,
+                                    deleteNoteBlock,
+                                    createFocusRequest,
+                                    groupNoteBlock,
+                                    appendNoteBlock,
+                                    ungroupNoteBlock,
+                                    order + 1
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 </Collapse>
             </div>
         </div>

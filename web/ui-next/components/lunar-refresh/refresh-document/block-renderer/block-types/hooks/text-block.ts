@@ -66,7 +66,7 @@ const useTextBlock = (
         if(consumeFocusRequest(block.blockId) === false)
             return
 
-        
+        editableRef.current.focus()
         editableRef.current.focus()
 
         //move selection to the end of the element
@@ -77,7 +77,7 @@ const useTextBlock = (
         range.collapse(true)
         selection?.removeAllRanges()
         selection?.addRange(range)
-    }, [hasRequest])
+    }, [block, hasRequest])
 
     //this is the effect that focuses the element
     useEffect(() => {

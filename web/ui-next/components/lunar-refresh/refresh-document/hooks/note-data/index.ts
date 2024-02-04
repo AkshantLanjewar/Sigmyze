@@ -39,6 +39,14 @@ const useNoteData = (
     //these are the blocks that are to be rendered within the document editor
     const [blocks, setBlocks] = useState<INoteBlock[]>([])
 
+    //stringified version of blocks due to react update sucks
+    const [blocksSTR, setBlocksSTR] = useState<string>("[]")
+
+    //whether or not the blocks have been updated
+    const [blocksUpdated, setBlocksUpdated] = useState<boolean>(false)
+    //function to toggle the blocks updated
+    const toggleBlocksUpdated = () => setBlocksUpdated((step) => !step)
+
     //this is the current title of the note
     const [title, setTitle] = useState<string>("")
 
@@ -75,7 +83,9 @@ const useNoteData = (
         }
 
         setBlocks([ ...newBlocks ])
+        setBlocksSTR(JSON.stringify(newBlocks))
         updateNoteBlocks(fileId, newBlocks)
+        toggleBlocksUpdated()
     }
 
     /**
@@ -103,8 +113,11 @@ const useNoteData = (
         }
 
         setBlocks([ ...newBlocks ])
+        setBlocksSTR(JSON.stringify(newBlocks))
         updateNoteBlocks(fileId, newBlocks)
-        setTimeout(() => createFocusRequest(blockId), 50)
+        toggleBlocksUpdated()
+        
+        createFocusRequest(blockId)
     }
 
     /**
@@ -123,7 +136,9 @@ const useNoteData = (
         })
 
         setBlocks([ ...newBlocks ])
+        setBlocksSTR(JSON.stringify(newBlocks))
         updateNoteBlocks(fileId, newBlocks)
+        toggleBlocksUpdated()
     }
 
     /**
@@ -162,7 +177,9 @@ const useNoteData = (
             newBlocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "", isGroup: false })
 
         setBlocks([ ...newBlocks ])
+        setBlocksSTR(JSON.stringify(newBlocks))
         updateNoteBlocks(fileId, newBlocks)
+        toggleBlocksUpdated()
         if(deleteIndex !== undefined)
             createFocusRequest(newBlocks[deleteIndex].blockId)
     }
@@ -177,7 +194,9 @@ const useNoteData = (
         let newBlocks = groupNoteBlockRECURSE(blocks, blockId, createFocusRequest)
 
         setBlocks([ ...newBlocks ])
+        setBlocksSTR(JSON.stringify(newBlocks))
         updateNoteBlocks(fileId, newBlocks)
+        toggleBlocksUpdated()
     }
 
     /**
@@ -187,10 +206,19 @@ const useNoteData = (
      *  - this is the id of the block that is going to get ungrouped
      */
     const ungroupNoteBlock = (blockId: string) => {
-        let { newBlocks, index } = ungroupBlockRECURSE(blocks, blockId, createFocusRequest)
+        const persistedBlocks = [ ...blocks ]
+        let { newBlocks, ungroupId } = ungroupBlockRECURSE(blocks, blockId, createFocusRequest)
+        const nSTR = JSON.stringify(newBlocks)
+        if(newBlocks.length < persistedBlocks.length)
+            return
         
         setBlocks([ ...newBlocks ])
+        setBlocksSTR(nSTR)
         updateNoteBlocks(fileId, newBlocks)
+        toggleBlocksUpdated()
+
+        if(ungroupId !== undefined)
+            setTimeout(() => createFocusRequest(ungroupId!), 50)
     }
 
     /**
@@ -203,9 +231,11 @@ const useNoteData = (
         let newBlocks = appendNoteBlockRECURSE(blocks, blockId, createFocusRequest)
 
         setBlocks([ ...newBlocks.blocks ])
+        setBlocksSTR(JSON.stringify(newBlocks.blocks))
         updateNoteBlocks(fileId, newBlocks.blocks)
-        if(newBlocks.id !== undefined)
-            setTimeout(() => createFocusRequest(newBlocks.id!), 25)
+        toggleBlocksUpdated()
+
+        createFocusRequest(newBlocks.id!)
     }
 
     //this is the effect that loads in the initial data from the file
@@ -217,11 +247,15 @@ const useNoteData = (
         
         setTitle(file.fileName)
         setBlocks([ ...newBlocks ])
+        setBlocksSTR(JSON.stringify(newBlocks))
+        toggleBlocksUpdated()
     }, [fileId])
 
     return {
         blocks,
         title,
+        blocksUpdated,
+        blocksSTR,
         changeNoteTitle,
         updateNoteBlock,
         changeNoteBlock,

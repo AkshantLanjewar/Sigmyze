@@ -79,7 +79,12 @@ interface INoteHeadingProps {
     /**
      * this is the function that appends a note block
      */
-    appendNoteBlock: (blockId: string) => void
+    appendNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that ungroups a block
+     */
+    ungroupNoteBlock: (blockId: string) => void
 }
 
 const NoteHeading: React.FC<INoteHeadingProps> = ({
@@ -93,7 +98,8 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
     changeNoteBlock,
     createFocusRequest,
     groupNoteBlock,
-    appendNoteBlock
+    appendNoteBlock,
+    ungroupNoteBlock
 }) => {
     //this is the toggle to focus the ref that the hook subscribes to
     const [focus, setFocus] = useState<boolean>(false)
@@ -126,9 +132,9 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
     } = useHeader(block, hasRequest, consumeFocusRequest, changeNoteBlock, updateNoteBlock)
 
     //this is the hook that handles the text gestures for the tick ref
-    useTextGestures(active === "tick", block.blockId, tickRef, groupNoteBlock, appendNoteBlock)
+    useTextGestures(active === "tick", block.blockId, tickRef, groupNoteBlock, appendNoteBlock, ungroupNoteBlock)
     //this is the same hook, only for the title ref now
-    useTextGestures(active === "title", block.blockId, titleRef, groupNoteBlock, appendNoteBlock)
+    useTextGestures(active === "title", block.blockId, titleRef, groupNoteBlock, appendNoteBlock, ungroupNoteBlock)
 
     //effect that handles the setting of the groupTitle state
     useEffect(() => {

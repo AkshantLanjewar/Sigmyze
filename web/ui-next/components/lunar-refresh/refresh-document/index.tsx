@@ -24,6 +24,8 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
     const {
         blocks,
         title,
+        blocksUpdated,
+        blocksSTR,
         changeNoteTitle,
         updateNoteBlock,
         changeNoteBlock,
@@ -62,6 +64,8 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 blocks={blocks}
                 title={title}
                 hasRequest={hasRequest}
+                blocksUpdated={blocksUpdated}
+                blocksSTR={blocksSTR}
                 editNoteName={changeNoteTitle}
                 updateNoteBlock={updateNoteBlock}
                 consumeFocusRequest={consumeFocusRequest}
@@ -71,6 +75,7 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 createFocusRequest={createFocusRequest}
                 groupNoteBlock={groupNoteBlock}
                 appendNoteBlock={appendNoteBlock}
+                ungroupNoteBlock={ungroupNoteBlock}
             />
         </div>
     )

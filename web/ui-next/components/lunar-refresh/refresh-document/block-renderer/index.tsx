@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Blocks, INoteBlock } from '../types'
 import { NoteChart, NoteParagraph } from './block-types'
 import NoteImage from './block-types/media/image'
@@ -26,6 +27,11 @@ const BLOCK_SWITCH = (
      * this is the length of the block list
      */
     blocksLength: number,
+
+    /** 
+     * Whether or not the blocks have been updated
+    */
+    blocksUpdated: boolean,
 
     /**
      * This is the function that updates a blocks content
@@ -68,6 +74,11 @@ const BLOCK_SWITCH = (
     appendNoteBlock: (blockId: string) => void,
 
     /**
+     * This is the function to ungroup a block
+     */
+    ungroupNoteBlock: (blockId: string) => void,
+
+    /**
      * the order level of the component, 0 being the root layer
      */
     order?: number,
@@ -85,6 +96,7 @@ const BLOCK_SWITCH = (
                 hasRequest={hasRequest}
                 index={index}
                 blocksLength={blocksLength}
+                blocksUpdated={blocksUpdated}
                 updateNoteBlock={updateNoteBlock}
                 consumeFocusRequest={consumeFocusRequest}
                 changeNoteBlock={changeNoteBlock}
@@ -93,6 +105,7 @@ const BLOCK_SWITCH = (
                 createFocusRequest={createFocusRequest}
                 groupNoteBlock={groupNoteBlock}
                 appendNoteBlock={appendNoteBlock}
+                ungroupNoteBlock={ungroupNoteBlock}
             />
         )
 
@@ -109,6 +122,7 @@ const BLOCK_SWITCH = (
                     createFocusRequest={createFocusRequest}
                     groupNoteBlock={groupNoteBlock}
                     appendNoteBlock={appendNoteBlock}
+                    ungroupNoteBlock={ungroupNoteBlock}
                     isTitleBlock={titleBlock}
                 />
             )
@@ -133,6 +147,7 @@ const BLOCK_SWITCH = (
                     createFocusRequest={createFocusRequest}
                     groupNoteBlock={groupNoteBlock}
                     appendNoteBlock={appendNoteBlock}
+                    ungroupNoteBlock={ungroupNoteBlock}
                     isTitleBlock={titleBlock}
                 />
             )
@@ -181,6 +196,16 @@ interface IBlockRendererProps {
      */
     hasRequest: boolean,
 
+    /** 
+     * Whether or not the blocks have been updated
+    */
+    blocksUpdated: boolean,
+
+    /** 
+     * STR version of blocks
+    */
+    blocksSTR: string,
+
     /**
      * This is the function that can edit the note title
      */
@@ -224,13 +249,20 @@ interface IBlockRendererProps {
     /**
      * this is the function that appends a note block
      */
-    appendNoteBlock: (blockId: string) => void
+    appendNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that ungroups a block
+     */
+    ungroupNoteBlock: (blockId: string) => void
 }
 
 const BlockRenderer: React.FC<IBlockRendererProps> = ({ 
     blocks, 
     title, 
     hasRequest, 
+    blocksUpdated,
+    blocksSTR,
     editNoteName, 
     updateNoteBlock,
     consumeFocusRequest,
@@ -239,8 +271,16 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     deleteNoteBlock,
     createFocusRequest,
     groupNoteBlock,
-    appendNoteBlock 
+    appendNoteBlock,
+    ungroupNoteBlock 
 }) => {
+    const [renderedBlocks, setRenderedBlocks] = useState<INoteBlock[]>([])
+
+    useEffect(() => {
+        let nRenderedBlocks: INoteBlock[] = JSON.parse(blocksSTR)
+        setRenderedBlocks([ ...nRenderedBlocks ])
+    }, [blocksSTR])
+
     return (
         <div className={styles.document__wrapper}>
             <div
@@ -256,7 +296,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                     className={styles.document__renderer}
                     style={{ flexGrow: 1 }}
                 >
-                    {blocks.map((step, index) => (
+                    {renderedBlocks.map((step, index) => (
                         <div 
                             data-testId={`document-block-${index}`}
                             data-testValue={step.blockType}
@@ -266,6 +306,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                                 hasRequest, 
                                 index, 
                                 blocks.length, 
+                                blocksUpdated,
                                 updateNoteBlock, 
                                 consumeFocusRequest,
                                 changeNoteBlock,
@@ -273,7 +314,8 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                                 deleteNoteBlock,
                                 createFocusRequest,
                                 groupNoteBlock,
-                                appendNoteBlock
+                                appendNoteBlock,
+                                ungroupNoteBlock
                             )}
                         </div>
                     ))}

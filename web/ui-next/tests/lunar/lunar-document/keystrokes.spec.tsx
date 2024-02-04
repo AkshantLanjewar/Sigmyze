@@ -115,12 +115,13 @@ const mixedIMPL = async (component: MountResult, page: Page) => {
     const nestedChildren = block.getByTestId(nestedChildrenLocator)
 
     await expect(nestedChildren.locator('> div')).toHaveCount(2)
-    await page.keyboard.press('Tab')
-    await expect(nestedChildren.locator('> div')).toHaveCount(1)
+    await page.keyboard.press("Tab")
+
+    await expect(block.getByTestId(blockLocator + "::child::1")).toBeAttached()
 
     //now we press shift+tab and check that there are 2 elements
     await page.keyboard.press("Shift+Tab")
-    await expect(nestedChildren.locator('> div')).toHaveCount(2)
+    await expect(block.getByTestId(blockLocator + "::child::1")).not.toBeAttached()
 }
 
 const arrowKeysIMPL = async (component: MountResult, page: Page) => {

@@ -59,7 +59,12 @@ interface INoteParagraphProps {
     /**
      * this is the function that appends a note block
      */
-    appendNoteBlock: (blockId: string) => void
+    appendNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that ungroups a block
+     */
+    ungroupNoteBlock: (blockId: string) => void
 }
 
 const NoteParagraph: React.FC<INoteParagraphProps> = ({ 
@@ -72,7 +77,8 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     changeNoteBlock,
     createFocusRequest,
     groupNoteBlock,
-    appendNoteBlock 
+    appendNoteBlock,
+    ungroupNoteBlock 
 }) => {
     //this is the ref for the paragraph component
     const editableRef = useRef<HTMLParagraphElement>(null)
@@ -103,7 +109,7 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
         changeNoteBlock
     )
 
-    useTextGestures(active, block.blockId, editableRef, groupNoteBlock, appendNoteBlock)
+    useTextGestures(active, block.blockId, editableRef, groupNoteBlock, appendNoteBlock, ungroupNoteBlock)
 
     //this is the click outside ref
     const ref = useClickOutside(() => {
