@@ -1,6 +1,6 @@
 import NoteTopbar from "./topbar"
 import BlockRenderer from "./block-renderer"
-import useNoteData from "./hooks/note-data"
+import useNoteData from "./hooks/note-data" 
 import { useContext, useEffect, useRef } from "react"
 import { LunarUIContextData } from "../ui-context"
 import { ILunarUIState } from "../ui-context/state"
@@ -28,7 +28,10 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
         updateNoteBlock,
         changeNoteBlock,
         createRawBlock,
-        deleteNoteBlock
+        deleteNoteBlock,
+        groupNoteBlock,
+        ungroupNoteBlock,
+        appendNoteBlock
     } = useNoteData(fileId, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks, createFocusRequest)
 
     //this is the ref that handles the initial load
@@ -66,6 +69,8 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 createRawBlock={createRawBlock}
                 deleteNoteBlock={deleteNoteBlock}
                 createFocusRequest={createFocusRequest}
+                groupNoteBlock={groupNoteBlock}
+                appendNoteBlock={appendNoteBlock}
             />
         </div>
     )

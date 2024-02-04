@@ -8,6 +8,7 @@ import useTextCaptureHook from "../hooks/text-capture-hook"
 import useTextBlock from "../hooks/text-block"
 import useGrip from "../hooks/grip"
 import ActionMenu from "../../action-menu"
+import useTextGestures from "../hooks/text-gesture"
 
 interface INoteParagraphProps {
     /**
@@ -24,6 +25,11 @@ interface INoteParagraphProps {
      * Whether or not it is the endblock
      */
     endblock: boolean,
+
+    /**
+     * Whether or not this block is the title block in a group
+    */
+    isTitleBlock?: boolean,
 
     /**
      * This is the function that updates a blocks content
@@ -43,23 +49,39 @@ interface INoteParagraphProps {
     /**
      * This is the function that creates a focus request within the editor
      */
-    createFocusRequest: (blockId: string) => void
+    createFocusRequest: (blockId: string) => void,
+
+    /**
+     * this is the function that groups a block within the editor
+     */
+    groupNoteBlock: (blockId: string) => void,
+
+    /**
+     * this is the function that appends a note block
+     */
+    appendNoteBlock: (blockId: string) => void
 }
 
 const NoteParagraph: React.FC<INoteParagraphProps> = ({ 
     block, 
     hasRequest, 
     endblock, 
+    isTitleBlock,
     updateNoteBlock, 
     consumeFocusRequest, 
     changeNoteBlock,
-    createFocusRequest 
+    createFocusRequest,
+    groupNoteBlock,
+    appendNoteBlock 
 }) => {
     //this is the ref for the paragraph component
     const editableRef = useRef<HTMLParagraphElement>(null)
 
     //this is the toggle to focus the ref that the hook subscribes to
     const [focus, setFocus] = useState<boolean>(false)
+
+    //whether or not this block is a title block
+    const [title, setTitle] = useState<boolean>(false)
 
     //load in the hook that handles all text functionality
     const {
@@ -81,6 +103,8 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
         changeNoteBlock
     )
 
+    useTextGestures(active, block.blockId, editableRef, groupNoteBlock, appendNoteBlock)
+
     //this is the click outside ref
     const ref = useClickOutside(() => {
         let element = editableRef.current
@@ -93,6 +117,14 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     const skip = useRef<boolean>(false)
     //this is the hook that handles the grip logic
     const { gripHandler } = useGrip(setActive)
+
+    //effect that handles the setting of the title state
+    useEffect(() => {
+        if(isTitleBlock === undefined)
+            return
+
+        setTitle(isTitleBlock)
+    }, [isTitleBlock])
 
     return (
         <div 
@@ -112,16 +144,18 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
                 variant={"subtle"}
                 size={"sm"}
                 color={"gray"}
-                ml={-26}
+                ml={title ? -46 : -26}
                 data-testId={"drag-handle"}
                 onMouseDown={(e) => {
+                    e.nativeEvent.stopImmediatePropagation()
                     skip.current = true
                     gripHandler()
                 }}
                 onMouseUp={() => setFocus(!focus)}
                 style={{ 
                     opacity: active ? 1 : 0,
-                    transition: "opacity 50ms linear" 
+                    transition: "opacity 50ms linear" ,
+                    pointerEvents: active ? "all" : "none"
                 }}
             >
                 <IconGripVertical style={{ width: "70%", height: "70%" }} stroke={1.5} />
@@ -129,7 +163,7 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
             
             <div 
                 data-testId={"block-content"}
-                style={{ width: "100%" }}
+                style={{ width: "100%", marginLeft: title ? 20 : 0 }}
             >
                 <p
                     ref={editableRef}

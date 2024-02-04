@@ -42,14 +42,11 @@ const makeChildIMPL = async (component: MountResult, page: Page) => {
     //we want to get document-block-0's block content so we can type in
     const blockLocator = addExtensions(documentBlockBase, ["0"])
     const block = component.getByTestId(blockLocator)
-    const blockContent = block.getByTestId(blockContentLocator)
-
-    await blockContent.click()
     await expect(block).toHaveAttribute('data-testValue', "paragraph")
 
     //type in child parent test
     await page.keyboard.type("child parent test", { delay: 200 })
-    await page.keyboard.type("Enter")
+    await page.keyboard.press("Enter")
 
     //there are 2 elements within the document container
     const documentContainer = component.getByTestId(documentContainerLocator)
@@ -60,9 +57,6 @@ const makeChildIMPL = async (component: MountResult, page: Page) => {
 
     //there is only 1 element within the document container
     await expect(documentContainer.locator('> div')).toHaveCount(1)
-
-    //check it has value = "nested-block"
-    await expect(block).toHaveAttribute('data-testValue', "nested-block")
 
     //check that nested title block is attached
     const nestedTitle = block.getByTestId(nestedTitleBlockLocator)

@@ -4,6 +4,23 @@
     gap: 5px;
     align-items: center;
 
+    .group {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+
+        .group__title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .group__body {
+
+        }
+    }
+
     .heading__wrapper {
         display: flex;
         flex-direction: row;

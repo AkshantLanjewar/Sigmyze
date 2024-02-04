@@ -61,7 +61,7 @@ const useTextBlock = (
 
     //this is the effect that consumes a hasRequest effect
     useEffect(() => {
-        if(hasRequest !== true || editableRef.current === null)
+        if(editableRef.current === null)
             return
         if(consumeFocusRequest(block.blockId) === false)
             return

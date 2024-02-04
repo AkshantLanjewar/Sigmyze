@@ -317,7 +317,7 @@ const useHeader = (
 
         setTicks(tickText)
         setTitle(titleText)
-        updateNoteBlock(block.blockId, `${tickText} ${titleText}`)
+        updateNoteBlock(block.blockId, `${tickText} ${titleText ? titleText : ""}`)
     }, [focused])
 
     return {
@@ -330,6 +330,7 @@ const useHeader = (
         cOrder,
         menuActive,
         position,
+        active,
         focusHandler,
         blurHandler,
         setTicksActive,

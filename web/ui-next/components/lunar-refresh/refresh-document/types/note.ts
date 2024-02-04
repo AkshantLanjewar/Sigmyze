@@ -9,9 +9,14 @@ type TextBlocks = "paragraph" | "heading::1" | "heading::2" | "heading::3" | "he
 type MediaBlocks = "media::image" | "media::chart"
 
 /**
+ * These are all the system blocks
+ */
+type SystemBlocks = "system::group"
+
+/**
  * These are all the block types
  */
-type Blocks = TextBlocks | MediaBlocks
+type Blocks = TextBlocks | MediaBlocks | SystemBlocks
 
 /**
  * This is the datastructure definition for a block within a note in the refresh note editor
@@ -30,12 +35,23 @@ interface INoteBlock {
     /**
      * This is the content of the block. Stored in string form so changes can be easily detected.
      */
-    blockContent: string
+    blockContent: string,
+
+    /**
+     * Whether or not this block is grouped
+     */
+    isGroup: boolean
+
+    /**
+     * If the block has children, this is where it would be stored
+     */
+    blockChildren?: INoteBlock[]
 }
 
 export type { 
     INoteBlock,
     TextBlocks,
     MediaBlocks,
+    SystemBlocks,
     Blocks 
 }

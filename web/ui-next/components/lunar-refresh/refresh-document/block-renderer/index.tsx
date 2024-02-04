@@ -2,6 +2,7 @@ import { Blocks, INoteBlock } from '../types'
 import { NoteChart, NoteParagraph } from './block-types'
 import NoteImage from './block-types/media/image'
 import NoteHeading from './block-types/text/heading'
+import GroupBlock from './group-block'
 import styles from './index.module.scss'
 import NoteTitle from './note-title'
 
@@ -54,8 +55,47 @@ const BLOCK_SWITCH = (
     /**
      * This is the function that creates a focus request within the editor
      */
-    createFocusRequest: (blockId: string) => void
+    createFocusRequest: (blockId: string) => void,
+
+    /**
+     * this is the function that groups a block within the editor
+     */
+    groupNoteBlock: (blockId: string) => void,
+
+    /**
+     * this is the function that appends a note block
+     */
+    appendNoteBlock: (blockId: string) => void,
+
+    /**
+     * the order level of the component, 0 being the root layer
+     */
+    order?: number,
+
+    /**
+     * This is if the block is a title block or not
+     */
+    titleBlock?: boolean,
 ) => {
+    if(step.blockChildren !== undefined)
+        return (
+            <GroupBlock
+                block={step}
+                order={order || 0}
+                hasRequest={hasRequest}
+                index={index}
+                blocksLength={blocksLength}
+                updateNoteBlock={updateNoteBlock}
+                consumeFocusRequest={consumeFocusRequest}
+                changeNoteBlock={changeNoteBlock}
+                createRawBlock={createRawBlock}
+                deleteNoteBlock={deleteNoteBlock}
+                createFocusRequest={createFocusRequest}
+                groupNoteBlock={groupNoteBlock}
+                appendNoteBlock={appendNoteBlock}
+            />
+        )
+
     switch(step.blockType) {
         case "paragraph":
             return (
@@ -67,6 +107,9 @@ const BLOCK_SWITCH = (
                     consumeFocusRequest={consumeFocusRequest}
                     changeNoteBlock={changeNoteBlock}
                     createFocusRequest={createFocusRequest}
+                    groupNoteBlock={groupNoteBlock}
+                    appendNoteBlock={appendNoteBlock}
+                    isTitleBlock={titleBlock}
                 />
             )
         case "heading::1":
@@ -88,6 +131,9 @@ const BLOCK_SWITCH = (
                     consumeFocusRequest={consumeFocusRequest}
                     changeNoteBlock={changeNoteBlock}
                     createFocusRequest={createFocusRequest}
+                    groupNoteBlock={groupNoteBlock}
+                    appendNoteBlock={appendNoteBlock}
+                    isTitleBlock={titleBlock}
                 />
             )
         case "media::chart":
@@ -114,8 +160,6 @@ const BLOCK_SWITCH = (
                     deleteNoteBlock={deleteNoteBlock}
                 />
             )
-            
-            break
         default:
             return undefined
     }
@@ -170,7 +214,17 @@ interface IBlockRendererProps {
     /**
      * This is the function that creates a focus request within the editor
      */
-    createFocusRequest: (blockId: string) => void
+    createFocusRequest: (blockId: string) => void,
+
+    /**
+     * this is the function that groups a block within the editor
+     */
+    groupNoteBlock: (blockId: string) => void,
+
+    /**
+     * this is the function that appends a note block
+     */
+    appendNoteBlock: (blockId: string) => void
 }
 
 const BlockRenderer: React.FC<IBlockRendererProps> = ({ 
@@ -183,7 +237,9 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     changeNoteBlock,
     createRawBlock,
     deleteNoteBlock,
-    createFocusRequest 
+    createFocusRequest,
+    groupNoteBlock,
+    appendNoteBlock 
 }) => {
     return (
         <div className={styles.document__wrapper}>
@@ -206,7 +262,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                             data-testValue={step.blockType}
                         >
                             {BLOCK_SWITCH(
-                                step, 
+                                { ...step }, 
                                 hasRequest, 
                                 index, 
                                 blocks.length, 
@@ -215,7 +271,9 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                                 changeNoteBlock,
                                 createRawBlock,
                                 deleteNoteBlock,
-                                createFocusRequest
+                                createFocusRequest,
+                                groupNoteBlock,
+                                appendNoteBlock
                             )}
                         </div>
                     ))}
@@ -225,4 +283,5 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     )
 }
 
+export { BLOCK_SWITCH }
 export default BlockRenderer

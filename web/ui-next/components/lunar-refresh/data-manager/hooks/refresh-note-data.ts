@@ -44,7 +44,7 @@ const useRefreshNoteData = (
             blocks: []
         }
 
-        newNote.blocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "" })
+        newNote.blocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "", isGroup: false })
         newNotes.push(newNote)
         setNotes([ ...newNotes ])
     }, [notes])

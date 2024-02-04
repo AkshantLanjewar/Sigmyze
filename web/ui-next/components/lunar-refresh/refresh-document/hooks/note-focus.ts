@@ -10,6 +10,8 @@ const useNoteFocus = () => {
 
     //state whether or not there is a focus request that needs to be processed
     const [hasRequest, setHasRequest] = useState<boolean>(false)
+    //function to toggle focus request
+    const toggleHasRequest = () => setHasRequest(!hasRequest)
 
     /**
      * @description
@@ -18,11 +20,9 @@ const useNoteFocus = () => {
      *  - this is the id of the block that we want to be focused
      */
     const createFocusRequest = (blockId: string) => {
-        if(focusRequest.current !== undefined)
-            return
-
+        console.log(blockId)
         focusRequest.current = blockId
-        setHasRequest(true)
+        toggleHasRequest()
     }
 
     /**
@@ -36,7 +36,7 @@ const useNoteFocus = () => {
         if(focusRequest.current !== blockId)
             return false
 
-        setHasRequest(false)
+        console.log(blockId)
         focusRequest.current = undefined
         return true
     }

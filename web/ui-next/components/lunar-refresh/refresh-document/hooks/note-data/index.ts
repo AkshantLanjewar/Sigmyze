@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
-import { Blocks, INoteBlock } from "../types"
-import { ISigmyzeFile } from "../../../ui/file-management/types"
+import { Blocks, INoteBlock } from "../../types"
+import { ISigmyzeFile } from "../../../../ui/file-management/types"
 import { v4 } from "uuid"
+import { appendNoteBlockRECURSE, changeNoteBlockRECURSE, deleteNoteBlockRECURSE, updateNoteBlockRECURSE } from "./update"
+import { groupNoteBlockRECURSE, ungroupBlockRECURSE } from "./group"
 
 const useNoteData = (
     /**
@@ -66,6 +68,8 @@ const useNoteData = (
             let block = blocks[i]
             if(block.blockId === blockId)
                 block.blockContent = newContent
+            if(block.isGroup === true && block.blockChildren !== undefined)
+                block.blockChildren = updateNoteBlockRECURSE(block.blockChildren, blockId, newContent)
 
             newBlocks.push(block)
         }
@@ -91,6 +95,8 @@ const useNoteData = (
             if(block.blockId === blockId) {
                 block.blockType = newType
                 block.blockContent = newContent
+            } else if(block.isGroup && block.blockChildren !== undefined) {
+                block.blockChildren = changeNoteBlockRECURSE(block.blockChildren, blockId, newType, newContent)
             }
 
             newBlocks.push(block)
@@ -98,7 +104,7 @@ const useNoteData = (
 
         setBlocks([ ...newBlocks ])
         updateNoteBlocks(fileId, newBlocks)
-        createFocusRequest(blockId)
+        setTimeout(() => createFocusRequest(blockId), 50)
     }
 
     /**
@@ -112,7 +118,8 @@ const useNoteData = (
         newBlocks.push({
             blockId: v4(),
             blockType: "paragraph",
-            blockContent: ""
+            blockContent: "",
+            isGroup: false
         })
 
         setBlocks([ ...newBlocks ])
@@ -131,23 +138,74 @@ const useNoteData = (
         for(let i = 0; i < blocks.length; i++) {
             let block = blocks[i]
             if(block.blockId === blockId) {
+                if(block.isGroup && block.blockChildren !== undefined) {
+                    let children = block.blockChildren
+                    newBlocks.concat(children)
+                }
+
                 deleteIndex = i
                 continue
+            } if(block.isGroup && block.blockChildren !== undefined) {
+                block.blockChildren = deleteNoteBlockRECURSE(block.blockChildren, blockId, createFocusRequest)
+                if(block.blockChildren.length === 0) {
+                    block.isGroup = false
+                    block.blockChildren = undefined
+                }
             }
 
             newBlocks.push(block)
         }
 
-        if(deleteIndex === undefined)
-            return
-        if(newBlocks.length - 1 < deleteIndex && deleteIndex !== 0)
+        if(deleteIndex !== undefined && newBlocks.length - 1 < deleteIndex && deleteIndex !== 0)
             deleteIndex = deleteIndex - 1
         if(newBlocks.length === 0)
-            newBlocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "" })
+            newBlocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "", isGroup: false })
 
         setBlocks([ ...newBlocks ])
         updateNoteBlocks(fileId, newBlocks)
-        createFocusRequest(newBlocks[deleteIndex].blockId)
+        if(deleteIndex !== undefined)
+            createFocusRequest(newBlocks[deleteIndex].blockId)
+    }
+
+    /**
+     * @description
+     *  - this is the function that groups a note block
+     * @param blockId 
+     *  - this is the id of the block that is groing to be grouped
+     */
+    const groupNoteBlock = (blockId: string) => {
+        let newBlocks = groupNoteBlockRECURSE(blocks, blockId, createFocusRequest)
+
+        setBlocks([ ...newBlocks ])
+        updateNoteBlocks(fileId, newBlocks)
+    }
+
+    /**
+     * @description
+     *  - this is the function that ungroups a note block
+     * @param blockId 
+     *  - this is the id of the block that is going to get ungrouped
+     */
+    const ungroupNoteBlock = (blockId: string) => {
+        let { newBlocks, index } = ungroupBlockRECURSE(blocks, blockId, createFocusRequest)
+        
+        setBlocks([ ...newBlocks ])
+        updateNoteBlocks(fileId, newBlocks)
+    }
+
+    /**
+     * @description
+     *  - this is the function that appends a new block after the specified blockid
+     * @param blockId 
+     *  - this is the block id of the block we want to add another block after
+     */
+    const appendNoteBlock = (blockId: string) => {
+        let newBlocks = appendNoteBlockRECURSE(blocks, blockId, createFocusRequest)
+
+        setBlocks([ ...newBlocks.blocks ])
+        updateNoteBlocks(fileId, newBlocks.blocks)
+        if(newBlocks.id !== undefined)
+            setTimeout(() => createFocusRequest(newBlocks.id!), 25)
     }
 
     //this is the effect that loads in the initial data from the file
@@ -156,7 +214,7 @@ const useNoteData = (
         let newBlocks = fetchNoteBlocks(fileId)
         if(file === undefined || newBlocks === undefined)
             return
-
+        
         setTitle(file.fileName)
         setBlocks([ ...newBlocks ])
     }, [fileId])
@@ -168,7 +226,10 @@ const useNoteData = (
         updateNoteBlock,
         changeNoteBlock,
         createRawBlock,
-        deleteNoteBlock
+        deleteNoteBlock,
+        groupNoteBlock,
+        ungroupNoteBlock,
+        appendNoteBlock
     }
 }
 
