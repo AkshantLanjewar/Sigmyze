@@ -172,7 +172,7 @@ const useNoteData = (
         updateNoteBlocks(fileId, output.blocks)
         toggleBlocksUpdated()
 
-        createFocusRequest(displayList[index])
+        setTimeout(() => createFocusRequest(displayList[index]), 50)
     }
 
     /**
@@ -250,7 +250,7 @@ const useNoteData = (
 
         //create the focus request
         createFocusRequest(displayLayout[newIndex])
-    }, [activeBlock, blocks])
+    }, [activeBlock, blocks, createFocusRequest])
 
     /**
      * @description
@@ -273,7 +273,7 @@ const useNoteData = (
 
         //create the focus request
         createFocusRequest(displayLayout[newIndex])
-    }, [activeBlock, blocks])
+    }, [activeBlock, blocks, createFocusRequest])
 
     //this is the effect that loads in the initial data from the file
     useEffect(() => {

@@ -14,7 +14,8 @@ const createDisplayLayout = (blocks: INoteBlock[]) => {
 
         if(block.isGroup === true && block.blockChildren !== undefined) {
             let childrenIds = createDisplayLayout(block.blockChildren)
-            displayIds.concat(childrenIds)
+            for(let x = 0; x < childrenIds.length; x++)
+                displayIds.push(childrenIds[x])
         }
     }
 

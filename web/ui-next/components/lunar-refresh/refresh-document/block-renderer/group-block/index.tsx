@@ -145,7 +145,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
 
     //effect that handles the loading of the block data into the group
     useEffect(() => {
-        let nTitleBlock = { ...block }
+        let nTitleBlock: INoteBlock = JSON.parse(JSON.stringify(block))
         if(block.isGroup !== true || block.blockChildren === undefined)
             return
 

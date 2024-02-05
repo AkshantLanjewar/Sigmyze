@@ -108,7 +108,7 @@ const BLOCK_SWITCH = (
      */
     titleBlock?: boolean,
 ) => {
-    if(step.blockChildren !== undefined)
+    if(step.blockChildren !== undefined && step.isGroup === true)
         return (
             <GroupBlock
                 block={step}
