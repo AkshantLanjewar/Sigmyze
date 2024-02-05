@@ -40,7 +40,12 @@ interface ILunarPane {
     /**
      * this is the jsx element that we want to be stored within the lunar pane
      */
-    paneContent: JSX.Element
+    paneContent: JSX.Element,
+
+    /**
+     * This is the optional background color for the tab pane
+     */
+    backgroundColor?: string
 }
 
 export type { 

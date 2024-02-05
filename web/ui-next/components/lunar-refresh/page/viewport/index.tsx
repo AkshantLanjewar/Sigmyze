@@ -40,6 +40,8 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ setItemActive }) => {
                     break
                 case "note":
                     newPane.paneContent = <RefreshDocument fileId={tab.fileId} />
+                    newPane.backgroundColor = "#1A1B1E"
+                    
                     break
                 default:
                     newPane.paneContent = <div />

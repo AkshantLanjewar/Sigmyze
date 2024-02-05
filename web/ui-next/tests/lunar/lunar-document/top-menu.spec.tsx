@@ -60,7 +60,7 @@ const topMenuMountIMPL = async (component: MountResult, page: Page) => {
 
     //check that the topbar has 4 sections
     const documentTopbar = component.getByTestId(documentTopbarLocator)
-    await expect(documentTopbar.locator('> div')).toHaveCount(4)
+    await expect(documentTopbar.locator('> div')).toHaveCount(7)
 
     //check that section 0 has 1 child
     const rootSectionLocator = addExtensions(documentTopbarSectionBase, ["0"])
@@ -74,7 +74,7 @@ const topMenuMountIMPL = async (component: MountResult, page: Page) => {
     //check that section 1 has 3 children
     const textSectionLocator = addExtensions(documentTopbarSectionBase, ["1"])
     const textSection = documentTopbar.getByTestId(textSectionLocator)
-    await expect(textSection.locator('> div')).toHaveCount(3)
+    await expect(textSection.locator('> button')).toHaveCount(3)
 
     //check that bold text is attached
     const textBoldButton = textSection.getByTestId(textBoldButtonLocator)
@@ -91,7 +91,7 @@ const topMenuMountIMPL = async (component: MountResult, page: Page) => {
     //check that section-2 has 3 children
     const alignSectionLocator = addExtensions(documentTopbarSectionBase, ["2"])
     const alignSection = documentTopbar.getByTestId(alignSectionLocator)
-    await expect(alignSection.locator('> div')).toHaveCount(3)
+    await expect(alignSection.locator('> button')).toHaveCount(3)
 
     //check that align-left is attached
     const alignLeft = alignSection.getByTestId(alignLeftLocator)
@@ -108,7 +108,7 @@ const topMenuMountIMPL = async (component: MountResult, page: Page) => {
     //check that section-3 has 2 children attached
     const mediaSectionLocator = addExtensions(documentTopbarSectionBase, ["3"])
     const mediaSection = documentTopbar.getByTestId(mediaSectionLocator)
-    await expect(mediaSection.locator('> div')).toHaveCount(2)
+    await expect(mediaSection.locator('> button')).toHaveCount(2)
 
     //check that media chart is attached
     const addChart = mediaSection.getByTestId(addChartLocator)
