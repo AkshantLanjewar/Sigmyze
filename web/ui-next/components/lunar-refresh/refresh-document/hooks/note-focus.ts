@@ -13,6 +13,9 @@ const useNoteFocus = () => {
     //function to toggle focus request
     const toggleHasRequest = () => setHasRequest(!hasRequest)
 
+    //this is the active block within the editor, state is set by the active blocks themselves
+    const [activeBlock, setActiveBlock] = useState<string | undefined>(undefined)
+
     /**
      * @description
      *  - this is the function that creates a focus request
@@ -39,10 +42,16 @@ const useNoteFocus = () => {
         return true
     }
 
+    const setActiveBlockState = (blockId: string) =>
+        setActiveBlock(blockId)
+    
+
     return {
         hasRequest,
+        activeBlock,
         consumeFocusRequest,
-        createFocusRequest
+        createFocusRequest,
+        setActiveBlockState
     }
 }
 

@@ -34,6 +34,11 @@ const BLOCK_SWITCH = (
     blocksUpdated: boolean,
 
     /**
+     * The active block within the editor
+     */
+    activeBlock: string | undefined,
+
+    /**
      * This is the function that updates a blocks content
      */
     updateNoteBlock: (blockId: string, newContent: string) => void,
@@ -79,6 +84,21 @@ const BLOCK_SWITCH = (
     ungroupNoteBlock: (blockId: string) => void,
 
     /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void,
+
+    /**
+     * this is the function to move the focus up one display block
+     */
+    incrementFocusUp: () => void,
+
+    /**
+     * this is the function to move the focus down one display block
+     */
+    decrementFocusDown: () => void,
+
+    /**
      * the order level of the component, 0 being the root layer
      */
     order?: number,
@@ -97,6 +117,7 @@ const BLOCK_SWITCH = (
                 index={index}
                 blocksLength={blocksLength}
                 blocksUpdated={blocksUpdated}
+                activeBlock={activeBlock}
                 updateNoteBlock={updateNoteBlock}
                 consumeFocusRequest={consumeFocusRequest}
                 changeNoteBlock={changeNoteBlock}
@@ -106,6 +127,9 @@ const BLOCK_SWITCH = (
                 groupNoteBlock={groupNoteBlock}
                 appendNoteBlock={appendNoteBlock}
                 ungroupNoteBlock={ungroupNoteBlock}
+                setActiveBlockState={setActiveBlockState}
+                incrementFocusUp={incrementFocusUp}
+                decrementFocusDown={decrementFocusDown}
             />
         )
 
@@ -123,6 +147,10 @@ const BLOCK_SWITCH = (
                     groupNoteBlock={groupNoteBlock}
                     appendNoteBlock={appendNoteBlock}
                     ungroupNoteBlock={ungroupNoteBlock}
+                    setActiveBlockState={setActiveBlockState}
+                    incrementFocusUp={incrementFocusUp}
+                    decrementFocusDown={decrementFocusDown}
+                    deleteNoteBlock={deleteNoteBlock}
                     isTitleBlock={titleBlock}
                 />
             )
@@ -148,6 +176,10 @@ const BLOCK_SWITCH = (
                     groupNoteBlock={groupNoteBlock}
                     appendNoteBlock={appendNoteBlock}
                     ungroupNoteBlock={ungroupNoteBlock}
+                    setActiveBlockState={setActiveBlockState}
+                    incrementFocusUp={incrementFocusUp}
+                    decrementFocusDown={decrementFocusDown}
+                    deleteNoteBlock={deleteNoteBlock}
                     isTitleBlock={titleBlock}
                 />
             )
@@ -161,6 +193,7 @@ const BLOCK_SWITCH = (
                     changeNoteBlock={changeNoteBlock}
                     createRawBlock={createRawBlock}
                     deleteNoteBlock={deleteNoteBlock}
+                    setActiveBlockState={setActiveBlockState}
                 />
             )
         case "media::image":
@@ -173,6 +206,7 @@ const BLOCK_SWITCH = (
                     updateNoteBlock={updateNoteBlock}
                     createRawBlock={createRawBlock}
                     deleteNoteBlock={deleteNoteBlock}
+                    setActiveBlockState={setActiveBlockState}
                 />
             )
         default:
@@ -205,6 +239,11 @@ interface IBlockRendererProps {
      * STR version of blocks
     */
     blocksSTR: string,
+
+    /**
+     * The active block within the editor
+     */
+    activeBlock: string | undefined,
 
     /**
      * This is the function that can edit the note title
@@ -254,7 +293,22 @@ interface IBlockRendererProps {
     /**
      * This is the function that ungroups a block
      */
-    ungroupNoteBlock: (blockId: string) => void
+    ungroupNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void,
+
+    /**
+     * this is the function to move the focus up one display block
+     */
+    incrementFocusUp: () => void,
+
+    /**
+     * this is the function to move the focus down one display block
+     */
+    decrementFocusDown: () => void
 }
 
 const BlockRenderer: React.FC<IBlockRendererProps> = ({ 
@@ -263,6 +317,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     hasRequest, 
     blocksUpdated,
     blocksSTR,
+    activeBlock,
     editNoteName, 
     updateNoteBlock,
     consumeFocusRequest,
@@ -272,7 +327,10 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     createFocusRequest,
     groupNoteBlock,
     appendNoteBlock,
-    ungroupNoteBlock 
+    ungroupNoteBlock,
+    setActiveBlockState,
+    incrementFocusUp,
+    decrementFocusDown 
 }) => {
     const [renderedBlocks, setRenderedBlocks] = useState<INoteBlock[]>([])
 
@@ -300,6 +358,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                         <div 
                             data-testId={`document-block-${index}`}
                             data-testValue={step.blockType}
+                            data-active={activeBlock === step.blockId}
                         >
                             {BLOCK_SWITCH(
                                 { ...step }, 
@@ -307,6 +366,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                                 index, 
                                 blocks.length, 
                                 blocksUpdated,
+                                activeBlock,
                                 updateNoteBlock, 
                                 consumeFocusRequest,
                                 changeNoteBlock,
@@ -315,7 +375,10 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                                 createFocusRequest,
                                 groupNoteBlock,
                                 appendNoteBlock,
-                                ungroupNoteBlock
+                                ungroupNoteBlock,
+                                setActiveBlockState,
+                                incrementFocusUp,
+                                decrementFocusDown
                             )}
                         </div>
                     ))}

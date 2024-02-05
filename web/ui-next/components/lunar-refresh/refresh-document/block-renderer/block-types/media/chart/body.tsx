@@ -46,7 +46,12 @@ interface IChartBodyProps {
     /**
      * function to update the active chart
      */
-    updateChart: (newChart: ISerializedNoteChart) => void
+    updateChart: (newChart: ISerializedNoteChart) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void
 }
 
 const ChartBody: React.FC<IChartBodyProps> = ({ 
@@ -56,7 +61,8 @@ const ChartBody: React.FC<IChartBodyProps> = ({
     consumeFocusRequest, 
     deleteNoteBlock, 
     updateNoteBlock, 
-    updateChart 
+    updateChart,
+    setActiveBlockState 
 }) => {
     //whether or not the chart is active
     const [active, setActive] = useState<boolean>(false)
@@ -85,6 +91,14 @@ const ChartBody: React.FC<IChartBodyProps> = ({
 
         setActive(true)
     }, [hasRequest])
+
+    //this is the effect that sets the active block state when the chart is active
+    useEffect(() => {
+        if(active === false)
+            return
+
+        setActiveBlockState(blockId)
+    }, [active, blockId])
 
     return (
         <div 

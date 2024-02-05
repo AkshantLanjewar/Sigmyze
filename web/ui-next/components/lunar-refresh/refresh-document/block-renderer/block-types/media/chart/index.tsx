@@ -38,7 +38,12 @@ interface INoteChartProps {
     /**
      * This is the function that deletes a block from the renderer
      */
-    deleteNoteBlock: (blockId: string) => void
+    deleteNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void
 }
 
 const NoteChart: React.FC<INoteChartProps> = ({
@@ -48,7 +53,8 @@ const NoteChart: React.FC<INoteChartProps> = ({
     consumeFocusRequest,
     changeNoteBlock,
     createRawBlock,
-    deleteNoteBlock
+    deleteNoteBlock,
+    setActiveBlockState
 }) => {
     const { 
         chart,
@@ -77,6 +83,7 @@ const NoteChart: React.FC<INoteChartProps> = ({
                     deleteNoteBlock={deleteNoteBlock}
                     updateNoteBlock={updateNoteBlock}
                     updateChart={updateChart}
+                    setActiveBlockState={setActiveBlockState}
                 />
             )}
         </>

@@ -19,7 +19,7 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
     const { getFileById, editFileTitle } = useContext(LunarUIContextData) as ILunarUIState
     const { fetchNoteBlocks, updateNoteBlocks } = useContext(LunarDataManagerData) as ILunarDataManagerState
 
-    const { hasRequest, consumeFocusRequest, createFocusRequest } = useNoteFocus()
+    const { hasRequest, activeBlock, consumeFocusRequest, createFocusRequest, setActiveBlockState } = useNoteFocus()
 
     const {
         blocks,
@@ -33,8 +33,10 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
         deleteNoteBlock,
         groupNoteBlock,
         ungroupNoteBlock,
-        appendNoteBlock
-    } = useNoteData(fileId, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks, createFocusRequest)
+        appendNoteBlock,
+        incrementFocusUp,
+        decrementFocusDown
+    } = useNoteData(fileId, activeBlock, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks, createFocusRequest)
 
     //this is the ref that handles the initial load
     const initialLoad = useRef<boolean>(true)
@@ -66,6 +68,7 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 hasRequest={hasRequest}
                 blocksUpdated={blocksUpdated}
                 blocksSTR={blocksSTR}
+                activeBlock={activeBlock}
                 editNoteName={changeNoteTitle}
                 updateNoteBlock={updateNoteBlock}
                 consumeFocusRequest={consumeFocusRequest}
@@ -76,6 +79,9 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 groupNoteBlock={groupNoteBlock}
                 appendNoteBlock={appendNoteBlock}
                 ungroupNoteBlock={ungroupNoteBlock}
+                setActiveBlockState={setActiveBlockState}
+                incrementFocusUp={incrementFocusUp}
+                decrementFocusDown={decrementFocusDown}
             />
         </div>
     )

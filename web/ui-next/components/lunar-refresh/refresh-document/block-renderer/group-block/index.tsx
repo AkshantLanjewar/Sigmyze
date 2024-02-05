@@ -38,6 +38,11 @@ interface IGroupBlockProps {
     blocksUpdated: boolean,
 
     /**
+     * The active block within the editor
+     */
+    activeBlock: string | undefined,
+
+    /**
      * This is the function that updates a blocks content
      */
     updateNoteBlock: (blockId: string, newContent: string) => void,
@@ -80,7 +85,22 @@ interface IGroupBlockProps {
     /**
      * This is the function that ungroups a block
      */
-    ungroupNoteBlock: (blockId: string) => void
+    ungroupNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void,
+
+    /**
+     * this is the function to move the focus up one display block
+     */
+    incrementFocusUp: () => void,
+
+    /**
+     * this is the function to move the focus down one display block
+     */
+    decrementFocusDown: () => void
 }
 
 const GroupBlock: React.FC<IGroupBlockProps> = ({ 
@@ -90,6 +110,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
     index, 
     blocksLength, 
     blocksUpdated,
+    activeBlock,
     updateNoteBlock, 
     consumeFocusRequest, 
     changeNoteBlock, 
@@ -98,7 +119,10 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
     createFocusRequest,
     groupNoteBlock,
     appendNoteBlock,
-    ungroupNoteBlock 
+    ungroupNoteBlock,
+    setActiveBlockState,
+    incrementFocusUp,
+    decrementFocusDown 
 }) => {
     //this is the title block to be rendered
     const [titleBlock, setTitleBlock] = useState<INoteBlock | undefined>(undefined)
@@ -168,6 +192,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                 index, 
                                 children.length, 
                                 blocksUpdated,
+                                activeBlock,
                                 updateNoteBlock, 
                                 consumeFocusRequest,
                                 changeNoteBlock,
@@ -177,6 +202,9 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                 groupNoteBlock,
                                 appendNoteBlock,
                                 ungroupNoteBlock,
+                                setActiveBlockState,
+                                incrementFocusUp,
+                                decrementFocusDown,
                                 order + 1,
                                 true 
                             )
@@ -200,6 +228,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                             <div
                                 data-testId={`document-block-${index}::child::${order}`}
                                 data-testValue={step.blockType}
+                                data-active={step.blockId === activeBlock}
                             >
                                 {BLOCK_SWITCH(
                                     step, 
@@ -207,6 +236,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                     index, 
                                     children.length, 
                                     blocksUpdated,
+                                    activeBlock,
                                     updateNoteBlock, 
                                     consumeFocusRequest,
                                     changeNoteBlock,
@@ -216,6 +246,9 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                     groupNoteBlock,
                                     appendNoteBlock,
                                     ungroupNoteBlock,
+                                    setActiveBlockState,
+                                    incrementFocusUp,
+                                    decrementFocusDown,
                                     order + 1
                                 )}
                             </div>

@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Blocks, INoteBlock } from "../../types"
 import { ISigmyzeFile } from "../../../../ui/file-management/types"
 import { v4 } from "uuid"
 import { appendNoteBlockRECURSE, changeNoteBlockRECURSE, deleteNoteBlockRECURSE, updateNoteBlockRECURSE } from "./update"
 import { groupNoteBlockRECURSE, ungroupBlockRECURSE } from "./group"
+import { createDisplayLayout } from "./focus"
 
 const useNoteData = (
     /**
      * This is the id of the file this note belongs too
      */
     fileId: string,
+
+    /**
+     * The block that is active within the editor
+     */
+    activeBlock: string | undefined,
 
     /**
      * This is the function that retreives a file by its id
@@ -117,7 +123,7 @@ const useNoteData = (
         updateNoteBlocks(fileId, newBlocks)
         toggleBlocksUpdated()
         
-        createFocusRequest(blockId)
+        setTimeout(() => createFocusRequest(blockId!), 50)
     }
 
     /**
@@ -148,40 +154,25 @@ const useNoteData = (
      *  - this is the id of the block we are trying to delete
      */
     const deleteNoteBlock = (blockId: string) => {
-        let newBlocks: INoteBlock[] = []
-        let deleteIndex: number | undefined = undefined
-        for(let i = 0; i < blocks.length; i++) {
-            let block = blocks[i]
-            if(block.blockId === blockId) {
-                if(block.isGroup && block.blockChildren !== undefined) {
-                    let children = block.blockChildren
-                    newBlocks.concat(children)
-                }
+        const displayList = createDisplayLayout(blocks)
+        let output = deleteNoteBlockRECURSE(blocks, blockId)
+        if(output.focusId === undefined || output.blocks.length === 0)
+            return
 
-                deleteIndex = i
-                continue
-            } if(block.isGroup && block.blockChildren !== undefined) {
-                block.blockChildren = deleteNoteBlockRECURSE(block.blockChildren, blockId, createFocusRequest)
-                if(block.blockChildren.length === 0) {
-                    block.isGroup = false
-                    block.blockChildren = undefined
-                }
-            }
+        let index = displayList.indexOf(output.focusId)
+        if(index === -1)
+            return
+        if(index > 0)
+            index = index - 1
+        else
+            index = 1
 
-            newBlocks.push(block)
-        }
-
-        if(deleteIndex !== undefined && newBlocks.length - 1 < deleteIndex && deleteIndex !== 0)
-            deleteIndex = deleteIndex - 1
-        if(newBlocks.length === 0)
-            newBlocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "", isGroup: false })
-
-        setBlocks([ ...newBlocks ])
-        setBlocksSTR(JSON.stringify(newBlocks))
-        updateNoteBlocks(fileId, newBlocks)
+        setBlocks([ ...output.blocks ])
+        setBlocksSTR(JSON.stringify(output.blocks))
+        updateNoteBlocks(fileId, output.blocks)
         toggleBlocksUpdated()
-        if(deleteIndex !== undefined)
-            createFocusRequest(newBlocks[deleteIndex].blockId)
+
+        createFocusRequest(displayList[index])
     }
 
     /**
@@ -238,6 +229,52 @@ const useNoteData = (
         createFocusRequest(newBlocks.id!)
     }
 
+    /**
+     * @description
+     *  - this is the function that increments the focus up one block display wise
+     */
+    const incrementFocusUp = useCallback(() => {
+        if(activeBlock === undefined)
+            return
+
+        let displayLayout = createDisplayLayout(blocks)
+        const activeIndex = displayLayout.indexOf(activeBlock)
+        if(activeIndex === -1)
+            return //index not found error
+
+        let newIndex = 0
+        if(activeIndex === 0)
+            newIndex = displayLayout.length - 1
+        else
+            newIndex = activeIndex - 1
+
+        //create the focus request
+        createFocusRequest(displayLayout[newIndex])
+    }, [activeBlock, blocks])
+
+    /**
+     * @description
+     *  - this is the function that decrements the focus down one block display wise
+     */
+    const decrementFocusDown = useCallback(() => {
+        if(activeBlock === undefined)
+            return
+
+        let displayLayout = createDisplayLayout(blocks)
+        const activeIndex = displayLayout.indexOf(activeBlock)
+        if(activeIndex === -1)
+            return //index not found error
+
+        let newIndex = 0
+        if(activeIndex === displayLayout.length - 1)
+            newIndex = 0
+        else
+            newIndex = activeIndex + 1
+
+        //create the focus request
+        createFocusRequest(displayLayout[newIndex])
+    }, [activeBlock, blocks])
+
     //this is the effect that loads in the initial data from the file
     useEffect(() => {
         let file = getFileById(fileId)
@@ -263,7 +300,9 @@ const useNoteData = (
         deleteNoteBlock,
         groupNoteBlock,
         ungroupNoteBlock,
-        appendNoteBlock
+        appendNoteBlock,
+        incrementFocusUp,
+        decrementFocusDown
     }
 }
 

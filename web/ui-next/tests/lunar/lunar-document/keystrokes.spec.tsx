@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/experimental-ct-react'
 import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider/next-13'
 import { Locator, Page } from "@playwright/test"
 import LunarRefresh from '../../../components/lunar-refresh/page';
+
 import { createDocumentPage } from './block-types.spec';
 
 import { 
@@ -133,30 +134,29 @@ const arrowKeysIMPL = async (component: MountResult, page: Page) => {
     const block = component.getByTestId(blockLocator)
     const blockContent = block.getByTestId(blockContentLocator)
 
-    await blockContent.click()
     await page.keyboard.press('Enter')
 
     //there are 2 elements within the document container
     const documentContainer = component.getByTestId(documentContainerLocator)
     await expect(documentContainer.locator('> div')).toHaveCount(2)
 
-    //press the downarrow key
-    await page.keyboard.press("ArrowDown")
+    //press the uparrow key
+    await page.keyboard.press("ArrowUp")
 
     //check that block-0 has active = false
-    await expect(block).toHaveAttribute("data-active", "false")
+    await expect(block).toHaveAttribute("data-active", "true")
 
     //check that block-1 has active = true
     const alternateBlockLocator = addExtensions(documentBlockBase, ["1"])
     const alternateBlock = component.getByTestId(alternateBlockLocator)
-    await expect(alternateBlock).toHaveAttribute("data-active", "true")
+    await expect(alternateBlock).toHaveAttribute("data-active", "false")
 
     //press uparrow key
-    await page.keyboard.press("ArrowUp")
+    await page.keyboard.press("ArrowDown")
 
     //check that block-0 = true and block-1 = false
-    await expect(block).toHaveAttribute("data-active", "true")
-    await expect(alternateBlock).toHaveAttribute("data-active", "false")
+    await expect(block).toHaveAttribute("data-active", "false")
+    await expect(alternateBlock).toHaveAttribute("data-active", "true")
 }
 
 test('[Lunar Document]: Make Text Block Child Element', async ({ mount, page }) => {

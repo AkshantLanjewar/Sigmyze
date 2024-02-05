@@ -64,7 +64,27 @@ interface INoteParagraphProps {
     /**
      * This is the function that ungroups a block
      */
-    ungroupNoteBlock: (blockId: string) => void
+    ungroupNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void,
+
+    /**
+     * this is the function to move the focus up one display block
+     */
+    incrementFocusUp: () => void,
+
+    /**
+     * this is the function to move the focus down one display block
+     */
+    decrementFocusDown: () => void,
+
+    /**
+     * This is the function that deletes a block from the renderer
+     */
+    deleteNoteBlock: (blockId: string) => void,
 }
 
 const NoteParagraph: React.FC<INoteParagraphProps> = ({ 
@@ -78,7 +98,11 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     createFocusRequest,
     groupNoteBlock,
     appendNoteBlock,
-    ungroupNoteBlock 
+    ungroupNoteBlock,
+    setActiveBlockState,
+    incrementFocusUp,
+    decrementFocusDown,
+    deleteNoteBlock 
 }) => {
     //this is the ref for the paragraph component
     const editableRef = useRef<HTMLParagraphElement>(null)
@@ -109,7 +133,19 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
         changeNoteBlock
     )
 
-    useTextGestures(active, block.blockId, editableRef, groupNoteBlock, appendNoteBlock, ungroupNoteBlock)
+    //handles all text gestures for the block
+    useTextGestures(
+        active, 
+        block.blockId, 
+        menuActive, 
+        editableRef, 
+        groupNoteBlock, 
+        appendNoteBlock, 
+        ungroupNoteBlock, 
+        incrementFocusUp,
+        decrementFocusDown,
+        deleteNoteBlock
+    )
 
     //this is the click outside ref
     const ref = useClickOutside(() => {
@@ -131,6 +167,14 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
 
         setTitle(isTitleBlock)
     }, [isTitleBlock])
+
+    //effect that sets the active block if the current block is active
+    useEffect(() => {
+        if(active === false)
+            return
+
+        setActiveBlockState(block.blockId)
+    }, [block, active])
 
     return (
         <div 

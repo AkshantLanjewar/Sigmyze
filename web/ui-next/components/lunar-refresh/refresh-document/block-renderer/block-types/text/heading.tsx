@@ -84,7 +84,27 @@ interface INoteHeadingProps {
     /**
      * This is the function that ungroups a block
      */
-    ungroupNoteBlock: (blockId: string) => void
+    ungroupNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void,
+
+    /**
+     * this is the function to move the focus up one display block
+     */
+    incrementFocusUp: () => void,
+
+    /**
+     * this is the function to move the focus down one display block
+     */
+    decrementFocusDown: () => void,
+
+    /**
+     * This is the function that deletes a block from the renderer
+     */
+    deleteNoteBlock: (blockId: string) => void,
 }
 
 const NoteHeading: React.FC<INoteHeadingProps> = ({
@@ -99,7 +119,11 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
     createFocusRequest,
     groupNoteBlock,
     appendNoteBlock,
-    ungroupNoteBlock
+    ungroupNoteBlock,
+    setActiveBlockState,
+    incrementFocusUp,
+    decrementFocusDown,
+    deleteNoteBlock
 }) => {
     //this is the toggle to focus the ref that the hook subscribes to
     const [focus, setFocus] = useState<boolean>(false)
@@ -132,9 +156,31 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
     } = useHeader(block, hasRequest, consumeFocusRequest, changeNoteBlock, updateNoteBlock)
 
     //this is the hook that handles the text gestures for the tick ref
-    useTextGestures(active === "tick", block.blockId, tickRef, groupNoteBlock, appendNoteBlock, ungroupNoteBlock)
+    useTextGestures(
+        active === "tick", 
+        block.blockId, 
+        menuActive, 
+        tickRef, 
+        groupNoteBlock, 
+        appendNoteBlock, 
+        ungroupNoteBlock, 
+        incrementFocusUp,
+        decrementFocusDown,
+        deleteNoteBlock
+    )
     //this is the same hook, only for the title ref now
-    useTextGestures(active === "title", block.blockId, titleRef, groupNoteBlock, appendNoteBlock, ungroupNoteBlock)
+    useTextGestures(
+        active === "title", 
+        block.blockId, 
+        menuActive, 
+        titleRef, 
+        groupNoteBlock, 
+        appendNoteBlock, 
+        ungroupNoteBlock, 
+        incrementFocusUp,
+        decrementFocusDown,
+        deleteNoteBlock
+    )
 
     //effect that handles the setting of the groupTitle state
     useEffect(() => {
@@ -144,6 +190,14 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
 
         setGroupTitle(isTitleBlock)
     }, [isTitleBlock])
+
+    //effect that sets the document's active block when the heading is focused
+    useEffect(() => {
+        if(focused === false)
+            return
+
+        setActiveBlockState(block.blockId)
+    }, [focused, block])
     
     //this is the click outside ref
     const ref = useClickOutside(() => { 

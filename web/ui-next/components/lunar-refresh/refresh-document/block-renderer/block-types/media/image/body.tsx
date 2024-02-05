@@ -44,6 +44,11 @@ interface IImageBodyProps {
      * This is the function that updates the image within the image block
      */
     updateImage: (newImage: ISerializedNoteImage) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void
 }
 
 const ImageBody: React.FC<IImageBodyProps> = ({
@@ -53,7 +58,8 @@ const ImageBody: React.FC<IImageBodyProps> = ({
     consumeFocusRequest,
     deleteNoteBlock,
     updateNoteBlock,
-    updateImage
+    updateImage,
+    setActiveBlockState
 }) => {
     //whether or not the image is active
     const [active, setActive] = useState<boolean>(false)
@@ -110,6 +116,14 @@ const ImageBody: React.FC<IImageBodyProps> = ({
         updateNoteBlock(blockId, serialized)
         updateImage(newImage)
     }, [dims])
+
+    //this is the effect that sets the focus state when the image is active
+    useEffect(() => {
+        if(active === false)
+            return
+
+        setActiveBlockState(blockId)
+    }, [active, blockId])
 
     return (
         <div

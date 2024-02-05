@@ -65,6 +65,21 @@ const changeNoteBlockRECURSE = (
 }
 
 /**
+ * This is the definition for the output for the deleteNoteBlockRECURSE function
+ */
+interface IDeleteNoteBlockRecurseOutput {
+    /**
+     * This is the list of blocks after the deleteNote function has been run through them recursively
+     */
+    blocks: INoteBlock[],
+
+    /**
+     * if a block was found to be deleted, this is the id of the block that was deleted
+     */
+    focusId: string | undefined
+}
+
+/**
  * @description
  *  - this is the function that recursively deletes a block from the editor
  * @param blocks 
@@ -77,38 +92,46 @@ const changeNoteBlockRECURSE = (
 const deleteNoteBlockRECURSE = (
     blocks: INoteBlock[],
     blockId: string,
-    createFocusRequest: (blockId: string) => void
-) => {
+): IDeleteNoteBlockRecurseOutput => {
     let newBlocks: INoteBlock[] = []
-    let deleteIndex: number | undefined = undefined
+    let focusId: string | undefined = undefined
+
     for(let i = 0; i < blocks.length; i++) {
         let block = blocks[i]
         if(block.blockId === blockId) {
-            if(block.isGroup === true && block.blockChildren !== undefined) {
-                let children = block.blockChildren
-                newBlocks.concat(children)
+            if(block.isGroup === true && block.blockChildren !== undefined && i > 0) {
+                let parentBlock = newBlocks[i - 1]
+                if(parentBlock.isGroup === true && parentBlock.blockChildren !== undefined)
+                    parentBlock.blockChildren.concat(block.blockChildren)
+                else {
+                    parentBlock.isGroup = true
+                    parentBlock.blockChildren = block.blockChildren
+                }
+
+                newBlocks[i - 1] = parentBlock
+            } else if(block.isGroup === true && block.blockChildren !== undefined && i === 0) {
+                const blockChildren = block.blockChildren
+                newBlocks.concat(blockChildren)
             }
 
-            deleteIndex = i
+            focusId = block.blockId
             continue
-        } if(block.isGroup && block.blockChildren !== undefined) {
-            block.blockChildren = deleteNoteBlockRECURSE(block.blockChildren, blockId, createFocusRequest)
-            if(block.blockChildren.length === 0) {
+        } else if(block.isGroup === true && block.blockChildren !== undefined) {
+            const output = deleteNoteBlockRECURSE(block.blockChildren, blockId)
+            if(output.blocks.length === 0) {
                 block.isGroup = false
                 block.blockChildren = undefined
-            }
+            } 
+
+            block.blockChildren = output.blocks
+            if(output.focusId !== undefined)
+                focusId = output.focusId
         }
 
         newBlocks.push(block)
     }
 
-
-    if(deleteIndex !== undefined && newBlocks.length - 1 < deleteIndex && deleteIndex !== 0 && newBlocks.length !== 0)
-        deleteIndex = deleteIndex - 1
-    if(deleteIndex !== undefined)
-        createFocusRequest(newBlocks[deleteIndex].blockId)
-    
-    return newBlocks
+    return { blocks: newBlocks, focusId }
 }
 
 /**
@@ -134,7 +157,15 @@ const appendNoteBlockRECURSE = (
         newBlocks.push(block)
 
         if(block.blockId === blockId) {
-            const newBlock: INoteBlock = { blockId: v4(), blockContent: "", blockType: "paragraph", isGroup: false }
+            let newBlock: INoteBlock = { blockId: v4(), blockContent: "", blockType: "paragraph", isGroup: false }
+            if(block.isGroup === true && block.blockChildren !== undefined) {
+                block.isGroup = false
+                newBlock.isGroup = true
+                newBlock.blockChildren = block.blockChildren
+
+                block.blockChildren = undefined
+                newBlocks[i] = block
+            }
             
             newBlocks.push(newBlock)
             newBlockId = newBlock.blockId

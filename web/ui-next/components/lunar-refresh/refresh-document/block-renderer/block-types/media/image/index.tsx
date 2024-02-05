@@ -38,6 +38,11 @@ interface INoteImageProps {
      * This is the function that deletes a block from the renderer
      */
     deleteNoteBlock: (blockId: string) => void,
+
+    /**
+     * This is the function that sets the active block for focus purposes
+     */
+    setActiveBlockState: (blockId: string) => void
 }
 
 const NoteImage: React.FC<INoteImageProps> = ({ 
@@ -47,7 +52,8 @@ const NoteImage: React.FC<INoteImageProps> = ({
     changeNoteBlock, 
     updateNoteBlock, 
     createRawBlock,
-    deleteNoteBlock 
+    deleteNoteBlock,
+    setActiveBlockState 
 }) => {
     const { image, render, cancelImageSelect, updateImage } = useNoteImage(block, changeNoteBlock)
 
@@ -71,6 +77,7 @@ const NoteImage: React.FC<INoteImageProps> = ({
                     deleteNoteBlock={deleteNoteBlock}
                     updateImage={updateImage}
                     updateNoteBlock={updateNoteBlock}
+                    setActiveBlockState={setActiveBlockState}
                 />
             )}
         </>
