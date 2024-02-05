@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Blocks, INoteBlock } from "../../../types";
 import { ISerializedNoteImage } from "../media/types";
 
@@ -15,7 +15,12 @@ const useNoteImage = (
     /**
      * This is the function that updates a note block
      */
-    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
+
+    /**
+     * this is the function that updates the blocks content within the editor and context store
+     */
+    updateNoteBlock: (blockId: string, newContent: string) => void
 ) => {
     /**
      * This is the selected image data that has to be serialized / deserialized from the block content
@@ -25,6 +30,9 @@ const useNoteImage = (
 
     //whether or not to render the body
     const [render, setRender] = useState<boolean>(false)
+
+    //whether or not the data has been loaded
+    const [loaded, setLoaded] = useState<boolean>(false)
 
     /**
      * @description
@@ -45,12 +53,31 @@ const useNoteImage = (
             return
 
         setImage({ ...newImage })
+        updateNoteBlock(block.blockId, JSON.stringify(newImage))
         setRender(true)
     }
+
+    //effect that handles the loading of the block on init
+    useEffect(() => {
+        try {
+            const parsed: ISerializedNoteImage = JSON.parse(block.blockContent)
+            if(parsed.marshalCheck !== "swagmarsh") {
+                setLoaded(true)
+                return
+            }
+
+            updateImage(parsed)
+            setLoaded(true)
+        } catch (e) { 
+            setLoaded(true)
+            return 
+        }
+    }, [])
 
     return {
         image,
         render,
+        loaded,
         cancelImageSelect,
         updateImage
     }

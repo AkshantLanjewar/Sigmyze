@@ -55,18 +55,20 @@ const NoteImage: React.FC<INoteImageProps> = ({
     deleteNoteBlock,
     setActiveBlockState 
 }) => {
-    const { image, render, cancelImageSelect, updateImage } = useNoteImage(block, changeNoteBlock)
+    const { image, render, loaded, cancelImageSelect, updateImage } = useNoteImage(block, changeNoteBlock, updateNoteBlock)
 
     return (
         <>
-            <NoteImageModal
-                blockId={block.blockId}
-                open={image === undefined}
-                cancel={cancelImageSelect}
-                updateNoteBlock={updateNoteBlock}
-                updateImage={updateImage}
-                createRawBlock={createRawBlock}
-            />
+            {loaded === true && (
+                <NoteImageModal
+                    blockId={block.blockId}
+                    open={image === undefined}
+                    cancel={cancelImageSelect}
+                    updateNoteBlock={updateNoteBlock}
+                    updateImage={updateImage}
+                    createRawBlock={createRawBlock}
+                />
+            )}
 
             {render && (
                 <ImageBody

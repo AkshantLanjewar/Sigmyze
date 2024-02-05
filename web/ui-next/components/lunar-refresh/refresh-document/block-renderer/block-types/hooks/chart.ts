@@ -15,7 +15,7 @@ const useNoteChart = (
     /**
      * This is the function that updates a note block
      */
-    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void
+    changeNoteBlock: (blockId: string, newType: Blocks, newContent: string) => void,
 ) => {
     /**
      * This is the selected chart data, that has to be serialized / deserialized from the block Content
