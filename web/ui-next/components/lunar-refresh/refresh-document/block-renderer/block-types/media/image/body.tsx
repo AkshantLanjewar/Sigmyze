@@ -159,9 +159,10 @@ const ImageBody: React.FC<IImageBodyProps> = ({
                         focused={active}
                         actions={[
                             {
-                                label: "Delete Chart",
+                                label: "Delete Image",
                                 icon: <IconTrash size={18} />,
                                 color: "red",
+                                testId: "delete-image",
                                 action: () => toggleDeleteModal()
                             }
                         ]}

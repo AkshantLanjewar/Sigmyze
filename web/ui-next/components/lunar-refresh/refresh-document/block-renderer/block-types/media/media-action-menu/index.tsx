@@ -48,6 +48,7 @@ const ActionMenu: React.FC<IActionMenuProps> = ({ actions, focused }) => {
                                         variant={"filled"}
                                         radius={"sm"}
                                         onClick={() => step.action()}
+                                        data-testId={step.testId}
                                     >
                                         {step.icon}
                                     </ActionIcon>

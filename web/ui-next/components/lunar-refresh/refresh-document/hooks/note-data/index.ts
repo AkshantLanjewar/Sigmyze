@@ -156,8 +156,12 @@ const useNoteData = (
     const deleteNoteBlock = (blockId: string) => {
         const displayList = createDisplayLayout(blocks)
         let output = deleteNoteBlockRECURSE(blocks, blockId)
-        if(output.focusId === undefined || output.blocks.length === 0)
+        if(output.focusId === undefined)
             return
+        if(output.blocks.length === 0) {
+            output.blocks.push({ blockId: v4(), blockContent: "", blockType: "paragraph", isGroup: false })
+            displayList.push(output.blocks[0].blockId)
+        }
 
         let index = displayList.indexOf(output.focusId)
         if(index === -1)

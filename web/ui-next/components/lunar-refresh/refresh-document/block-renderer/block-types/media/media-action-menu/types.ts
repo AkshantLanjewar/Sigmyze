@@ -19,7 +19,12 @@ interface IActionMenuAction {
     /**
      * Icon for the button
      */
-    icon: React.ReactElement
+    icon: React.ReactElement,
+
+    /**
+     * testid for the element
+     */
+    testId?: string
 }
 
 export type { IActionMenuAction }

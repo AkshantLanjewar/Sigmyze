@@ -89,13 +89,15 @@ const ImageDeleteModal: React.FC<IImageDeleteModalProps> = ({ toggle, blockId, d
             title={"Are you sure?"}
             size={"md"}
         >
-            <FormBuilder
-                forms={formFields}
-                submit={submit}
-                closeModal={close}
-                submitStoreDependency={"delete-confirmation"}
-                submitText="Delete"
-            />
+            <div data-testId={"delete-image-modal"}>
+                <FormBuilder
+                    forms={formFields}
+                    submit={submit}
+                    closeModal={close}
+                    submitStoreDependency={"delete-confirmation"}
+                    submitText="Delete"
+                />
+            </div>
         </Modal>
     )
 }

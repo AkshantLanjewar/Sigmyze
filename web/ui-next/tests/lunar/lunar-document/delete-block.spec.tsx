@@ -61,13 +61,15 @@ const deleteImageBlockIMPL = async (component: MountResult, page: Page) => {
     //click on block-0 block-content
     const blockLocator = addExtensions(documentBlockBase, ["0"])
     const block = component.getByTestId(blockLocator)
-    const blockContent = block.getByTestId(blockContentLocator)
+    const blockContent = block.getByTestId("image-body")
 
     await blockContent.click()
 
     //check that delete image is attached and click on it
     const deleteImage = block.getByTestId(deleteImageLocator)
     await expect(deleteImage).toBeAttached()
+    
+    await deleteImage.click()
     await deleteImage.click()
 
     //delete image modal is attached
@@ -75,15 +77,15 @@ const deleteImageBlockIMPL = async (component: MountResult, page: Page) => {
     await expect(deleteImageModal).toBeAttached()
 
     //there is a cancel button attached
-    const cancelButton = page.getByTestId("img-del-cancel")
+    const cancelButton = page.getByTestId("cancel-button")
     await expect(cancelButton).toBeAttached()
 
     //there is a delete button that is disabled
-    const deleteButton = page.getByTestId('img-delete')
+    const deleteButton = page.getByTestId('submit-button')
     await expect(deleteButton).toBeDisabled()
 
     //check there is a warning attached
-    const warning = deleteImageModal.getByTestId('warning-img')
+    const warning = deleteImageModal.getByTestId('delete-warning')
     await expect(warning).toBeAttached()
 
     //get the input and click it
