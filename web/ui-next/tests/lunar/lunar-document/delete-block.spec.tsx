@@ -107,13 +107,15 @@ const deleteChartBlockIMPL = async (component: MountResult, page: Page) => {
     //click on block-0 block-content
     const blockLocator = addExtensions(documentBlockBase, ["0"])
     const block = component.getByTestId(blockLocator)
-    const blockContent = block.getByTestId(blockContentLocator)
+    const blockContent = block.getByTestId("chart-block-body")
 
     await blockContent.click()
 
     //check that delete chart is attached and click it
     const deleteChart = block.getByTestId(deleteChartLocator)
     await expect(deleteChart).toBeAttached()
+
+    await deleteChart.click()
     await deleteChart.click()
 
     //check that the delete chart modal is attached
@@ -121,11 +123,11 @@ const deleteChartBlockIMPL = async (component: MountResult, page: Page) => {
     await expect(deleteChartModal).toBeAttached()
 
     //check that there is a cancel button attached
-    const cancel = page.getByTestId("cancel")
+    const cancel = page.getByTestId("cancel-button")
     await expect(cancel).toBeAttached()
 
     //check that there is a delete button that is disabled
-    const deleteButton = page.getByTestId('chart-delete')
+    const deleteButton = page.getByTestId('submit-button')
     await expect(deleteButton).toBeDisabled()
 
     //check there is a warning attached

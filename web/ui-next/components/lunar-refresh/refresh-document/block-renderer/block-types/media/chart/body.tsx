@@ -156,6 +156,7 @@ const ChartBody: React.FC<IChartBodyProps> = ({
                                 label: "Delete Chart",
                                 icon: <IconTrash size={18} />,
                                 color: "red",
+                                testId: "delete-chart",
                                 action: () => toggleDeleteModal()
                             }
                         ]}

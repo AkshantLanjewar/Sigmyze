@@ -38,7 +38,7 @@ const ChartDeleteModal: React.FC<IChartDeleteModalProps> = ({ toggle, blockId, d
         {
             type: "alert",
             id: "alert-component",
-            testId: "delete-warning",
+            testId: "warning",
             alertTitle: "Warning",
             alertIcon: <IconAlertTriangle />,
             alertColor: "orange",
@@ -90,13 +90,15 @@ const ChartDeleteModal: React.FC<IChartDeleteModalProps> = ({ toggle, blockId, d
             title={"Are you sure?"}
             size={"md"}
         >
-            <FormBuilder
-                forms={formFields}
-                submit={submit}
-                closeModal={close}
-                submitStoreDependency={"delete-confirmation"}
-                submitText="Delete"
-            />
+            <div data-testId={"delete-chart-modal"}>
+                <FormBuilder
+                    forms={formFields}
+                    submit={submit}
+                    closeModal={close}
+                    submitStoreDependency={"delete-confirmation"}
+                    submitText="Delete"
+                />
+            </div>
         </Modal>
     )
 }
