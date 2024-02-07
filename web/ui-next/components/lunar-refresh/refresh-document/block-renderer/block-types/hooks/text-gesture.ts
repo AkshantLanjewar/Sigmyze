@@ -34,7 +34,8 @@ const useTextGestures = (
     ungroupNoteBlock: (blockId: string) => void,
     incrementFocusUp: () => void,
     decrementFocusDown: () => void,
-    deleteNoteBlock: (blockId: string) => void
+    deleteNoteBlock: (blockId: string) => void,
+    blur?: () => void
 ) => {
     /**
      * @description
@@ -42,6 +43,9 @@ const useTextGestures = (
      * @param event 
      */
     const keyDown = (event: KeyboardEvent) => {
+        if(editableRef.current === null)
+            return
+
         switch(event.key) {
             case "Tab":
                 event.preventDefault()
@@ -53,17 +57,27 @@ const useTextGestures = (
 
                 return
             case "Enter":
+                if(blur !== undefined)
+                    blur()
+
                 event.preventDefault()
                 appendNoteBlock(blockId)
-
                 return
             case "ArrowUp":
+                if(blur !== undefined)
+                    blur()
+
                 event.preventDefault()
+                editableRef.current.blur()
                 incrementFocusUp()
 
                 return
             case "ArrowDown":
+                if(blur !== undefined)
+                    blur()
+
                 event.preventDefault()
+                editableRef.current.blur()
                 decrementFocusDown()
 
                 return

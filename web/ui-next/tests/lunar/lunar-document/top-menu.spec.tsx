@@ -125,7 +125,7 @@ const topMenuHeadingIMPL = async (component: MountResult, page: Page) => {
 
     //check that the topbar has 4 sections
     const documentTopbar = component.getByTestId(documentTopbarLocator)
-    await expect(documentTopbar.locator('> div')).toHaveCount(4)
+    await expect(documentTopbar.locator('> div')).toHaveCount(7)
 
     //check that section 0 has 1 child
     const rootSectionLocator = addExtensions(documentTopbarSectionBase, ["0"])
@@ -139,7 +139,7 @@ const topMenuHeadingIMPL = async (component: MountResult, page: Page) => {
 
     //check that heading-items has 7 elements as children
     const headingItems = headingDropdown.getByTestId(headingItemsLocator)
-    await expect(headingItems.locator('> div')).toHaveCount(7)
+    await expect(headingItems.locator('> div')).toHaveCount(9)
 
     //get heading-item-1 and check it has value = "heading::1"
     const headingItemLocator = addExtensions(headingItemBase, ["1"])
@@ -156,6 +156,7 @@ const topMenuHeadingIMPL = async (component: MountResult, page: Page) => {
     await expect(block).toHaveAttribute("data-testValue", "heading::1")
 
     //now type in dummy string and create a child
+    await page.keyboard.press("Space", { delay: 200 })
     await page.keyboard.type("swag", { delay: 200 })
     await page.keyboard.press("Enter")
 

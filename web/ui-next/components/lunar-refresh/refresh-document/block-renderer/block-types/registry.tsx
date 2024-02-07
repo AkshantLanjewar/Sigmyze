@@ -75,27 +75,59 @@ interface IRegistryIconProps {
      * This is the block that we want the icon for
      */
     block: Blocks
+
+    /*
+     * This is the optional setting to scale the icons to the themeIcon size
+     */
+    scale?: boolean
 }
 
-const RegistryIcon: React.FC<IRegistryIconProps> = ({ block }) => {
+const RegistryIcon: React.FC<IRegistryIconProps> = ({ block, scale }) => {
     switch(block) {
         case "paragraph":
+            if(scale === true)
+                return <IconTextCaption width={"80%"} height={"80%"} stroke={2} />
+
             return <IconTextCaption size={22} />
         case "heading::1":
+            if(scale === true)
+                return <IconH1 width={"80%"} height={"80%"} stroke={2} />
+
             return <IconH1 size={22} />
         case "heading::2":
+           if(scale === true)
+                return <IconH2 width={"80%"} height={"80%"} stroke={2} />
+
             return <IconH2 size={22} />
         case "heading::3":
+            if(scale === true)
+                return <IconH3 width={"80%"} height={"80%"} stroke={2} />
+
             return <IconH3 size={22} />
         case "heading::4":
+            if(scale === true)
+                return <IconH4 width={"80%"} height={"80%"} stroke={2} />
+
             return <IconH4 size={22} />
-        case "heading::5":
+        case "heading::5": 
+            if(scale === true)
+                return <IconH5 width={"80%"} height={"80%"} stroke={2} />
+
             return <IconH5 size={22} />
         case "heading::6":
+            if(scale === true)
+                return <IconH6 width={"80%"} height={"80%"} stroke={2} />
+
             return <IconH6 size={22} />
         case "media::chart":
+            if(scale === true)
+                return <IconChartHistogram width={"80%"} height={"80%"} stroke={2} />
+            
             return <IconChartHistogram size={22} />
         case "media::image":
+            if(scale === true)
+                return <IconCamera width={"80%"} height={"80%"} stroke={2} />
+
             return <IconCamera size={22} />
         default:
             return null

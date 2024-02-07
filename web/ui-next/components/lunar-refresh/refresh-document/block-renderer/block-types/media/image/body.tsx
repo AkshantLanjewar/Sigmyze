@@ -83,7 +83,7 @@ const ImageBody: React.FC<IImageBodyProps> = ({
     const toggleDeleteModal = () => setDeleteToggle(!deleteToggle)
 
     useEffect(() => {
-        if(hasRequest === false || consumeFocusRequest(blockId) === false)
+        if(consumeFocusRequest(blockId) === false)
             return
 
         setActive(true)

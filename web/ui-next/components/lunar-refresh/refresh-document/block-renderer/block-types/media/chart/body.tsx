@@ -86,11 +86,12 @@ const ChartBody: React.FC<IChartBodyProps> = ({
     const toggleSettingsModal = () => setSettingsToggle(!settingsToggle)
 
     useEffect(() => {
-        if(hasRequest === false || consumeFocusRequest(blockId) === false)
+        let result = consumeFocusRequest(blockId)
+        if(result === false)
             return
 
         setActive(true)
-    }, [hasRequest])
+    }, [hasRequest, blockId, consumeFocusRequest])
 
     //this is the effect that sets the active block state when the chart is active
     useEffect(() => {

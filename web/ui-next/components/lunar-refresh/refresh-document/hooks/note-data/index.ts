@@ -253,7 +253,7 @@ const useNoteData = (
             newIndex = activeIndex - 1
 
         //create the focus request
-        createFocusRequest(displayLayout[newIndex])
+        setTimeout(() => createFocusRequest(displayLayout[newIndex]), 50)
     }, [activeBlock, blocks, createFocusRequest])
 
     /**
@@ -276,7 +276,7 @@ const useNoteData = (
             newIndex = activeIndex + 1
 
         //create the focus request
-        createFocusRequest(displayLayout[newIndex])
+        setTimeout(() => createFocusRequest(displayLayout[newIndex]), 50)
     }, [activeBlock, blocks, createFocusRequest])
 
     //this is the effect that loads in the initial data from the file

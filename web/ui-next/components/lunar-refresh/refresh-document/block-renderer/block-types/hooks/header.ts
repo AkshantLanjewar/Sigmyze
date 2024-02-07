@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { Blocks, INoteBlock } from "../../../types"
 import { setUncaughtExceptionCaptureCallback } from "process"
 import useActionMenu from "./action-menu"
+import { getSelectionTextInfo } from "./header-util"
 
 /**
  * @description
@@ -39,6 +40,9 @@ const useHeader = (
     //order ref for update
     const orderRef = useRef<number>(1)
 
+    //this is the ref for when we change the block on keydown so we dont skip block changes
+    const blockChangeRef = useRef<boolean>(false)
+
     //this is the tick section of the header
     const [ticks, setTicks] = useState<string | undefined>(undefined)
     //flag to focus the tick
@@ -54,7 +58,11 @@ const useHeader = (
     const [focusT, setFocusT] = useState<boolean>(false)
 
     //this is the active element within the header
-    const [active, setActive] = useState<'tick' | 'title' | undefined>(undefined)
+    const activeRef = useRef<'tick' | 'title' | null>(null)
+    //the toggle for whether or not the active has updated
+    const [activeUpdated, setActiveUpdated] = useState<boolean>(false)
+    //the actual toggle
+    const toggleActiveUpdated = () => setActiveUpdated(e => !e)
 
     //whether or not the element is focused
     const [focused, setFocused] = useState<boolean>(false)
@@ -63,7 +71,7 @@ const useHeader = (
     const [cOrder, setCOrder] = useState<number>(1)
 
     //hook to use action menu state
-    const { menuActive, position, actionKeyDown, actionKeyUp, getQueryText } = useActionMenu(titleRef, active === "title")
+    const { menuActive, position, actionKeyDown, actionKeyUp, getQueryText } = useActionMenu(titleRef, activeRef.current === "title")
 
     /**
      * @description
@@ -75,7 +83,9 @@ const useHeader = (
 
         titleRef.current.blur()
         setFocusTick(!focusTick)
-        setActive('tick')
+        activeRef.current = 'tick'
+
+        toggleActiveUpdated()
     }   
 
     /**
@@ -83,11 +93,21 @@ const useHeader = (
      *  - this is the function that runs when the title is focused
      */
     const focusHandler = () => {
-        setFocused(true)
-        setActive('title')
-
-        if(title === undefined)
+        if(title === undefined || blockChangeRef.current === true) {
             setTicksActive()
+            setFocused(true)
+            if(blockChangeRef.current === true)
+                blockChangeRef.current = false
+
+            return
+        }
+        
+        activeRef.current = 'title'
+        titleFocusBug.current = true
+
+        setFocused(true)
+        setFocusT((e) => !e)
+        toggleActiveUpdated()
     }
 
     /**
@@ -100,7 +120,7 @@ const useHeader = (
 
         setFocused(false)
         setTitleEdit(false)
-        setActive(undefined)
+        activeRef.current = null
 
         focusBug.current = true
         tickRef.current.blur()
@@ -134,7 +154,7 @@ const useHeader = (
             setTicks(split[0])
             setTitle(split[1])
         }
-    }, [block])
+    }, [])
 
     //effect that runs reset toggle
     useEffect(() => {
@@ -148,10 +168,10 @@ const useHeader = (
      *  - the event that is being fired
      */
     const keyDownListener = (event: KeyboardEvent) => {
-        if(titleRef.current === null || tickRef.current === null)
+        if(titleRef.current === null || tickRef.current === null || activeRef.current === null)
             return
 
-        if(event.code === "Space") {
+        if(event.code === "Space" || event.code === "ArrowRight" && activeRef.current === "tick") {
             event.preventDefault()
 
             const pTitle = titleRef.current.innerText
@@ -165,90 +185,106 @@ const useHeader = (
             changeNoteBlock(block.blockId, newType, `${text} ${pTitle}`)
             
             titleFocusBug.current = true
-            setActive('title')
+            activeRef.current = "title"
             setFocusT((val) => !val)
         }
     }
 
     const keyUpListener = (event: KeyboardEvent) => {
-        if(tickRef.current === null || titleRef.current === null)
+        if(tickRef.current === null || titleRef.current === null || activeRef.current === null)
             return
 
-        if((event.code === "Backspace" || event.code === "ArrowLeft") && active === "title") {
+        if((event.code === "Backspace") && activeRef.current === "title") {
             const titleText = titleRef.current.innerText
             if(titleText.length > 0)
                 return
 
-            
-            titleRef.current.blur()
-
-            setActive('tick')
+            activeRef.current = 'tick'
             setFocusTick((val) => !val)
+        } if(event.code === "ArrowLeft" && activeRef.current === "title") {
+            if(getSelectionTextInfo(titleRef).atStart !== true)
+                return
+
+            activeRef.current = 'tick'
+            setFocusTick((e) => !e)
         }
         
-        const text = tickRef.current.innerText
-        if(text.length === 0)
-            changeNoteBlock(block.blockId, "paragraph", text)
-        if(active !== "tick")
+        const tText = titleRef.current.textContent
+        const text = tickRef.current.textContent
+        if(text === null || text.length === 0)
+            changeNoteBlock(block.blockId, "paragraph", "")
+        if(activeRef.current !== "tick")
             return
-
+                
         switch(text) {
             case "#":
                 setCOrder(1)
                 orderRef.current = 1
-
+        
+                changeNoteBlock(block.blockId, "heading::1", `${text} ${tText}`)
+                activeRef.current = "tick"
+                blockChangeRef.current = true
                 break
             case "##":
                 setCOrder(2)
                 orderRef.current = 2
-
+              
+                changeNoteBlock(block.blockId, "heading::2", `${text} ${tText}`)
+                activeRef.current = "tick"
+                blockChangeRef.current = true
                 break
             case "###":
                 setCOrder(3)
                 orderRef.current = 3
 
+                changeNoteBlock(block.blockId, "heading::3", `${text} ${tText}`)
+                activeRef.current = "tick"
+                blockChangeRef.current = true
                 break
             case "####":
                 setCOrder(4)
                 orderRef.current = 4
-
+                
+                changeNoteBlock(block.blockId, "heading::4", `${text} ${tText}`)
+                activeRef.current = "tick"
+                blockChangeRef.current = true
                 break
             case "#####":
                 setCOrder(5)
                 orderRef.current = 5
 
+                changeNoteBlock(block.blockId, "heading::5", `${text} ${tText}`)
+                activeRef.current = "tick"
+                blockChangeRef.current = true
                 break
             case "######":
                 setCOrder(6)
                 orderRef.current = 6
 
+                changeNoteBlock(block.blockId, "heading::6", `${text} ${tText}`)
+                activeRef.current = "tick"
+                blockChangeRef.current = true
                 break
             default:
-                changeNoteBlock(block.blockId, "paragraph", text)
+                changeNoteBlock(block.blockId, "paragraph", "")
                 break
         }
+
     }
 
     //this is the effect that sets the keyListeners based on the active item
     useEffect(() => {
         if(tickRef.current === null || titleRef.current === null)
             return
+        if(focused === false)
+            return
 
-        if(focused === false) {
-            tickRef.current?.removeEventListener("keydown", keyDownListener)
-            tickRef.current.removeEventListener("keyup", keyUpListener)
+        tickRef.current.addEventListener("keydown", keyDownListener)
+        tickRef.current.addEventListener("keyup", keyUpListener)
 
-            titleRef.current.removeEventListener("keyup", keyUpListener)
-            titleRef.current.removeEventListener("keyup", actionKeyUp)
-            titleRef.current.removeEventListener("keydown", actionKeyDown)
-        } else {
-            tickRef.current.addEventListener("keydown", keyDownListener)
-            tickRef.current.addEventListener("keyup", keyUpListener)
-
-            titleRef.current.addEventListener("keyup", keyUpListener)
-            titleRef.current.addEventListener("keyup", actionKeyUp)
-            titleRef.current.addEventListener("keydown", actionKeyDown)
-        }
+        titleRef.current.addEventListener("keyup", keyUpListener)
+        titleRef.current.addEventListener("keyup", actionKeyUp)
+        titleRef.current.addEventListener("keydown", actionKeyDown)
 
         return () => {
             if(tickRef.current === null || titleRef.current === null)
@@ -260,14 +296,15 @@ const useHeader = (
             titleRef.current.removeEventListener("keyup", actionKeyUp)
             titleRef.current.removeEventListener("keydown", actionKeyDown)
         }
-    }, [focused, active])
+    }, [focused, activeUpdated])
 
     //effect to focus t 
     useEffect(() => {
         if(titleRef.current === null || titleFocusBug.current === false)
             return
-
+        
         titleFocusBug.current = false
+        titleRef.current.focus()
         titleRef.current.focus()
         const range = document.createRange()
         const selection = window.getSelection()
@@ -330,7 +367,7 @@ const useHeader = (
         cOrder,
         menuActive,
         position,
-        active,
+        active: activeRef.current || undefined,
         focusHandler,
         blurHandler,
         setTicksActive,

@@ -340,7 +340,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     }, [blocksSTR])
 
     return (
-        <div className={styles.document__wrapper}>
+        <div style={{ marginBottom: "5em" }} className={styles.document__wrapper}>
             <div
                 className={styles.document__renderer}
             >
@@ -352,7 +352,7 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                 <div
                     data-testId={"document-container"}
                     className={styles.document__renderer}
-                    style={{ flexGrow: 1 }}
+                    style={{ flexGrow: 1, paddingBottom: "5em" }}
                 >
                     {renderedBlocks.map((step, index) => (
                         <div 

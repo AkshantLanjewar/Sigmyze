@@ -4,12 +4,26 @@ import TextSelector from './text-selector'
 import TextStyleSection from './text-style'
 import BlockAlignSection from './block-align'
 import BlockMediaSection from './block-media'
+import { Blocks, INoteBlock } from '../types'
 
 interface INoteTopbarProps {
+    /**
+     * this is the active block within the editor
+     */
+    activeBlock: string | undefined,
 
+    /**
+     * These are the blocks that are rendered within the editor
+     */
+    blocks: INoteBlock[],
+
+    /*
+     * this is the function that handles the changing of the requested note block
+    */
+    changeNoteBlock: (blockId: string, newTypes: Blocks, newContent: string) => void
 }
 
-const NoteTopbar: React.FC<INoteTopbarProps> = ({ }) => {
+const NoteTopbar: React.FC<INoteTopbarProps> = ({ activeBlock, blocks, changeNoteBlock }) => {
     return (
         <div
             data-testId={'document-topbar'}
@@ -19,7 +33,11 @@ const NoteTopbar: React.FC<INoteTopbarProps> = ({ }) => {
                 data-testId={"section-0"}
                 className={styles.section}
             >
-                <TextSelector />
+                <TextSelector 
+                    activeBlock={activeBlock}
+                    blocks={blocks}
+                    changeNoteBlock={changeNoteBlock}
+                />
             </div>
 
             <div className={styles.divider}></div>

@@ -166,7 +166,8 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
         ungroupNoteBlock, 
         incrementFocusUp,
         decrementFocusDown,
-        deleteNoteBlock
+        deleteNoteBlock,
+        blurHandler
     )
     //this is the same hook, only for the title ref now
     useTextGestures(
@@ -179,7 +180,8 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
         ungroupNoteBlock, 
         incrementFocusUp,
         decrementFocusDown,
-        deleteNoteBlock
+        deleteNoteBlock,
+        blurHandler
     )
 
     //effect that handles the setting of the groupTitle state
@@ -281,6 +283,7 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
                         style={{ color: "#5C5F66", flexGrow: 0, display: focused ? "block" : "none" }}
                         ref={tickRef} 
                         onFocus={setTicksActive}
+                        onClick={setTicksActive}
                     >
                         {ticks}
                     </div>

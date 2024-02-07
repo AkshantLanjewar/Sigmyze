@@ -57,10 +57,15 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 width: "100%",
                 background: "#101113",
                 display: "block",
-                position: 'relative'
+                position: 'relative',
+                marginBottom: "5em"
             }}
         >
-            <NoteTopbar />
+            <NoteTopbar
+                blocks={blocks}
+                activeBlock={activeBlock}
+                changeNoteBlock={changeNoteBlock}
+            />
 
             <BlockRenderer
                 blocks={blocks}
