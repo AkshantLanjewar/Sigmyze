@@ -25,7 +25,7 @@ interface INoteTopbarProps {
 
     /*
      * this is the function that handles the changing of the requested note block
-    */
+     */
     changeNoteBlock: (blockId: string, newTypes: Blocks, newContent: string) => void,
 
     /*
@@ -107,7 +107,11 @@ const NoteTopbar: React.FC<INoteTopbarProps> = ({ activeBlock, blocks, stylesUpd
                 data-testId={"section-3"}
                 className={styles.section}
             >
-                <BlockMediaSection />
+                <BlockMediaSection 
+                    activeBlock={activeBlock}
+                    blocks={blocks}
+                    changeNoteBlock={changeNoteBlock}
+                />
             </div>
         </div>
     )
