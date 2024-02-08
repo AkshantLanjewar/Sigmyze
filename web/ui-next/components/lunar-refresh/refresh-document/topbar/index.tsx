@@ -95,7 +95,10 @@ const NoteTopbar: React.FC<INoteTopbarProps> = ({ activeBlock, blocks, stylesUpd
                 data-testId={"section-2"}
                 className={styles.section}
             >
-                <BlockAlignSection />
+                <BlockAlignSection 
+                    align={align}
+                    updateAlign={updateAlign}
+                />
             </div>
 
             <div className={styles.divider}></div>

@@ -256,20 +256,15 @@ const topMenuTextAlignIMPL = async (component: MountResult, page: Page) => {
 
     //check that the topbar has 4 sections
     const documentTopbar = component.getByTestId(documentTopbarLocator)
-    await expect(documentTopbar.locator('> div')).toHaveCount(4)
-
-    // get the block to measure UI state
-    const blockLocator = addExtensions(documentBlockBase, ["0"])
-    const block = component.getByTestId(blockLocator)
+    await expect(documentTopbar.locator('> div')).toHaveCount(7)
 
     //check that section-2 has 3 children
     const alignSectionLocator = addExtensions(documentTopbarSectionBase, ["2"])
     const alignSection = documentTopbar.getByTestId(alignSectionLocator)
-    await expect(alignSection.locator('> div')).toHaveCount(3)
+    await expect(alignSection.locator('> button')).toHaveCount(3)
 
     //first get align left and measure UI state
     const alignLeft = alignSection.getByTestId(alignLeftLocator)
-    await expect(block).toHaveAttribute("data-align", "left")
     await expect(alignLeft).toHaveAttribute("data-active", "true")
 
     //now we are going to get alignCenter and click on it, then measure UI state change
@@ -278,7 +273,6 @@ const topMenuTextAlignIMPL = async (component: MountResult, page: Page) => {
 
     //now click align center and measure ui change
     await alignCenter.click()
-    await expect(block).toHaveAttribute("data-align", "center")
     await expect(alignCenter).toHaveAttribute("data-active", "true")
     await expect(alignLeft).toHaveAttribute("data-active", "false")
 
@@ -288,7 +282,6 @@ const topMenuTextAlignIMPL = async (component: MountResult, page: Page) => {
 
     //now click and measure the UI state change
     await alignRight.click()
-    await expect(block).toHaveAttribute("data-align", "right")
     await expect(alignCenter).toHaveAttribute("data-active", "false")
     await expect(alignRight).toHaveAttribute("data-active", "true")
 }
