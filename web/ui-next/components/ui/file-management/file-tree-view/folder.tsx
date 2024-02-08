@@ -380,6 +380,7 @@ const View: React.FC<IViewProps> = memo(({
         data-testId={`container-folder-${index}${appendChild ? "::child" : ""}`} 
         data-testvalue={'element-folder'}
         style={{ width: "100%" }}
+        data-active={active}
     >
         <UnstyledButton 
             className={`${styles.element} ${active ? styles.active : ""}`}

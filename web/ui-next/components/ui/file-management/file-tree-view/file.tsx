@@ -328,6 +328,7 @@ const View: React.FC<IViewProps> = memo(({
             style={{ paddingLeft: paddingLeft }}
             data-testId={`container-element-${index}${isChild ? "::child" : ""}`}
             data-testValue={`element-${fileType}`}
+            data-active={active}
             onClick={(e) => {
                 openTab(file.fileId)
                 onClickHandler(e)
