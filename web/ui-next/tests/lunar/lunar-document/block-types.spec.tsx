@@ -2,19 +2,11 @@ import { test, expect } from '@playwright/experimental-ct-react'
 import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider/next-13'
 import { Locator, Page } from "@playwright/test"
 import LunarRefresh from '../../../components/lunar-refresh/page';
-import { addIndicatorChartRenderTEST } from '../lunar-chart/quanta-data.spec';
 
 import { 
-    addRefreshChartCancelLocator,
-    addRefreshChartLocator,
-    addRefreshChartOptionBase,
-    addRefreshChartOptionsLocator,
-    addRefreshChartSubmitLocator,
     blockContentLocator, 
     blockDragHandleLocator, 
     documentBlockBase, 
-    documentContainerLocator, 
-    sizeHandlesLocator, 
     uploadImageInputLocator, 
     uploadImageModalCancelLocator, 
     uploadImageModalLocator, 
@@ -28,6 +20,7 @@ import {
     quantaSelectPagedIndicatorsROUTE, 
     quantaSelectIndicator 
 } from '../lunar-chart/mock-api';
+import createDocumentPage from './util';
 
 interface MountResult extends Locator {
     unmount(): Promise<void>;
@@ -35,23 +28,6 @@ interface MountResult extends Locator {
 }
 
 //specific button that is within the portal. (note this is a base, and needs to be combined with an index)
-const buttonPortalButtonBase = "button"
-
-/**
- * this is the button that activates the new note form
- */
-const newNoteButtonLocator = "new-note"
-
-/**
- * this is the locator for the note name input in the note-create form
- */
-const noteNameInputLocator = "note-name"
-
-/**
- * this is the locator for the submit button in all generated forms
- */
-const submitButtonLocator = "submit-button"
-
 /**
  * This is the locator for the select chart flow wrapper
  * testValue is the flow's step
@@ -99,11 +75,6 @@ const chartSettingsStageLocator = "chart-settings-stage"
 const chartSettingsTitleSwitchLocator = "display-title-switch"
 
 /**
- * this is the locator for the chart title input
- */
-const chartTitleLocator = "chart-title"
-
-/**
  * This is the locator for the display x axis switch
  */
 const displayXAxisLocator = "display-x-axis"
@@ -141,40 +112,6 @@ const addExtensions = (base: string, extensions: string[]) => {
     }
 
     return outputString
-}
-
-const createDocumentPage = async (component: MountResult, page: Page) => {
-    //create a chart so that we can add it into the document
-    await addIndicatorChartRenderTEST(component, page)
-
-    //click the root folder
-    const containerFolderZeroLocator = addExtensions("container-folder", ["0"])
-    const containerFolderZero = component.getByTestId(containerFolderZeroLocator).locator('> button')
-    await containerFolderZero.click()
-    await containerFolderZero.click()
-
-    //get the toolbar create button and click it
-    const toolbarCreateButtonLocator = addExtensions(buttonPortalButtonBase, ["0"])
-    const toolbarCreateButton = component.getByTestId(toolbarCreateButtonLocator)
-    await toolbarCreateButton.click()
-
-    //get the new note button and activate the new note form
-    const newNoteButton = component.getByTestId(newNoteButtonLocator)
-    await newNoteButton.click()
-
-    //type in a dummy name for the new note
-    const noteNameInput = page.getByTestId(noteNameInputLocator)
-    const noteNameInputRAW = noteNameInput.locator('input')
-    await noteNameInputRAW.type('dummy note', { delay: 200 })
-
-    //now we need to get the submit button and click it
-    const submitButton = page.getByTestId(submitButtonLocator)
-    await submitButton.click()
-
-    //now we validate that the document-container is attached
-    const documentContainer = component.getByTestId(documentContainerLocator)
-    await expect(documentContainer).toBeAttached()
-    await expect(documentContainer.locator('> div')).toHaveCount(1)
 }
 
 const blockTitleIMPL = async (order: number, component: MountResult, page: Page) => {

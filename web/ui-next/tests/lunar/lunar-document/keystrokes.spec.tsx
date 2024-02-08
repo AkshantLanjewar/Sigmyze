@@ -3,7 +3,6 @@ import { MemoryRouterProvider } from 'next-router-mock/dist/MemoryRouterProvider
 import { Locator, Page } from "@playwright/test"
 import LunarRefresh from '../../../components/lunar-refresh/page';
 
-import { createDocumentPage } from './block-types.spec';
 
 import { 
     blockContentLocator, 
@@ -20,6 +19,7 @@ import {
     quantaSelectPagedIndicatorsROUTE, 
     quantaSelectIndicator 
 } from '../lunar-chart/mock-api'
+import createDocumentPage from './util';
 
 interface MountResult extends Locator {
     unmount(): Promise<void>;
