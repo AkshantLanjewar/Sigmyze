@@ -4,7 +4,8 @@ import TextSelector from './text-selector'
 import TextStyleSection from './text-style'
 import BlockAlignSection from './block-align'
 import BlockMediaSection from './block-media'
-import { Blocks, INoteBlock } from '../types'
+import { Blocks, IBlockStyles, INoteBlock } from '../types'
+import useTopbarState from './state'
 
 interface INoteTopbarProps {
     /**
@@ -18,12 +19,41 @@ interface INoteTopbarProps {
     blocks: INoteBlock[],
 
     /*
+     * Whether or not the styles have been updated
+     */
+    stylesUpdated: boolean,
+
+    /*
      * this is the function that handles the changing of the requested note block
     */
-    changeNoteBlock: (blockId: string, newTypes: Blocks, newContent: string) => void
+    changeNoteBlock: (blockId: string, newTypes: Blocks, newContent: string) => void,
+
+    /*
+     * This is the function that gets the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
+
+    /*
+     * This is the function that updates the block styles 
+     */
+    setBlockStyles: (blockId: string, styles: IBlockStyles) => void
 }
 
-const NoteTopbar: React.FC<INoteTopbarProps> = ({ activeBlock, blocks, changeNoteBlock }) => {
+const NoteTopbar: React.FC<INoteTopbarProps> = ({ activeBlock, blocks, stylesUpdated, changeNoteBlock, getBlockStyles, setBlockStyles }) => {
+    const {
+        bold,
+        italic,
+        strike,
+        align,
+        toggleBoldOn,
+        toggleBoldOff,
+        toggleItalicOn,
+        toggleItalicOff,
+        toggleStrikethruOn,
+        toggleStrikethruOff,
+        updateAlign
+    } = useTopbarState(activeBlock, stylesUpdated, getBlockStyles, setBlockStyles)
+
     return (
         <div
             data-testId={'document-topbar'}
@@ -46,7 +76,17 @@ const NoteTopbar: React.FC<INoteTopbarProps> = ({ activeBlock, blocks, changeNot
                 data-testId={"section-1"}
                 className={styles.section}
             >
-                <TextStyleSection />
+                <TextStyleSection 
+                    bold={bold}
+                    italic={italic}
+                    strike={strike}
+                    toggleBoldOn={toggleBoldOn}
+                    toggleBoldOff={toggleBoldOff}
+                    toggleItalicOn={toggleItalicOn}
+                    toggleItalicOff={toggleItalicOff}
+                    toggleStrikethruOn={toggleStrikethruOn}
+                    toggleStrikethruOff={toggleStrikethruOff}
+                />
             </div>
 
             <div className={styles.divider}></div>

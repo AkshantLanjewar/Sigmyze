@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Blocks, INoteBlock } from '../types'
+import { Blocks, IBlockStyles, INoteBlock } from '../types'
 import { NoteChart, NoteParagraph } from './block-types'
 import NoteImage from './block-types/media/image'
 import NoteHeading from './block-types/text/heading'
@@ -98,6 +98,11 @@ const BLOCK_SWITCH = (
      */
     decrementFocusDown: () => void,
 
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
+
     /**
      * the order level of the component, 0 being the root layer
      */
@@ -130,6 +135,7 @@ const BLOCK_SWITCH = (
                 setActiveBlockState={setActiveBlockState}
                 incrementFocusUp={incrementFocusUp}
                 decrementFocusDown={decrementFocusDown}
+                getBlockStyles={getBlockStyles}
             />
         )
 
@@ -152,6 +158,7 @@ const BLOCK_SWITCH = (
                     decrementFocusDown={decrementFocusDown}
                     deleteNoteBlock={deleteNoteBlock}
                     isTitleBlock={titleBlock}
+                    getBlockStyles={getBlockStyles}
                 />
             )
         case "heading::1":
@@ -180,6 +187,7 @@ const BLOCK_SWITCH = (
                     incrementFocusUp={incrementFocusUp}
                     decrementFocusDown={decrementFocusDown}
                     deleteNoteBlock={deleteNoteBlock}
+                    getBlockStyles={getBlockStyles}
                     isTitleBlock={titleBlock}
                 />
             )
@@ -194,6 +202,7 @@ const BLOCK_SWITCH = (
                     createRawBlock={createRawBlock}
                     deleteNoteBlock={deleteNoteBlock}
                     setActiveBlockState={setActiveBlockState}
+                    getBlockStyles={getBlockStyles}
                 />
             )
         case "media::image":
@@ -207,6 +216,7 @@ const BLOCK_SWITCH = (
                     createRawBlock={createRawBlock}
                     deleteNoteBlock={deleteNoteBlock}
                     setActiveBlockState={setActiveBlockState}
+                    getBlockStyles={getBlockStyles}
                 />
             )
         default:
@@ -308,7 +318,12 @@ interface IBlockRendererProps {
     /**
      * this is the function to move the focus down one display block
      */
-    decrementFocusDown: () => void
+    decrementFocusDown: () => void,
+
+    /*
+     * This is the function that retreives a blocks styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined
 }
 
 const BlockRenderer: React.FC<IBlockRendererProps> = ({ 
@@ -330,7 +345,8 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
     ungroupNoteBlock,
     setActiveBlockState,
     incrementFocusUp,
-    decrementFocusDown 
+    decrementFocusDown,
+    getBlockStyles
 }) => {
     const [renderedBlocks, setRenderedBlocks] = useState<INoteBlock[]>([])
 
@@ -378,7 +394,8 @@ const BlockRenderer: React.FC<IBlockRendererProps> = ({
                                 ungroupNoteBlock,
                                 setActiveBlockState,
                                 incrementFocusUp,
-                                decrementFocusDown
+                                decrementFocusDown,
+                                getBlockStyles
                             )}
                         </div>
                     ))}

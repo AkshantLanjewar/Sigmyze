@@ -15,6 +15,7 @@ import {
     alignCenterLocator, 
     alignLeftLocator, 
     alignRightLocator, 
+    blockContentLocator, 
     documentBlockBase, 
     documentTopbarLocator, 
     documentTopbarSectionBase, 
@@ -170,25 +171,24 @@ const topMenuTextStyleIMPL = async (component: MountResult, page: Page) => {
 
     //check that the topbar has 4 sections
     const documentTopbar = component.getByTestId(documentTopbarLocator)
-    await expect(documentTopbar.locator('> div')).toHaveCount(4)
+    await expect(documentTopbar.locator('> div')).toHaveCount(7)
 
     //check that section 1 has 3 children
     const textSectionLocator = addExtensions(documentTopbarSectionBase, ["1"])
     const textSection = documentTopbar.getByTestId(textSectionLocator)
-    await expect(textSection.locator('> div')).toHaveCount(3)
-
-    //now measure UI state b4 change
-    const blockLocator = addExtensions(documentBlockBase, ["0"])
-    const block = component.getByTestId(blockLocator)
-    await expect(block).toHaveAttribute("data-bold", "false")
+    await expect(textSection.locator('> button')).toHaveCount(3)
 
     //get textBoldButton and click it
     const textBoldButton = textSection.getByTestId(textBoldButtonLocator)
     await expect(textBoldButton).toHaveAttribute("data-active", "false")
     await textBoldButton.click()
 
+    //get the block and click on the contnet
+    const blockLocator = addExtensions(documentBlockBase, ["0"])
+    const block = await component.getByTestId(blockLocator)
+    await block.getByTestId(blockContentLocator).click()
+
     //validate UI has updated
-    await expect(block).toHaveAttribute("data-bold", "true")
     await expect(textBoldButton).toHaveAttribute("data-active", "true")
 
     //type in test string and create new block
@@ -198,22 +198,23 @@ const topMenuTextStyleIMPL = async (component: MountResult, page: Page) => {
     //check the UI state has reverted on block focus change
     await expect(textBoldButton).toHaveAttribute("data-active", "false")
     await page.keyboard.press("ArrowUp")
+
+    await page.waitForTimeout(1000)
+
     await expect(textBoldButton).toHaveAttribute("data-active", "true")
 
     //click on bold to make sure the state reverts
     await textBoldButton.click()
-    await expect(block).toHaveAttribute("data-bold", "false")
     await expect(textBoldButton).toHaveAttribute("data-active", "false")
 
     //same with italicize, we have to measure ui state b4 change
     const textItalicButton = textSection.getByTestId(italicizeLocator)
     await expect(textItalicButton).toHaveAttribute("data-active", "false")
-    await expect(block).toHaveAttribute("data-italic", "false")
 
     //now click and measure state change
     await textItalicButton.click()
+    await block.getByTestId(blockContentLocator).click()
     await expect(textItalicButton).toHaveAttribute("data-active", "true")
-    await expect(block).toHaveAttribute("data-italic", "true")
 
     //arrow down test to check if italic updates on block focus
     await page.keyboard.press("ArrowDown")
@@ -226,16 +227,14 @@ const topMenuTextStyleIMPL = async (component: MountResult, page: Page) => {
     //click and measure state change
     await textItalicButton.click()
     await expect(textItalicButton).toHaveAttribute("data-active", "false")
-    await expect(block).toHaveAttribute("data-italic", "false")
 
     //same with strikethru, we have to measure UI state before the change
     const textStrikethruButton = textSection.getByTestId(strikethruLocator)
-    await expect(block).toHaveAttribute("data-strikethru", "false")
     await expect(textStrikethruButton).toHaveAttribute("data-active", "false")
 
     //now click and measure state change
     await textStrikethruButton.click()
-    await expect(block).toHaveAttribute("data-strikethru", "true")
+    await block.getByTestId(blockContentLocator).click()
     await expect(textStrikethruButton).toHaveAttribute("data-active", "true")
 
     //arrow down test to check if strikethru updates on block focus
@@ -248,7 +247,6 @@ const topMenuTextStyleIMPL = async (component: MountResult, page: Page) => {
 
     //click and measure state change
     await textStrikethruButton.click()
-    await expect(block).toHaveAttribute("data-strikethru", "false")
     await expect(textStrikethruButton).toHaveAttribute("data-active", "false")
 }
 

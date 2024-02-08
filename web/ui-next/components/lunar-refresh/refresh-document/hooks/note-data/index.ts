@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react"
-import { Blocks, INoteBlock } from "../../types"
+import { Blocks, IBlockStyles, INoteBlock } from "../../types"
 import { ISigmyzeFile } from "../../../../ui/file-management/types"
 import { v4 } from "uuid"
 import { appendNoteBlockRECURSE, changeNoteBlockRECURSE, deleteNoteBlockRECURSE, updateNoteBlockRECURSE } from "./update"
 import { groupNoteBlockRECURSE, ungroupBlockRECURSE } from "./group"
 import { createDisplayLayout } from "./focus"
+import { getBlockStylesRecurse, setBlockStylesRecurse } from "./style"
 
 const useNoteData = (
     /**
@@ -52,6 +53,11 @@ const useNoteData = (
     const [blocksUpdated, setBlocksUpdated] = useState<boolean>(false)
     //function to toggle the blocks updated
     const toggleBlocksUpdated = () => setBlocksUpdated((step) => !step)
+
+    //this is the toggle for whether or not the styles have updated 
+    const [stylesUpdated, setStylesUpdated] = useState<boolean>(false)
+    //this is the function that toggles the styles updated flag 
+    const toggleStylesUpdated = () => setStylesUpdated((e) => !e)
 
     //this is the current title of the note
     const [title, setTitle] = useState<string>("")
@@ -279,6 +285,34 @@ const useNoteData = (
         setTimeout(() => createFocusRequest(displayLayout[newIndex]), 50)
     }, [activeBlock, blocks, createFocusRequest])
 
+    /*
+     * @description
+     *  - this is the function that retreives a requestedBlocks styles 
+     * @param blockId
+     *  - this is the blockId of the block we are looking for
+     */
+    const getBlockStyles = (blockId: string) =>
+        getBlockStylesRecurse(blocks, blockId)
+
+    /*
+     * @description
+     *  - this is the function that updates the block styles within the editor 
+     * @param blockid 
+     *  - the id of the block we want to update 
+     * @param styles
+     *  - the new styles for the block
+     */ 
+    const setBlockStyles = (blockId: string, styles: IBlockStyles) => {
+        let newBlocks = setBlockStylesRecurse(blocks, blockId, styles)
+
+        setBlocks([ ...newBlocks ])
+        setBlocksSTR(JSON.stringify(newBlocks))
+        updateNoteBlocks(fileId, newBlocks)
+
+        toggleBlocksUpdated()
+        toggleStylesUpdated()
+    }
+
     //this is the effect that loads in the initial data from the file
     useEffect(() => {
         let file = getFileById(fileId)
@@ -296,6 +330,7 @@ const useNoteData = (
         blocks,
         title,
         blocksUpdated,
+        stylesUpdated,
         blocksSTR,
         changeNoteTitle,
         updateNoteBlock,
@@ -306,7 +341,9 @@ const useNoteData = (
         ungroupNoteBlock,
         appendNoteBlock,
         incrementFocusUp,
-        decrementFocusDown
+        decrementFocusDown,
+        getBlockStyles,
+        setBlockStyles
     }
 }
 

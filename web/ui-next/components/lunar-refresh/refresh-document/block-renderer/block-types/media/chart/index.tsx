@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { Blocks, INoteBlock } from "../../../../types"
+import { Blocks, IBlockStyles, INoteBlock } from "../../../../types"
 import useNoteChart from "../../hooks/chart"
 import NoteChartModal from "./modal"
 import ChartBody from "./body"
@@ -44,6 +44,11 @@ interface INoteChartProps {
      * This is the function that sets the active block for focus purposes
      */
     setActiveBlockState: (blockId: string) => void
+
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
 }
 
 const NoteChart: React.FC<INoteChartProps> = ({
@@ -54,7 +59,8 @@ const NoteChart: React.FC<INoteChartProps> = ({
     changeNoteBlock,
     createRawBlock,
     deleteNoteBlock,
-    setActiveBlockState
+    setActiveBlockState,
+    getBlockStyles
 }) => {
     const { 
         chart,
@@ -76,6 +82,7 @@ const NoteChart: React.FC<INoteChartProps> = ({
 
             {render && (
                 <ChartBody 
+                    block={block}
                     blockId={block.blockId}
                     chart={chart!}
                     hasRequest={hasRequest}
@@ -83,6 +90,7 @@ const NoteChart: React.FC<INoteChartProps> = ({
                     deleteNoteBlock={deleteNoteBlock}
                     updateNoteBlock={updateNoteBlock}
                     updateChart={updateChart}
+                    getBlockStyles={getBlockStyles}
                     setActiveBlockState={setActiveBlockState}
                 />
             )}

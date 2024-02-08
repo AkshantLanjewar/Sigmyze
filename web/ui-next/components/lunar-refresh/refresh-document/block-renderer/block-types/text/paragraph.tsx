@@ -1,6 +1,6 @@
 import { useClickOutside } from "@mantine/hooks"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Blocks, INoteBlock } from "../../../types"
+import { Blocks, IBlockStyles, INoteBlock } from "../../../types"
 import styles from '../index.module.scss'
 import { ActionIcon, Text } from "@mantine/core"
 import { IconGripVertical } from "@tabler/icons"
@@ -9,6 +9,7 @@ import useTextBlock from "../hooks/text-block"
 import useGrip from "../hooks/grip"
 import ActionMenu from "../../action-menu"
 import useTextGestures from "../hooks/text-gesture"
+import useBlockStyles from "../hooks/styles"
 
 interface INoteParagraphProps {
     /**
@@ -85,6 +86,11 @@ interface INoteParagraphProps {
      * This is the function that deletes a block from the renderer
      */
     deleteNoteBlock: (blockId: string) => void,
+    
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
 }
 
 const NoteParagraph: React.FC<INoteParagraphProps> = ({ 
@@ -102,7 +108,8 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     setActiveBlockState,
     incrementFocusUp,
     decrementFocusDown,
-    deleteNoteBlock 
+    deleteNoteBlock,
+    getBlockStyles
 }) => {
     //this is the ref for the paragraph component
     const editableRef = useRef<HTMLParagraphElement>(null)
@@ -160,6 +167,9 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
     //this is the hook that handles the grip logic
     const { gripHandler } = useGrip(setActive)
 
+    //this is the hook that handles the styling
+    const { computed } = useBlockStyles(block, getBlockStyles)
+
     //effect that handles the setting of the title state
     useEffect(() => {
         if(isTitleBlock === undefined)
@@ -175,6 +185,7 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
 
         setActiveBlockState(block.blockId)
     }, [block, active])
+
 
     return (
         <div 
@@ -219,7 +230,7 @@ const NoteParagraph: React.FC<INoteParagraphProps> = ({
                     ref={editableRef}
                     contentEditable={true}
                     className={styles.block__paragraph}
-                    style={{ color: flavor ? "#5C5F66" : "#C1C2C5" }}
+                    style={{ color: flavor ? "#5C5F66" : "#C1C2C5", ...computed }}
                     onInput={e => setBuffer(e.currentTarget.textContent?.trim())}
                     onFocus={() => setActive(true)}
                     onBlur={() => {

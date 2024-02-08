@@ -25,6 +25,7 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
         blocks,
         title,
         blocksUpdated,
+        stylesUpdated,
         blocksSTR,
         changeNoteTitle,
         updateNoteBlock,
@@ -35,7 +36,9 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
         ungroupNoteBlock,
         appendNoteBlock,
         incrementFocusUp,
-        decrementFocusDown
+        decrementFocusDown,
+        getBlockStyles,
+        setBlockStyles
     } = useNoteData(fileId, activeBlock, getFileById, editFileTitle, fetchNoteBlocks, updateNoteBlocks, createFocusRequest)
 
     //this is the ref that handles the initial load
@@ -63,8 +66,11 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
         >
             <NoteTopbar
                 blocks={blocks}
+                stylesUpdated={stylesUpdated}
                 activeBlock={activeBlock}
                 changeNoteBlock={changeNoteBlock}
+                getBlockStyles={getBlockStyles}
+                setBlockStyles={setBlockStyles}
             />
 
             <BlockRenderer
@@ -87,6 +93,7 @@ const RefreshDocument: React.FC<IRefreshDocumentProps> = ({ fileId }) => {
                 setActiveBlockState={setActiveBlockState}
                 incrementFocusUp={incrementFocusUp}
                 decrementFocusDown={decrementFocusDown}
+                getBlockStyles={getBlockStyles}
             />
         </div>
     )

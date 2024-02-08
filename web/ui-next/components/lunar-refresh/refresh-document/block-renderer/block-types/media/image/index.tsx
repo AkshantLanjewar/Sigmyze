@@ -1,4 +1,4 @@
-import { Blocks, INoteBlock } from "../../../../types"
+import { Blocks, IBlockStyles, INoteBlock } from "../../../../types"
 import useNoteImage from "../../hooks/image"
 import ImageBody from "./body"
 import NoteImageModal from "./modal"
@@ -43,6 +43,11 @@ interface INoteImageProps {
      * This is the function that sets the active block for focus purposes
      */
     setActiveBlockState: (blockId: string) => void
+
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
 }
 
 const NoteImage: React.FC<INoteImageProps> = ({ 
@@ -53,7 +58,8 @@ const NoteImage: React.FC<INoteImageProps> = ({
     updateNoteBlock, 
     createRawBlock,
     deleteNoteBlock,
-    setActiveBlockState 
+    setActiveBlockState,
+    getBlockStyles
 }) => {
     const { image, render, loaded, cancelImageSelect, updateImage } = useNoteImage(block, changeNoteBlock, updateNoteBlock)
 
@@ -75,11 +81,13 @@ const NoteImage: React.FC<INoteImageProps> = ({
                     blockId={block.blockId}
                     image={image!}
                     hasRequest={hasRequest}
+                    block={block}
                     consumeFocusRequest={consumeFocusRequest}
                     deleteNoteBlock={deleteNoteBlock}
                     updateImage={updateImage}
                     updateNoteBlock={updateNoteBlock}
                     setActiveBlockState={setActiveBlockState}
+                    getBlockStyles={getBlockStyles}
                 />
             )}
         </>

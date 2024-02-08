@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Blocks, INoteBlock } from "../../../types";
+import { Blocks, IBlockStyles, INoteBlock } from "../../../types";
 import { useClickOutside } from "@mantine/hooks";
 import useTextCaptureHook from "../hooks/text-capture-hook";
 import useTextBlock from "../hooks/text-block";
@@ -12,6 +12,7 @@ import getCaretPosition from '../hooks/util'
 import useHeader from "../hooks/header";
 import ActionMenu from "../../action-menu";
 import useTextGestures from "../hooks/text-gesture";
+import useBlockStyles from "../hooks/styles";
 
 const removeTicks = (val: string) => {
     const split = val.split(" ")
@@ -105,6 +106,11 @@ interface INoteHeadingProps {
      * This is the function that deletes a block from the renderer
      */
     deleteNoteBlock: (blockId: string) => void,
+
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
 }
 
 const NoteHeading: React.FC<INoteHeadingProps> = ({
@@ -123,7 +129,8 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
     setActiveBlockState,
     incrementFocusUp,
     decrementFocusDown,
-    deleteNoteBlock
+    deleteNoteBlock,
+    getBlockStyles
 }) => {
     //this is the toggle to focus the ref that the hook subscribes to
     const [focus, setFocus] = useState<boolean>(false)
@@ -183,6 +190,9 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
         deleteNoteBlock,
         blurHandler
     )
+
+    //this is the effect that handles the header's styles 
+    const { computed } = useBlockStyles(block, getBlockStyles)
 
     //effect that handles the setting of the groupTitle state
     useEffect(() => {
@@ -291,7 +301,7 @@ const NoteHeading: React.FC<INoteHeadingProps> = ({
                     <div
                         contentEditable={titleEdit}
                         className={style}
-                        style={{ color: "#C1C2C5", cursor: "text" }}
+                        style={{ color: "#C1C2C5", cursor: "text", ...computed }}
                         onFocus={focusHandler}
                         ref={titleRef}
                     >

@@ -6,13 +6,19 @@ import PortableRefreshChart from "../../../../../refresh-chart/portable"
 import { useClickOutside } from "@mantine/hooks"
 import ActionMenu from "../media-action-menu"
 import { IconTrash, IconWriting } from "@tabler/icons"
-import { Blocks } from "../../../../types"
+import { Blocks, IBlockStyles, INoteBlock } from "../../../../types"
 import ChartDeleteModal from "./modal/delete"
 import ChartSettingsModal from "./modal/settings-modal"
 import ResizeableWrapper from "../resizeable-wrapper"
+import useBlockStyles from "../../hooks/styles"
 
 
 interface IChartBodyProps {
+    /**
+     * This is the block that is being rendered
+     */
+    block: INoteBlock,
+
     /**
      * blockId for the block
      */
@@ -52,9 +58,15 @@ interface IChartBodyProps {
      * This is the function that sets the active block for focus purposes
      */
     setActiveBlockState: (blockId: string) => void
+
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
 }
 
 const ChartBody: React.FC<IChartBodyProps> = ({ 
+    block,
     blockId, 
     chart, 
     hasRequest, 
@@ -62,7 +74,8 @@ const ChartBody: React.FC<IChartBodyProps> = ({
     deleteNoteBlock, 
     updateNoteBlock, 
     updateChart,
-    setActiveBlockState 
+    setActiveBlockState,
+    getBlockStyles
 }) => {
     //whether or not the chart is active
     const [active, setActive] = useState<boolean>(false)
@@ -84,6 +97,9 @@ const ChartBody: React.FC<IChartBodyProps> = ({
     const [settingsToggle, setSettingsToggle] = useState<boolean>(false)
     //this is the function that toggles the settings modal
     const toggleSettingsModal = () => setSettingsToggle(!settingsToggle)
+
+    //this is the hook that handles the styles 
+    const { computed } = useBlockStyles(block, getBlockStyles)
 
     useEffect(() => {
         let result = consumeFocusRequest(blockId)
@@ -116,7 +132,7 @@ const ChartBody: React.FC<IChartBodyProps> = ({
             >
                 <div 
                     className={`${styles.body__chart} ${active ? styles.active : null}`}
-                    style={{ width: active ? dims.x + 5 : dims.x, height: active ? dims.y + 5 : dims.y }}
+                    style={{ width: active ? dims.x + 5 : dims.x, height: active ? dims.y + 5 : dims.y, justifyContent: computed.justifyContent }}
                 >
                     <ChartSettingsModal
                         toggle={settingsToggle}

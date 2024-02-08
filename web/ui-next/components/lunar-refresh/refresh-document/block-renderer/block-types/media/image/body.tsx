@@ -8,6 +8,8 @@ import { Image } from "@mantine/core"
 import ActionMenu from "../media-action-menu"
 import { IconTrash } from "@tabler/icons"
 import ImageDeleteModal from "./modal/delete"
+import { IBlockStyles, INoteBlock } from "../../../../types"
+import useBlockStyles from "../../hooks/styles"
 
 interface IImageBodyProps {
     /**
@@ -24,6 +26,11 @@ interface IImageBodyProps {
      * whether or not there is a focus request within the editor
      */
     hasRequest: boolean,
+
+    /**
+     * This is the block that is being rendered
+     */
+    block: INoteBlock,
 
     /**
      * This is the function that consumes a focus request
@@ -49,17 +56,24 @@ interface IImageBodyProps {
      * This is the function that sets the active block for focus purposes
      */
     setActiveBlockState: (blockId: string) => void
+
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined,
 }
 
 const ImageBody: React.FC<IImageBodyProps> = ({
     blockId,
     image,
     hasRequest,
+    block,
     consumeFocusRequest,
     deleteNoteBlock,
     updateNoteBlock,
     updateImage,
-    setActiveBlockState
+    setActiveBlockState,
+    getBlockStyles
 }) => {
     //whether or not the image is active
     const [active, setActive] = useState<boolean>(false)
@@ -81,6 +95,9 @@ const ImageBody: React.FC<IImageBodyProps> = ({
     const [deleteToggle, setDeleteToggle] = useState<boolean>(false)
     //this is the function that toggles the delete modal
     const toggleDeleteModal = () => setDeleteToggle(!deleteToggle)
+
+    //this is the hook that handles all the styling state 
+    const { computed } = useBlockStyles(block, getBlockStyles)
 
     useEffect(() => {
         if(consumeFocusRequest(blockId) === false)
@@ -140,7 +157,7 @@ const ImageBody: React.FC<IImageBodyProps> = ({
             >
                 <div
                     className={`${styles.body__image} ${active ? styles.active : null}`}
-                    style={{ width: active ? dims.x + 5 : dims.x, height: active ? dims.y + 5 : dims.y }}
+                    style={{ width: active ? dims.x + 5 : dims.x, height: active ? dims.y + 5 : dims.y, ...computed }}
                 >
                     <ImageDeleteModal
                         toggle={deleteToggle}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Blocks, INoteBlock } from "../../types"
+import { Blocks, IBlockStyles, INoteBlock } from "../../types"
 import { BLOCK_SWITCH } from ".."
 import styles from '../block-types/index.module.scss'
 import { ActionIcon, Collapse } from "@mantine/core"
@@ -100,7 +100,12 @@ interface IGroupBlockProps {
     /**
      * this is the function to move the focus down one display block
      */
-    decrementFocusDown: () => void
+    decrementFocusDown: () => void,
+
+    /*
+     * This is the function to get the block styles 
+     */
+    getBlockStyles: (blockId: string) => IBlockStyles | undefined
 }
 
 const GroupBlock: React.FC<IGroupBlockProps> = ({ 
@@ -122,7 +127,8 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
     ungroupNoteBlock,
     setActiveBlockState,
     incrementFocusUp,
-    decrementFocusDown 
+    decrementFocusDown,
+    getBlockStyles
 }) => {
     //this is the title block to be rendered
     const [titleBlock, setTitleBlock] = useState<INoteBlock | undefined>(undefined)
@@ -205,6 +211,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                 setActiveBlockState,
                                 incrementFocusUp,
                                 decrementFocusDown,
+                                getBlockStyles,
                                 order + 1,
                                 true 
                             )
@@ -249,6 +256,7 @@ const GroupBlock: React.FC<IGroupBlockProps> = ({
                                     setActiveBlockState,
                                     incrementFocusUp,
                                     decrementFocusDown,
+                                    getBlockStyles,
                                     order + 1
                                 )}
                             </div>
