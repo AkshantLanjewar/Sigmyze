@@ -127,7 +127,10 @@ const blockTitleIMPL = async (order: number, component: MountResult, page: Page)
     await expect(block).toHaveAttribute('data-testValue', "paragraph")
 
     //we want to construct the order string
-    for(let i = 0; i < order; i++)
+    await page.keyboard.press("#")
+    await page.waitForTimeout(400)
+
+    for(let i = 1; i < order; i++)
         await page.keyboard.press("#")
 
     //type in !#
