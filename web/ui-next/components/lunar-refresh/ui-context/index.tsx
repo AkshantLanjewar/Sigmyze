@@ -14,20 +14,75 @@ import useUITabs from "./hooks/ui-tabs-data"
 import useSynchroMessage from "./hooks/ui-synchro-data"
 import useSigmyzeFilesystemUtil from "./hooks/ui-filesystem-data"
 import { useAddQueue } from "./hooks/ui-add-indicator"
+import deleteFile from "./functions/file/delete"
+import DeleteChart from "./forms/delete-chart"
 
 const LunarUIContextData = createContext<ILunarUIState | null>(null)
 
 interface ILunarUIContextProps {
+    /*
+     * These are the current active portal buttons 
+     */
     portalButtons: IPortalButton[],
+
+    /*
+     * The id of the active item within the sidebar 
+     */
     activeItemId: string | undefined,
+
+    /*
+     * This is the id of the active folder within the editor 
+     */
     activeFolderId: string | undefined,
+
+    /*
+     * This is the stringified version of the UI's ISigmyzeFilesystem
+     */
     loadedFilesystem: string | undefined,
+
+    /*
+     * Whether or not the context is in debug mode 
+     */
     debugMode: boolean,
+
+    /*
+     * another form of debug mode (TESTING)
+     */
     editorDebugMode: boolean,
+
+    /*
+     * What the current modal state is 
+     */
     modalState: string | null,
+
+    /*
+     * this is the toggle to activate the delete chart flow 
+     */
+    deleteChartFlowToggle: boolean,
+
+    /*
+     * This is the toggle to activate the delete note flow 
+     */
+    deleteNoteFlowToggle: boolean,
+
+    /*
+     * this is the function to close a modal 
+     */
     closeModal: () => void,
+
+    /*
+     * this is the function that sets an item active within the file tree view 
+     */
     setItemActive: (itemId: string, itemType: string) => void,
+
+    /*
+     * resets the active item back to the project root 
+     */
     resetActive: () => void,
+
+    /*
+     * function to update the loaded filesystem state 
+     */
     setLoadedFilesystem: Dispatch<SetStateAction<string | undefined>>,
 
     /**
@@ -35,6 +90,9 @@ interface ILunarUIContextProps {
      */
     openDeleteIndicatorFlow: () => void
 
+    /*
+     * the children to be rendered under the context
+     */
     children: React.ReactNode
 }
 
@@ -119,6 +177,23 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
         )
 
         setLoadedFilesystem(JSON.stringify(newFilesystem))
+    }, [loadedFilesystem, addDeleteSynchroMessage, setItemActive])
+
+    /* NOTE: This method is to only be used within a form component 
+     * This is the callback for th emethod that deletes a file within the filesystem 
+     */
+    const deleteFileCallback = useCallback((fileId: string) => {
+        if(loadedFilesystem === undefined)
+            return
+
+        let parsed: ISigmyzeFilesystem = JSON.parse(loadedFilesystem)
+        let output = deleteFile(parsed.folders, fileId, addDeleteSynchroMessage, addCloseFileIdTabBulk)
+        if(output.folderId === undefined)
+            return
+        
+        parsed.folders = [...output.folders]
+        setLoadedFilesystem(JSON.stringify(parsed))
+        setTimeout(() => setItemActive(output.folderId!, "folder"), 10)
     }, [loadedFilesystem, addDeleteSynchroMessage, setItemActive])
 
     /**
@@ -251,6 +326,28 @@ const LunarUIContext: React.FC<ILunarUIContextProps> = ({
                             <DeleteFolderForm 
                                 close={closeModal}
                                 deleteFolder={deleteFolderCallback}
+                            />
+                        </ModalManager.Modal>
+
+                        <ModalManager.Modal
+                            id={"delete-chart-modal"}
+                            title={"Delete Chart"}
+                        >
+                            <DeleteChart
+                                close={closeModal}
+                                deleteFile={deleteFileCallback}
+                                isNote={false}
+                            />
+                        </ModalManager.Modal>
+
+                        <ModalManager.Modal
+                            id={"delete-note-modal"}
+                            title={"Delete Note"}
+                        >
+                            <DeleteChart
+                                close={closeModal}
+                                deleteFile={deleteFileCallback}
+                                isNote={true}
                             />
                         </ModalManager.Modal>
                     </ModalManager>

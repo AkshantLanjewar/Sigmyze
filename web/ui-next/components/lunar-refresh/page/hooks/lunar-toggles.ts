@@ -29,10 +29,22 @@ const useLunarToggles = () => {
     const [deleteIndicatorFlowToggle, setDeleteIndicatorFlowToggle] = useState<boolean>(false)
     const openDeleteIndicatorFlow = useCallback(() => setDeleteIndicatorFlowToggle((step) => !step), [])
 
+    //this is a controlled toggle to activate the delete chart flow 
+    const [deleteChartFlowToggle, setDeleteChartFlowToggle] = useState<boolean>(false)
+    const openDeleteChartFlow = useCallback(() => setDeleteChartFlowToggle((e) => !e), [])
+
+    //this is a controlled toggle to activate the delete note flow 
+    const [deleteNoteFlowToggle, setDeleteNoteFlowToggle] = useState<boolean>(false)
+    const openDeleteNoteFlow = useCallback(() => setDeleteNoteFlowToggle((e) => !e), [])
+
     return {
         addIndicatorFlowToggle,
         settingsFlowToggle,
         deleteIndicatorFlowToggle,
+        deleteChartFlowToggle,
+        deleteNoteFlowToggle,
+        openDeleteChartFlow,
+        openDeleteNoteFlow,
         openAddIndicatorFlow,
         openSettingsFlow,
         openDeleteIndicatorFlow

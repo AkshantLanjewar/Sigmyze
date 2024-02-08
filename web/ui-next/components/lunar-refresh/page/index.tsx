@@ -59,6 +59,10 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
         addIndicatorFlowToggle,
         settingsFlowToggle,
         deleteIndicatorFlowToggle,
+        deleteChartFlowToggle,
+        deleteNoteFlowToggle,
+        openDeleteChartFlow,
+        openDeleteNoteFlow,
         openAddIndicatorFlow,
         openSettingsFlow,
         openDeleteIndicatorFlow
@@ -177,6 +181,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
             "folder-delete": () => openModal('delete-folder-modal'),
             "chart-add": () => openAddIndicatorFlow(),
             "chart-settings": () => openSettingsFlow(),
+            "note-delete": () => openModal('delete-note-modal'),
+            "chart-remove": () => openModal('delete-chart-modal'),
             "indicator-remove": () => openDeleteIndicatorFlow()
         })
 
@@ -205,6 +211,8 @@ const LunarRefresh: React.FC<ILunarRefreshProps> = ({ testingPortal, mockFilesys
                     resetActive={resetActive}
                     setLoadedFilesystem={setLoadedFilesystem}
                     openDeleteIndicatorFlow={openDeleteIndicatorFlow}
+                    deleteChartFlowToggle={deleteChartFlowToggle}
+                    deleteNoteFlowToggle={deleteNoteFlowToggle}
                 >
                     <>
                         <AddIndicatorFlow activateFlow={addIndicatorFlowToggle} />

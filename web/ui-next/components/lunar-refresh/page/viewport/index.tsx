@@ -69,7 +69,7 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ setItemActive }) => {
             return
 
         setItemActive(tab.fileId, tab.tabType)
-    }, [activeTab, tabs])
+    }, [activeTab])
 
     //TODO: Implement a system where we can get the pane type so we can add it to the div cuz mantine :(
     useEffect(() => {
