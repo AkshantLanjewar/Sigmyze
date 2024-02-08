@@ -49,7 +49,7 @@ const cancelButtonLocator = "cancel-button"
 /*
  * the locator for the confirm delete input 
  */
-const confirmDeleteLocator = "confirm-delete"
+const confirmDeleteLocator = "confirm-checkbox"
 
 const deleteNote = async (component: MountResult, page: Page, fileChildren: Locator) => {
     //open the menu containing the create options 
@@ -96,6 +96,7 @@ const deleteNote = async (component: MountResult, page: Page, fileChildren: Loca
 
     //get the confirm delete and click on the locator 
     const confirmDelete = deleteNoteModal.getByTestId(confirmDeleteLocator)
+    await expect(confirmDelete).toBeAttached()
     await confirmDelete.locator('input').click()
 
     //submit button isnt disabled and we click it 
