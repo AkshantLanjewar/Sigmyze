@@ -44,6 +44,9 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
     //this is the indicator that is being handled during an event
     const [eventIndicator, setEventIndicator] = useState<IQuantaIndicatorLoc | undefined>(undefined)
 
+    //note intial load flag
+    const noteInitialLoad = useRef<boolean>(true)
+
     const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
 
     const { 
@@ -51,8 +54,10 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         setNotes,
         createNewNote, 
         deleteNote,
-        editNoteName 
-    } = useRefreshNoteData()
+        editNoteName,
+        fetchNoteBlocks,
+        updateNoteBlocks 
+    } = useRefreshNoteData(lunarProject, setLunarProject)
 
     const { 
         fileSystem, 
@@ -82,7 +87,8 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         addChartIndicator,
         updateSigmyzeIndicators,
         getChartIndicators,
-        deleteChartIndicator 
+        deleteChartIndicator,
+        getCharts 
     } = useRefreshChartData(
         lunarProject, 
         loadedFilesystem, 
@@ -116,8 +122,12 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
 
         let newCharts = lunarProject.charts
         setCharts([ ...newCharts ])
-        let newNotes = lunarProject.notes
-        setNotes([ ...newNotes ])
+        if(noteInitialLoad.current === true) {
+            let newNotes = lunarProject.notes
+            setNotes([ ...newNotes ])
+            noteInitialLoad.current = false
+        }
+
         if(skipFilesystem.current === true) {
             skipFilesystem.current = false
             return
@@ -242,7 +252,10 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         updateSigmyzeIndicators,
         getChartIndicators,
         deleteChartIndicator,
-        setEventIndicator
+        setEventIndicator,
+        fetchNoteBlocks,
+        updateNoteBlocks,
+        getCharts
     }), [
         charts, 
         notes, 
@@ -251,7 +264,10 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         getChartIndicators,
         deleteChartIndicator,
         eventIndicator,
-        setEventIndicator
+        setEventIndicator,
+        fetchNoteBlocks,
+        updateNoteBlocks,
+        getCharts
     ])
 
     return (

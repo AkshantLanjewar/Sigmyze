@@ -95,7 +95,10 @@ const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, 
                             bottom: 0,
                             right: 0,
 
-                            overflowY: 'auto'
+                            overflowY: 'auto',
+                            display: "flex",
+                            flexFlow: "column",
+                            backgroundColor: "rgb(16, 17, 19)"
                         }}
                     >
                         {panes.map((step) => (
@@ -103,7 +106,9 @@ const LunarViewportView: React.FC<IViewProps> = memo(({ activeTab, tabs, panes, 
                                 value={step.paneId}
                                 style={{
                                     height: "100%" ,
-                                    width: "100%" 
+                                    width: "100%",
+                                    backgroundColor: step.backgroundColor || "inherit",
+                                    flex: "1 1 auto"
                                 }}
                             >
                                 {step.paneContent}

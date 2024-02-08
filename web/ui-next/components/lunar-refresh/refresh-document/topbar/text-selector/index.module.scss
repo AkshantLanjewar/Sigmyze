@@ -1,0 +1,41 @@
+$dark-6: var(--mantine-color-dark-8);
+$indigo-6: var(--mantine-color-indigo-6);
+$indigo-3: var(--mantine-color-indigo-5);
+
+.heading__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 10px;
+
+    &:hover {
+        background-color: $dark-6;
+        color: white;
+    }
+
+    &.active {
+        background-color: $indigo-6;
+        color: white;
+
+        &:hover {
+            background-color: $indigo-3;
+        }
+    }
+
+    .heading__title {
+        flex: 1;
+        min-width: 0;
+
+        p {
+            font-size: 10px;
+            max-height: 20px;
+
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}

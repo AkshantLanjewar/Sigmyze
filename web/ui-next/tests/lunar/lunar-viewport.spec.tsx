@@ -296,6 +296,7 @@ test('Lunar Refresh Viewport + Folder Deletion integration test', async ({ mount
 
     //click on dummyFolder again
     await dummyFolder.locator('button').first().click()
+    await dummyFolder.locator('button').first().click()
 
     //now we need to click on buttonZero again
     await buttonZero.click()
@@ -364,6 +365,7 @@ test('Lunar Refresh Viewport + Folder Deletion integration test', async ({ mount
     await expect(viewportViewportValueNote).toBe("note")
 
     //now we click on folder-0 again
+    await projectFolder.locator('button').first().click()
     await projectFolder.locator('button').first().click()
 
     //now we want to check that the delete button is disabled

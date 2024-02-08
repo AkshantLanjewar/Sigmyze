@@ -560,3 +560,5 @@ test('[Delete Indicator]: Chart Legend Test', async ({ mount, page }) => {
 
    await deleteIndicatorChartLegendTEST(component, page)
 })
+
+export { addIndicatorChartRenderTEST }

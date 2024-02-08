@@ -2,12 +2,18 @@ import { useContext, useEffect, useState } from "react"
 import LunarViewportView from "./view"
 import { LunarUIContextData } from "../../ui-context"
 import { ILunarUIState } from "../../ui-context/state"
-import { ILunarPane } from "./types"
+import { ILunarPane, ILunarTab } from "./types"
 import RefreshChart from "../../refresh-chart"
+import RefreshDocument from "../../refresh-document"
 
-interface ILunarViewportProps { }
+interface ILunarViewportProps {
+    /**
+     * This is the function that sets an item active in the filebar
+     */
+    setItemActive: (itemId: string, itemType: string) => void
+}
 
-const LunarViewport: React.FC<ILunarViewportProps> = ({ }) => {
+const LunarViewport: React.FC<ILunarViewportProps> = ({ setItemActive }) => {
     //this is a list of all the panes within the current viewport
     const [panes, setPanes] = useState<ILunarPane[]>([])
     //this is the active pane type
@@ -32,6 +38,11 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ }) => {
                 case "chart":
                     newPane.paneContent = <RefreshChart fileId={tab.fileId} />
                     break
+                case "note":
+                    newPane.paneContent = <RefreshDocument fileId={tab.fileId} />
+                    newPane.backgroundColor = "#1A1B1E"
+                    
+                    break
                 default:
                     newPane.paneContent = <div />
             }
@@ -41,6 +52,24 @@ const LunarViewport: React.FC<ILunarViewportProps> = ({ }) => {
 
         setPanes([ ...newPanes ])
     }, [tabs])
+
+    //this is the effect that handles the updating of the filesystem when the tab is changed
+    useEffect(() => {
+        if(activeTab === undefined)
+            return
+
+        let tab: ILunarTab | undefined = undefined
+        for(let i = 0; i < tabs.length; i++) {
+            let _tab = tabs[i]
+            if(_tab.tabId === activeTab)
+                tab = _tab
+        }
+
+        if(tab === undefined)
+            return
+
+        setItemActive(tab.fileId, tab.tabType)
+    }, [activeTab, tabs])
 
     //TODO: Implement a system where we can get the pane type so we can add it to the div cuz mantine :(
     useEffect(() => {

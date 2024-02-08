@@ -3,6 +3,7 @@ import { ILunarChart, ILunarProject, IQuantaIndicatorLoc } from "../state"
 import { ISigmyzeFilesystem } from "../../../ui/file-management/types"
 import { IQuantaIndicatorText } from "../../../ui/quanta-dataset-manager/types"
 import { setChartIndicators } from "../../../ui/file-management/util"
+import { IChartLoc } from "../../refresh-document/block-renderer/block-types/media/types"
 
 /**
  * @description
@@ -194,6 +195,28 @@ const useRefreshChartData = (
     }, [charts])
 
     /**
+     * @description
+     *  - this is the function that gets the charts that are loaded
+     */
+    const getCharts = useCallback(() => {
+        if(lunarProject === undefined)
+            return []
+
+        let dCharts: IChartLoc[] = []
+        for(let i = 0; i < lunarProject.charts.length; i++) {
+            let chart = lunarProject.charts[i]
+            let _chart: IChartLoc = {
+                fileId: chart.objectId,
+                title: chart.name
+            }
+
+            dCharts.push(_chart)
+        }
+
+        return dCharts
+    }, [lunarProject])
+
+    /**
      * This is the function that handles the updating of the sigmyze filesystem 
      * when a chart has an indicator appended
      */
@@ -210,7 +233,6 @@ const useRefreshChartData = (
                     chart = _chart
             }
 
-            console.log(chart)
             if(chart === undefined)
                 return
 
@@ -231,7 +253,8 @@ const useRefreshChartData = (
         addChartIndicator,
         updateSigmyzeIndicators,
         getChartIndicators,
-        deleteChartIndicator
+        deleteChartIndicator,
+        getCharts
     }
 }
 

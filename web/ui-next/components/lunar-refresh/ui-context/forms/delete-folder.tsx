@@ -38,8 +38,6 @@ const DeleteFolderForm: React.FC<IDeleteFolderFormProps> = ({ close, deleteFolde
             testId: "confirm-checkbox",
             name: "I Understand, and wish to proceed."
         } as IQuantaFormField
-
-
     ]), [])
 
     //FIXME: Fix the deletion logic in dev mode

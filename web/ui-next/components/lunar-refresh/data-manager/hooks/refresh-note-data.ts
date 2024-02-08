@@ -1,9 +1,14 @@
 import { useCallback, useState } from "react"
-import { ILunarNote } from "../state"
+import { ILunarNote, ILunarProject } from "../state"
+import { v4 } from "uuid"
+import { INoteBlock } from "../../refresh-document/types"
 
 /**
  * @description
  *  - this is a hook meant to abstract away all the state relating to note's within the data-manager
+ * 
+ * @param lunarProject
+ *  - the active project, changes percolate down from here
  * 
  * @function setNotes
  *  - this is the RAW function that set's the note's state
@@ -14,7 +19,10 @@ import { ILunarNote } from "../state"
  * @function editNoteName
  *  - this is the function that handles the editing of a note's name
  */
-const useRefreshNoteData = () => {
+const useRefreshNoteData = (
+    lunarProject: ILunarProject | undefined,
+    setLunarProject: (project: ILunarProject | undefined) => void
+) => {
     //theese are the notes in the project (detached for easier editing)
     const [notes, setNotes] = useState<ILunarNote[]>([])
 
@@ -29,12 +37,16 @@ const useRefreshNoteData = () => {
      *  - this is the fileId for the new note
      */
     const createNewNote = useCallback((name: string, id: string) => {
-        const newNote: ILunarNote = {
+        let newNotes: ILunarNote[] = notes
+        let newNote: ILunarNote = {
             name: name,
-            objectId: id
+            objectId: id,
+            blocks: []
         }
 
-        setNotes([ ...notes, newNote ])
+        newNote.blocks.push({ blockId: v4(), blockType: "paragraph", blockContent: "", isGroup: false })
+        newNotes.push(newNote)
+        setNotes([ ...newNotes ])
     }, [notes])
 
     /**
@@ -55,7 +67,7 @@ const useRefreshNoteData = () => {
             newNotes.push(note)
         }
 
-        setNotes([ ...newNotes ])
+        setNotes([ ...notes ])
     }, [notes])
 
     /**
@@ -81,12 +93,51 @@ const useRefreshNoteData = () => {
         setNotes([ ...newNotes ])
     }, [notes])
 
+    /**
+     * @description
+     *  - this is the function that updates the blocks in a note
+     * @param fileId
+     *  - this is the id of the file we are updating
+     * @param newBlocks
+     *  - these are the new blocks the note has to be updated with
+     */
+    const updateNoteBlocks = useCallback((fileId: string, newBlocks: INoteBlock[]) => {
+        let newNotes: ILunarNote[] = []
+        for(let i = 0; i < notes.length; i++) {
+            let note = notes[i]
+            if(note.objectId === fileId)
+                note.blocks = newBlocks
+
+            newNotes.push(note)
+        }
+
+        setNotes([ ...newNotes ])
+    }, [notes])
+
+    /**
+     * @description
+     *  - This is the function that retreives a note's blocks from the data manager
+     * @param fileId
+     *  - this is the id of the file we want the blocks for
+     */
+    const fetchNoteBlocks = useCallback((fileId: string) => {
+        for(let i = 0; i < notes.length; i++) {
+            let note_ = notes[i]
+            if(note_.objectId === fileId)
+                return note_.blocks   
+        }
+
+        return undefined
+    }, [notes])
+
     return {
         notes,
         setNotes,
         createNewNote,
         deleteNote,
-        editNoteName
+        editNoteName,
+        fetchNoteBlocks,
+        updateNoteBlocks
     }
 }
 
