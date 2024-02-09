@@ -1,4 +1,0 @@
-langservers:
-  ts:
-    - typescript-language-server
-    - --stdio
