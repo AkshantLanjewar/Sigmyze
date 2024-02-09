@@ -17,6 +17,7 @@ namespace SigmyzeServer.Models.Lunar
         [JsonPropertyName("folders")]
         public List<SimpleFolder>? Folders { get; set; }
 
+        //these are the fileId's within this folder
         [JsonProperty("files")]
         [JsonPropertyName("files")]
         public List<string>? Files { get; set; }
@@ -32,11 +33,12 @@ namespace SigmyzeServer.Models.Lunar
         [JsonPropertyName("folders")]
         public List<SimpleFolder>? Folders { get; set; }
 
+        // These are the fileId's within the root of the filesystem
         [JsonProperty("files")]
         [JsonPropertyName("files")]
         public List<string>? Files { get; set; }
 
-        public bool Validate()
+        public bool Validate(string projectName, List<LunarChart> charts, List<LunarNote> notes)
         {
             return true;
         }
