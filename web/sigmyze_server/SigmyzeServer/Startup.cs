@@ -82,7 +82,6 @@ namespace SigmyzeServer
             services.AddSingleton<IQuantaRepository, QuantaRepository>(); 
             services.AddSingleton<IQuantaIndicatorRepository, QuantaIndicatorRepository>();
             services.AddSingleton<IUserServiceRepository, UserServiceRepository>();
-            services.AddSingleton<ICodeRepository, CodeRepository>();
             services.AddSingleton<IQuantaExecutionService, QuantaExecutionService>();
 
             services.AddAuthentication(auth => {
