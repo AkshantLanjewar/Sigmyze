@@ -9,15 +9,19 @@ public class FilesystemTests
     */
     public SimpleFilesystem GenerateValidSimpleFilesystem(string projectName)
     {
-        SimpleFilesystem filesystem = new SimpleFilesystem();
-        filesystem.Files = new List<string>();
-        filesystem.Folders = new List<SimpleFolder>();
+        SimpleFilesystem filesystem = new SimpleFilesystem
+        {
+            Files = new List<string>(),
+            Folders = new List<SimpleFolder>()
+        };
 
-        SimpleFolder rootFolder = new SimpleFolder();
-        rootFolder.Files = new List<string>();
-        rootFolder.Folders = new List<SimpleFolder>();
-        rootFolder.FolderName = projectName;
-        rootFolder.FolderId = "root-folder";
+        SimpleFolder rootFolder = new SimpleFolder
+        {
+            Files = new List<string>(),
+            Folders = new List<SimpleFolder>(),
+            FolderName = projectName,
+            FolderId = "root-folder"
+        };
 
         rootFolder.Files.Add("test-chart");
         rootFolder.Files.Add("test-note");
@@ -31,10 +35,12 @@ public class FilesystemTests
     public List<LunarChart> GenerateLunarCharts()
     {
         List<LunarChart> charts = new List<LunarChart>();
-        LunarChart chart = new LunarChart();
-        chart.ObjectId = "test-chart";
-        chart.Name = "Test Chart";
-        chart.Indicators = new List<QuantaIndicatorLocation>();
+        LunarChart chart = new LunarChart
+        {
+            ObjectId = "test-chart",
+            Name = "Test Chart",
+            Indicators = new List<QuantaIndicatorLocation>()
+        };
 
         charts.Add(chart);
         return charts;
@@ -46,11 +52,23 @@ public class FilesystemTests
     public List<LunarNote> GenerateLunarNotes()
     {
         List<LunarNote> notes = new List<LunarNote>();
-        LunarNote note = new LunarNote();
-        note.ObjectId = "test-note";
-        note.Name = "Test Note";
-        note.Blocks = new List<NoteBlock>();
+        LunarNote note = new LunarNote
+        {
+            ObjectId = "test-note",
+            Name = "Test Note",
+            Blocks = new List<NoteBlock>()
+        };
 
+        NoteBlock block = new NoteBlock
+        {
+            BlockId = "root-block",
+            BlockContent = "",
+            BlockType = "paragraph",
+            IsGroup = false,
+        };
+
+        note.Blocks.Add(block);
+        notes.Add(note);
         return notes;
     }
 
@@ -118,7 +136,6 @@ public class FilesystemTests
         Assert.False(validateResult, "There are parameters missing from the filesystem");
     }
 
-    //TODO: Implement
     [Fact]
     public void InvalidFolderCase()
     {
