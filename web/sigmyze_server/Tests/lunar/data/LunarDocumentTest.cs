@@ -7,7 +7,7 @@ public class LunarDocumentTests
         This is the function that generates a valid simple filesystem that requires the two functions below,
         GenerateLunarCharts and GenerateLunarNotes in order to generate a valid config.
     */
-    public SimpleFilesystem GenerateValidSimpleFilesystem(string projectName)
+    public static SimpleFilesystem GenerateValidSimpleFilesystem(string projectName)
     {
         SimpleFilesystem filesystem = new SimpleFilesystem
         {
@@ -32,7 +32,7 @@ public class LunarDocumentTests
     /*
         This is the function that generates the list of valid charts for the generated SimpleFilesytem to work
     */
-    public List<LunarChart> GenerateLunarCharts()
+    public static List<LunarChart> GenerateLunarCharts()
     {
         List<LunarChart> charts = new List<LunarChart>();
         LunarChart chart = new LunarChart
@@ -49,7 +49,7 @@ public class LunarDocumentTests
     /*
         This is the function that generates the list of valid notes for the generated SimpleFilesystem tobe valid
     */
-    public List<LunarNote> GenerateLunarNotes()
+    public static List<LunarNote> GenerateLunarNotes()
     {
         List<LunarNote> notes = new List<LunarNote>();
         LunarNote note = new LunarNote
@@ -72,7 +72,7 @@ public class LunarDocumentTests
         return notes;
     }
 
-    public LunarDocument GenerateValidDocuemnt()
+    public static LunarDocument GenerateValidDocuemnt()
     {
         LunarDocument doc = new LunarDocument
         {
