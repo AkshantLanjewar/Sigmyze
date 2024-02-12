@@ -45,6 +45,11 @@ namespace SigmyzeServer.Models.Lunar
         [JsonPropertyName("files")]
         public List<string>? Files { get; set; }
 
+        public bool ShallowValidate()
+        {
+            return true;
+        }
+
         public bool Validate(string projectName, List<LunarChart> charts, List<LunarNote> notes)
         {
             return true;

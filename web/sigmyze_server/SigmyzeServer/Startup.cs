@@ -11,6 +11,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using SigmyzeServer.Services.OrganizationServices;
 using System.Net.WebSockets;
+using SigmyzeServer.Services.Web.Lunar;
 
 namespace SigmyzeServer
 {
@@ -83,6 +84,9 @@ namespace SigmyzeServer
             services.AddSingleton<IQuantaIndicatorRepository, QuantaIndicatorRepository>();
             services.AddSingleton<IUserServiceRepository, UserServiceRepository>();
             services.AddSingleton<IQuantaExecutionService, QuantaExecutionService>();
+            
+            //web services
+            services.AddSingleton<ILunarRefreshService, LunarRefreshService>();
 
             services.AddAuthentication(auth => {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
