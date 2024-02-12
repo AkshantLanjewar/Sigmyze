@@ -18,6 +18,9 @@ public class QuantaIndicatorLocation
 
     public bool Validate()
     {
+        if(this.DatasetId == null | this.IndicatorId == null)
+            return false;
+
         return true;
     }
 }
@@ -41,6 +44,16 @@ public class LunarChart
 
     public bool Validate()
     {
+        if(this.Name == null || this.ObjectId == null || this.Indicators == null)
+            return false;
+
+        //now we will iterate thru the indicators to validate the indicators
+        for(int i = 0; i < this.Indicators.Count; i++) {
+            QuantaIndicatorLocation indicator = this.Indicators[i];
+            if(indicator.Validate() == false)
+                return false;
+        }
+
         return true;
     }
 }
