@@ -1,8 +1,18 @@
 namespace Test.Lunar;
+
+using MongoDB.Bson.IO;
 using SigmyzeServer.Models.Lunar;
+using Xunit.Abstractions;
 
 public class FilesystemTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public FilesystemTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     /*
         This is the function that generates a valid simple filesystem that requires the two functions below,
         GenerateLunarCharts and GenerateLunarNotes in order to generate a valid config.

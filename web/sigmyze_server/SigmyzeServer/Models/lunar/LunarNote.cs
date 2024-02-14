@@ -1,5 +1,6 @@
 namespace SigmyzeServer.Models.Lunar;
 
+using Microsoft.Extensions.ObjectPool;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
@@ -53,6 +54,11 @@ public class BlockStyles
 
     public bool Validate()
     {
+        if(this.Bold == null || this.Italic == null || this.StrikeThru == null || this.Align == null)
+            return false;
+        if(NoteConstants.blockAlignPositions.Contains(this.Align) == false)
+            return false;
+
         return true;
     }
 }
@@ -91,6 +97,26 @@ public class NoteBlock
 
     public bool Validate()
     {
+        if(this.BlockId == null || this.BlockType == null || this.BlockContent == null || this.IsGroup == null)
+            return false;
+        if(this.IsGroup == true && this.BlockChildren == null)
+            return false;
+        if(NoteConstants.mediaBlockTypes.Contains(this.BlockType) == false && NoteConstants.textBlockTypes.Contains(this.BlockType) == false)
+            return false;
+        if(this.BlockStyles != null && this.BlockStyles.Validate() == false)
+            return false;
+
+        //if the block has children go through and validate the blocks
+        if(this.IsGroup == true)
+        {
+            for(int i = 0; i < this.BlockChildren!.Count; i++)
+            {
+                NoteBlock block = this.BlockChildren[i];
+                if(block.Validate() == false)
+                    return false;
+            }
+        }
+
         return true;
     }
 }
@@ -114,6 +140,19 @@ public class LunarNote
 
     public bool Validate()
     {
+        if(this.Name == null || this.ObjectId == null || this.Blocks == null)
+            return false;
+        if(this.Blocks.Count == 0)
+            return false;
+
+        //go through the blocks and validate that they are true
+        for(int i = 0; i < this.Blocks.Count; i++) 
+        {
+            NoteBlock block = this.Blocks[i];
+            if(block.Validate() == false)
+                return false;
+        }
+
         return true;
     }
 }

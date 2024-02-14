@@ -48,7 +48,8 @@ public class LunarChart
             return false;
 
         //now we will iterate thru the indicators to validate the indicators
-        for(int i = 0; i < this.Indicators.Count; i++) {
+        for(int i = 0; i < this.Indicators.Count; i++) 
+        {
             QuantaIndicatorLocation indicator = this.Indicators[i];
             if(indicator.Validate() == false)
                 return false;
