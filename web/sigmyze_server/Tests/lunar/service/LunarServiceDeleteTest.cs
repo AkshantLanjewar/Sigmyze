@@ -2,9 +2,17 @@ namespace Test.Lunar;
 using SigmyzeServer.Services.Web.Lunar;
 using SigmyzeServer.Models.Lunar;
 using MongoDB.Driver;
+using Xunit.Abstractions;
 
 public class LunarServiceDeleteTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public LunarServiceDeleteTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     public LunarDocument[] GenerateLunarDocuments()
     {
         List<LunarDocument> documents = [ LunarDocumentTests.GenerateValidDocuemnt() ];
@@ -18,18 +26,19 @@ public class LunarServiceDeleteTests
     public async Task BaseCase()
     {
         //collect
-        ServiceMockedData mocked = new ServiceMockedData(GenerateLunarDocuments());
+        _output.WriteLine("swag");
+        ServiceMockedData mocked = new ServiceMockedData(GenerateLunarDocuments(), _output);
         IMongoClient client = mocked.GetClient();
-
-        IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         //act
         await service.DeleteProject("orgId", "projectSwag");
 
         //expect
-        int collectionDocuments = (await collection.Find(_ => true).ToListAsync()).Count;
+        IMongoDatabase db = client.GetDatabase("application::lunar");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
+        
+        int collectionDocuments = (await collection.Find(x => x.OrganizationId == "orgId").ToListAsync()).Count;
         Assert.Equal(0, collectionDocuments);
     }
 
@@ -44,7 +53,7 @@ public class LunarServiceDeleteTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         //act
@@ -66,7 +75,7 @@ public class LunarServiceDeleteTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         //act

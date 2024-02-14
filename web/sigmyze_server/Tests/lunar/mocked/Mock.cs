@@ -40,9 +40,6 @@ public class ServiceMockedData
         this.documentCursor = new Mock<IAsyncCursor<LunarDocument>>();
         this.documents = _documents.ToList();
 
-        if(output != null)
-            output.WriteLine(this.documents.Count.ToString());
-        
         this.InitializeMongoCollection(output);
     }
 
@@ -111,8 +108,8 @@ public class ServiceMockedData
             //first convert object to document filter
             IBsonSerializerRegistry? serializerRegistry = MongoDB.Bson.Serialization.BsonSerializer.SerializerRegistry;
             var documentSerializer = serializerRegistry.GetSerializer<LunarDocument>();
-
             string jsonFilter = filter.Render(documentSerializer, serializerRegistry).ToJson();
+
             LunarDocumentFilter? parsedFilter = JsonConvert.DeserializeObject<LunarDocumentFilter>(jsonFilter);
             if(parsedFilter == null)
                 return InitFindAsyncCursor(new List<LunarDocument>());
@@ -121,7 +118,7 @@ public class ServiceMockedData
             for(int i = 0; i < this.documents.Count; i++)
             {
                 LunarDocument document = this.documents[i];
-                if(document.ProjectId == parsedFilter.ProjectId && document.OrganizationId == parsedFilter.OrganizationId)
+                if(parsedFilter.Matches(document))
                     matchedDocuments.Add(document);
             }
 
@@ -137,6 +134,34 @@ public class ServiceMockedData
         {
             this.documents.Add(newDocument);
             return Task.FromResult(true);
+        });
+
+        //this is the method for DeleteOneAsync
+        this.documentCollection.Setup(x => x.DeleteOneAsync(
+            It.IsAny<FilterDefinition<LunarDocument>>(),
+            It.IsAny<CancellationToken>()
+        )).Callback((FilterDefinition<LunarDocument> filter, CancellationToken c) => 
+        {
+            //first convert object to document filter
+            IBsonSerializerRegistry? serializerRegistry = MongoDB.Bson.Serialization.BsonSerializer.SerializerRegistry;
+            var documentSerializer = serializerRegistry.GetSerializer<LunarDocument>();
+            string jsonFilter = filter.Render(documentSerializer, serializerRegistry).ToJson();
+
+            LunarDocumentFilter? parsedFilter = JsonConvert.DeserializeObject<LunarDocumentFilter>(jsonFilter);
+            if(parsedFilter == null)
+                return;
+
+            List<LunarDocument> newDocuments = new List<LunarDocument>();
+            for(int i = 0; i < this.documents.Count; i++)
+            {
+                LunarDocument document = this.documents[i];
+                if(parsedFilter.Matches(document))
+                    continue;
+
+                newDocuments.Add(document);
+            }
+
+            this.documents = newDocuments;
         });
 
         this.InitMongoDB();

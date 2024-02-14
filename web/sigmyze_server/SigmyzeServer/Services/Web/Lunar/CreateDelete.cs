@@ -45,6 +45,6 @@ public partial class LunarRefreshService
 
     public async Task DeleteProject(string organizationId, string projectId)
     {
-
+        await _collection.DeleteOneAsync(x => x.OrganizationId == organizationId && x.ProjectId == projectId);
     }
 }
