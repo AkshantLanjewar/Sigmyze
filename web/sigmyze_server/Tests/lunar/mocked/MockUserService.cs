@@ -59,6 +59,8 @@ public class LinkedUserServiceMocked
             .Returns(true).Returns(false);
         this.userServiceCursor.SetupSequence(x => x.MoveNextAsync(It.IsAny<CancellationToken>()))
             .Returns(Task.FromResult(true)).Returns(Task.FromResult(false));
+        
+        //these methods are setup for the collection
         this.userServiceCollection.Setup(x => x.AggregateAsync(It.IsAny<PipelineDefinition<UserServiceIndex, UserServiceIndex>>(),
             It.IsAny<AggregateOptions>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(this.userServiceCursor.Object);

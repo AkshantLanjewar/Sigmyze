@@ -61,8 +61,6 @@ public class LunarDocument
 
         if(this.Filesystem.Validate(this.ProjectName, this.Charts, this.Notes) == false)
             return false;
-        if(this.Filesystem.Folders![0].FolderName != this.ProjectName)
-            return false;
 
         return true;
     }

@@ -35,6 +35,6 @@ public partial class LunarRefreshService : ILunarRefreshService
     public LunarRefreshService(IMongoClient mongoClient)
     {
         var database = mongoClient.GetDatabase("application::lunar");
-        _collection = database.GetCollection<LunarDocument>("documents");
+        _collection = database.GetCollection<LunarDocument>("lunar_documents");
     }
 }

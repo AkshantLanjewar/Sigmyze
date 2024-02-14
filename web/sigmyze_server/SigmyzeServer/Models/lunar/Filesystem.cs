@@ -45,7 +45,7 @@ namespace SigmyzeServer.Models.Lunar
             {
                 SimpleFolder folder = this.Folders[i];
                 List<string> subFileIds = folder.GetAllFileIds();
-                fileIds.Concat(subFileIds);
+                fileIds = fileIds.Concat(subFileIds).ToList();
             }
 
             return fileIds;
@@ -63,6 +63,7 @@ namespace SigmyzeServer.Models.Lunar
         {
             if(NullCheck() == false)
                 return false;
+
             for(int i = 0; i < this.Folders!.Count; i++)
             {
                 SimpleFolder folder = this.Folders[i];
@@ -86,7 +87,7 @@ namespace SigmyzeServer.Models.Lunar
         [JsonPropertyName("files")]
         public List<string>? Files { get; set; }
 
-        public List<string> GetAllFileIds()
+        private List<string> GetAllFileIds()
         {
             if(this.Files == null || this.Folders == null)
                 return new List<string>();
@@ -133,10 +134,6 @@ namespace SigmyzeServer.Models.Lunar
             List<string> fileIds = GetAllFileIds();
             if(NullCheck() == false)
                 return false;
-            if(this.Files!.Count > 0)
-                return false;
-            if(this.Folders!.Count == 0)
-                return false;
 
             //go thru and validate all the subfolders
             for(int i = 0; i < this.Folders!.Count; i++)
@@ -146,9 +143,6 @@ namespace SigmyzeServer.Models.Lunar
                     return false;
             }
 
-            if(this.Folders[0].FolderName != projectName)
-                return false;
-            
 
             //go through the charts and remove the fileId of each chart from the fileIds
             for(int i = 0; i < charts.Count; i++)

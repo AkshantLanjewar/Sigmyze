@@ -120,25 +120,12 @@ public class LunarDocumentTests
         //collect
         LunarDocument document = GenerateValidDocuemnt();
         document.Filesystem!.Folders = new List<SimpleFolder>();
+        document.Filesystem.Folders.Add(new SimpleFolder());
 
         //act
         bool result = document.Validate();
 
         //assert
-        Assert.False(result, "The filesystem has no folders or submembers");
-    }
-
-    [Fact]
-    public void NameDoesntMatchTest()
-    {
-        //collect
-        LunarDocument document = GenerateValidDocuemnt();
-        document.ProjectName = "lolzors";
-
-        //act
-        bool result = document.Validate();
-
-        //assert
-        Assert.False(result, "The project name doesnt match with the root folder");
+        Assert.False(result, "The filesystem has an invalid folder within it");
     }
 }

@@ -97,22 +97,6 @@ public class FilesystemTests
         Assert.True(validateResult, "This is a valid filesystem configuration");
     }
 
-    [Fact]
-    public void FileOutsideOfRootFolder()
-    {
-        //collect
-        SimpleFilesystem filesystem = GenerateValidSimpleFilesystem("test");
-        filesystem.Files!.Add("testing");
-
-        List<LunarNote> notes = GenerateLunarNotes();
-        List<LunarChart> charts = GenerateLunarCharts();
-
-        //act
-        bool validateResult = filesystem.Validate("test", charts, notes);
-
-        //expect
-        Assert.False(validateResult, "There is a file in the root of the filesystem");
-    }
 
     [Fact]
     public void FileMissingCase()
