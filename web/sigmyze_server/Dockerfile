@@ -1,9 +1,16 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS test 
+WORKDIR /test 
+
+COPY . .
+RUN dotnet restore 
+RUN dotnet test
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
-COPY SigmyzeServer.csproj .
+COPY ./SigmyzeServer/SigmyzeServer.csproj .
 RUN dotnet restore
-COPY . .
+COPY ./SigmyzeServer .
 RUN dotnet publish -c release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
