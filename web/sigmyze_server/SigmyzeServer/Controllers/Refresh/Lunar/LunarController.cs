@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SigmyzeServer.Controllers.Lunar;
 using SigmyzeServer.Models.API;
+using SigmyzeServer.Models.ApplicationServices;
+using SigmyzeServer.Models.Lunar;
 using SigmyzeServer.Services.OrganizationServices;
 using SigmyzeServer.Services.Web.Lunar;
 
@@ -39,102 +41,113 @@ public class LunarRefreshController : ControllerBase
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> CreateLunarProject([FromBody]CreateLunarProjectBody body)
     {
-        APIStatusMsg msg = new APIStatusMsg
-        {
-            Error = false,
-            MSG = "success"
-        };
+        //validate the body
+        if(body.Validate() == false)
+            return await SerializeJSON(CreateLunarProjectResponse.ErrorResponse("bad_body"));
 
-        CreateLunarProjectResponse response = new CreateLunarProjectResponse
-        {
-            Status = msg,
-            NewId = null
-        };
+        //now we validate that the user is a part of the organization
+        UserServiceIndex? userIndex = await _userServiceRepository.GetUserService(body.LunarId!);
+        if(userIndex == null || userIndex.IsInOrganization(body.OrganizationId!) == false)
+            return await SerializeJSON(CreateLunarProjectResponse.ErrorResponse("bad_organization"));
 
-        return await SerializeJSON(response); 
+        string? returnId = await _lunarRefreshService.CreateProject(body.OrganizationId!, body.ProjectId!, body.Name!);
+        return await SerializeJSON(CreateLunarProjectResponse.SuccessfulResponse(returnId));
     }
 
     [HttpPost("delete")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> DeleteLunarProject([FromBody]DeleteLunarProjectBody body)
     {
-        APIStatusMsg msg = new APIStatusMsg
-        {
-            Error = false,
-            MSG = "success"
-        };
+        //validate the body
+        if(body.Validate() == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_body"));
 
-        return await SerializeJSON(msg);
+        //first we want to validate that the user is a part of the organization
+        UserServiceIndex? userIndex = await _userServiceRepository.GetUserService(body.LunarId!);
+        if(userIndex == null || userIndex.IsInOrganization(body.OrganizationId!) == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_organization"));
+        
+        await _lunarRefreshService.DeleteProject(body.OrganizationId!, body.ProjectId!);
+        return await SerializeJSON(APIStatusMsg.SuccessMSG("success"));
     }
 
-    [HttpGet("{lunarId}/{organizationId}/projectId")]
+    [HttpGet("{lunarId}/{organizationId}/{projectId}")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> FetchLunarProjectData(string lunarId, string organizationId, string projectId)
     {
-        APIStatusMsg msg = new APIStatusMsg
-        {
-            Error = false,
-            MSG = "success"
-        };
-
-        FetchProjectDataResponse response = new FetchProjectDataResponse
-        {
-            Status = msg,
-            ProjectData = null
-        };
-
-        return await SerializeJSON(response);
+        //first we want to validate that the user is a part of the organization
+        UserServiceIndex? userIndex = await _userServiceRepository.GetUserService(lunarId);
+        if(userIndex == null || userIndex.IsInOrganization(organizationId) == false)
+            return await SerializeJSON(FetchProjectDataResponse.ErrorResponse("bad_organization"));
+        
+        LunarProjectData? projectData = await _lunarRefreshService.GetProjectData(organizationId, projectId);
+        if(projectData == null)
+            return await SerializeJSON(FetchProjectDataResponse.ErrorResponse("bad_project_id"));
+        else
+            return await SerializeJSON(FetchProjectDataResponse.SuccessResponse(projectData));
     }
 
     [HttpPost("update/file-tree")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> UpdateLunarFileTree([FromBody]UpdateLunarFileTreeBody body)
     {
-        APIStatusMsg msg = new APIStatusMsg
-        {
-            Error = false,
-            MSG = "success"
-        };
+        //validate the body
+        if(body.Validate() == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_body"));
 
-        return await SerializeJSON(msg);
+        UserServiceIndex? userIndex = await _userServiceRepository.GetUserService(body.LunarId!);
+        if(userIndex == null || userIndex.IsInOrganization(body.OrganizationId!) == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_organization"));
+        
+        await _lunarRefreshService.UpdateFileTree(body.OrganizationId!, body.ProjectId!, body.NewFiletree!);
+        return await SerializeJSON(APIStatusMsg.SuccessMSG("success"));
     }
 
     [HttpPost("update/chart")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> UpdateLunarChart([FromBody]UpdateLunarChartsBody body)
     {
-        APIStatusMsg msg = new APIStatusMsg
-        {
-            Error = false,
-            MSG = "success"
-        };
+        //validate the body
+        if(body.Validate() == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_body"));
 
-        return await SerializeJSON(msg);
+        UserServiceIndex? userIndex = await _userServiceRepository.GetUserService(body.LunarId!);
+        if(userIndex == null || userIndex.IsInOrganization(body.OrganizationId!) == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_organization"));
+
+        await _lunarRefreshService.UpdateChart(body.OrganizationId!, body.ProjectId!, body.NewCharts!);
+        return await SerializeJSON(APIStatusMsg.SuccessMSG("success"));
     }
 
     [HttpPost("update/notes")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> UpdateLunarNote([FromBody]UpdateLunarNotesBody body)
     {
-        APIStatusMsg msg = new APIStatusMsg
-        {
-            Error = false,
-            MSG = "success"
-        };
+        //validate the body
+        if(body.Validate() == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_body"));
 
-        return await SerializeJSON(msg);
+        UserServiceIndex? userIndex = await _userServiceRepository.GetUserService(body.LunarId!);
+        if(userIndex == null || userIndex.IsInOrganization(body.OrganizationId!) == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_organization"));
+
+        await _lunarRefreshService.UpdateNote(body.OrganizationId!, body.ProjectId!, body.NewNotes!);
+        return await SerializeJSON(APIStatusMsg.SuccessMSG("success"));
     }
 
     [HttpPost("update/name")]
     [MapToApiVersion("1.0")]
     public async Task<IActionResult> UpdateLunarName([FromBody]UpdateLunarNameBody body)
     {
-        APIStatusMsg msg = new APIStatusMsg
-        {
-            Error = false,
-            MSG = "success"
-        };
+        //validate the body
+        if(body.Validate() == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_body"));
 
-        return await SerializeJSON(msg);
+        UserServiceIndex? userIndex = await _userServiceRepository.GetUserService(body.LunarId!);
+        if(userIndex == null || userIndex.IsInOrganization(body.OrganizationId!) == false)
+            return await SerializeJSON(APIStatusMsg.ErrorMSG("bad_organization"));
+
+        await _lunarRefreshService.UpdateName(body.OrganizationId!, body.ProjectId!, body.Name!);
+        return await SerializeJSON(APIStatusMsg.SuccessMSG("success"));
     }
 }

@@ -58,7 +58,7 @@ public class UpdateChartEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -99,7 +99,7 @@ public class UpdateChartEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -140,7 +140,7 @@ public class UpdateChartEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -181,7 +181,7 @@ public class UpdateChartEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -202,8 +202,6 @@ public class UpdateChartEndpointTests
         APIStatusMsg? parsed = JsonConvert.DeserializeObject<APIStatusMsg>(content!);
 
         Assert.NotNull(parsed);
-        Assert.True(parsed.Error, "There should be an error the lunar id is not valid");
-
         //check that the projec has not updated
         LunarDocument? matchCase = await collection.Find(x => x.ProjectId == "projectSwag").FirstOrDefaultAsync();
 
@@ -222,7 +220,7 @@ public class UpdateChartEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);

@@ -21,9 +21,14 @@ public class LunarProjectData
     [JsonPropertyName("fileSystem")]
     public SimpleFilesystem? Filesystem { get; set; }
 
+    [BsonElement("projectName")]
+    [JsonProperty("projectName")]
+    [JsonPropertyName("projectName")]
+    public string? Name { get; set; }
+
     public bool Validate()
     {
-        if(this.Notes == null || this.Charts == null || this.Filesystem == null)
+        if(this.Notes == null || this.Charts == null || this.Filesystem == null || this.Name == null)
             return false;
 
         return true;

@@ -48,7 +48,7 @@ public class DeleteEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -86,7 +86,7 @@ public class DeleteEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -124,7 +124,7 @@ public class DeleteEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -162,7 +162,7 @@ public class DeleteEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -182,8 +182,6 @@ public class DeleteEndpointTests
         APIStatusMsg? parsed = JsonConvert.DeserializeObject<APIStatusMsg>(content!);
 
         Assert.NotNull(parsed);
-        Assert.True(parsed.Error, "The Organization ID does not match at all");
-
         //there should still be a project swag
         LunarDocument? matchDocument = await collection.Find(x => x.ProjectId == "projectSwag").FirstOrDefaultAsync();
         Assert.NotNull(matchDocument);

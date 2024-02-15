@@ -1,8 +1,23 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using SigmyzeServer.Models.ApplicationServices;
 using SigmyzeServer.Models.Lunar;
 
 namespace Test.Lunar;
+
+public class UserServiceFilter
+{
+    [JsonProperty("user_id")]
+    public string? UserId { get; set; }
+
+    public bool Matches(UserServiceIndex index)
+    {
+        if(this.UserId != null && this.UserId != index.UserId)
+            return false;
+
+        return true;
+    }
+}
 
 public class LunarDocumentFilter
 {

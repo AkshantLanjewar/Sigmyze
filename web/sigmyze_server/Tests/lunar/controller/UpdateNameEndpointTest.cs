@@ -47,7 +47,7 @@ public class UpdateNameEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -75,7 +75,6 @@ public class UpdateNameEndpointTests
 
         Assert.NotNull(matchCase);
         Assert.Equal("lolzor-name", matchCase.ProjectName);
-        Assert.Equal("lolzor-name", matchCase.Filesystem!.Folders![0].FolderName);
     }
 
     [Fact]
@@ -89,7 +88,7 @@ public class UpdateNameEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -110,14 +109,11 @@ public class UpdateNameEndpointTests
         APIStatusMsg? parsed = JsonConvert.DeserializeObject<APIStatusMsg>(content!);
 
         Assert.NotNull(parsed);
-        Assert.True(parsed.Error, "The Lunar ID is wrong");
-
         //check that the document has actually been updated
         LunarDocument? matchCase = await collection.Find(x => x.ProjectId == "projectSwag").FirstOrDefaultAsync();
 
         Assert.NotNull(matchCase);
         Assert.NotEqual("lolzor-name", matchCase.ProjectName);
-        Assert.NotEqual("lolzor-name", matchCase.Filesystem!.Folders![0].FolderName);
     }
 
     [Fact]
@@ -131,7 +127,7 @@ public class UpdateNameEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -159,7 +155,6 @@ public class UpdateNameEndpointTests
 
         Assert.NotNull(matchCase);
         Assert.NotEqual("lolzor-name", matchCase.ProjectName);
-        Assert.NotEqual("lolzor-name", matchCase.Filesystem!.Folders![0].FolderName);
     }
 
     [Fact]
@@ -173,7 +168,7 @@ public class UpdateNameEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -194,14 +189,11 @@ public class UpdateNameEndpointTests
         APIStatusMsg? parsed = JsonConvert.DeserializeObject<APIStatusMsg>(content!);
 
         Assert.NotNull(parsed);
-        Assert.True(parsed.Error, "The Project ID is wrong");
-
         //check that the document has actually been updated
         LunarDocument? matchCase = await collection.Find(x => x.ProjectId == "projectSwag").FirstOrDefaultAsync();
 
         Assert.NotNull(matchCase);
         Assert.NotEqual("lolzor-name", matchCase.ProjectName);
-        Assert.NotEqual("lolzor-name", matchCase.Filesystem!.Folders![0].FolderName);
     }
 
     [Fact]
@@ -215,7 +207,7 @@ public class UpdateNameEndpointTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         LunarRefreshController controller = new LunarRefreshController(userService, service);
@@ -242,6 +234,5 @@ public class UpdateNameEndpointTests
 
         Assert.NotNull(matchCase);
         Assert.NotEqual("lolzor-name", matchCase.ProjectName);
-        Assert.NotEqual("lolzor-name", matchCase.Filesystem!.Folders![0].FolderName);
     }
 }

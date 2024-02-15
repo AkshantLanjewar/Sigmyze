@@ -16,6 +16,14 @@ public class CreateLunarProjectBody
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    public bool Validate()
+    {
+        if(LunarId == null || OrganizationId == null || ProjectId == null || Name == null)
+            return false;
+
+        return true;
+    }
 }
 
 public class DeleteLunarProjectBody
@@ -28,6 +36,14 @@ public class DeleteLunarProjectBody
     
     [JsonPropertyName("projectId")]
     public string? ProjectId { get; set; }
+
+    public bool Validate()
+    {
+        if(this.LunarId == null || this.OrganizationId == null || this.ProjectId == null)
+            return false;
+
+        return true;
+    }
 }
 
 public class UpdateLunarFileTreeBody
@@ -43,6 +59,16 @@ public class UpdateLunarFileTreeBody
 
     [JsonPropertyName("newFiletree")]
     public SimpleFilesystem? NewFiletree { get; set; }
+
+    public bool Validate()
+    {
+        if(this.LunarId == null || this.OrganizationId == null || this.ProjectId == null || this.NewFiletree == null)
+            return false;
+        if(this.NewFiletree.ShallowValidate() == false)
+            return false;
+
+        return true;
+    }
 }
 
 public class UpdateLunarChartsBody
@@ -58,6 +84,22 @@ public class UpdateLunarChartsBody
 
     [JsonPropertyName("newCharts")]
     public List<LunarChart>? NewCharts { get; set; }
+
+    public bool Validate()
+    {
+        if(this.LunarId == null || this.OrganizationId == null || this.ProjectId == null || this.NewCharts == null)
+            return false;
+
+        //go through and validate the new charts
+        for(int i = 0; i < this.NewCharts.Count; i++)
+        {
+            LunarChart chart = this.NewCharts[i];
+            if(chart.Validate() == false)
+                return false;
+        }
+
+        return true;
+    }
 }
 
 public class UpdateLunarNotesBody
@@ -73,6 +115,22 @@ public class UpdateLunarNotesBody
 
     [JsonPropertyName("newNotes")]
     public List<LunarNote>? NewNotes { get; set; }
+
+    public bool Validate()
+    {
+        if(this.LunarId == null || this.OrganizationId == null || this.ProjectId == null || this.NewNotes == null)
+            return false;
+
+        //go through and validate the new notes
+        for(int i = 0; i < this.NewNotes.Count; i++)
+        {
+            LunarNote note = this.NewNotes[i];
+            if(note.Validate() == false)
+                return false;
+        }
+
+        return true;
+    }
 }
 
 public class UpdateLunarNameBody
@@ -88,4 +146,12 @@ public class UpdateLunarNameBody
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    public bool Validate()
+    {
+        if(this.LunarId == null || this.OrganizationId == null || this.ProjectId == null || this.Name == null)
+            return false;
+
+        return true;
+    }
 }

@@ -16,7 +16,8 @@ public partial class LunarRefreshService
         {
             Filesystem = document.Filesystem,
             Notes = document.Notes!,
-            Charts = document.Charts!
+            Charts = document.Charts!,
+            Name = document.ProjectName
         };
 
         return projectData;

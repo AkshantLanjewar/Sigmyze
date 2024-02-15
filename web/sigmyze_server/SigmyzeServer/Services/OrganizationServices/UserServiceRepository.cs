@@ -27,7 +27,7 @@ public class UserServiceRepository : IUserServiceRepository
 
     //FEATURE: This retreives the user service index based on the user_id
     public async Task<UserServiceIndex?> GetUserService(string user_id) =>
-        await _userServiceCollection.Find(x => x.UserId == user_id).FirstOrDefaultAsync();
+        await (await _userServiceCollection.FindAsync(x => x.UserId == user_id)).FirstOrDefaultAsync();
 
     //FEATURE: This updates the userindex based on the user_id
     public async Task UpdateUserService(string user_id, UserServiceIndex nUserService) =>
