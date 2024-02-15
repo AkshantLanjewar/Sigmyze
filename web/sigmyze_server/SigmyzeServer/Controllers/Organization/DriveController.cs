@@ -250,6 +250,10 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
+            //update the lunar repo name if that is what is requested
+            if(body.ProjectName != null && body.ProjectType == "lunar_project")
+                await _lunarRefreshService.UpdateName(body.OrganizationId, body.ProjectId, body.ProjectName);
+
             DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
             drive = await utils.UpdateProject(drive!, body.ParentFolder, body.ProjectId, body.ProjectName, body.ProjectType);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
