@@ -20,7 +20,7 @@ public class LunarServiceUpdateNoteTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         List<LunarNote> newNotes = LunarDocumentTests.GenerateLunarNotes();
@@ -50,7 +50,7 @@ public class LunarServiceUpdateNoteTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         List<LunarNote> newNotes = LunarDocumentTests.GenerateLunarNotes();
@@ -75,7 +75,7 @@ public class LunarServiceUpdateNoteTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         List<LunarNote> newNotes = LunarDocumentTests.GenerateLunarNotes();
@@ -105,7 +105,7 @@ public class LunarServiceUpdateNoteTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         List<LunarNote> newNotes = LunarDocumentTests.GenerateLunarNotes();

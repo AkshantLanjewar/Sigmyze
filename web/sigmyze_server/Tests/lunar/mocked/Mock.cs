@@ -164,6 +164,38 @@ public class ServiceMockedData
             this.documents = newDocuments;
         });
 
+        //this is the method for UpdateOneAsync
+        this.documentCollection.Setup(x => x.UpdateOneAsync(
+            It.IsAny<FilterDefinition<LunarDocument>>(),
+            It.IsAny<UpdateDefinition<LunarDocument>>(),
+            It.IsAny<UpdateOptions>(),
+            It.IsAny<CancellationToken>()
+        )).Callback((FilterDefinition<LunarDocument> filter, UpdateDefinition<LunarDocument> update, UpdateOptions o, CancellationToken c) =>
+        {
+            //first convert filter to document filter
+            IBsonSerializerRegistry? serializerRegistry = MongoDB.Bson.Serialization.BsonSerializer.SerializerRegistry;
+            var documentSerializer = serializerRegistry.GetSerializer<LunarDocument>();
+            string jsonFilter = filter.Render(documentSerializer, serializerRegistry).ToJson();
+            string jsonUpdate = update.Render(documentSerializer, serializerRegistry).ToJson();
+
+            LunarDocumentFilter? parsedFilter = JsonConvert.DeserializeObject<LunarDocumentFilter>(jsonFilter);
+            LunarDocumentUpdateFilter? updateFilter = JsonConvert.DeserializeObject<LunarDocumentUpdateFilter>(jsonUpdate);
+            if(parsedFilter == null || updateFilter == null)
+                return;
+
+            List<LunarDocument> newDocuments = new List<LunarDocument>();
+            for(int i = 0; i < this.documents.Count; i++)
+            {
+                LunarDocument document = this.documents[i];
+                if(parsedFilter.Matches(document))
+                    document = updateFilter.Update(document);
+
+                newDocuments.Add(document);
+            }
+
+            this.documents = newDocuments;
+        });
+
         this.InitMongoDB();
     }
 

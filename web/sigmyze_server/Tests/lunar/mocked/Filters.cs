@@ -6,11 +6,9 @@ namespace Test.Lunar;
 
 public class LunarDocumentFilter
 {
-    [BsonElement("organizationId")]
     [JsonProperty("organizationId")]
     public string? OrganizationId { get; set; }
 
-    [BsonElement("projectId")]
     [JsonProperty("projectId")]
     public string? ProjectId { get; set; }
 
@@ -30,5 +28,51 @@ public class LunarDocumentFilter
             return false;
 
         return true;
+    }
+}
+
+public class LunarDocumentSetFilters
+{
+    [JsonProperty("fileSystem")]
+    public SimpleFilesystem? Filesystem { get; set; }
+
+    [JsonProperty("notes")]
+    public List<LunarNote>? Notes { get; set; }
+
+    [JsonProperty("charts")]
+    public List<LunarChart>? Charts { get; set; }
+
+    [JsonProperty("projectName")]
+    public string? ProjectName { get; set; }
+
+    public LunarDocument Update(LunarDocument document)
+    {
+        LunarDocument newDocument = document;
+
+        if(this.Filesystem != null)
+            newDocument.Filesystem = this.Filesystem;
+        if(this.Notes != null)
+            newDocument.Notes = this.Notes;
+        if(this.Charts != null)
+            newDocument.Charts = this.Charts;
+        if(this.ProjectName != null)
+            newDocument.ProjectName = this.ProjectName;
+
+        return newDocument;
+    }
+}
+
+public class LunarDocumentUpdateFilter
+{
+    [JsonProperty("$set")]
+    public LunarDocumentSetFilters? Set { get; set; }
+
+    public LunarDocument Update(LunarDocument document)
+    {
+        LunarDocument newDocument = document;
+        if(this.Set != null)
+            newDocument = this.Set.Update(newDocument);
+
+        return newDocument;
     }
 }

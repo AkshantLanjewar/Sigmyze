@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SigmyzeServer.Models.API;
 using SigmyzeServer.Models.ApplicationServices;
 using SigmyzeServer.Services.OrganizationServices;
+using SigmyzeServer.Services.Web.Lunar;
 
 namespace SigmyzeServer.Controllers
 {
@@ -18,19 +19,22 @@ namespace SigmyzeServer.Controllers
         private readonly IDriveRepository _driveRepository;
         private readonly IProjectRepository _projectRepository; 
         private readonly IQuantaRepository _quantaRepository;
+        private readonly ILunarRefreshService _lunarRefreshService;
 
         public DriveController(
             IOrganizationRepository organizationRepository, 
             IUserServiceRepository userServiceRepository,
             IDriveRepository driveRepository,
             IProjectRepository projectRepository,
-            IQuantaRepository quantaRepository
+            IQuantaRepository quantaRepository,
+            ILunarRefreshService lunarRefreshService
         ) : base(organizationRepository)
         {
             _userServiceRepository = userServiceRepository;
             _driveRepository = driveRepository;
             _projectRepository = projectRepository;
             _quantaRepository = quantaRepository;
+            _lunarRefreshService = lunarRefreshService;
         }
 
         //FEATURE: This retreives a drive from the collection chain
@@ -178,7 +182,7 @@ namespace SigmyzeServer.Controllers
                 return await SerializeJSON(msg);
             }
 
-            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
+            DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository, _lunarRefreshService);
             drive = await utils.InsertProject(drive!, body.OrganizationId, body.ParentFolder, body.ProjectName, body.ProjectType);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
@@ -213,7 +217,7 @@ namespace SigmyzeServer.Controllers
             }
 
             DriveUtils utils = new DriveUtils(_projectRepository, _quantaRepository);
-            drive = utils.DeleteProject(drive!, body.ParentFolder, body.ProjectId, body.ProjectType);
+            drive = utils.DeleteProject(drive!, body.ParentFolder, body.ProjectId, body.OrganizationId, body.ProjectType);
             await _driveRepository.UpdateDrive(drive.DriveId!, drive);
 
             return await SerializeJSON(msg);

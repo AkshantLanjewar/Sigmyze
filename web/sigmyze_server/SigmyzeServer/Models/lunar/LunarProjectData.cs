@@ -23,6 +23,9 @@ public class LunarProjectData
 
     public bool Validate()
     {
+        if(this.Notes == null || this.Charts == null || this.Filesystem == null)
+            return false;
+
         return true;
     }
 }

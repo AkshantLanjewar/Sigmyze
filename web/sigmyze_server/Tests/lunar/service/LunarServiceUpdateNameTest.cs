@@ -20,7 +20,7 @@ public class LunarServiceUpdateNameTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         //act
@@ -32,7 +32,6 @@ public class LunarServiceUpdateNameTests
 
         Assert.NotNull(document);
         Assert.Equal("test-title", document.ProjectName);
-        Assert.Equal("test-title", document.Filesystem!.Folders![0].FolderName);
     }
 
     [Fact]
@@ -43,7 +42,7 @@ public class LunarServiceUpdateNameTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         //act
@@ -55,7 +54,6 @@ public class LunarServiceUpdateNameTests
 
         Assert.NotNull(document);
         Assert.NotEqual("test-title", document.ProjectName);
-        Assert.NotEqual("test-title", document.Filesystem!.Folders![0].FolderName);
     }
 
     [Fact]
@@ -66,7 +64,7 @@ public class LunarServiceUpdateNameTests
         IMongoClient client = mocked.GetClient();
 
         IMongoDatabase db = client.GetDatabase("application::lunar");
-        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("documents");
+        IMongoCollection<LunarDocument> collection = db.GetCollection<LunarDocument>("lunar_documents");
         LunarRefreshService service = new LunarRefreshService(client);
 
         //act

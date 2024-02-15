@@ -1,5 +1,6 @@
 using SigmyzeServer.Models.ApplicationServices;
 using SigmyzeServer.Services.OrganizationServices;
+using SigmyzeServer.Services.Web.Lunar;
 
 namespace SigmyzeServer.Controllers;
 
@@ -7,11 +8,17 @@ public class DriveUtils
 {
     private readonly IProjectRepository _projectRepository;
     private readonly IQuantaRepository _quantaRepository;
+    private readonly ILunarRefreshService? _lunarRefreshService;
 
-    public DriveUtils(IProjectRepository projectRepository, IQuantaRepository quantaRepository)
+    public DriveUtils (
+        IProjectRepository projectRepository, 
+        IQuantaRepository quantaRepository,
+        ILunarRefreshService? lunarRefreshService = null
+    )
     {
         _projectRepository = projectRepository;
         _quantaRepository = quantaRepository;
+        _lunarRefreshService = lunarRefreshService;
     }
 
     private List<ProjectView> getProjects(List<ProjectView> projects, List<Folder> folders) 
@@ -214,37 +221,12 @@ public class DriveUtils
         projectView.ProjectName = projectName;
         projectView.ProjectType = projectType;
 
-        if(projectType == "lunar_project")
+        if(projectType == "lunar_project" && this._lunarRefreshService != null)
         {
-            //Build the database version
-            ProjectData projectDB = new ProjectData();
-            projectDB.ProjectId = projectView.ProjectId;
-            projectDB.ProjectName = projectView.ProjectName;
-            projectDB.OrganizationId = organizationId;
-            projectDB.Documents = new List<Document>();
-            projectDB.Nodes = new List<Node>();
+            string? genId = await _lunarRefreshService.CreateProject(organizationId, projectView.ProjectId, projectName);
 
-            //build the default split
-            Node defaultSplit = new Node();
-            defaultSplit.NodeId = "project_split";
-            defaultSplit.NodeName = "Project";
-            defaultSplit.NodeType = "project";
-            defaultSplit.Data = new NodeData();
-            defaultSplit.Children = new List<Node>();
-
-            //build the default demo chart
-            Node demoChart = new Node();
-            demoChart.NodeId = "demo-chart";
-            demoChart.NodeName = "Demo Chart";
-            demoChart.NodeType = "chart";
-            demoChart.Children = new List<Node>();
-            demoChart.Data = new NodeData();
-            demoChart.Data.Indicators = new List<IIndicator>();
-
-            //append them together
-            defaultSplit.Children.Add(demoChart);
-            projectDB.Nodes.Add(defaultSplit);
-            await _projectRepository.CreateProject(projectDB);
+            if(genId != null)
+                projectView.ProjectId = genId;
         }
 
         if(projectType == "quanta_project")
@@ -294,14 +276,14 @@ public class DriveUtils
         return validateProject(drive.Folders!, projectId);
     }
     
-    public Drive DeleteProject(Drive drive, string parentId, string projectId, string projectType)
+    public Drive DeleteProject(Drive drive, string parentId, string projectId, string organizationId, string projectType)
     {
         ProjectView view = new ProjectView();
         view.ProjectId = projectId;
 
         //delete the project based on the type
-        if(projectType == "lunar_project")
-            Task.Run(async () => await _projectRepository.DeleteProject(projectId));
+        if(projectType == "lunar_project" && _lunarRefreshService != null)
+            Task.Run(async () => await _lunarRefreshService.DeleteProject(organizationId, projectId));
         if(projectType == "quanta_project")
             Task.Run(async () => await _quantaRepository.DeleteProject(projectId));
 
