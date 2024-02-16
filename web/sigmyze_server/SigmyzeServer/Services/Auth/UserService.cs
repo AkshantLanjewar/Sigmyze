@@ -46,7 +46,7 @@ namespace SigmyzeServer.Services.Auth
         {
             AuthResp resp = new AuthResp();
             User? pUser   = await _authService.GetAsyncEmail(data.Email);
-            if(pUser == null)
+            if(pUser == null || pUser.LunarId == null)
                 return badAuth("user_dne");
 
             string? hashed = _hashService.HashPassword(data.Password, pUser.Salt);
@@ -64,6 +64,7 @@ namespace SigmyzeServer.Services.Auth
             resp.RefreshToken = refreshToken.Token;
             resp.Verified     = pUser.Verified;
             resp.Role         = pUser.Role;
+            resp.LunarId = pUser.LunarId;
 
             return resp;
         }

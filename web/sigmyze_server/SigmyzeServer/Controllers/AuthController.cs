@@ -139,6 +139,8 @@ namespace SigmyzeServer.Controllers
             await _userAuth.CreateAsync(aUser);
             resp.Token      = token;
             resp.Registered = true;
+            resp.LunarId = aUser.LunarId;
+
             setTokenCookie(aUser.RefreshToken.Token);
             _emailService.SendVerificationEmailSES(aUser.VerificationToken!, aUser.EMail!, aUser.Username);            
 

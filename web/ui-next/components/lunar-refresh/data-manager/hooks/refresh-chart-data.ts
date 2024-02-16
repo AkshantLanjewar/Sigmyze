@@ -4,6 +4,10 @@ import { ISigmyzeFilesystem } from "../../../ui/file-management/types"
 import { IQuantaIndicatorText } from "../../../ui/quanta-dataset-manager/types"
 import { setChartIndicators } from "../../../ui/file-management/util"
 import { IChartLoc } from "../../refresh-document/block-renderer/block-types/media/types"
+import { IAuthenticationData } from "../../../data/user/types"
+import { useRouter } from "next/router"
+import { LunarRefreshAPI_updateCharts } from "../api"
+import { showNotification } from "@mantine/notifications"
 
 /**
  * @description
@@ -30,6 +34,8 @@ const useRefreshChartData = (
     lunarProject: ILunarProject | undefined,
     loadedFilesystem: ISigmyzeFilesystem | undefined,
     skipFilesystem: MutableRefObject<boolean>,
+    dataLoad: MutableRefObject<Boolean>,
+    authData: IAuthenticationData | null | undefined,
     updateUIFilesystem: (filesystem: ISigmyzeFilesystem) => void,
     fetchIndicatorText: (datasetId: string, indicatorId: string) => Promise<IQuantaIndicatorText | undefined>,
     setLunarProject: (project: ILunarProject | undefined) => void
@@ -243,6 +249,37 @@ const useRefreshChartData = (
 
         main()
     }
+
+    const router = useRouter()
+
+    //this is the effect that handles the updating of the charts
+    useEffect(() => {
+        async function main() {
+            let token = authData?.token
+            let lunarId = authData?.lunarId
+            let query = router.query.ids
+
+            if(dataLoad.current === false || token === undefined || lunarId === undefined)
+                return
+            if(Array.isArray(query) === false || query.length !== 2)
+                return
+
+            const organizationId = query[0]
+            const projectId = query[1]
+            const result = await LunarRefreshAPI_updateCharts(token, lunarId, organizationId, projectId, charts)
+
+            if(result !== undefined)
+                showNotification({
+                    title: "Update Error",
+                    message: `There was an error updating the server. Error code: ${result}`,
+                    color: 'red',
+                    autoClose: 1000 * 5
+                })
+        }
+
+        const timeout = setTimeout(() => main(), 10 * 1000)
+        return () => clearTimeout(timeout)
+    }, [charts, authData])
 
     return {
         charts,

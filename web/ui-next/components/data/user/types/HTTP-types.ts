@@ -25,7 +25,8 @@ interface ILogoutResp {
 interface IRegisterResp {
     registered: boolean,
     message?: string,
-    token?: string
+    token?: string,
+    lunarId?: string
 }
 
 interface IAuthResp {
@@ -33,7 +34,8 @@ interface IAuthResp {
     token?: string,
     message?: string,
     verified?: string,
-    role?: string
+    role?: string,
+    lunarId?: string
 }
 
 //Request Types

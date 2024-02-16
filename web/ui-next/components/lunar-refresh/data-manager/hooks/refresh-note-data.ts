@@ -1,7 +1,11 @@
-import { useCallback, useState } from "react"
+import { MutableRefObject, useCallback, useEffect, useState } from "react"
 import { ILunarNote, ILunarProject } from "../state"
 import { v4 } from "uuid"
 import { INoteBlock } from "../../refresh-document/types"
+import { IAuthenticationData } from "../../../data/user/types"
+import { useRouter } from "next/router"
+import { LunarRefreshAPI_updateNotes } from "../api"
+import { showNotification } from "@mantine/notifications"
 
 /**
  * @description
@@ -21,6 +25,8 @@ import { INoteBlock } from "../../refresh-document/types"
  */
 const useRefreshNoteData = (
     lunarProject: ILunarProject | undefined,
+    dataLoad: MutableRefObject<Boolean>,
+    authData: IAuthenticationData | null | undefined,
     setLunarProject: (project: ILunarProject | undefined) => void
 ) => {
     //theese are the notes in the project (detached for easier editing)
@@ -129,6 +135,37 @@ const useRefreshNoteData = (
 
         return undefined
     }, [notes])
+
+    const router = useRouter()
+
+    //this is the effect that handles the updating of the notes
+    useEffect(() => {
+        async function main() {
+            let token = authData?.token
+            let lunarId = authData?.lunarId
+            let query = router.query.ids
+
+            if(dataLoad.current === false || token === undefined || lunarId === undefined)
+                return
+            if(Array.isArray(query) === false || query.length !== 2)
+                return
+
+            const organizationId = query[0]
+            const projectId = query[1]
+            const result = await LunarRefreshAPI_updateNotes(token, lunarId, organizationId, projectId, notes)
+
+            if(result !== undefined)
+                showNotification({
+                    title: "Update Error",
+                    message: `There was an error updating the server. Error code: ${result}`,
+                    color: 'red',
+                    autoClose: 1000 * 5
+                })
+        }
+
+        const timeout = setTimeout(() => main(), 15 * 1000)
+        return () => clearTimeout(timeout)
+    }, [notes, authData])
 
     return {
         notes,

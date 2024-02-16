@@ -1,9 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
-import { ILunarChart, ILunarDataManagerState, ILunarNote, ILunarProject, IQuantaIndicatorLoc } from "./state"
+import { ILunarDataManagerState, ILunarProject, IQuantaIndicatorLoc } from "./state"
 import { UserContextData } from "../../data/user/context"
 import { IUserContext } from "../../data/user/types"
 import { convertSigmyzeToSimple, convertSimpleFilesystem, generateDefaultProject } from "./functions"
-import { ISigmyzeFilesystem, ISimpleFilesystem } from "../../ui/file-management/types"
 import { LunarUIContextData } from "../ui-context"
 import { ILunarUIState } from "../ui-context/state"
 import useRefreshChartData from "./hooks/refresh-chart-data"
@@ -13,6 +12,9 @@ import { QuantaDatasetManagerData } from "../../ui/quanta-dataset-manager"
 import { IDatasetManagerState } from "../../ui/quanta-dataset-manager/types"
 import SettingsFlow from "./forms/settings"
 import DeleteIndicatorFlow from "./forms/delete-indicator"
+import { useRouter } from "next/router"
+import { LunarRefreshAPI_fetchProject, LunarRefreshAPI_updateFileTree } from "./api"
+import { showNotification } from "@mantine/notifications"
 
 const LunarDataManagerData = createContext<ILunarDataManagerState | null>(null)
 
@@ -35,6 +37,9 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
     const [lunarProject, setLunarProject] = useState<ILunarProject | undefined>(undefined)
     //this is the flag to skip the filesystem reload
     const skipFilesystem = useRef<boolean>(false)
+
+    //whether or not the data has been loaded from the server
+    const dataLoad = useRef<boolean>(false)
     
     //this is the ref that tracks whether or not the charts have been loaded
     const chartInitialLoad = useRef<boolean>(false)
@@ -49,6 +54,8 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
 
     const { fetchIndicatorText } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
 
+    const { authData, loaded, loggedIn, userData } = useContext(UserContextData) as IUserContext
+
     const { 
         notes, 
         setNotes,
@@ -57,7 +64,7 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         editNoteName,
         fetchNoteBlocks,
         updateNoteBlocks 
-    } = useRefreshNoteData(lunarProject, setLunarProject)
+    } = useRefreshNoteData(lunarProject, dataLoad, authData, setLunarProject)
 
     const { 
         fileSystem, 
@@ -68,7 +75,6 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         updateUIFilesystem 
     } = useRefreshFilesystem()
 
-    const { authData } = useContext(UserContextData) as IUserContext
     const { 
         debugMode, 
         loadedFilesystem, 
@@ -93,25 +99,60 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         lunarProject, 
         loadedFilesystem, 
         skipFilesystem,
+        dataLoad,
+        authData,
         updateUIFilesystem, 
         fetchIndicatorText,
         setLunarProject
     )
 
+    const router = useRouter()
+
     /**
      * this effect handles the loading of project data
      */
     useEffect(() => {
-        if(debugMode === true) {
-            setLunarProject(undefined)
-            return
-        }
+        async function main() {
+            if(debugMode === true) {
+                setLunarProject(undefined)
+                return
+            }
+    
+            //we want the user state to be loaded
+            if(loaded === false || dataLoad.current === true)
+                return
+    
+            let token = authData?.token
+            let lunarId = authData?.lunarId
+            if(token === undefined || lunarId === undefined)
+                setLunarProject({ ...generateDefaultProject() })
 
-        let token = authData?.token
-        if(token === undefined)
-            setLunarProject({ ...generateDefaultProject() })
-        //NOTE: have to implemenet load project but thats a little later
-    }, [authData, debugMode])
+            //NOTE: have to implemenet load project but thats a little later
+            let query = router.query.ids
+            if(Array.isArray(query) && loggedIn === false)
+                router.push('/')
+            else if(Array.isArray(query) && query.length === 2 && token !== undefined && lunarId !== undefined) {
+                const organizationId = query[0]
+                const projectId = query[1]
+                const projectData = await LunarRefreshAPI_fetchProject(token, lunarId, organizationId, projectId)
+                if(projectData === undefined || projectData.validate() === false)
+                    return
+
+                const newLunarProject: ILunarProject = {
+                    projectId,
+                    name: projectData.projectName!,
+                    notes: projectData.notes!,
+                    charts: projectData.charts!,
+                    fileSystem: projectData.fileSystem!
+                }
+
+                setLunarProject({ ...newLunarProject })
+                dataLoad.current = true
+            }
+        }
+        
+        main()
+    }, [authData, debugMode, loaded, loggedIn])
 
     /**
      * once a lunar project is loaded, the component parts are also updated as well
@@ -151,6 +192,37 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         let generatedFilesystem = convertSimpleFilesystem(lunarProject.name, fileSystem, charts, notes)
         updateUIFilesystem(generatedFilesystem)
     }, [fileSystem])
+
+    /**
+     * This is the effect that will handle the filesystem updating
+     */
+    useEffect(() => {
+        async function main() {
+            let token = authData?.token
+            let lunarId = authData?.lunarId
+            let query = router.query.ids
+
+            if(fileSystem === undefined || token === undefined || lunarId === undefined)
+                return 
+            if(Array.isArray(query) === false || query.length !== 2 || dataLoad.current === false)
+                return
+            
+            const organizationId = query[0]
+            const projectId = query[1]
+            let result = await LunarRefreshAPI_updateFileTree(token, lunarId, organizationId, projectId, fileSystem)
+
+            if(result !== undefined)
+                showNotification({
+                    title: "Update Error",
+                    message: `There was an error updating the server. Error code: ${result}`,
+                    color: 'red',
+                    autoClose: 1000 * 5
+                })
+        }
+
+        const timeout = setTimeout(() => main(), 10 * 1000)
+        return () => clearTimeout(timeout)
+    }, [fileSystem, authData])
 
 
     /**

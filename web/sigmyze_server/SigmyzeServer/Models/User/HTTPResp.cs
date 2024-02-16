@@ -21,6 +21,9 @@ namespace SigmyzeServer.Models.User
 
         [JsonIgnore]
         public string? RefreshToken { get; set; }
+
+        [JsonProperty("lunarId")]
+        public string? LunarId { get; set; }
     }
 
     public class RegisterResp
@@ -33,6 +36,9 @@ namespace SigmyzeServer.Models.User
 
         [JsonProperty("token")]
         public string? Token { get; set; }
+
+        [JsonProperty("lunarId")]
+        public string? LunarId { get; set; }
     }
 
     public class LogoutResp

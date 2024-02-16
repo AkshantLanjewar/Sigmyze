@@ -25,7 +25,7 @@ const QuantaPage: React.FC = ({ }) => {
             setOrganizationId(quantaId[0])
             setProjectId(quantaId[1])
         }
-    }, [loggedIn, loaded, router])
+    }, [loggedIn, loaded])
 
     return (
         <div style={{ height: '100%' }}>
