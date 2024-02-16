@@ -48,6 +48,7 @@ const makeChildIMPL = async (component: MountResult, page: Page) => {
     //type in child parent test
     await page.keyboard.type("child parent test", { delay: 200 })
     await page.keyboard.press("Enter")
+    await page.waitForTimeout(500)
 
     //there are 2 elements within the document container
     const documentContainer = component.getByTestId(documentContainerLocator)
@@ -55,6 +56,7 @@ const makeChildIMPL = async (component: MountResult, page: Page) => {
 
     //press tab
     await page.keyboard.press("Tab")
+    await page.waitForTimeout(500)
 
     //there is only 1 element within the document container
     await expect(documentContainer.locator('> div')).toHaveCount(1)
@@ -85,6 +87,7 @@ const reverseChildIMPL = async (component: MountResult, page: Page) => {
     //click the block content and press shift tab
     await blockContent.click()
     await page.keyboard.press("Shift+Tab")
+    await page.waitForTimeout(500)
 
     //check that there are 2 components within the document container
     const documentContainer = component.getByTestId(documentContainerLocator)
@@ -138,6 +141,7 @@ const arrowKeysIMPL = async (component: MountResult, page: Page) => {
     const blockContent = block.getByTestId(blockContentLocator)
 
     await page.keyboard.press('Enter')
+    await page.waitForTimeout(500)
 
     //there are 2 elements within the document container
     const documentContainer = component.getByTestId(documentContainerLocator)
@@ -145,6 +149,7 @@ const arrowKeysIMPL = async (component: MountResult, page: Page) => {
 
     //press the uparrow key
     await page.keyboard.press("ArrowUp")
+    await page.waitForTimeout(500)
 
     //check that block-0 has active = false
     await expect(block).toHaveAttribute("data-active", "true")
@@ -156,6 +161,7 @@ const arrowKeysIMPL = async (component: MountResult, page: Page) => {
 
     //press uparrow key
     await page.keyboard.press("ArrowDown")
+    await page.waitForTimeout(500)
 
     //check that block-0 = true and block-1 = false
     await expect(block).toHaveAttribute("data-active", "false")
