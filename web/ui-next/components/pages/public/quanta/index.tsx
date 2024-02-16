@@ -35,7 +35,7 @@ const PublicQuantaPage: React.FC<IPublicQuantaPageProps> = ({ datasetId, setData
 
             //now we can pull the data for the dataset
             let primedDataset = await primeDataset(datasetId)
-            if(primedDataset === undefined)
+            if(primedDataset === undefined || primedDataset.dataset_name === undefined)
                 return
 
             setDatasetTitle(primedDataset.dataset_name)

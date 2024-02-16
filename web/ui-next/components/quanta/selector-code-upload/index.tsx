@@ -62,7 +62,7 @@ const SelectorCodeUpload: React.FC = ({ }) => {
 
         let webcontainer = getContainer()
         containerRef.current = webcontainer 
-    }, [webcontainerCreated, getContainer])
+    }, [webcontainerCreated])
 
     useEffect(() => {
         if(selectorCode === null) {

@@ -17,8 +17,9 @@ const IterBodyView: React.FC<IViewProps> = memo(({
 }) => {
     return (
         <>
-            {iterOutputs.map((step) => (
+            {iterOutputs.map((step, index) => (
                 <OutputRenderer
+                    index={index}
                     output={step}
                     nodeId={nodeId}
                     focused={internalFocused}

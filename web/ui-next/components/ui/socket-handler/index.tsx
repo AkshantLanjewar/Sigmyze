@@ -45,7 +45,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
         setSocketHandlers([ ...nHandlers ])
     }
 
-    const connect: Function = useCallback(() => {
+    const connect: Function = () => {
         if(loaded === false || loggedIn === false || testMode === true)
             return
         if(socketCreated === true)
@@ -77,7 +77,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
                 connect()
             }, 1000 * 5)
         }
-    }, [loaded, loggedIn, socketCreated, addMessage, dontRecreate, testMode])
+    }
 
     useEffect(() => {
         if(testMode === true)
@@ -93,14 +93,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
             setSocketCreated(false)
             setDontRecreate(true)
         }
-    }, [testMode])
-
-    useEffect(() => {
-        if(testMode === true)
-            return
-        
-        connect() // persists connection
-    }, [loaded, loggedIn, socketCreated])
+    }, [testMode, loaded, loggedIn])
 
     //handles the inbound messaging
     useEffect(() => {
