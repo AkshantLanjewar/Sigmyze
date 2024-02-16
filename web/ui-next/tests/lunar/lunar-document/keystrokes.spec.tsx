@@ -109,6 +109,7 @@ const mixedIMPL = async (component: MountResult, page: Page) => {
     await blockContent.click()
     await page.keyboard.type("test subtitle", { delay: 200 })
     await page.keyboard.press("Enter")
+    await page.waitForTimeout(500)
 
     //check that there are 2 blocks within nested children
     const blockLocator = addExtensions(documentBlockBase, ["0"])
@@ -117,11 +118,13 @@ const mixedIMPL = async (component: MountResult, page: Page) => {
 
     await expect(nestedChildren.locator('> div')).toHaveCount(2)
     await page.keyboard.press("Tab")
+    await page.waitForTimeout(500)
 
     await expect(block.getByTestId(blockLocator + "::child::1")).toBeAttached()
 
     //now we press shift+tab and check that there are 2 elements
     await page.keyboard.press("Shift+Tab")
+    await page.waitForTimeout(500)
     await expect(block.getByTestId(blockLocator + "::child::1")).not.toBeAttached()
 }
 
