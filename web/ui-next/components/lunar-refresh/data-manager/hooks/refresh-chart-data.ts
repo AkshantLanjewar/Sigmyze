@@ -258,7 +258,9 @@ const useRefreshChartData = (
             let token = authData?.token
             let lunarId = authData?.lunarId
             let query = router.query.ids
-
+            
+            if(query === undefined)
+                return
             if(dataLoad.current === false || token === undefined || lunarId === undefined)
                 return
             if(Array.isArray(query) === false || query.length !== 2)

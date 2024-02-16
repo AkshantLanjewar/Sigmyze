@@ -202,6 +202,8 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
             let lunarId = authData?.lunarId
             let query = router.query.ids
 
+            if(query === undefined)
+                return
             if(fileSystem === undefined || token === undefined || lunarId === undefined)
                 return 
             if(Array.isArray(query) === false || query.length !== 2 || dataLoad.current === false)
