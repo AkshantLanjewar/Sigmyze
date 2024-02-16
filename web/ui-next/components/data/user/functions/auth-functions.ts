@@ -18,8 +18,10 @@ async function Login(
         //successs iwth the server authentication
         let nAuthenticationData = {} as IAuthenticationData
         nAuthenticationData.token = resp.token
+        nAuthenticationData.lunarId = resp.lunarId
         nAuthenticationData.logged_in = true
         nAuthenticationData.verified_state = "verify"
+
         if(resp.verified === "yes")
             nAuthenticationData.verified_state = "logged_in"
 
@@ -62,6 +64,7 @@ async function Register(
         //success
         let nAuthenticationData = {} as IAuthenticationData
         nAuthenticationData.token = resp.token
+        nAuthenticationData.lunarId = resp.lunarId
         nAuthenticationData.verified_state = "verify"
         nAuthenticationData.logged_in = true
 
@@ -101,7 +104,7 @@ async function Verify(
         nAuthenticationData.token = resp.token
         nAuthenticationData.verified_state = "logged_in"
 
-        setAuthData({ ...nAuthenticationData })
+        setAuthData((d) => ({ ...nAuthenticationData, lunarId: d?.lunarId }))
     } else {
         //failure
         let message = resp.message

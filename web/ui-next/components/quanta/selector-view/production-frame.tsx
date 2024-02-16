@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useCallback, useContext, useEffect, useRef, useState } from "react"
 import { IQuantaCategorization, IQuantaSelector, IQuantaTextStore, ProjectSchemas } from "../../data/quanta/types/project"
 import { IIFrameMessage } from "../selector-pane/selector-frame-tester/types"
 import productionMessageHandler from "./handler"
@@ -6,6 +6,8 @@ import { buildAnalysis } from "../selector-frame/analysis"
 import { IPipelineMessage, IQuantaQuery } from "../selector-frame/types"
 import FrameView from "./production-frame-view"
 import { IPipelineAnalysis } from "../selector-pane/context/types"
+import { QuantaDatasetManagerData } from "../../ui/quanta-dataset-manager"
+import { IDatasetManagerState } from "../../ui/quanta-dataset-manager/types"
 
 interface IProductionSelectorFrameProps {
     selector: IQuantaSelector,
@@ -14,6 +16,17 @@ interface IProductionSelectorFrameProps {
     schemas: ProjectSchemas[],
     textStore: IQuantaTextStore,
     selectionIndex: number | undefined,
+
+    /**
+     * This is the amount of selectors that are currently being rendered
+     */
+    selectorsLength: number,
+    
+    /**
+     * this is the index for this production frame
+     */
+    index: number,
+
     setSelectorValue: (selectorId: string, value: string) => void,
     setSelectedIndicator: (indicatorId: string) => void,
     selectedValues: {
@@ -29,6 +42,8 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
     textStore,
     selectionIndex,
     selectedValues,
+    selectorsLength,
+    index,
     setSelectorValue ,
     setSelectedIndicator
 }) => {
@@ -41,6 +56,29 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
     const intialSelection = useRef<boolean>(false)
     const iframeRef = useRef<HTMLIFrameElement | null>(null)
     const containerRef = useRef<HTMLDivElement | null>(null)
+
+    const {
+        queryIndicatorsLength,
+        indicatorsLength,
+        selectIndicators,
+        queryIndicatorsPaged,
+        selectIndicatorsPaged,
+        fetchIndicator
+    } = useContext(QuantaDatasetManagerData) as IDatasetManagerState
+
+    //this is the effect that focuses the container if it is the last rendered frame
+    useEffect(() => {
+        if(index !== selectorsLength - 1)
+            return
+        
+        setTimeout(() => {
+            let container = iframeRef.current
+            if(container === null)
+                return
+
+            container.scrollIntoView({ behavior: 'smooth' })
+        }, 250)
+    }, [selectorsLength, index])
 
     useEffect(() => {
         let sourceCode = selector.selectorCode
@@ -170,7 +208,13 @@ const ProductionSelectorFrame: React.FC<IProductionSelectorFrameProps> = ({
                     intialSelection,
                     selectorLink,
                     setSelectorValue,
-                    setSelectedIndicator
+                    setSelectedIndicator,
+                    queryIndicatorsLength,
+                    indicatorsLength,
+                    selectIndicators,
+                    queryIndicatorsPaged,
+                    selectIndicatorsPaged,
+                    fetchIndicator
                 ) 
             } catch (error) {
                 console.debug(`[ERROR]: ${error}`)

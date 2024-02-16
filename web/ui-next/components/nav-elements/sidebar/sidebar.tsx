@@ -1,25 +1,47 @@
-import { Navbar, Tooltip } from '@mantine/core'
+import { Navbar, Tooltip, UnstyledButton } from '@mantine/core'
 import { IconAtom2, IconDatabase, IconDeviceFloppy, IconGlobe, IconStack2 } from '@tabler/icons'
 import Link from 'next/link'
 import DriveCreateItem from './drive-create-item'
 import styles from './sidebar.module.scss'
+import { IPortalButton } from '../../lunar-refresh/types'
+import React from 'react'
+import PortalButtons from './portal-buttons'
 
+/**
+ * theese are the props required so that the sidebar component will work correctly
+ */
 interface ISidebarProps {
-    location: string
+    /**
+     * this is the url location that we want to be set active
+     * ex: /, /lunar, /quanta etc...
+     */
+    location: string,
+
+    /**
+     * theese are an optional list of portal buttons that need to be rendered
+     */
+    portalButtons?: IPortalButton[]
 }
 
 /**
  * @param location
  *  this is the current location of the page
+ * @param portalButtons
+ *  this is the passed list of portal buttons, if there are any
  * @description
  *  this is the sidebar that is shown in protected routes
  *  if this sidebar is shown on the lunar page incorporate
  *  the stack explorer as well.
  */
-const Sidebar: React.FC<ISidebarProps> = ({ location }) => {
+const Sidebar: React.FC<ISidebarProps> = ({ location, portalButtons }) => {
     return (
         <Navbar width={{ base: 80 }}>
             <div className={styles.sidebarWrapper}>
+                {portalButtons
+                    ? <PortalButtons portalButtons={portalButtons} />
+                    : null
+                }
+
                 <div className={`${styles.elements} ${location === '/lunar' && styles.border}`}>
                     {location === '/drive' && (
                         <>

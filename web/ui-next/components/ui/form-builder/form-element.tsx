@@ -7,6 +7,7 @@ import { Alert } from "@mantine/core"
 import QuantaSegmentControl from "./form-elements/segment-control"
 import FileInput from "./form-elements/file-input/file-input"
 import DynamicElement from "./form-elements/dynamic-element"
+import CheckboxInput from "./form-elements/checkbox-input"
 
 interface IFormElementProps {
     step: IQuantaFormField,
@@ -123,6 +124,18 @@ const FormElement: React.FC<IFormElementProps> = ({ step, getValue, setValue, va
                         valStore={valStore}
                         getValue={getValue}
                         setValue={setValue}
+                    />
+                )
+                break
+            case "checkbox":
+                if(step.name === undefined || step.id === undefined)
+                    return
+
+                output = (
+                    <CheckboxInput
+                        name={step.name}
+                        testId={step.testId}
+                        setValue={(value: string) => setValue(step.id!, value)}
                     />
                 )
                 break

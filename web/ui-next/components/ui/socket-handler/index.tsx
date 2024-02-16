@@ -51,6 +51,7 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
         if(socketCreated === true)
             return
 
+        console.debug(`connecting to ${wsServer}`)
         const newWebsocket = new WebSocket(wsServer + '/')
 
         newWebsocket.onerror = err => console.error(err)
@@ -68,6 +69,13 @@ const SocketHandler: React.FC<ISocketHandler> = ({ testMode, children }) => {
         newWebsocket.onclose = () => {
             setWebSocket(null)
             setSocketCreated(false)
+            if(dontRecreate === true)
+                return
+
+            setTimeout(() => {
+                console.log('[info]: connecting')
+                connect()
+            }, 1000 * 5)
         }
     }
 

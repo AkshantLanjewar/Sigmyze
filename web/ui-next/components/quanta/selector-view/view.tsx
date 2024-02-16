@@ -30,9 +30,9 @@ const View: React.FC<IViewProps> = React.memo(({
 }) => {
     return (
         <>
-            <Stack spacing={"md"} sx={{ width: "100%" }}>
-                {selectors.map((step) => (
-                    <div>
+            <Stack spacing={"md"} sx={{ width: "100%" }} data-testId={"renderer-frames"}>
+                {selectors.map((step, index) => (
+                    <div data-testId={`iframe-${index}`}>
                         <ProductionSelectorFrame 
                             selector={step}
                             publicToken={publicToken}
@@ -41,6 +41,8 @@ const View: React.FC<IViewProps> = React.memo(({
                             textStore={textStore}
                             selectionIndex={selectionIndex}
                             selectedValues={selectedValues}
+                            selectorsLength={selectors.length}
+                            index={index}
                             setSelectorValue={setSelectorValue}
                             setSelectedIndicator={setSelectedIndicator}
                         />

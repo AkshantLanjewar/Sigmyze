@@ -1,7 +1,7 @@
 import { MantineColor } from "@mantine/core"
 import { IUIDropdownItem } from "../../../ui/ui-dropdown/types"
 
-type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert" | "segment" | "dynamic"
+type QuantaFormType = "text" | "dropdown" | "additional" | "file" | "alert" | "segment" | "dynamic" | "checkbox"
 
 /**
  * Form field definitions

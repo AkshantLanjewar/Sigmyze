@@ -1,9 +1,6 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react"
 import { IDatasetCache, IDatasetManagerState, IDatasetProjects, IQuantaIndicatorCache, IQuantaIndicatorShell } from "./types"
-import { FetchDatasetEditor, FetchIndicator, PrimeDataset } from "./http"
-import { fetchIndicatorText, formatIndicatorText, getDatasetCategorization, getDatasetSelectors, getDatasetText, getPublicDatasetCards } from "./functions"
-import { IQuantaIndicator } from "../../quanta/quanta-indicator-manager/types"
-import { IDatasetCard } from "../../data/quanta/dataset-api"
+import { useQuantaDatasetCache } from "./hooks"
 
 interface IQuantaDatasetManagerProps {
     children?: JSX.Element | never[]
@@ -12,213 +9,40 @@ interface IQuantaDatasetManagerProps {
 const QuantaDatasetManagerData = createContext<IDatasetManagerState | null>(null)
 
 const QuantaDatasetManager: React.FC<IQuantaDatasetManagerProps> = ({ children }) => {
-    //dataset cache
-    const [datasetCache, setDatasetCache] = useState<IDatasetCache>({})
-    const [datasetCardsCache, setDatasetCardsCache] = useState<IDatasetCard[]>([])
-    const [datasetEditorsCache, setDatasetEditorscache] = useState<IDatasetProjects[]>([])
-    //indicator cache
-    const [indicatorCache, setIndicatorCache] = useState<IQuantaIndicatorCache>({})
-    const [cachedIndicators, setCachedIndicators] = useState<IQuantaIndicatorShell[]>([])
-
-    //here are some utility functions that help with the dataset editor cache
-    const popDatasetEditor = useCallback(() => {
-        let newEditorsCache = datasetEditorsCache
-        let output = newEditorsCache.shift()
-
-        setDatasetEditorscache([ ...newEditorsCache ])
-        return output
-    }, [datasetEditorsCache])
-
-    const fetchDatasetEditor = useCallback((datasetId: string) => {
-        for(let i = 0; i < datasetEditorsCache.length; i++) {
-            let datasetEditor = datasetEditorsCache[i]
-            if(datasetEditor.datasetId === datasetId)
-                return datasetEditor
-        }
-
-        return undefined
-    }, [datasetEditorsCache])
-
-    const addDatasetEditor = useCallback((dataset: IDatasetProjects) => {
-        setDatasetEditorscache([ ...datasetEditorsCache, dataset ])
-    }, [datasetEditorsCache])
-
-    //here are some utility functions that help with the dataset card cache
-    const popDatasetCard = useCallback(() => {
-        let newCardsCache = datasetCardsCache
-        let output = newCardsCache.shift()
-
-        setDatasetCardsCache([ ...newCardsCache ])
-        return output
-    }, [datasetCardsCache])
-
-    //here are some utilities to help interface with the indicator cache
-    const isCached = useCallback((datasetId: string, indicatorId: string) => {
-        for(let i = 0; i < cachedIndicators.length; i++) {
-            let indicator = cachedIndicators[i]
-            if(indicator.datasetId === datasetId && indicator.indicatorId === indicatorId)
-                return true
-        }
-        
-        return false
-    }, [cachedIndicators])
-
-    const cacheIndicator = useCallback((datasetId: string, indicator: IQuantaIndicator) => {
-        let cacheKeys = Object.keys(indicatorCache)
-        if(cacheKeys.includes(datasetId) === false)
-            return
-        if(indicator.indicatorId === undefined || isCached(datasetId, indicator.indicatorId) === true)
-            return
-
-        let newCachedIndicators = [ ...cachedIndicators, { datasetId: datasetId, indicatorId: indicator.indicatorId } as IQuantaIndicatorShell ]
-        let newIndicatorCache = indicatorCache
-        newIndicatorCache[datasetId].push(indicator)
-
-        setIndicatorCache({ ...newIndicatorCache })
-        setCachedIndicators([ ...newCachedIndicators ])
-    }, [indicatorCache, cachedIndicators, isCached])
-
-    const getIndicator = useCallback((datasetId: string, indicatorId: string) => {
-        let cacheKeys = Object.keys(indicatorCache)
-        if(cacheKeys.includes(datasetId) === false || isCached(datasetId, indicatorId) === false)
-            return undefined
-
-        let indicatorList = indicatorCache[datasetId]
-        for(let i = 0; i < indicatorList.length; i++) {
-            let option = indicatorList[i]
-            if(option.indicatorId === indicatorId)
-                return option
-        }
-
-        return undefined
-    }, [isCached, indicatorCache])
-
-    const deleteIndicator = useCallback((datasetId: string, indicatorId: string) => {
-        let cacheKeys = Object.keys(indicatorCache)
-        if(cacheKeys.includes(datasetId) === false || isCached(datasetId, indicatorId) === false)
-            return undefined
-
-        let indicatorList = indicatorCache[datasetId]
-        let nIndicatorList = [] as IQuantaIndicator[]
-        for(let i = 0; i < indicatorList.length; i++) {
-            let indicator = indicatorList[i]
-            if(indicator.indicatorId === indicatorId)
-                continue
-
-            nIndicatorList.push(indicator)
-        }
-
-        let nIndicatorCache = indicatorCache
-        nIndicatorCache[datasetId] = nIndicatorList
-        let nCachedIndicators = [] as IQuantaIndicatorShell[]
-        for(let i = 0; i < cachedIndicators.length; i++) {
-            let indicator = cachedIndicators[i]
-            if(indicator.datasetId === datasetId && indicator.indicatorId === indicatorId)
-                continue
-
-            nCachedIndicators.push(indicator)
-        }
-
-        setIndicatorCache({ ...nIndicatorCache })
-        setCachedIndicators([ ...cachedIndicators ])
-    }, [indicatorCache, cachedIndicators, isCached])
-
-    //effect that limits the size of the datasetCache to 50
-    useEffect(() => {
-        let cacheKeys = Object.keys(datasetCache)
-        if((cacheKeys.length > 50) == false)
-            return
-
-        let nDatasetCache = datasetCache
-        let topKey = cacheKeys[0]
-        delete nDatasetCache[topKey]
-
-        setDatasetCache({ ...nDatasetCache })
-    }, [datasetCache])
-
-    //effect that limits the size of the indicatorCache to 80
-    useEffect(() => {
-        let cachedShift = cachedIndicators.shift()
-        if((cachedIndicators.length > 80) === false || cachedShift === undefined)
-            return
-            
-        deleteIndicator(cachedShift.datasetId, cachedShift.indicatorId)
-    }, [cachedIndicators])
-
-    //effect that limits the size of the datasetCard Caache to 100
-    useEffect(() => {
-        if((datasetCardsCache.length > 100) === false)
-            return
-
-        popDatasetCard()
-    }, [datasetCardsCache])
-
-    //effect that limits the size of the datasetEditor cache to 80
-    useEffect(() => {
-        if((datasetEditorsCache.length > 80) === false)
-            return
-
-        popDatasetEditor()
-    }, [datasetEditorsCache])
-
-    //here are all the methods that will be a part of the dataset manager
-    const primeDatasetCallback = useCallback(async (datasetId: string) => {
-        return await PrimeDataset(datasetId, datasetCache, setDatasetCache)
-    }, [datasetCache])
-
-    const fetchDatasetEditorCallback = useCallback(async (datasetId: string) => {
-        return await FetchDatasetEditor(datasetId, fetchDatasetEditor, addDatasetEditor)
-    }, [fetchDatasetEditor, addDatasetEditor])
-
-    const fetchIndicatorCallback = useCallback(async (datasetId: string, indicatorId: string) => {
-        return await FetchIndicator(datasetId, indicatorId, isCached, cacheIndicator, getIndicator)
-    }, [isCached, cacheIndicator, getIndicator])
-
-    const formatIndicatorTextCallback = useCallback(async (datasetId: string, indicatorId: string, text: string) => {
-        return await formatIndicatorText(datasetId, indicatorId, text, fetchIndicatorCallback)
-    }, [fetchIndicatorCallback])
-
-    const fetchIndicatorTextCallback = useCallback(async (datasetId: string, indicatorId: string) => {
-        return await fetchIndicatorText(datasetId, indicatorId, primeDatasetCallback, formatIndicatorTextCallback)
-    }, [primeDatasetCallback, formatIndicatorTextCallback])
-
-    const getDatasetSelectorsCallback = useCallback((datasetId: string) => {
-        return getDatasetSelectors(datasetId, datasetCache)
-    }, [datasetCache])
-
-    const getDatasetCategorizationCallback = useCallback((datasetId: string) => {
-        return getDatasetCategorization(datasetId, datasetCache)
-    }, [datasetCache])
-
-    const getDatasetTextCallback = useCallback((datasetId: string, type: string) => {
-        return getDatasetText(datasetId, type, datasetCache)
-    }, [datasetCache])
-
-    const getPublicDatasetCardsCallback = useCallback(() => {
-        return getPublicDatasetCards(datasetCardsCache, setDatasetCardsCache)
-    }, [datasetCardsCache])
+    const {
+        primeDataset,
+        formatIndicatorText,
+        fetchIndicatorText,
+        selectIndicators,
+        selectIndicatorsPaged,
+        queryIndicatorsPaged,
+        queryIndicatorsLength,
+        indicatorsLength,
+        fetchDatasetEditor,
+        getDatasetSelectors,
+        fetchIndicator,
+        getPublicDatasetCards,
+        getDatasetCategorization,
+        getDatasetText
+    } = useQuantaDatasetCache()
+    
     
     const memoValue: IDatasetManagerState = useMemo(() => ({
-        primeDataset: primeDatasetCallback,
-        getPublicDatasetCards: getPublicDatasetCardsCallback,
-        fetchIndicator: fetchIndicatorCallback,
-        fetchDatasetEditor: fetchDatasetEditorCallback,
-        getDatasetSelectors: getDatasetSelectorsCallback,
-        getDatasetCategorization: getDatasetCategorizationCallback,
-        getDatasetText: getDatasetTextCallback,
-        formatIndicatorText: formatIndicatorTextCallback,
-        fetchIndicatorText: fetchIndicatorTextCallback
-    }), [
-        primeDatasetCallback,
-        getPublicDatasetCardsCallback,
-        fetchIndicatorCallback,
-        getDatasetSelectorsCallback,
-        fetchDatasetEditorCallback,
-        getDatasetCategorizationCallback,
-        getDatasetTextCallback,
-        formatIndicatorTextCallback,
-        fetchIndicatorTextCallback
-    ])
+        primeDataset,
+        getPublicDatasetCards,
+        fetchIndicator,
+        fetchDatasetEditor,
+        getDatasetSelectors,
+        getDatasetCategorization,
+        getDatasetText,
+        formatIndicatorText,
+        fetchIndicatorText,
+        selectIndicators,
+        selectIndicatorsPaged,
+        queryIndicatorsPaged,
+        queryIndicatorsLength,
+        indicatorsLength
+    }), [])
     
     return (
         <>

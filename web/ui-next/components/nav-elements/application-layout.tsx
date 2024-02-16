@@ -6,6 +6,7 @@ import UserContext from "../data/user/context"
 import { theme } from "../default-theme"
 import Header from "./header"
 import Sidebar from "./sidebar/sidebar"
+import { IPortalButton } from "../lunar-refresh/types"
 
 enum ApplicationNavbar {
     logged_out,
@@ -19,6 +20,7 @@ interface IApplicationLayoutProps {
     location: string,
     protectedView: boolean,
     darken?: boolean,
+    portalButtons?: IPortalButton[],
     children: React.ReactNode
 }
 
@@ -34,15 +36,24 @@ interface IApplicationLayoutProps {
  *  if it is a protected view, it will display the sidebar.
  * @param darken
  *  this is the boolean to set the navbar to its darker color or not
+ * @param portalButtons
+ *  this is the passed set of portal buttons, only rendered if passed
  * @description
  *  this is the parent component that manages the base layout for the website
  * @returns web layout (with children)
  */
-const ApplicationLayout: React.FC<IApplicationLayoutProps> = 
-({ title, description, location, protectedView, darken, children }) => {
+const ApplicationLayout: React.FC<IApplicationLayoutProps> = ({ 
+    title, 
+    description, 
+    location, 
+    protectedView, 
+    darken, 
+    portalButtons,
+    children 
+}) => {
     let sidebar = undefined
     if(protectedView)
-        sidebar = <Sidebar location={location} />
+        sidebar = <Sidebar location={location} portalButtons={portalButtons} />
 
     return (
         <>

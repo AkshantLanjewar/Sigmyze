@@ -31,6 +31,7 @@ const UploadModal: React.FC<IUploadModalProps> = ({ closeModal, containerRef }) 
     ] as IQuantaFormField[]
 
     const submit = (forms: IQuantaFormField[], valStore: {[key: string]: any}) => {
+        console.log(initialized) 
         if(initialized !== true) {
             setLoadingStr(undefined)
             return
@@ -58,6 +59,8 @@ const UploadModal: React.FC<IUploadModalProps> = ({ closeModal, containerRef }) 
                     await containerRef.current.fs.mkdir(built_path, { recursive: true })
                 }
             }
+
+            
             try {
                 let bytesBlob = await base64ToBlob(fileBytes)
                 const code_archive = await ZipArchive.from_blob(bytesBlob)

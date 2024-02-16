@@ -3,7 +3,7 @@ import { MantineThemeOverride } from "@mantine/core";
 export const theme: MantineThemeOverride = {
     colorScheme: 'dark',
     colors: {
-        light: [
+        dark: [
             "#C1C2C5",
             "#A6A7AB",
             "#909296",

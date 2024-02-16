@@ -23,6 +23,7 @@ type VerifiedStates = "signedout" | "verify" | "logged_in"
 
 interface IAuthenticationData {
     token?: string,
+    lunarId?: string,
     verified_state?: VerifiedStates,
     logged_in?: boolean,
     loaded?: boolean
