@@ -1,5 +1,4 @@
 import { SetStateAction } from "react"
-import { ILunarProjectData } from "../../lunar/types/types"
 
 interface IOrganizationController {
     //NOTE: State relating to the current organization
@@ -28,15 +27,12 @@ interface IOrganization {
 
 interface IDrive {
     drive_id: string,
-    projects: ILunarProjectData[],
-    folders: IFolder[]
 }
 
 interface IFolder {
     folder_id: string,
     folder_name: string,
 
-    projects: ILunarProjectData[],
     folders: IFolder[]
 }
 
