@@ -29,6 +29,8 @@ async function RefreshToken(
             nAuthenticationData.token = resp.token
             nAuthenticationData.verified_state = "verify"
             nAuthenticationData.logged_in = true
+            nAuthenticationData.lunarId = authData?.lunarId
+
             if(resp.verified === "yes")
                 nAuthenticationData.verified_state = "logged_in"
             

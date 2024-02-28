@@ -165,7 +165,7 @@ const LunarRefreshAPI_updateNotes = async (
     }
 
     //now we need to geherate the request options
-    const url = `${server}/api/v1/refresh/lunar/update/note`
+    const url = `${server}/api/v1/refresh/lunar/update/notes`
     const options = GenerateOptions("POST", token, body)
     const resp = await GET_Cacheless<IStatus>(url, options)
 

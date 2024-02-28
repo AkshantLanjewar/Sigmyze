@@ -129,12 +129,16 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
 
             //NOTE: have to implemenet load project but thats a little later
             let query = router.query.ids
-            if(Array.isArray(query) && loggedIn === false)
+            if(query === undefined)
+                return
+            console.log(lunarId)
+            if(Array.isArray(query) && token === undefined)
                 router.push('/')
-            else if(Array.isArray(query) && query.length === 2 && token !== undefined && lunarId !== undefined) {
+            else if(Array.isArray(query) === true && query.length === 2 && token !== undefined && lunarId !== undefined) {
                 const organizationId = query[0]
                 const projectId = query[1]
                 const projectData = await LunarRefreshAPI_fetchProject(token, lunarId, organizationId, projectId)
+                console.log(projectData)
                 if(projectData === undefined || projectData.validate() === false)
                     return
 
@@ -152,7 +156,7 @@ const LunarDataManager: React.FC<ILunarDataManagerProps> = ({ settingsFlowToggle
         }
         
         main()
-    }, [authData, debugMode, loaded, loggedIn])
+    }, [authData, debugMode, loaded, router])
 
     /**
      * once a lunar project is loaded, the component parts are also updated as well

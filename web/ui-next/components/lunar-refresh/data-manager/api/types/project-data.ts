@@ -42,7 +42,11 @@ class LunarProjectData implements ILunarProjectData {
     projectName?: string | undefined = undefined
 
     constructor(data: ILunarProjectData) {
-        this.notes = data.notes 
+        console.log(data)
+        if(data === null)
+            return
+        if(Object.keys(data).includes("notes") === true)
+            this.notes = data.notes 
         this.charts = data.charts 
         this.fileSystem = data.fileSystem 
         this.projectName = data.projectName 
