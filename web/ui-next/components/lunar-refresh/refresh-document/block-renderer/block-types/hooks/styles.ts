@@ -32,9 +32,9 @@ const useBlockStyles = (
     //this is the function that gets the blocks styles when the block updates
     useEffect(() => {
         const styles = getBlockStyles(block.blockId)
-        if(styles === undefined)
+        if(styles === undefined || styles === null)
             return
-    
+        
         setBold(styles.bold)
         setItalic(styles.italic)
         setStrikeThru(styles.strikethru)

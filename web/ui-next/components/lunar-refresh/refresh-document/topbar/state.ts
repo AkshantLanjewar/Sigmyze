@@ -40,7 +40,7 @@ const useTopbarState = (
             return
 
         let styles = getBlockStyles(activeBlock)
-        if(styles === undefined)
+        if(styles === undefined || styles === null)
             return
 
         setBold(styles.bold)
