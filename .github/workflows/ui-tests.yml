@@ -19,7 +19,6 @@ jobs:
       working-directory: ./web/ui-next
       run: yarn
 
-    - uses: actions/checkout@v2
     - name: Run tests
       working-directory: ./web/ui-next
       run: yarn test
