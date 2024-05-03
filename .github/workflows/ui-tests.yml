@@ -17,6 +17,9 @@ jobs:
       working-directory: ./web/ui-next
       run: yarn
 
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
     - uses: actions/checkout@v2
     - name: Run tests
       working-directory: ./web/ui-next
