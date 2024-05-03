@@ -10,15 +10,14 @@ jobs:
   build:
     name: r_test
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.43.0-jammy
 
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
       working-directory: ./web/ui-next
       run: yarn
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
 
     - uses: actions/checkout@v2
     - name: Run tests
