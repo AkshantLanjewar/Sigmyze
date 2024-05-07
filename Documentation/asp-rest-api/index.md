@@ -9,7 +9,7 @@ The ASP.net REST API helps provide the platform with most DB CRUD operations, re
 - `maps` (these are all the models used to display maps)
 - `user` (these are all the models used to handle users within the platform)
 
-A more detailed breakdown of the models can be found [here]()
+A more detailed breakdown of the models can be found [here](./models/index.md)
 
 **Services**
 
