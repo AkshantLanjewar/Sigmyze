@@ -8,7 +8,7 @@ The API Models are all base classes needed for an API response, such as a status
 
 ## Application Services Models
 This is a large group of models, closey related to the requests and responses for information relating to user authentication, organizations, querying datasets, as well as updating the drive. The files in the root folder are:
-- `DriveReq.cs` (detailed breakdown can be found [here]())
+- `DriveReq.cs` (detailed breakdown can be found [here](./application-services/drive-req.md))
 - `OrganizationResp.cs` (detailed breakdown can be found [here]())
 - `ProjectReq.cs` (detailed breakdown can be found [here]())
 - `ProjectResp.cs` (detailed breakdown can be found [here]())
@@ -23,6 +23,26 @@ This subfolder contains models related to all project data within the system. Wh
 - `NodeData.cs` (detailed breakdown can be found [here]())
 - `Organizations.cs` (detailed breakdown can be found [here]())
 - `Project.cs` (detailed breakdown can be found [here]())
+
+#### Quanta
+Since the amount of models required to ingest custom data into the system is quite large, this subfolder contains all of the models relating to quanta projects within the editor. The files in this folder are:
+- `DatasetQuery.cs` (detailed breakdown can be found [here]())
+- `Quanta.cs` (detailed breakdown can be found [here]())
+- `QuantaEditor.cs` (detailed breakdown can be found [here]())
+- `QuantaExecution.cs` (detailed breakdown can be found [here]())
+- `QuantaIndicator.cs` (detailed breakdown can be found [here]())
+- `QuantaQuery.cs` (detailed breakdown can be found [here]())
+- `QuantaSchema.cs` (detailed breakdown can be found [here]())
+
+### Queries
+This folder contains all of the models needed to query the quanta system. The files in the root of this folder are:
+- `ExecutionQuery.cs` (detailed breakdown can be found [here]())
+- `QuantaQueries.cs` (detailed breakdown can be found [here]())
+
+### UserData
+These are the models used to correctly implement the organization system. The files in the root of this folder are:
+- `LinkedServices.cs` (detailed breakdown can be found [here]())
+- `LinkedUserServices.cs` (detailed breakdown can be found [here]())
 
 ## Data Models
 ## Lunar Models
