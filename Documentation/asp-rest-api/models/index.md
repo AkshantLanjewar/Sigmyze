@@ -9,8 +9,8 @@ The API Models are all base classes needed for an API response, such as a status
 ## Application Services Models
 This is a large group of models, closey related to the requests and responses for information relating to user authentication, organizations, querying datasets, as well as updating the drive. The files in the root folder are:
 - `DriveReq.cs` (detailed breakdown can be found [here](./application-services/drive-req.md))
-- `OrganizationResp.cs` (detailed breakdown can be found [here]())
-- `ProjectReq.cs` (detailed breakdown can be found [here]())
+- `OrganizationResp.cs` (detailed breakdown can be found [here](./application-services/organization-resp.md))
+- `ProjectReq.cs` (detailed breakdown can be found [here](./application-services/project-req.md))
 - `ProjectResp.cs` (detailed breakdown can be found [here]())
 
 ### Organization Data
