@@ -17,10 +17,10 @@ This is a large group of models, closey related to the requests and responses fo
 This subfolder contains models related to all project data within the system. Whether they are lunar projects, quanta projects, or any other type of user created info, these models help define them. The files in the root of this folder are:
 - `ApplicationServices.cs` (DEPRECATED)
 - `DatasetMapping.cs` (detailed breakdown can be found [here](./application-services/organization-data/dataset-mapping.md))
-- `Document.cs` (detailed breakdown can be found [here]())
-- `Drive.cs` (detailed breakdown can be found [here]())
-- `Node.cs` (detailed breakdown can be found [here]())
-- `NodeData.cs` (detailed breakdown can be found [here]())
+- `Document.cs` (DEPRECATED)
+- `Drive.cs` (detailed breakdown can be found [here](./application-services/organization-data/drive.md))
+- `Node.cs` (DEPRECATED)
+- `NodeData.cs` (DEPRECATED)
 - `Organizations.cs` (detailed breakdown can be found [here]())
 - `Project.cs` (detailed breakdown can be found [here]())
 
