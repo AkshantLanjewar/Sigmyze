@@ -11,12 +11,12 @@ This is a large group of models, closey related to the requests and responses fo
 - `DriveReq.cs` (detailed breakdown can be found [here](./application-services/drive-req.md))
 - `OrganizationResp.cs` (detailed breakdown can be found [here](./application-services/organization-resp.md))
 - `ProjectReq.cs` (more detailed breakdown can be found [here](./application-services/project-req.md))
-- `ProjectResp.cs` ()
+- `ProjectResp.cs` (more detailed breakdown can be found [here](./application-services/project-resp.md))
 
 ### Organization Data
 This subfolder contains models related to all project data within the system. Whether they are lunar projects, quanta projects, or any other type of user created info, these models help define them. The files in the root of this folder are:
-- `ApplicationServices.cs` ()
-- `DatasetMapping.cs` (detailed breakdown can be found [here]())
+- `ApplicationServices.cs` (DEPRECATED)
+- `DatasetMapping.cs` (detailed breakdown can be found [here](./application-services/organization-data/dataset-mapping.md))
 - `Document.cs` (detailed breakdown can be found [here]())
 - `Drive.cs` (detailed breakdown can be found [here]())
 - `Node.cs` (detailed breakdown can be found [here]())
