@@ -17,7 +17,7 @@ public class CreateFolderBody
 **Fields**
 - `ParentFolder` (this is the parent folder where the folder will be created, root if the drive folder)
 - `FolderName` (this is the name of the new folder)
-- `OrganizationId` (this is the id of the organization the drive is for)
+- `OrganizationId` (this is the id of the [organization](./organization-data/organization.md) the drive is for)
 
 ### JSON Representation
 ```json
@@ -44,7 +44,7 @@ public class DeleteFolderBody
 **Fields**
 - `ParentFolder` (This is the parent folder of the folder that is going to be deleted)
 - `FolderId` (This is the id of the folder that is going to be deleted)
-- `OrganizationId` (This is the id of the organization the drive belongs too)
+- `OrganizationId` (This is the id of the [organization](./organization-data/organization.md) the drive belongs too)
 
 ### JSON Representation
 ```json
@@ -72,7 +72,7 @@ public class UpdateFolderBody
 **Fields**
 - `ParentFolder` (the id of the parent folder for the targeted folder)
 - `FolderId` (the id for the target folder)
-- `OrganizationId` (This is the id of the organization the drive belongs too)
+- `OrganizationId` (This is the id of the [organization](./organization-data/organization.md) the drive belongs too)
 - `FolderName` (the new name for the folder)
 
 ### JSON Representation
@@ -101,7 +101,7 @@ public class CreateProjectBody
 
 **Fields**
 - `ParentFolder` (the id of the folder for the targeted project will be placed into)
-- `OrganizationId` (This is the id of the organization the drive belongs too)
+- `OrganizationId` (This is the id of the [organization](./organization-data/organization.md) the drive belongs too)
 - `ProjectName` (the name for the new project)
 - `ProjectType` (the type of project being created, currently supports either lunar or quanta)
 
@@ -130,7 +130,7 @@ public class DeleteProjectBody
 
 **Fields**
 - `ParentFolder` (id of the folder the file is in)
-- `OrganizationId` (This is the id of the organization the drive belongs too)
+- `OrganizationId` (This is the id of the [organization](./organization-data/organization.md) the drive belongs too)
 - `ProjectId` (the id of the project that is being created)
 - `ProjectType` (the type of project being deleted, currently supports either lunar or quanta)
 
@@ -159,7 +159,7 @@ public class UpdateProjectBody
 
 **Fields**
 - `ParentFolder` (id of the folder the file is in)
-- `OrganizationId` (This is the id of the organization the drive belongs too)
+- `OrganizationId` (This is the id of the [organization](./organization-data/organization.md) the drive belongs too)
 - `ProjectId` (the id of the project that is being updated)
 - `ProjectName` (the new name for the project)
 - `ProjectType` (the type of project being deleted, currently supports either lunar or quanta)

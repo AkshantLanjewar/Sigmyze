@@ -21,8 +21,8 @@ This subfolder contains models related to all project data within the system. Wh
 - `Drive.cs` (detailed breakdown can be found [here](./application-services/organization-data/drive.md))
 - `Node.cs` (DEPRECATED)
 - `NodeData.cs` (DEPRECATED)
-- `Organizations.cs` (detailed breakdown can be found [here]())
-- `Project.cs` (detailed breakdown can be found [here]())
+- `Organizations.cs` (detailed breakdown can be found [here](./application-services/organization-data/organization.md))
+- `Project.cs` (DEPRECATED)
 
 #### Quanta
 Since the amount of models required to ingest custom data into the system is quite large, this subfolder contains all of the models relating to quanta projects within the editor. The files in this folder are:
