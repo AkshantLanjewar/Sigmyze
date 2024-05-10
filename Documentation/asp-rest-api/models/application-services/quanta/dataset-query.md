@@ -11,7 +11,7 @@ public class DatasetQueryBody
 ```
 
 **Fields**
-- `Params` (these are the specific [query]() options for the request)
+- `Params` (these are the specific [query](./quanta-query.md#quantaquery) options for the request)
 - `Token` (this is the public quanta token in order to correctly access the dataset)
 
 ## JSON Representation

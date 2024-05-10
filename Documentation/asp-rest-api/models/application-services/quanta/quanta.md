@@ -267,5 +267,5 @@ public class QuantaSchemas
 ```
 
 **Fields**
-- `SchemaId` (this is the id of the schema, used to query it from the list)
+- `SchemaId` (this is the id of the [schema](./quanta-schema.md#quantaschema), used to query it from the list)
 - `Schema` (this is the actual schema that is being stored (list of nodes))

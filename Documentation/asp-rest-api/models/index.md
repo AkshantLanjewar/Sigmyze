@@ -32,7 +32,7 @@ Since the amount of models required to ingest custom data into the system is qui
 - `QuantaExecution.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta-execution.md))
 - `QuantaIndicator.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta-indicator.md))
 - `QuantaQuery.cs` (detailed breakdown can be found [here](./application-services/quanta/dataset-query.md))
-- `QuantaSchema.cs` (detailed breakdown can be found [here]())
+- `QuantaSchema.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta-schema.md))
 
 ### Queries
 This folder contains all of the models needed to query the quanta system. The files in the root of this folder are:
