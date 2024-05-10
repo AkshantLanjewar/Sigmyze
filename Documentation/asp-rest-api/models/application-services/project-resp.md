@@ -15,7 +15,7 @@ public class GetQuantaProjectResp
 
 **Fields**
 - `Status` (this is the [status](../api-status.md) for the API call)
-- `ProjectData` (this is the [project repository]() that was requested in the API call)
+- `ProjectData` (this is the [project repository](./quanta/quanta.md#quantarepositorydefinition) that was requested in the API call)
 
 ### JSON Representation
 ```json

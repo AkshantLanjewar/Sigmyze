@@ -16,7 +16,7 @@ public class UpdateQuantaDataBody
 ```
 
 **Fields**
-- `Data` this is the new quanta project data that has to be synchronized with the database
+- `Data` this is the new quanta project [data](./quanta/quanta.md#quantaprojectdata) that has to be synchronized with the database
 
 ### JSON Representation
 ```json

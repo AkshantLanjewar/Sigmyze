@@ -16,6 +16,6 @@ public class Organization
 **Fields**
 - `Id` (This is the ID for the document in the mongodb collection) 
 - `OrganizationId` (this is the id for the organization, used to query the collection)
-- `LinkedDriveId` (this is the drive that is associated with this organization)
+- `LinkedDriveId` (this is the [drive](./drive.md) that is associated with this organization)
 - `OrganizationName` (this is the organization's name, used for display purposes)
 - `Users` (this is the list of user ids that are a part of this organization)
