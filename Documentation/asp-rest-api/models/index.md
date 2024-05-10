@@ -36,8 +36,8 @@ Since the amount of models required to ingest custom data into the system is qui
 
 ### Queries
 This folder contains all of the models needed to query the quanta system. The files in the root of this folder are:
-- `ExecutionQuery.cs` (detailed breakdown can be found [here]())
-- `QuantaQueries.cs` (detailed breakdown can be found [here]())
+- `ExecutionQuery.cs` (detailed breakdown can be found [here](./application-services/queries/execution-queries.md))
+- `QuantaQueries.cs` (detailed breakdown can be found [here](./application-services/queries/quanta-queries.md))
 
 ### UserData
 These are the models used to correctly implement the organization system. The files in the root of this folder are:
