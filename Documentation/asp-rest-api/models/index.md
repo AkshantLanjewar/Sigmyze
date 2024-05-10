@@ -28,7 +28,7 @@ This subfolder contains models related to all project data within the system. Wh
 Since the amount of models required to ingest custom data into the system is quite large, this subfolder contains all of the models relating to quanta projects within the editor. The files in this folder are:
 - `DatasetQuery.cs` (detailed breakdown can be found [here](./application-services/quanta/dataset-query.md))
 - `Quanta.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta.md))
-- `QuantaEditor.cs` (detailed breakdown can be found [here]())
+- `QuantaEditor.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta-editor.md))
 - `QuantaExecution.cs` (detailed breakdown can be found [here]())
 - `QuantaIndicator.cs` (detailed breakdown can be found [here]())
 - `QuantaQuery.cs` (detailed breakdown can be found [here]())
