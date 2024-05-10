@@ -31,7 +31,7 @@ Since the amount of models required to ingest custom data into the system is qui
 - `QuantaEditor.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta-editor.md))
 - `QuantaExecution.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta-execution.md))
 - `QuantaIndicator.cs` (detailed breakdown can be found [here](./application-services/quanta/quanta-indicator.md))
-- `QuantaQuery.cs` (detailed breakdown can be found [here]())
+- `QuantaQuery.cs` (detailed breakdown can be found [here](./application-services/quanta/dataset-query.md))
 - `QuantaSchema.cs` (detailed breakdown can be found [here]())
 
 ### Queries
