@@ -38,7 +38,7 @@ public class GetQuantaIndicatorsResp
 
 **Fields**
 - `Status` (this is the [status](../api-status.md) for the API call)
-- `Indicators` (these are the [indicators]() returned from the dataset)
+- `Indicators` (these are the [indicators](./quanta/quanta-indicator.md#quantaindicator) returned from the dataset)
 
 ### JSON Definition
 ```json

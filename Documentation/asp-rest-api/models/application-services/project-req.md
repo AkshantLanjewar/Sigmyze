@@ -43,7 +43,7 @@ public class AddQuantaIndicator
 - `ProcessId` (when every data collection process starts, its assigned a process id as a form of authentication)
 - `OrganizationId` (this is the id of the organization the quanta dataset belongs too)
 - `QuantaId` (this is the id of the quanta dataset the indicator will be added too)
-- `Indicators` (these are the stringified version of the quanta [indicator]() that is going to be added to the dataset)
+- `Indicators` (these are the stringified version of the quanta [indicator](./quanta/quanta-indicator.md#quantaindicator) that is going to be added to the dataset)
 
 ### JSON Representation
 ```json
@@ -74,7 +74,7 @@ public class UpdateQuantaIndicatorBody
 - `ProcessId` (when every data collection process starts, its assigned a process id as a form of authentication)
 - `OrganizationId` (this is the id of the organization the quanta dataset belongs too)
 - `QuantaId` (this is the id of the quanta dataset the indicator will be added too)
-- `Indicators` (these are the stringified version of the quanta [indicator]() that is going to be updated within the dataset)
+- `Indicators` (these are the stringified version of the quanta [indicator](./quanta/quanta-indicator.md#quantaindicator) that is going to be updated within the dataset)
 - `Mode` (the update mode, either replace or append)
 
 **Methods**
