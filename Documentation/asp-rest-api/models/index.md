@@ -41,8 +41,8 @@ This folder contains all of the models needed to query the quanta system. The fi
 
 ### UserData
 These are the models used to correctly implement the organization system. The files in the root of this folder are:
-- `LinkedServices.cs` (detailed breakdown can be found [here]())
-- `LinkedUserServices.cs` (detailed breakdown can be found [here]())
+- `LinkedServices.cs` (detailed breakdown can be found [here](./application-services/user-data/linked-services.md))
+- `LinkedUserServices.cs` (detailed breakdown can be found [here](./application-services/user-data/linked-user-services.md))
 
 ## Data Models
 ## Lunar Models
