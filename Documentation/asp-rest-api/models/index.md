@@ -45,6 +45,11 @@ These are the models used to correctly implement the organization system. The fi
 - `LinkedUserServices.cs` (detailed breakdown can be found [here](./application-services/user-data/linked-user-services.md))
 
 ## Data Models
+This folder contains the models relating to reuqests for the quanta editor. The files in this folder are:
+- `DatasetPOST.cs` (detailed breakdown can be found [here](./data/dataset-post.md))
+- `DatasetResponse.cs` (DEPRECATED)
+- `QuantaDatasetResponse.cs` (detailed breakdown can be found [here](./data/quanta-dataset-response.md) DEPRECATED)
+
 ## Lunar Models
 ## Maps Models
 ## User Models
