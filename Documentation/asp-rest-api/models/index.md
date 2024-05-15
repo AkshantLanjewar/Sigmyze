@@ -51,5 +51,12 @@ This folder contains the models relating to reuqests for the quanta editor. The 
 - `QuantaDatasetResponse.cs` (detailed breakdown can be found [here](./data/quanta-dataset-response.md) DEPRECATED)
 
 ## Lunar Models
+This folder contains all of the models relating to the data used for a lunar refresh project. The files in this folder are:
+- `Filesystem.cs` (detailed breakdown can be found [here](./lunar/filesystem.md))
+- `LunarChart.cs` (detailed breakdown can be found [here](./lunar/lunar-chart.md))
+- `LunarDocument.cs` (detailed breakdown can be found [here](./lunar/lunar-document.md))
+- `LunarNote.cs` (detailed breakdown can be found [here](./lunar/lunar-note.md))
+- `LunarProjectData.cs` (DEPRECATED)
+
 ## Maps Models
 ## User Models
