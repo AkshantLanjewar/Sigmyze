@@ -58,5 +58,12 @@ This folder contains all of the models relating to the data used for a lunar ref
 - `LunarNote.cs` (detailed breakdown can be found [here](./lunar/lunar-note.md))
 - `LunarProjectData.cs` (DEPRECATED)
 
-## Maps Models
+## Maps Models (DEPRECATED)
 ## User Models
+This folder contains all of the models relating to the data used for user authentication within the platform. The files in this folder are:
+- `AuthDatabaseSettings.cs` (detailed breakdown can be found [here](./user/auth-database-settings.md))
+- `HTTPRecv.cs` (detailed breakdown can be found [here](./user/http-recv.md))
+- `HTTPResp.cs` (detailed breakdown can be found [here](./user/http-resp.md))
+- `PublicUser.cs` (DEPRECATED)
+- `RefreshToken.cs` (detailed breakdown can be found [here](./user/refresh-token.md))
+- `User.cs` (detailed breakdown can be found [here](./user/user.md))
