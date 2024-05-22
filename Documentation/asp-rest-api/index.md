@@ -36,8 +36,8 @@ We can abstract away many common operations to update and query data from the da
 **Controllers**
 
 URL endpoints are created through the controller model, in which each controller has a url base, with many additional endpoints depending on the desired functionality. The controllers in the rest-api that create endpoints are:
-- `AuthController` (controller with user authentication endpoints, detailed breakdown can be found [here]())
-- `LunarController` (controller for lunar refresh endpoints)
+- `AuthController` (controller with user authentication endpoints, detailed breakdown can be found [here](./controllers/auth-controller.md))
+- `LunarController` (controller for lunar refresh endpoints, detailed breakdown can be found [here](./controllers/lunar-controller.md))
 - `Quanta` (controller for all of the quanta project endpoints)
 - `DriveController` (controller for all of the drive endpoints)
 - `OrganizationController` (controller for all of the organization endpoints)
