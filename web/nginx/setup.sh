@@ -1,6 +1,6 @@
 #!/bin/sh
-export AWS_ACCESS_KEY_ID=AKIAYO437S56L2UOZ3MW
-export AWS_SECRET_ACCESS_KEY='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'
+export AWS_ACCESS_KEY_ID=CHANGE_ME
+export AWS_SECRET_ACCESS_KEY=''
 
 certbot certonly --non-interactive \
       --dns-route53 \
