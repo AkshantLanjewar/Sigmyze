@@ -96,6 +96,7 @@ namespace SigmyzeServer.Services.Auth
             resp.Token        = jwtToken;
             resp.Verified     = pUser.Verified;
             resp.RefreshToken = newRefreshToken.Token;
+            resp.Message      = "refreshed";
 
             return resp;
         }

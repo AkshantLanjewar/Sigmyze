@@ -25,6 +25,9 @@ namespace SigmyzeServer.Services.Auth
 
         public string? HashPassword(string pwd, string? salt, int nIter = ITER, int nHash = N_HASH)
         {
+            if(salt == null || nIter <= 0 || nHash <= 128)
+                return null;
+
             var saltBytes = Convert.FromBase64String(salt);
             using(var rfc = new Rfc2898DeriveBytes(pwd, saltBytes, nIter))
             {

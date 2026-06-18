@@ -182,6 +182,7 @@ namespace SigmyzeServer.Controllers
             }
 
             resp.LoggedOut = true;
+            resp.Message = "logged_out";
             return await SerializeJSON(resp);
         }
 
@@ -207,6 +208,7 @@ namespace SigmyzeServer.Controllers
 
             resp.Verified = true;
             resp.Token    = nToken;
+            resp.Message = "verified";
             return await SerializeJSON(resp);
         }
 
